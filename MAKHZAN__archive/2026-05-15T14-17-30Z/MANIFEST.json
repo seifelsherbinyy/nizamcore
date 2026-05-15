@@ -1,0 +1,305 @@
+﻿{
+    "ts":  "2026-05-15T14:17:30Z",
+    "trigger":  "phase_1_complete_initial_scaffold",
+    "pop_version":  "3.0.0",
+    "git_commit":  "11531b15b19019dd7cc82a703562dce9f9c3772e",
+    "file_count":  59,
+    "files":  [
+                  {
+                      "path":  ".gitignore",
+                      "sha256":  "5d1e34bd31d2d393bf689a225ca8059b5caf018e6db110276ebd6c914cfa21f3",
+                      "size_bytes":  3215
+                  },
+                  {
+                      "path":  "CHANGELOG.md",
+                      "sha256":  "ee2ebe69f645c3b0fcba2ca03595dd8b9e03a77d84f14d03a0766bd65e7a5b50",
+                      "size_bytes":  1022
+                  },
+                  {
+                      "path":  "CRITICAL_FACTS.md",
+                      "sha256":  "bb12c25aed6f2dcc2eb3f67dcd9bddde82aff425c5faff39011d86606c6c131d",
+                      "size_bytes":  817
+                  },
+                  {
+                      "path":  "MAKHZAN__archive/README.md",
+                      "sha256":  "b17e830e6c8d731e238a20d39474965307d7c7e0d7919bf69ecdeeb7b043b514",
+                      "size_bytes":  1085
+                  },
+                  {
+                      "path":  "MAKHZAN__archive/_index.json",
+                      "sha256":  "8047008fbb54f234b0452be13257068a5b9ea56631ae916ad9435564a5e2b0f6",
+                      "size_bytes":  702
+                  },
+                  {
+                      "path":  "NAQD__brain_griller/README.md",
+                      "sha256":  "90239319fb59b3accc3d65c822eb62944987091b5e2c8d35dc0699495b71d637",
+                      "size_bytes":  1007
+                  },
+                  {
+                      "path":  "NAQD__brain_griller/_index.json",
+                      "sha256":  "96ee61cd26e11740a119f4501f6b37e7a8d3bc5223600115d3c78172c840d405",
+                      "size_bytes":  734
+                  },
+                  {
+                      "path":  "NIZAM__system/SCHEMA_INDEX.json",
+                      "sha256":  "18a57e068b3442a1b5ba60cc9d7362697db5e294af261cfa8181795e9b3a23e7",
+                      "size_bytes":  3044
+                  },
+                  {
+                      "path":  "NIZAM__system/_index.json",
+                      "sha256":  "fe38e38007c9cbce3332f7de66b0339b30a4decd365d02d00f41ff1be43258fe",
+                      "size_bytes":  605
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/EXTERNAL_PATTERNS_CITED.md",
+                      "sha256":  "c39f13e0dc459b0cbf3e3804a8a7b08520157b3ffbc428d95259830a4c07d197",
+                      "size_bytes":  2018
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/GITHUB_PRIVACY.md",
+                      "sha256":  "531530bae7f87e9e3d9c17ebdc3f8c8c5f2cdf6b848643a72db05cf7cea2eccd",
+                      "size_bytes":  1806
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/NIZAMCORE_INTEGRATION.md",
+                      "sha256":  "d9a2b30974b6f6edb1ea55bba48dc6e67df789cd55c400dfce12dfdec7db56ea",
+                      "size_bytes":  1803
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/NOTION_PATHWAY.md",
+                      "sha256":  "83016cffa121c495ede67b8caa364c5a736732a13d49397fb3b62e4d4258f367",
+                      "size_bytes":  884
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/OBSIDIAN_PATHWAY.md",
+                      "sha256":  "cbef901954a9d6451507a44e11a72f3122a8ea91dc19c5915452849cfec785c5",
+                      "size_bytes":  1271
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/PHASE_2_FOLDERS.md",
+                      "sha256":  "6babb5abd924959b35222769e0b4bf912bacf6fad6e7175d50368c794350f2ee",
+                      "size_bytes":  2533
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/PHASE_3_FOLDERS.md",
+                      "sha256":  "a431eae0d8bbe12b0a6d8b59681c30ad1ebd383b74fc1d67e58bc6761de5094c",
+                      "size_bytes":  1475
+                  },
+                  {
+                      "path":  "NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md",
+                      "sha256":  "620861e0c1a5c660d12c945c13807ebc631c9bf654e148406bdd894ce30a31be",
+                      "size_bytes":  1907
+                  },
+                  {
+                      "path":  "NIZAM__system/personas/NAQD.json",
+                      "sha256":  "9f249d415c1f474158294fdc80733b4dba31e26bfefaf5d6e08c899e13757cc6",
+                      "size_bytes":  1627
+                  },
+                  {
+                      "path":  "NIZAM__system/personas/SHURA.json",
+                      "sha256":  "bad3d741c5ca63ea39df8324601064432d57e5e3d7a2971e245ff6608b5e63c5",
+                      "size_bytes":  1253
+                  },
+                  {
+                      "path":  "NIZAM__system/personas/TAFRIGH.json",
+                      "sha256":  "bdb182c25663b0e9dd28783798101648f014b15055f65fabd1802fdee7cd4755",
+                      "size_bytes":  1180
+                  },
+                  {
+                      "path":  "NIZAM__system/policies/PRIVACY_CLASSIFICATION.json",
+                      "sha256":  "78901bd4ee30945c066a40c0d3653a0557c5651289e3134d6f7920e07b7ede74",
+                      "size_bytes":  2804
+                  },
+                  {
+                      "path":  "NIZAM__system/policies/SYNC_POLICY.json",
+                      "sha256":  "60bea64212d4fd4689bf06ca1ca6f70886121e7001621c9363982755f61aaaae",
+                      "size_bytes":  1696
+                  },
+                  {
+                      "path":  "NIZAM__system/policies/TOOL_ACCESS_MATRIX.json",
+                      "sha256":  "8120ad1a0beabc08ff0231774dd99ecfefb26d88d54abe03106a20314771fd21",
+                      "size_bytes":  1229
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/decision_ledger.schema.json",
+                      "sha256":  "8f369fcd067f33bf5cadb8d9b60b332c91d4586e6e895eb968d723cbe35f1468",
+                      "size_bytes":  951
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/event_ledger.schema.json",
+                      "sha256":  "924da31a395fe090ae31a6d7191b608ed32d35fd6e45ccc82bafb99f6665ca3a",
+                      "size_bytes":  931
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/folder_index.schema.json",
+                      "sha256":  "79e4077bfcd89662fba0c957e3263326486c918140cc9e3663fa7c051b7573a5",
+                      "size_bytes":  1367
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/learning_ledger.schema.json",
+                      "sha256":  "21918d8bd8ed549be82d3dc4d8d01767cca8619ead29c7b66db5da720ba70767",
+                      "size_bytes":  921
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/note_frontmatter.schema.json",
+                      "sha256":  "c857fbab95c1922870cfe7fd3d3a95c4877bbc398c4dfd28150991bcf0e4a5b1",
+                      "size_bytes":  1541
+                  },
+                  {
+                      "path":  "NIZAM__system/schemas/overload_flag.schema.json",
+                      "sha256":  "58df589d32eb2b9b49a723ac0cc16c82a44e93ba098d6aa8ba2058e3448c36fd",
+                      "size_bytes":  784
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/_SKILLS_INDEX.md",
+                      "sha256":  "b28ea73506d995fe9fe96d20a4103172be93ed8ee2b6a7538fb240038cf2b35e",
+                      "size_bytes":  2070
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/naqd-challenge.md",
+                      "sha256":  "36740d2e9335ede09d949e70ea466edae5e05c89a7fdc8f9e821b6ec77e2f95c",
+                      "size_bytes":  1234
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/naqd-grill.md",
+                      "sha256":  "06d7843ba85257abed1db6025494b233c27e59b7700e710e89bd22a15c943562",
+                      "size_bytes":  1984
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/naqd-reconcile.md",
+                      "sha256":  "88c727cf86d5d82fb21711ad60d5669cdeac3a93e6e1b0d1894405f9a15b87cf",
+                      "size_bytes":  1573
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/pop-health.md",
+                      "sha256":  "9c86f30b77228c74c7bae700c060df4447c7d537ffd4941eb7aa246503f6ef39",
+                      "size_bytes":  1462
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/pop-recap.md",
+                      "sha256":  "8363fd9c40fad572d3ef675eddec36a719a0d272927efa9caed44f9c303916db",
+                      "size_bytes":  1385
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/shura-brainstorm.md",
+                      "sha256":  "8f633d62cc3064c805d86dd063584bd0845fb844a72fa49ce16828e5b81c557b",
+                      "size_bytes":  1825
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/shura-connect.md",
+                      "sha256":  "56845514acb2749862f32493a59f95e72e1981601ff952bbb875378391380202",
+                      "size_bytes":  1036
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/shura-emerge.md",
+                      "sha256":  "daf49467febca916141447e055927d52af5d9ae88f81f38a89ca92ef87ab09f1",
+                      "size_bytes":  1242
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/shura-graduate.md",
+                      "sha256":  "b7f697aadd8c44dfad3a3396b8f2e971715912dc553fde79661dbc43643c5718",
+                      "size_bytes":  1484
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/sukoon-check.md",
+                      "sha256":  "031a3995d25705fb284e6aa004bbf214166dabf62cd41c2b5a46295e62e9793a",
+                      "size_bytes":  1853
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/tafrigh-capture.md",
+                      "sha256":  "d42116f159736076df784b4baf86e5e41ad13639957469a91297a318034c9878",
+                      "size_bytes":  2263
+                  },
+                  {
+                      "path":  "NIZAM__system/skills/tafrigh-triage.md",
+                      "sha256":  "a61328d8a3fbe346893ead192132035957feea06581236250b4287cc3c9634b8",
+                      "size_bytes":  1616
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/adr_decision.template.md",
+                      "sha256":  "541813f8c3556562d100656c3182872abec0b94d756f90048153e0333eef86db",
+                      "size_bytes":  846
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/brain_dump.template.md",
+                      "sha256":  "9f3bc43aa705a9fc08b56b648452cfedbd81dd26a0c95f232c10b56b0cea1d55",
+                      "size_bytes":  623
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/brainstorm.template.md",
+                      "sha256":  "e126f6a9b168ee80ee77c996b3525adb8b608f562c35cfb4a411402011838e74",
+                      "size_bytes":  694
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/griller.template.md",
+                      "sha256":  "e73094be2594a9d4f2238cf6a7cd446c76674b3678bee49c29830e67ac77d046",
+                      "size_bytes":  815
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/note_frontmatter.template.md",
+                      "sha256":  "cf322c1d77e5376eaec9beeb5dfb17272d5f1cf859e4e98d6b08c744d1991f1e",
+                      "size_bytes":  539
+                  },
+                  {
+                      "path":  "NIZAM__system/templates/recovery_check.template.md",
+                      "sha256":  "58fc10a7f459ab85563f4d9728d653f38752c11e9dfb557bdc4d33b45a900c4e",
+                      "size_bytes":  858
+                  },
+                  {
+                      "path":  "POP_MASTER_REGISTER.json",
+                      "sha256":  "7b6395bdd875236d31a51d5594844fa456c18cb4db91a208d31ffc2aa9e5195e",
+                      "size_bytes":  4376
+                  },
+                  {
+                      "path":  "POP_TEMPLE.json",
+                      "sha256":  "951a37f2b23cf3a6d3e7d92e74d753f09c8fe8810a8234c7675b48ace7170be3",
+                      "size_bytes":  4202
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "3d9cd3882ffc02cf5708f1e353cda810eda4cb264ec224bef81c6a18421c5834",
+                      "size_bytes":  2392
+                  },
+                  {
+                      "path":  "SHURA__brainstormer/README.md",
+                      "sha256":  "8cfdb2fb80821d41dab1392f4182c28f1c2f803bfe38e7518a76f79400c46464",
+                      "size_bytes":  950
+                  },
+                  {
+                      "path":  "SHURA__brainstormer/_index.json",
+                      "sha256":  "ce24051a23bc8a6f1da915e5b810198c3c16e54c3544ef611e5db3ff6eb2cef8",
+                      "size_bytes":  573
+                  },
+                  {
+                      "path":  "SUKOON__recovery_first/README.md",
+                      "sha256":  "e691381d97f84b278fa7dde1ff522f082eeb15ebf63a57edf42e6f11cb826f89",
+                      "size_bytes":  1007
+                  },
+                  {
+                      "path":  "SUKOON__recovery_first/_index.json",
+                      "sha256":  "b4eafd9a5ed27a8c205bfc8cadff00702c9dbebfa468988772d991cef2a8b310",
+                      "size_bytes":  666
+                  },
+                  {
+                      "path":  "TAFRIGH__brain_dumper/README.md",
+                      "sha256":  "9b468c07026beb834bda0c497dc29512cde42373370ba15b116c9b61fcdabee4",
+                      "size_bytes":  784
+                  },
+                  {
+                      "path":  "TAFRIGH__brain_dumper/_index.json",
+                      "sha256":  "7569e96f7779a9f7193a624e1226f5202a83efb83684ee997e023810328c1990",
+                      "size_bytes":  562
+                  },
+                  {
+                      "path":  "index.md",
+                      "sha256":  "1863685674de818858362c04b033538a0ade514c7a760e0e0978462175eec959",
+                      "size_bytes":  2230
+                  },
+                  {
+                      "path":  "log.md",
+                      "sha256":  "172853ddb8db293af541b2af77fe6050232b09801de846acee5590bfb935d4b3",
+                      "size_bytes":  295
+                  }
+              ],
+    "note":  "Phase 1b + local commit complete. Phase 1c-remote, Phase 1.5 pending gh auth login."
+}

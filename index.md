@@ -13,13 +13,17 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 ## NIZAM__system (00 — governance)
 - [`NIZAM__system/SCHEMA_INDEX.json`](NIZAM__system/SCHEMA_INDEX.json) — all schemas
 - [`NIZAM__system/personas/`](NIZAM__system/personas/) — 7 persona JSONs (TAFRIGH, SHURA, NAQD, KABIR_SHERBO, MUNAWARA, MAL, BADAN)
-- [`NIZAM__system/skills/`](NIZAM__system/skills/) — 26 POP slash-command skill files (Phase 1 + Phase 2)
+- [`NIZAM__system/skills/`](NIZAM__system/skills/) — 30 POP slash-command skill files (Phase 1 + 2 + 3)
+- [`NIZAM__system/protocols/`](NIZAM__system/protocols/) — 8 cadence-driven skill chains (daily/weekly/monthly/quarterly/annual/crisis/onboarding)
+- [`NIZAM__system/workflows/`](NIZAM__system/workflows/) — 8 scenario-driven skill chains (idea-to-decision, finance-decision, etc.)
+- [`NIZAM__system/PROTOCOLS_INDEX.json`](NIZAM__system/PROTOCOLS_INDEX.json) — machine-readable protocol registry
+- [`NIZAM__system/WORKFLOWS_INDEX.json`](NIZAM__system/WORKFLOWS_INDEX.json) — machine-readable workflow registry
 - [`NIZAM__system/policies/PRIVACY_CLASSIFICATION.json`](NIZAM__system/policies/PRIVACY_CLASSIFICATION.json)
 - [`NIZAM__system/policies/SYNC_POLICY.json`](NIZAM__system/policies/SYNC_POLICY.json)
 - [`NIZAM__system/policies/TOOL_ACCESS_MATRIX.json`](NIZAM__system/policies/TOOL_ACCESS_MATRIX.json)
-- [`NIZAM__system/ledgers/`](NIZAM__system/ledgers/) — EVENT, DECISION, LEARNING (Phase 1)
-- [`NIZAM__system/templates/`](NIZAM__system/templates/) — markdown templates
-- [`NIZAM__system/docs/`](NIZAM__system/docs/) — doctrine docs
+- [`NIZAM__system/ledgers/`](NIZAM__system/ledgers/) — 8 ledgers (EVENT, DECISION, LEARNING, STRATEGY, BATTLE, FINANCE, BODY, FAMILY)
+- [`NIZAM__system/templates/`](NIZAM__system/templates/) — 28 markdown templates
+- [`NIZAM__system/docs/`](NIZAM__system/docs/) — doctrine + memory/data-model docs ([`MEMORY_MODEL`](NIZAM__system/docs/MEMORY_MODEL.md), [`CONTINUITY_PROTOCOL`](NIZAM__system/docs/CONTINUITY_PROTOCOL.md), [`DATA_MODEL`](NIZAM__system/docs/DATA_MODEL.md))
 
 ## Cognitive modules (Phase 1)
 - [`TAFRIGH__brain_dumper/`](TAFRIGH__brain_dumper/) — daily/twice-daily declutter

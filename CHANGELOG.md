@@ -1,5 +1,20 @@
 # POP — Changelog
 
+## v3.3.0 — 2026-05-15 (operational layers — protocols + workflows + memory model)
+- New folder: `NIZAM__system/protocols/` — 8 cadence-driven skill chains.
+  Daily morning, daily evening, weekly Sunday, monthly close, quarterly close, annual close, crisis (SUKOON red), onboarding (first 7 days).
+- New folder: `NIZAM__system/workflows/` — 8 scenario-driven skill chains.
+  Idea-to-decision, idea-to-project, strategy-rollup, finance-decision, body-routine, family-routine, contradiction-resolution, weekly-synthesis.
+- New docs in `NIZAM/docs/`:
+  - `MEMORY_MODEL.md` — six-layer memory architecture.
+  - `CONTINUITY_PROTOCOL.md` — session / year / agent continuity guarantees.
+  - `DATA_MODEL.md` — every artifact type mapped to schema + folder + skill + privacy.
+- New JSON registries:
+  - `PROTOCOLS_INDEX.json`
+  - `WORKFLOWS_INDEX.json`
+- POP_TEMPLE platform_version → 3.3.0, with `operational_layers` block.
+- _SKILLS_INDEX, index.md updated to reference new layers.
+
 ## v3.2.0 — 2026-05-15 (Phase 3 scaffold)
 - 2 new top-level folders: AHEL__family_network (live, strictest privacy), BASIRA__future_visualization (shell only).
 - 1 new persona: AHEL.

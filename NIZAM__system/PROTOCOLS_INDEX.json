@@ -1,0 +1,17 @@
+{
+  "version": "3.3.0",
+  "generated": "2026-05-15T16:30:00Z",
+  "description": "Cadence-driven skill chains. Each protocol is a documented procedure that calls 2+ skills in a specific order with gate checks and SUKOON-state adjustments.",
+  "protocols": [
+    { "name": "daily_morning",          "cadence": "every morning",       "budget_min": 5,  "budget_max": 10, "path": "protocols/daily_morning.md",          "skills": ["/sukoon-check","/tafrigh-capture","/tafrigh-triage"] },
+    { "name": "daily_evening",          "cadence": "optional evening",    "budget_min": 5,  "budget_max": 10, "path": "protocols/daily_evening.md",          "skills": ["/tafrigh-capture (optional)"], "ledger_appends": ["DECISION_LEDGER","LEARNING_LEDGER"] },
+    { "name": "weekly_sunday",          "cadence": "Sunday evening",      "budget_min": 30, "budget_max": 30, "path": "protocols/weekly_sunday.md",          "skills": ["/pop-recap","/munawara-weekly-battle","/badan-weekly-review","/pop-health"] },
+    { "name": "monthly_close",          "cadence": "1st of month",        "budget_min": 60, "budget_max": 60, "path": "protocols/monthly_close.md",          "skills": ["/mal-exchange-rate-check","/mal-milestone-check","/badan trend","/ahel-connection-cadence"] },
+    { "name": "quarterly_close",        "cadence": "end of quarter",      "budget_min": 90, "budget_max": 120,"path": "protocols/quarterly_close.md",        "skills": ["/munawara-quarter-plan","/shura-brainstorm (cross-domain)"] },
+    { "name": "annual_close",           "cadence": "late December",       "budget_min": 240,"budget_max": 360,"path": "protocols/annual_close.md",           "skills": ["/kabir-sherbo-annual-review","/shura-emerge (365d)","HIKMAH crystallization"] },
+    { "name": "crisis_sukoon_red",      "cadence": "triggered (≥2 red flags / declared)", "budget_min": 0, "budget_max": 30, "path": "protocols/crisis_sukoon_red.md", "skills": ["/sukoon-check","/tafrigh-capture","/badan-red-flag-check (if needed)"] },
+    { "name": "onboarding_first_7_days","cadence": "one-time, first 7 days","budget_min": 5,"budget_max": 15, "path": "protocols/onboarding_first_7_days.md","skills": ["/sukoon-check","/tafrigh-capture","/tafrigh-triage","/shura-brainstorm","/naqd-grill","/badan-daily-signal","/pop-recap","/pop-health"] }
+  ],
+  "gating_rule": "Every protocol explicitly defines its behavior under SUKOON green / yellow / red. Recovery-first overrides ambition.",
+  "see_also": ["NIZAM__system/protocols/_PROTOCOLS_INDEX.md","NIZAM__system/workflows/_WORKFLOWS_INDEX.md"]
+}

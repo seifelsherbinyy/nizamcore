@@ -70,6 +70,21 @@ See [`NIZAM__system/docs/SCHEDULED_AGENTS.md`](../docs/SCHEDULED_AGENTS.md) for 
 ## Phase 3 — cross-CLI portability (designed)
 See [`NIZAM__system/docs/CROSS_CLI_BUILD.md`](../docs/CROSS_CLI_BUILD.md). POP skills are already platform-agnostic markdown. Build shim script for Codex / Gemini / OpenCode pending if needed.
 
+## Operational layers above individual skills
+
+### Protocols (cadence-driven skill chains)
+Daily / weekly / monthly / quarterly / annual / crisis / onboarding routines that chain skills in a specific order.
+See [`NIZAM__system/protocols/_PROTOCOLS_INDEX.md`](../protocols/_PROTOCOLS_INDEX.md).
+
+### Workflows (scenario-driven skill chains)
+Multi-skill chains for specific situations (idea-to-decision, finance-decision, contradiction-resolution, etc.).
+See [`NIZAM__system/workflows/_WORKFLOWS_INDEX.md`](../workflows/_WORKFLOWS_INDEX.md).
+
+### Memory + continuity + data model
+- [`MEMORY_MODEL.md`](../docs/MEMORY_MODEL.md) — six layers of POP memory.
+- [`CONTINUITY_PROTOCOL.md`](../docs/CONTINUITY_PROTOCOL.md) — how state survives sessions / years / agents.
+- [`DATA_MODEL.md`](../docs/DATA_MODEL.md) — every artifact type mapped to schema + folder + skill.
+
 ## Skill design principles
 [`NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md`](../docs/SKILL_DESIGN_PRINCIPLES.md)
 

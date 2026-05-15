@@ -1,6 +1,6 @@
 {
   "schema_ref": "NIZAM__system/schemas/temple.schema.json",
-  "platform_version": "3.2.0",
+  "platform_version": "3.3.0",
   "codename": "POP",
   "user": "Seif Elsherbiny",
   "created": "2026-05-15T14:17:30Z",
@@ -46,6 +46,13 @@
     "BASIRA":       { "phase": 3, "persona": null, "scaffolded": "shell_only" }
   },
   "orientation_files": ["index.md", "log.md", "SOUL.md", "CRITICAL_FACTS.md"],
+  "operational_layers": {
+    "protocols": { "index": "NIZAM__system/PROTOCOLS_INDEX.json", "folder": "NIZAM__system/protocols/", "count": 8 },
+    "workflows": { "index": "NIZAM__system/WORKFLOWS_INDEX.json", "folder": "NIZAM__system/workflows/", "count": 8 },
+    "memory_model_doc": "NIZAM__system/docs/MEMORY_MODEL.md",
+    "continuity_protocol_doc": "NIZAM__system/docs/CONTINUITY_PROTOCOL.md",
+    "data_model_doc": "NIZAM__system/docs/DATA_MODEL.md"
+  },
   "phase_2_folders": ["INTAJ","YAWMIYAT","QARAR","HIKMAH","NUR","JADWAL","HIFZ","KABIR_SHERBO","MUNAWARA","MAL","BADAN"],
   "phase_3_folders": ["BASIRA","AHEL"],
   "canonical_source_of_truth": "local POP folder at C:\\Users\\selsherb\\POP",

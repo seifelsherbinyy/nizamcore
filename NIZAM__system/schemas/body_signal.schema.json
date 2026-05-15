@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/body_signal.schema.json",
+  "title": "BADAN daily/hourly body signal snapshot",
+  "type": "object",
+  "required": ["ts"],
+  "properties": {
+    "ts": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "data_source": { "type": "string", "enum": ["WHOOP","Apple_Health","Garmin","smart_scale","gym_log","manual","other"] },
+    "weight_kg": { "type": ["number","null"] },
+    "body_fat_pct": { "type": ["number","null"] },
+    "sleep_hours": { "type": ["number","null"] },
+    "sleep_quality_1_10": { "type": ["integer","null"], "minimum": 1, "maximum": 10 },
+    "resting_hr_bpm": { "type": ["number","null"] },
+    "hrv_ms": { "type": ["number","null"] },
+    "stress_1_10": { "type": ["integer","null"], "minimum": 1, "maximum": 10 },
+    "mood_1_10": { "type": ["integer","null"], "minimum": 1, "maximum": 10 },
+    "energy_1_10": { "type": ["integer","null"], "minimum": 1, "maximum": 10 },
+    "hydration_l": { "type": ["number","null"] },
+    "caffeine_mg": { "type": ["number","null"] },
+    "nicotine": { "type": ["string","null"] },
+    "steps": { "type": ["integer","null"] },
+    "exercise_minutes": { "type": ["integer","null"] },
+    "exercise_type": { "type": ["string","null"] },
+    "calories_kcal": { "type": ["number","null"] },
+    "protein_g": { "type": ["number","null"] },
+    "carbs_g": { "type": ["number","null"] },
+    "fat_g": { "type": ["number","null"] },
+    "digestion_notes": { "type": ["string","null"] },
+    "free_text": { "type": "string" },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

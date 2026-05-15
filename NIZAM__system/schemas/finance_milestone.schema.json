@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/finance_milestone.schema.json",
+  "title": "MAL milestone ladder rung",
+  "type": "object",
+  "required": ["rung","target_usd_per_month","status"],
+  "properties": {
+    "rung": { "type": "integer", "enum": [1,2,3,4,5] },
+    "target_usd_per_month": { "type": "number", "enum": [1500,3000,5000,7500,10000] },
+    "status": { "type": "string", "enum": ["locked","pending","at_risk","achieved"] },
+    "entry_date": { "type": ["string","null"], "format": "date" },
+    "current_run_rate_3mo_avg_usd": { "type": "number" },
+    "primary_pathway": { "type": "string", "enum": ["salary_growth","gcc_or_remote_role","business_income","affiliate_or_performance_marketing","consulting","investment_income","automation_products","mixed"] },
+    "evidence": { "type": "string" },
+    "next_action": { "type": "string" },
+    "review_date": { "type": "string", "format": "date" },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

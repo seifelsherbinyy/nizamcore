@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/body_weekly_review.schema.json",
+  "title": "BADAN trend-based weekly body review",
+  "type": "object",
+  "required": ["week_iso","signal_count","trends"],
+  "properties": {
+    "week_iso": { "type": "string", "pattern": "^[0-9]{4}-W[0-9]{2}$" },
+    "signal_count": { "type": "integer", "description": "How many daily signals contributed (min 4 of 7 for meaningful trend)" },
+    "trends": {
+      "type": "object",
+      "properties": {
+        "weight_kg_trend": { "type": "string", "enum": ["up","down","stable","insufficient_data"] },
+        "sleep_quality_trend": { "type": "string", "enum": ["improving","stable","declining","insufficient_data"] },
+        "stress_trend": { "type": "string", "enum": ["improving","stable","declining","insufficient_data"] },
+        "energy_trend": { "type": "string", "enum": ["improving","stable","declining","insufficient_data"] },
+        "training_minutes_total": { "type": "number" },
+        "protein_avg_g": { "type": "number" }
+      }
+    },
+    "nutrient_coverage_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+    "training_recovery_balance": { "type": "string", "enum": ["balanced","over_trained","under_trained"] },
+    "red_flags_raised": { "type": "array", "items": { "type": "string" } },
+    "disclaimer_included": { "const": true, "description": "Always true — every BADAN output includes 'Advisory only — not medical diagnosis.'" },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

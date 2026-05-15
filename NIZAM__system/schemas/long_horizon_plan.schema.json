@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/long_horizon_plan.schema.json",
+  "title": "KABIR_SHERBO 10/15/20-year plan",
+  "type": "object",
+  "required": ["horizon_years","created","domains","strategic_pillars","non_negotiables"],
+  "properties": {
+    "horizon_years": { "type": "integer", "enum": [10,15,20] },
+    "created": { "type": "string", "format": "date" },
+    "updated": { "type": "string", "format": "date" },
+    "domains": {
+      "type": "object",
+      "description": "One block per domain. All 11 expected: wealth, career, body, family, faith, location, learning, relationships, business, assets, identity.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "desired_future_state": { "type": "string" },
+          "current_gap": { "type": "string" },
+          "constraints": { "type": "array", "items": { "type": "string" } },
+          "evidence_for_feasibility": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "strategic_pillars": {
+      "type": "array",
+      "minItems": 3, "maxItems": 5,
+      "items": { "type": "object", "properties": { "pillar": { "type": "string" }, "rationale": { "type": "string" }, "rolls_up_to_domains": { "type": "array", "items": { "type": "string" } } } }
+    },
+    "non_negotiables": { "type": "array", "items": { "type": "string" } },
+    "risks_and_contingencies": { "type": "array", "items": { "type": "object", "properties": { "risk": { "type": "string" }, "mitigation": { "type": "string" } } } },
+    "alliances": { "type": "array", "items": { "type": "string" } },
+    "decisive_battles": { "type": "array", "minItems": 5, "maxItems": 10, "items": { "type": "string" } },
+    "rolls_down_to_munawara": { "type": "array", "items": { "type": "string", "description": "Reference to MUNAWARA 5_year or 3_year plan files" } }
+  }
+}

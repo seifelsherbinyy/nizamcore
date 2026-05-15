@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/finance_scenario.schema.json",
+  "title": "MAL what-if income/expense scenario",
+  "type": "object",
+  "required": ["scenario_name","pathway","ramp_months","monthly_outcomes"],
+  "properties": {
+    "scenario_name": { "type": "string" },
+    "pathway": { "type": "string" },
+    "created": { "type": "string", "format": "date" },
+    "ramp_months": { "type": "integer", "description": "How long to reach target run-rate" },
+    "monthly_outcomes": { "type": "object", "properties": {
+      "low_usd": { "type": "number" },
+      "expected_usd": { "type": "number" },
+      "high_usd": { "type": "number" }
+    } },
+    "effort_hours_weekly": { "type": "number" },
+    "risk_level": { "type": "string", "enum": ["low","medium","high"] },
+    "reversibility": { "type": "string", "enum": ["easy","medium","hard"] },
+    "cashflow_timing_months": { "type": "integer", "description": "Months from start to first significant cash" },
+    "skill_leverage_score_1_10": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "ethical_fit_score_1_10": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "recovery_cost_estimate": { "type": "string", "enum": ["green","yellow","red"] },
+    "rate_verified": { "type": "boolean" },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

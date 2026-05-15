@@ -1,0 +1,14 @@
+{
+  "folder": "YAWMIYAT__journaling",
+  "symbol": "YAWMIYAT",
+  "meaning_ar": "diary / journal",
+  "phase": 2,
+  "purpose": "Structured journal entries + weekly reviews. Longer-form than TAFRIGH raw dumps.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["daily/{YYYY-MM-DD}.md","weekly/{YYYY-Wnn}.md","monthly/{YYYY-MM}.md","entries/*.md"],
+  "skill_commands": ["(designed) /yawmiyat-daily","(designed) /yawmiyat-weekly","(designed) /yawmiyat-monthly"],
+  "subfolders_planned": ["daily","weekly","monthly","entries"],
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — skills/templates pending future build"
+}

@@ -1,0 +1,14 @@
+{
+  "folder": "INTAJ__output_engine",
+  "symbol": "INTAJ",
+  "meaning_ar": "production",
+  "phase": 2,
+  "purpose": "Tasks, execution plans, agendas. The 'doing' layer between MUNAWARA tactical plans and actual work output.",
+  "privacy_level": "review_before_commit",
+  "allowed_contents": ["tasks/*.md","agendas/*.md","execution_plans/*.md","deliverables/*.md"],
+  "skill_commands": ["(designed) /intaj-tasks","(designed) /intaj-agenda","(designed) /intaj-deliverable"],
+  "subfolders_planned": ["tasks","agendas","execution_plans","deliverables"],
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — skills/templates pending future build"
+}

@@ -1,0 +1,16 @@
+{
+  "folder": "JADWAL__notion_dashboards",
+  "symbol": "JADWAL",
+  "meaning_ar": "table / schedule",
+  "phase": 2,
+  "purpose": "Notion dashboard mirror. Sanitized metadata only.",
+  "privacy_level": "mirror_sanitized_metadata_only",
+  "allowed_contents": ["dashboard configs","sanitized milestone names","high-level progress metrics"],
+  "sync_direction": "one_way_only (POP -> Notion, sanitized only)",
+  "skill_commands": ["(designed) /jadwal-promote"],
+  "doctrine_doc": "NIZAM__system/docs/NOTION_PATHWAY.md",
+  "api_token_handling": "Notion token in $env:NOTION_TOKEN, never in repo",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — Notion API setup + promotion script pending future build"
+}

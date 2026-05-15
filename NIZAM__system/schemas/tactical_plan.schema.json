@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/tactical_plan.schema.json",
+  "title": "MUNAWARA 1/3/5-year or quarter plan",
+  "type": "object",
+  "required": ["horizon","created","objectives"],
+  "properties": {
+    "horizon": { "type": "string", "enum": ["1_year","3_year","5_year","quarter","month","week"] },
+    "quarter_id": { "type": "string", "pattern": "^[0-9]{4}-Q[1-4]$" },
+    "month_id": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+    "week_id": { "type": "string", "pattern": "^[0-9]{4}-W[0-9]{2}$" },
+    "created": { "type": "string", "format": "date" },
+    "rolls_up_to": { "type": "string", "description": "Parent plan reference (e.g., KABIR_SHERBO/10_year/wealth.md)" },
+    "objectives": {
+      "type": "array",
+      "items": { "type": "object", "properties": {
+        "title": { "type": "string" },
+        "domain": { "type": "string" },
+        "success_criteria": { "type": "string" },
+        "owner": { "type": "string" },
+        "deadline": { "type": "string", "format": "date" },
+        "status": { "type": "string", "enum": ["not_started","in_progress","blocked","done","abandoned"] },
+        "recovery_cost_estimate": { "type": "string", "enum": ["green","yellow","red"] }
+      } }
+    },
+    "sukoon_state_at_creation": { "type": "string", "enum": ["green","yellow","red"] }
+  }
+}

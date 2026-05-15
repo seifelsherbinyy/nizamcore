@@ -1,0 +1,14 @@
+{
+  "folder": "QARAR__decisions",
+  "symbol": "QARAR",
+  "meaning_ar": "decision",
+  "phase": 2,
+  "purpose": "Architecture Decision Records (ADRs). Titled, dated, status-tracked decisions with reasoning, alternatives, and review dates.",
+  "privacy_level": "review_before_commit",
+  "allowed_contents": ["{YYYY-MM-DD}__{slug}.md"],
+  "skill_commands": ["/qarar-decide"],
+  "template": "NIZAM__system/templates/adr_decision.template.md",
+  "ledger_writes_to": ["DECISION_LEDGER.jsonl"],
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

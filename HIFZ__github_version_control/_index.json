@@ -1,0 +1,14 @@
+{
+  "folder": "HIFZ__github_version_control",
+  "symbol": "HIFZ",
+  "meaning_ar": "preservation",
+  "phase": 2,
+  "purpose": "GitHub repo metadata and version-control utilities beyond what root .git provides. Pre-commit hooks, mirror scripts, repo automation.",
+  "privacy_level": "review_before_commit",
+  "allowed_contents": ["hooks/*","scripts/*.ps1","scripts/*.py","docs/*.md"],
+  "skill_commands": ["(designed) /hifz-precommit-check","(designed) /hifz-snapshot"],
+  "subfolders_planned": ["hooks","scripts","docs"],
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — hooks/scripts pending future build"
+}

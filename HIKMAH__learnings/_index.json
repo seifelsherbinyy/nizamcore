@@ -1,0 +1,15 @@
+{
+  "folder": "HIKMAH__learnings",
+  "symbol": "HIKMAH",
+  "meaning_ar": "wisdom / insight",
+  "phase": 2,
+  "purpose": "Precious insights, principles, mistakes, repeatable lessons. The 'crystallized' layer above LEARNING_LEDGER.",
+  "privacy_level": "review_before_commit",
+  "allowed_contents": ["principles/*.md","mistakes/*.md","patterns/*.md","heuristics/*.md"],
+  "skill_commands": ["(designed) /hikmah-capture","(designed) /hikmah-review"],
+  "subfolders_planned": ["principles","mistakes","patterns","heuristics"],
+  "ledger_writes_to": ["LEARNING_LEDGER.jsonl"],
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — skills/templates pending future build"
+}

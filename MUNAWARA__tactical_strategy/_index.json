@@ -1,0 +1,16 @@
+{
+  "folder": "MUNAWARA__tactical_strategy",
+  "symbol": "MUNAWARA",
+  "meaning_ar": "illuminated (alt: TADBIR — planning/strategy — if user prefers strictly secular)",
+  "phase": 2,
+  "purpose": "Tactical execution. Translates KABIR_SHERBO long-horizon bets to 1/3/5-yr → quarters → months → weeks → battles.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["1_year/*.md","3_year/*.md","5_year/*.md","quarters/{YYYY-Qn}/plan.md","months/*.md","weeks/{YYYY-Wnn}.md","battle_ledger/*.md","opportunity_maneuvers/*.md"],
+  "skill_commands": ["/munawara-quarter-plan","/munawara-weekly-battle","/munawara-pivot"],
+  "subfolders": ["1_year","3_year","5_year","quarters","months","weeks","battle_ledger","opportunity_maneuvers"],
+  "doctrine_doc": "NIZAM__system/docs/MUNAWARA_TACTICAL_DOCTRINE.md",
+  "persona": "NIZAM__system/personas/MUNAWARA.json",
+  "sukoon_downshift_rule": "≥2 red flags in 7 days → auto-cut weekly battle load 50%",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

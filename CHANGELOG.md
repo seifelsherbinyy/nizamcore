@@ -1,5 +1,18 @@
 # POP — Changelog
 
+## v3.1.0 — 2026-05-15 (Phase 2 scaffold)
+- 11 new top-level folders: KABIR_SHERBO, MUNAWARA, MAL, BADAN, INTAJ, YAWMIYAT, QARAR, HIKMAH, NUR, JADWAL, HIFZ.
+- 4 new module personas: KABIR_SHERBO, MUNAWARA, MAL, BADAN.
+- 14 new skills: 2 kabir + 3 munawara + 5 mal + 3 badan + 1 qarar.
+- 10 new schemas: long_horizon_plan, tactical_plan, battle_ledger, strategy_pivot, finance_baseline, finance_milestone, finance_scenario, body_signal, body_weekly_review, body_red_flag.
+- 18 new templates across strategy / finance / body domains.
+- 5 doctrine docs: BIG_SHERBO_LONG_WAR, MUNAWARA_TACTICAL, MAL_FINANCIAL_LADDER, BADAN_HEALTH_ADVISORY, AHEL_FAMILY_PRIVACY (Phase 3 reference).
+- 22 folder shells with README + _index.json.
+- 4 new strict-local ledgers touched (gitignored): STRATEGY, BATTLE, FINANCE, BODY.
+- MAL `exchange_rate_log.jsonl` touched (gitignored).
+- Updated registries: SCHEMA_INDEX, POP_MASTER_REGISTER, POP_TEMPLE, _SKILLS_INDEX.
+- AHEL (Phase 3) + BASIRA (Phase 3) remain designed-only.
+
 ## v3.0.1 — 2026-05-15 (public-visibility enhancement)
 - Canonical remote set to `github.com/seifelsherbinyy/nizamcore` (PUBLIC per user override).
 - LICENSE added (MIT).

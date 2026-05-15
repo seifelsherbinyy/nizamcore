@@ -1,0 +1,18 @@
+{
+  "folder": "MAL__financial_engine",
+  "symbol": "MAL",
+  "meaning_ar": "wealth / money",
+  "phase": 2,
+  "purpose": "Personal finance engine. ~$900/mo baseline → >$10k/mo target via staged milestones + exchange-rate verification + 7-factor decision scoring.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["baseline/baseline_*.md","income_growth/<pathway>/*.md","business_pipelines/*.md","expenses_debt_assets/*.md","monthly_reviews/*.md","scenario_models/*.md","exchange_rate_log.jsonl"],
+  "skill_commands": ["/mal-baseline","/mal-scenario","/mal-milestone-check","/mal-exchange-rate-check","/mal-decision-score"],
+  "subfolders": ["baseline","income_growth","business_pipelines","expenses_debt_assets","monthly_reviews","scenario_models"],
+  "doctrine_doc": "NIZAM__system/docs/MAL_FINANCIAL_LADDER.md",
+  "persona": "NIZAM__system/personas/MAL.json",
+  "milestone_ladder_usd": [1500,3000,5000,7500,10000],
+  "exchange_rate_verification": "≥2 sources, median, snapshot to exchange_rate_log.jsonl",
+  "sibling_repo_reference": "https://github.com/seifelsherbinyy/goldminer",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

@@ -1,0 +1,18 @@
+{
+  "folder": "BADAN__body_health_system",
+  "symbol": "BADAN",
+  "meaning_ar": "body",
+  "phase": 2,
+  "purpose": "Advisory health-signal tracking. Weight / sleep / HR/HRV / stress / hydration / nutrition / training / recovery. NOT diagnostic.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["daily_signals/{YYYY-MM-DD}.md","weekly_reviews/{YYYY-Wnn}.md","nutrition/*.md","training/*.md","sleep_recovery/*.md","body_composition/*.md","red_flags/*.md"],
+  "skill_commands": ["/badan-daily-signal","/badan-weekly-review","/badan-red-flag-check"],
+  "subfolders": ["daily_signals","weekly_reviews","nutrition","training","sleep_recovery","body_composition","red_flags"],
+  "doctrine_doc": "NIZAM__system/docs/BADAN_HEALTH_ADVISORY_NOTES.md",
+  "persona": "NIZAM__system/personas/BADAN.json",
+  "minimum_trend_window_days": 7,
+  "data_sources_supported": ["WHOOP","Apple_Health","Garmin","smart_scale","gym_log","manual"],
+  "mandatory_disclaimer": "Advisory only — not medical diagnosis. Red flags route to qualified professionals.",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

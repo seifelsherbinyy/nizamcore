@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/finance_baseline.schema.json",
+  "title": "MAL finance baseline snapshot",
+  "type": "object",
+  "required": ["snapshot_date","currency","exchange_rate_egp_per_usd","rate_verified","income","fixed_costs","savings"],
+  "properties": {
+    "snapshot_date": { "type": "string", "format": "date" },
+    "currency": { "type": "string", "enum": ["EGP_and_USD","EGP","USD"] },
+    "exchange_rate_egp_per_usd": { "type": "number" },
+    "rate_verified": { "type": "boolean" },
+    "rate_source_ids": { "type": "array", "items": { "type": "string" } },
+    "income": {
+      "type": "object",
+      "properties": {
+        "stable_gross_monthly_egp": { "type": "number" },
+        "stable_net_monthly_egp": { "type": "number" },
+        "variable_monthly_avg_egp": { "type": "number" },
+        "one_off_recent_egp": { "type": "number" }
+      }
+    },
+    "fixed_costs": { "type": "object", "additionalProperties": { "type": "number" } },
+    "variable_costs": { "type": "object", "additionalProperties": { "type": "number" } },
+    "debt": {
+      "type": "array",
+      "items": { "type": "object", "properties": {
+        "name": { "type": "string" },
+        "principal_egp": { "type": "number" },
+        "rate_pct": { "type": "number" },
+        "term_months": { "type": "integer" },
+        "min_payment_monthly_egp": { "type": "number" }
+      } }
+    },
+    "savings": { "type": "object", "properties": {
+      "liquid_egp": { "type": "number" },
+      "investment_egp": { "type": "number" }
+    } },
+    "assets": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "category": { "type": "string" }, "value_egp": { "type": "number" } } } },
+    "liabilities": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "value_egp": { "type": "number" } } } },
+    "runway_months": { "type": "number", "description": "savings.liquid / monthly_burn" },
+    "skill_assets": { "type": "array", "items": { "type": "string" } },
+    "business_pipelines": { "type": "array", "items": { "type": "object", "properties": { "name": { "type": "string" }, "stage": { "type": "string" }, "expected_value_usd_monthly": { "type": "number" }, "effort_hours_weekly": { "type": "number" } } } },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

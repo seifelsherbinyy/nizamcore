@@ -1,0 +1,15 @@
+{
+  "folder": "NUR__obsidian_vault",
+  "symbol": "NUR",
+  "meaning_ar": "light / illumination",
+  "phase": 2,
+  "purpose": "Obsidian vault — deep local thinking layer. Receives curated promotions from POP canonical, one-way.",
+  "privacy_level": "mirror_curated_only",
+  "allowed_contents": ["curated strategy summaries","non-sensitive reflections","weekly review headlines","learning principles"],
+  "sync_direction": "one_way_only (POP -> Obsidian, never reverse)",
+  "skill_commands": ["(designed) /nur-promote"],
+  "doctrine_doc": "NIZAM__system/docs/OBSIDIAN_PATHWAY.md",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — Obsidian install + vault config pending user action"
+}

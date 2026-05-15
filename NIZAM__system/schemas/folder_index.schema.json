@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/folder_index.schema.json",
+  "title": "POP per-folder _index.json",
+  "type": "object",
+  "required": ["folder","purpose","privacy_level","last_updated","registers_to"],
+  "properties": {
+    "folder": { "type": "string", "description": "Folder name relative to POP root" },
+    "symbol": { "type": "string", "description": "Arabic prefix symbol (e.g., TAFRIGH)" },
+    "meaning_ar": { "type": "string" },
+    "purpose": { "type": "string", "description": "One-line technical purpose" },
+    "privacy_level": { "type": "string", "enum": ["strict_local","strict_local_maximum","review_before_commit","private_github","private_github_after_review","mirror_curated_only","mirror_sanitized_metadata_only","sync_safe"] },
+    "allowed_contents": { "type": "array", "items": { "type": "string" } },
+    "skill_commands": { "type": "array", "items": { "type": "string" } },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "machine_readable": { "type": "boolean" },
+          "last_modified": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "last_updated": { "type": "string", "format": "date-time" },
+    "registers_to": { "type": "string" }
+  }
+}

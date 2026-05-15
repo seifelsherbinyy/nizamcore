@@ -1,0 +1,100 @@
+# =========================================================================
+# POP — .gitignore
+# Default-exclude sensitive paths. Schemas, templates, skills, policies,
+# personas, READMEs, and folder _index.json files are committable.
+# =========================================================================
+
+# ---- Phase 1: sensitive capture — NEVER commit ----
+TAFRIGH__brain_dumper/raw/
+TAFRIGH__brain_dumper/triaged/
+SHURA__brainstormer/sessions/
+NAQD__brain_griller/sessions/
+SUKOON__recovery_first/signals/
+SUKOON__recovery_first/overload_flags.jsonl
+HAJR__quarantine/**
+
+# ---- Orientation files containing identity ----
+SOUL.md
+
+# ---- Ledgers: review before committing (timestamps + artifact paths) ----
+NIZAM__system/ledgers/EVENT_LEDGER.jsonl
+NIZAM__system/ledgers/DECISION_LEDGER.jsonl
+NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+
+# ---- Phase 2 strategic + finance + body — NEVER commit content ----
+KABIR_SHERBO__long_horizon_strategy/10_year/
+KABIR_SHERBO__long_horizon_strategy/15_year/
+KABIR_SHERBO__long_horizon_strategy/20_year/
+KABIR_SHERBO__long_horizon_strategy/identity_strategy/
+KABIR_SHERBO__long_horizon_strategy/major_pivots/
+KABIR_SHERBO__long_horizon_strategy/domains/
+KABIR_SHERBO__long_horizon_strategy/reviews/
+
+MUNAWARA__tactical_strategy/1_year/
+MUNAWARA__tactical_strategy/3_year/
+MUNAWARA__tactical_strategy/5_year/
+MUNAWARA__tactical_strategy/quarters/
+MUNAWARA__tactical_strategy/months/
+MUNAWARA__tactical_strategy/weeks/
+MUNAWARA__tactical_strategy/battle_ledger/
+MUNAWARA__tactical_strategy/opportunity_maneuvers/
+
+MAL__financial_engine/baseline/
+MAL__financial_engine/income_growth/
+MAL__financial_engine/business_pipelines/
+MAL__financial_engine/expenses_debt_assets/
+MAL__financial_engine/monthly_reviews/
+MAL__financial_engine/scenario_models/
+MAL__financial_engine/exchange_rate_log.jsonl
+
+BADAN__body_health_system/daily_signals/
+BADAN__body_health_system/weekly_reviews/
+BADAN__body_health_system/nutrition/
+BADAN__body_health_system/training/
+BADAN__body_health_system/sleep_recovery/
+BADAN__body_health_system/body_composition/
+BADAN__body_health_system/red_flags/
+
+# ---- Phase 3 family — strictest privacy ----
+AHEL__family_network/**
+!AHEL__family_network/README.md
+!AHEL__family_network/_index.json
+
+# ---- Phase 2/3 strict-local ledgers ----
+NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl
+NIZAM__system/ledgers/BATTLE_LEDGER.jsonl
+NIZAM__system/ledgers/FINANCE_LEDGER.jsonl
+NIZAM__system/ledgers/BODY_LEDGER.jsonl
+NIZAM__system/ledgers/FAMILY_LEDGER.jsonl
+
+# ---- nizamcore mirror (read-only fetch, not pushed back) ----
+NIZAM__system/_imported/
+
+# ---- OS / editor noise ----
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+.obsidian/workspace*
+.obsidian/cache
+.idea/
+.vscode/
+
+# ---- Secrets — NEVER commit ----
+*.env
+.env
+.env.*
+!.env.example
+*token*
+*secret*
+*credentials*
+*.pem
+*.key
+
+# ---- MAKHZAN archive: keep structure, but archived raw content respects upstream rules ----
+# (Snapshots inside MAKHZAN__archive may contain mirrored copies of strict-local files.
+# Treat snapshot contents as inheriting the privacy of their original location.)
+MAKHZAN__archive/**/raw/
+MAKHZAN__archive/**/triaged/
+MAKHZAN__archive/**/sessions/
+MAKHZAN__archive/**/signals/

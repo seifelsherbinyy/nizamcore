@@ -1,0 +1,14 @@
+{
+  "folder": "NAQD__brain_griller",
+  "symbol": "NAQD",
+  "meaning_ar": "critique",
+  "purpose": "Red-team ideas, plans, beliefs, decisions before external pressure does. Attack the idea, never the person. Reconciles contradictions when new info conflicts with old notes.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["sessions/*.md (grill + challenge + reconcile session notes)"],
+  "skill_commands": ["/naqd-grill", "/naqd-challenge", "/naqd-reconcile"],
+  "subfolders": ["sessions"],
+  "emotional_state_check": "SUKOON__recovery_first/overload_flags.jsonl (24h window)",
+  "fallback_mode_on_distress": "supportive_reflection",
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

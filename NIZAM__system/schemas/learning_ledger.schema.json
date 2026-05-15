@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/learning_ledger.schema.json",
+  "title": "LEARNING_LEDGER.jsonl line",
+  "type": "object",
+  "required": ["ts","insight"],
+  "properties": {
+    "ts": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "insight": { "type": "string", "description": "One-line learning or principle" },
+    "module": { "type": "string" },
+    "source": { "type": "string", "description": "Where the insight originated (file path, conversation, event)" },
+    "category": { "type": "string", "enum": ["principle","mistake","pattern","skill","relationship","health","finance","strategy","other"] },
+    "actionable": { "type": "boolean" },
+    "applies_to": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "string", "enum": ["speculative","low","medium","high"] }
+  }
+}

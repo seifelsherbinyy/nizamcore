@@ -1,0 +1,14 @@
+{
+  "folder": "NIZAM__system",
+  "symbol": "NIZAM",
+  "meaning_ar": "system/order",
+  "purpose": "Registries, schemas, personas, skills, policies, ledgers, templates, governance docs for the entire POP system.",
+  "privacy_level": "private_github_after_review",
+  "allowed_contents": [
+    "personas/*.json", "skills/*.md", "schemas/*.json", "policies/*.json",
+    "ledgers/*.jsonl", "templates/*.md", "docs/*.md", "_imported/** (Phase 1.5, gitignored)"
+  ],
+  "skill_commands_owned": "see skills/_SKILLS_INDEX.md",
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

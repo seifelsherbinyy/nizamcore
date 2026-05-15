@@ -1,0 +1,12 @@
+{
+  "folder": "SHURA__brainstormer",
+  "symbol": "SHURA",
+  "meaning_ar": "consultation",
+  "purpose": "Co-think with Seif. Vault-first research before any external search. Convert thought into plan.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["sessions/*.md (brainstorm + connect + emerge + graduate + recap session notes)"],
+  "skill_commands": ["/shura-brainstorm", "/shura-connect", "/shura-emerge", "/shura-graduate", "/pop-recap"],
+  "subfolders": ["sessions"],
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

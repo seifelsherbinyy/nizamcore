@@ -1,0 +1,24 @@
+{
+  "version": "3.0.0",
+  "generated": "2026-05-15T14:17:30Z",
+  "schemas": [
+    { "name": "folder_index",        "phase": 1, "path": "schemas/folder_index.schema.json",        "describes": "Per-folder _index.json structure" },
+    { "name": "event_ledger",        "phase": 1, "path": "schemas/event_ledger.schema.json",        "describes": "EVENT_LEDGER.jsonl line schema" },
+    { "name": "decision_ledger",     "phase": 1, "path": "schemas/decision_ledger.schema.json",     "describes": "DECISION_LEDGER.jsonl line schema" },
+    { "name": "learning_ledger",     "phase": 1, "path": "schemas/learning_ledger.schema.json",     "describes": "LEARNING_LEDGER.jsonl line schema" },
+    { "name": "overload_flag",       "phase": 1, "path": "schemas/overload_flag.schema.json",       "describes": "SUKOON overload flag entries" },
+    { "name": "note_frontmatter",    "phase": 1, "path": "schemas/note_frontmatter.schema.json",    "describes": "YAML frontmatter on every POP markdown note" },
+    { "name": "long_horizon_plan",   "phase": 2, "path": "schemas/long_horizon_plan.schema.json",   "describes": "KABIR_SHERBO 10/15/20-yr plan", "designed_only": true },
+    { "name": "tactical_plan",       "phase": 2, "path": "schemas/tactical_plan.schema.json",       "describes": "MUNAWARA 1/3/5-yr plan", "designed_only": true },
+    { "name": "battle_ledger",       "phase": 2, "path": "schemas/battle_ledger.schema.json",       "describes": "MUNAWARA weekly battle outcomes", "designed_only": true },
+    { "name": "strategy_pivot",      "phase": 2, "path": "schemas/strategy_pivot.schema.json",      "describes": "KABIR_SHERBO major pivot", "designed_only": true },
+    { "name": "finance_baseline",    "phase": 2, "path": "schemas/finance_baseline.schema.json",    "describes": "MAL current financial snapshot", "designed_only": true },
+    { "name": "finance_milestone",   "phase": 2, "path": "schemas/finance_milestone.schema.json",   "describes": "MAL milestone ladder rung", "designed_only": true },
+    { "name": "finance_scenario",    "phase": 2, "path": "schemas/finance_scenario.schema.json",    "describes": "MAL what-if income/expense scenarios", "designed_only": true },
+    { "name": "body_signal",         "phase": 2, "path": "schemas/body_signal.schema.json",         "describes": "BADAN daily health metric snapshot", "designed_only": true },
+    { "name": "body_weekly_review",  "phase": 2, "path": "schemas/body_weekly_review.schema.json",  "describes": "BADAN trend-based weekly review", "designed_only": true },
+    { "name": "body_red_flag",       "phase": 2, "path": "schemas/body_red_flag.schema.json",       "describes": "BADAN symptom-triggers-professional-review", "designed_only": true },
+    { "name": "family_person",       "phase": 3, "path": "schemas/family_person.schema.json",       "describes": "AHEL person card", "designed_only": true },
+    { "name": "family_support_event","phase": 3, "path": "schemas/family_support_event.schema.json","describes": "AHEL support-given event", "designed_only": true }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "version": "3.0.0",
+  "generated": "2026-05-15T14:17:30Z",
+  "tools": {
+    "claude_code": {
+      "read":  ["**/*"],
+      "write": ["**/*"],
+      "gated_by": ["HIMAYAH","SUKOON","THABAT"],
+      "note": "Full access; HIMAYAH must approve before any commit/sync; SUKOON must approve before heavy output sessions."
+    },
+    "chatgpt_web": {
+      "read":  ["NIZAM__system/templates/**","NIZAM__system/schemas/**","NIZAM__system/docs/**"],
+      "write": [],
+      "note": "Paste-in only, non-sensitive."
+    },
+    "obsidian_NUR": {
+      "read":  ["NUR__obsidian_vault/**"],
+      "write": ["NUR__obsidian_vault/**"],
+      "note": "Phase 2. Receives curated promotions from POP canonical; never the reverse."
+    },
+    "notion_JADWAL": {
+      "read":  [],
+      "write": [],
+      "note": "Phase 2. Reads sanitized metadata only via promotion script."
+    },
+    "github_private_repo": {
+      "read":  ["all private_github classified paths"],
+      "write": ["commits respecting .gitignore"],
+      "note": "Private repo only. Verify visibility before every push."
+    },
+    "future_agents": {
+      "note": "Any new agent must be added here with explicit read/write scopes before being granted access."
+    }
+  }
+}

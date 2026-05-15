@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/event_ledger.schema.json",
+  "title": "EVENT_LEDGER.jsonl line",
+  "type": "object",
+  "required": ["ts","actor","event"],
+  "properties": {
+    "ts": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "actor": { "type": "string", "description": "Module that emitted the event (TAFRIGH/SHURA/NAQD/SUKOON/NIZAM/etc.)" },
+    "skill": { "type": ["string","null"], "description": "Slash command that fired, if any" },
+    "gate": { "type": ["string","null"], "enum": ["HIMAYAH","SUKOON","THABAT",null] },
+    "event": { "type": "string", "description": "Verb_noun, e.g., brain_dump_captured" },
+    "artifact": { "type": ["string","null"], "description": "File path the event produced/touched" },
+    "session_id": { "type": ["string","null"] },
+    "note": { "type": ["string","null"] }
+  }
+}

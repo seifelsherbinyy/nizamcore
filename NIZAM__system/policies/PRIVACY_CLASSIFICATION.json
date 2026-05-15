@@ -1,0 +1,29 @@
+{
+  "schema_ref": "see plan §17",
+  "version": "3.0.0",
+  "generated": "2026-05-15T14:17:30Z",
+  "default": "strict_local",
+  "rules": [
+    { "path_glob": "TAFRIGH__brain_dumper/raw/**",                              "classification": "strict_local" },
+    { "path_glob": "TAFRIGH__brain_dumper/triaged/**",                          "classification": "strict_local" },
+    { "path_glob": "SHURA__brainstormer/sessions/**",                           "classification": "strict_local" },
+    { "path_glob": "NAQD__brain_griller/sessions/**",                           "classification": "strict_local" },
+    { "path_glob": "SUKOON__recovery_first/signals/**",                         "classification": "strict_local" },
+    { "path_glob": "SUKOON__recovery_first/overload_flags.jsonl",               "classification": "strict_local" },
+    { "path_glob": "HAJR__quarantine/**",                                       "classification": "strict_local" },
+    { "path_glob": "SOUL.md",                                                   "classification": "strict_local" },
+    { "path_glob": "KABIR_SHERBO__long_horizon_strategy/{10_year,15_year,20_year,identity_strategy,major_pivots,domains,reviews}/**", "classification": "strict_local" },
+    { "path_glob": "MUNAWARA__tactical_strategy/{1_year,3_year,5_year,quarters,months,weeks,battle_ledger,opportunity_maneuvers}/**",  "classification": "strict_local" },
+    { "path_glob": "MAL__financial_engine/**",                                  "classification": "strict_local" },
+    { "path_glob": "BADAN__body_health_system/**",                              "classification": "strict_local" },
+    { "path_glob": "AHEL__family_network/**",                                   "classification": "strict_local_maximum" },
+    { "path_glob": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",                  "classification": "review_before_commit" },
+    { "path_glob": "NIZAM__system/ledgers/DECISION_LEDGER.jsonl",               "classification": "review_before_commit" },
+    { "path_glob": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",               "classification": "review_before_commit" },
+    { "path_glob": "NIZAM__system/ledgers/{STRATEGY,BATTLE,FINANCE,BODY,FAMILY}_LEDGER.jsonl", "classification": "strict_local" },
+    { "path_glob": "NIZAM__system/{schemas,templates,skills,policies,docs,personas}/**", "classification": "private_github" },
+    { "path_glob": "{README.md,POP_TEMPLE.json,POP_MASTER_REGISTER.json,index.md,CRITICAL_FACTS.md,CHANGELOG.md,.gitignore}", "classification": "private_github" },
+    { "path_glob": "*/{README.md,_index.json}",                                 "classification": "private_github" },
+    { "path_glob": "log.md",                                                    "classification": "review_before_commit" }
+  ]
+}

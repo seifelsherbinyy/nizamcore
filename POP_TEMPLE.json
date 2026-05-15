@@ -1,0 +1,62 @@
+{
+  "schema_ref": "NIZAM__system/schemas/temple.schema.json",
+  "platform_version": "3.0.0",
+  "codename": "POP",
+  "user": "Seif Elsherbiny",
+  "created": "2026-05-15T14:17:30Z",
+  "principles": [
+    "recovery_first",
+    "local_first",
+    "capture_before_judge",
+    "machine_readable_continuity",
+    "three_inviolable_gates",
+    "dual_naming",
+    "vault_evolves_not_grows",
+    "vault_first_research",
+    "skills_are_encoded_paths",
+    "strategy_must_be_dynamic",
+    "long_horizon_rolls_to_tactical",
+    "finance_verifies_before_computes",
+    "health_advisory_not_diagnostic",
+    "family_strict_local",
+    "no_silent_operations"
+  ],
+  "gates": {
+    "HIMAYAH": "Privacy/protection — before any sync, commit, or external share, verify privacy classification.",
+    "SUKOON":  "Recovery — before any output-heavy session, check overload flags.",
+    "THABAT":  "Continuity — before session close, append to event ledger."
+  },
+  "modules": {
+    "TAFRIGH":      { "phase": 1, "persona": "NIZAM__system/personas/TAFRIGH.json" },
+    "SHURA":        { "phase": 1, "persona": "NIZAM__system/personas/SHURA.json" },
+    "NAQD":         { "phase": 1, "persona": "NIZAM__system/personas/NAQD.json" },
+    "SUKOON":       { "phase": 1, "persona": null, "note": "gate + folder, no module persona" },
+    "KABIR_SHERBO": { "phase": 2, "persona": null, "designed": true },
+    "MUNAWARA":     { "phase": 2, "persona": null, "designed": true },
+    "MAL":          { "phase": 2, "persona": null, "designed": true },
+    "BADAN":        { "phase": 2, "persona": null, "designed": true },
+    "AHEL":         { "phase": 3, "persona": null, "designed": true }
+  },
+  "orientation_files": ["index.md", "log.md", "SOUL.md", "CRITICAL_FACTS.md"],
+  "phase_2_folders": ["INTAJ","YAWMIYAT","QARAR","HIKMAH","NUR","JADWAL","HIFZ","KABIR_SHERBO","MUNAWARA","MAL","BADAN"],
+  "phase_3_folders": ["BASIRA","AHEL"],
+  "canonical_source_of_truth": "local POP folder at C:\\Users\\selsherb\\POP",
+  "mirrors": { "obsidian": "deferred_phase_2", "notion": "deferred_phase_2" },
+  "ledgers": {
+    "EVENT_LEDGER":    { "path": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",    "phase": 1, "privacy": "review_before_commit" },
+    "DECISION_LEDGER": { "path": "NIZAM__system/ledgers/DECISION_LEDGER.jsonl", "phase": 1, "privacy": "review_before_commit" },
+    "LEARNING_LEDGER": { "path": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl", "phase": 1, "privacy": "review_before_commit" },
+    "STRATEGY_LEDGER": { "path": "NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl", "phase": 2, "privacy": "strict_local" },
+    "BATTLE_LEDGER":   { "path": "NIZAM__system/ledgers/BATTLE_LEDGER.jsonl",   "phase": 2, "privacy": "strict_local" },
+    "FINANCE_LEDGER":  { "path": "NIZAM__system/ledgers/FINANCE_LEDGER.jsonl",  "phase": 2, "privacy": "strict_local" },
+    "BODY_LEDGER":     { "path": "NIZAM__system/ledgers/BODY_LEDGER.jsonl",     "phase": 2, "privacy": "strict_local" },
+    "FAMILY_LEDGER":   { "path": "NIZAM__system/ledgers/FAMILY_LEDGER.jsonl",   "phase": 3, "privacy": "strict_local" }
+  },
+  "external_pattern_sources": [
+    { "name": "eugeniughelbur/obsidian-second-brain", "license": "MIT", "url": "https://github.com/eugeniughelbur/obsidian-second-brain", "stars": 1100, "cherry_picked": ["ai_first_frontmatter","orientation_files","skill_as_markdown","vault_first_research","vault_evolves_not_grows"] },
+    { "name": "jamesmcroft/obsidian-ai-second-brain", "license": "MIT", "url": "https://github.com/jamesmcroft/obsidian-ai-second-brain", "cherry_picked": ["skills_are_encoded_paths_principle","optional_PARA_overlay"] },
+    { "name": "NicholasSpisak/second-brain", "license": "see-repo", "url": "https://github.com/NicholasSpisak/second-brain", "stars": 323, "cherry_picked": ["karpathy_llm_wiki_pattern"] },
+    { "name": "SESHAT (Seif's prior local project)", "license": "n/a", "url": null, "cherry_picked": ["dual_naming","_index_json","temple_json_master","three_gates","manifest_archive","jsonl_ledgers","iso8601_z"] },
+    { "name": "nizamcore (Seif's prior private repo)", "license": "private", "url": "https://github.com/seifelsherbinyy/nizamcore", "cherry_picked": "TBD_in_phase_1_5" }
+  ]
+}

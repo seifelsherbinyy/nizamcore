@@ -1,0 +1,13 @@
+{
+  "folder": "SUKOON__recovery_first",
+  "symbol": "SUKOON",
+  "meaning_ar": "calm / stillness",
+  "purpose": "Recovery-first foundation. Tracks sleep / energy / stress / mood. Emits overload flags that downshift planning load across all modules.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["signals/YYYY-MM-DD.md (daily recovery signal logs)", "overload_flags.jsonl (append-only flag stream)"],
+  "skill_commands": ["/sukoon-check"],
+  "subfolders": ["signals"],
+  "gate_authority": "SUKOON gate uses overload_flags.jsonl to red/yellow/green other modules.",
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

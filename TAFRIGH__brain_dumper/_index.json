@@ -1,0 +1,12 @@
+{
+  "folder": "TAFRIGH__brain_dumper",
+  "symbol": "TAFRIGH",
+  "meaning_ar": "unloading / emptying / discharging",
+  "purpose": "Daily/twice-daily mental decluttering capture and triage. Capture-first, no judgment.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["raw/*.md (timestamped captures, gitignored)", "triaged/*.md (sorted into 6 buckets, gitignored)"],
+  "skill_commands": ["/tafrigh-capture", "/tafrigh-triage"],
+  "subfolders": ["raw", "triaged"],
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

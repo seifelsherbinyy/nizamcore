@@ -1,0 +1,18 @@
+{
+  "folder": "AHEL__family_network",
+  "symbol": "AHEL",
+  "meaning_ar": "family / kin",
+  "phase": 3,
+  "purpose": "Family network steward. Person cards, support ledger, connection cadence, important dates. STRICTEST privacy in POP.",
+  "privacy_level": "strict_local_maximum",
+  "allowed_contents": ["family_tree/<person_id>.md","support_ledger/<person_id>__<date>.md","connection_cadence/<date>__cadence_check.md","important_dates/<person_id>__<label>.md"],
+  "skill_commands": ["/ahel-add-person","/ahel-support-log","/ahel-connection-cadence"],
+  "subfolders": ["family_tree","support_ledger","connection_cadence","important_dates"],
+  "doctrine_doc": "NIZAM__system/docs/AHEL_FAMILY_PRIVACY_RULES.md",
+  "persona": "NIZAM__system/personas/AHEL.json",
+  "gitignore_pattern": "AHEL__family_network/** EXCEPT README.md and _index.json",
+  "cadence_overload_protection": "max 3 people per week surfaced by /ahel-connection-cadence",
+  "log_md_policy": "sanitized only — never names, relations, or details",
+  "last_updated": "2026-05-15T16:00:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

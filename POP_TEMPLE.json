@@ -1,6 +1,6 @@
 {
   "schema_ref": "NIZAM__system/schemas/temple.schema.json",
-  "platform_version": "3.0.0",
+  "platform_version": "3.2.0",
   "codename": "POP",
   "user": "Seif Elsherbiny",
   "created": "2026-05-15T14:17:30Z",
@@ -42,7 +42,8 @@
     "NUR":          { "phase": 2, "persona": null, "scaffolded": "shell_only" },
     "JADWAL":       { "phase": 2, "persona": null, "scaffolded": "shell_only" },
     "HIFZ":         { "phase": 2, "persona": null, "scaffolded": "shell_only" },
-    "AHEL":         { "phase": 3, "persona": null, "designed": true }
+    "AHEL":         { "phase": 3, "persona": "NIZAM__system/personas/AHEL.json", "scaffolded": true, "live": true, "privacy": "strict_local_maximum" },
+    "BASIRA":       { "phase": 3, "persona": null, "scaffolded": "shell_only" }
   },
   "orientation_files": ["index.md", "log.md", "SOUL.md", "CRITICAL_FACTS.md"],
   "phase_2_folders": ["INTAJ","YAWMIYAT","QARAR","HIKMAH","NUR","JADWAL","HIFZ","KABIR_SHERBO","MUNAWARA","MAL","BADAN"],

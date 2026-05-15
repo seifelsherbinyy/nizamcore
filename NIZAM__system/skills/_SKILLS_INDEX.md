@@ -55,10 +55,20 @@ Each skill is an encoded set of paths, conventions, and procedures — not a fre
 |---|---|---|
 | [qarar-decide](qarar-decide.md) | `/qarar-decide <topic>` | ADR-style decision record |
 
-## Phase 3 — family + visualization + agents (designed, not yet scaffolded)
-- AHEL: `/ahel-add-person`, `/ahel-support-log`, `/ahel-connection-cadence`
-- Scheduled agents: morning capture prompt, nightly daily-log roll-up, Sunday recap, monthly milestone, quarterly plan, annual review.
-- Cross-CLI builds (Codex/Gemini/OpenCode): POP skill files are platform-agnostic markdown.
+## Phase 3 — family network (3 skills, scaffolded + live)
+
+### AHEL (family — strictest privacy)
+| Skill | Trigger | Purpose |
+|---|---|---|
+| [ahel-add-person](ahel-add-person.md) | `/ahel-add-person` | Create or update a person card (strict_local_maximum) |
+| [ahel-support-log](ahel-support-log.md) | `/ahel-support-log <person_id>` | Log support promise/delivery; recovery_cost mandatory |
+| [ahel-connection-cadence](ahel-connection-cadence.md) | `/ahel-connection-cadence` | Surface ≤3 overdue people/week; SUKOON-aware |
+
+## Phase 3 — scheduled agents (designed; runner choice pending)
+See [`NIZAM__system/docs/SCHEDULED_AGENTS.md`](../docs/SCHEDULED_AGENTS.md) for full cadence map + runner options (Windows Task Scheduler / claude-code-router / GitHub Actions). Recovery-first override is mandatory across all runner choices.
+
+## Phase 3 — cross-CLI portability (designed)
+See [`NIZAM__system/docs/CROSS_CLI_BUILD.md`](../docs/CROSS_CLI_BUILD.md). POP skills are already platform-agnostic markdown. Build shim script for Codex / Gemini / OpenCode pending if needed.
 
 ## Skill design principles
 [`NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md`](../docs/SKILL_DESIGN_PRINCIPLES.md)

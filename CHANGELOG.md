@@ -1,5 +1,17 @@
 # POP — Changelog
 
+## v3.2.0 — 2026-05-15 (Phase 3 scaffold)
+- 2 new top-level folders: AHEL__family_network (live, strictest privacy), BASIRA__future_visualization (shell only).
+- 1 new persona: AHEL.
+- 3 new skills: ahel-add-person, ahel-support-log, ahel-connection-cadence.
+- 2 new schemas: family_person, family_support_event.
+- 4 new templates: person_card, support_event, connection_cadence, important_date.
+- 2 new doctrine docs: SCHEDULED_AGENTS, CROSS_CLI_BUILD.
+- AHEL/** fully gitignored except README.md and _index.json.
+- FAMILY_LEDGER.jsonl touched (gitignored, strict_local).
+- Updated POP_TEMPLE platform_version to 3.2.0, with AHEL + BASIRA modules registered.
+- POP is now feature-complete at the framework level. Content awaits user fill.
+
 ## v3.1.0 — 2026-05-15 (Phase 2 scaffold)
 - 11 new top-level folders: KABIR_SHERBO, MUNAWARA, MAL, BADAN, INTAJ, YAWMIYAT, QARAR, HIKMAH, NUR, JADWAL, HIFZ.
 - 4 new module personas: KABIR_SHERBO, MUNAWARA, MAL, BADAN.

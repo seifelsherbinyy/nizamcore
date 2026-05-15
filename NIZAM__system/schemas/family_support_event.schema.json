@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/family_support_event.schema.json",
+  "title": "AHEL FAMILY_LEDGER.jsonl support entry",
+  "type": "object",
+  "required": ["ts","person_id","support_type","promised_action","status"],
+  "properties": {
+    "ts": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "person_id": { "type": "string" },
+    "module": { "const": "AHEL" },
+    "privacy_level": { "const": "strict_local_maximum" },
+    "event_type": { "type": "string", "enum": ["support_promised","support_delivered","support_overdue","contact_made","important_date_acknowledged","support_completed"] },
+    "support_type": { "type": "string", "enum": ["emotional","financial","logistical","medical","social","spiritual","other"] },
+    "promised_action": { "type": "string", "description": "What we said we'd do, plain language" },
+    "deadline": { "type": ["string","null"], "format": "date" },
+    "status": { "type": "string", "enum": ["promised","in_progress","delivered","overdue","cancelled"] },
+    "emotional_load_1_10": { "type": ["integer","null"], "minimum": 1, "maximum": 10 },
+    "recovery_cost_estimate": { "type": "string", "enum": ["green","yellow","red"] },
+    "follow_up": { "type": ["string","null"] },
+    "summary": { "type": "string", "maxLength": 280 }
+  }
+}

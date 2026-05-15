@@ -1,0 +1,15 @@
+{
+  "folder": "BASIRA__future_visualization",
+  "symbol": "BASIRA",
+  "meaning_ar": "insight / vision",
+  "phase": 3,
+  "purpose": "Future visualization layer — graph view, dashboards, timeline, agentic visualization. Designed; implementation deferred until Phase 1+2+3 data accumulates.",
+  "privacy_level": "review_before_commit",
+  "allowed_contents": ["dashboards/*.md","graphs/*","timelines/*","specs/*.md"],
+  "skill_commands_planned": ["/basira-graph","/basira-timeline","/basira-dashboard"],
+  "subfolders_planned": ["dashboards","graphs","timelines","specs"],
+  "tooling_candidates": ["Obsidian Graph View","Dataview","Foam","Logseq Whiteboard","custom D3.js","ChatGPT Custom GPT visualization"],
+  "last_updated": "2026-05-15T16:00:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "scaffolding_status": "shell only — design pending real POP data accumulation"
+}

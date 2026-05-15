@@ -46,7 +46,9 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`JADWAL__notion_dashboards/`](JADWAL__notion_dashboards/) — Notion mirror (shell only — pending API setup)
 - [`HIFZ__github_version_control/`](HIFZ__github_version_control/) — repo automation (shell only)
 
-## Phase 3 — designed, not yet scaffolded
-- AHEL__family_network/ — family map, strictest privacy → [reference doc](NIZAM__system/docs/AHEL_FAMILY_PRIVACY_RULES.md)
-- BASIRA__future_visualization/ — graph/dashboard layer
+## Phase 3 — scaffolded + live
+- [`AHEL__family_network/`](AHEL__family_network/) — strictest privacy family map → [doctrine](NIZAM__system/docs/AHEL_FAMILY_PRIVACY_RULES.md)
+- [`BASIRA__future_visualization/`](BASIRA__future_visualization/) — graph/dashboard layer (shell only)
+- See [`NIZAM__system/docs/SCHEDULED_AGENTS.md`](NIZAM__system/docs/SCHEDULED_AGENTS.md) for daily/weekly/quarterly automation design.
+- See [`NIZAM__system/docs/CROSS_CLI_BUILD.md`](NIZAM__system/docs/CROSS_CLI_BUILD.md) for Codex/Gemini/OpenCode portability.
 - See [`PHASE_2_FOLDERS.md`](NIZAM__system/docs/PHASE_2_FOLDERS.md) and [`PHASE_3_FOLDERS.md`](NIZAM__system/docs/PHASE_3_FOLDERS.md).

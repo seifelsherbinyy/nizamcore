@@ -12,6 +12,8 @@ NAQD__brain_griller/sessions/
 SUKOON__recovery_first/signals/
 SUKOON__recovery_first/overload_flags.jsonl
 HAJR__quarantine/**
+!HAJR__quarantine/README.md
+!HAJR__quarantine/_index.json
 
 # ---- Orientation files containing identity ----
 SOUL.md

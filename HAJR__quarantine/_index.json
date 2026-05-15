@@ -1,0 +1,11 @@
+{
+  "folder": "HAJR__quarantine",
+  "symbol": "HAJR",
+  "meaning_ar": "isolation / quarantine",
+  "purpose": "Holding pen for uncertain / sensitive / malformed / unclassified files. Nothing leaves HAJR without explicit triage.",
+  "privacy_level": "strict_local",
+  "allowed_contents": ["anything that doesn't belong elsewhere yet"],
+  "policy": "Files enter HAJR via user action or a skill that doesn't know where else to route. Triage moves them out manually.",
+  "last_updated": "2026-05-15T14:17:30Z",
+  "registers_to": "POP_MASTER_REGISTER.json"
+}

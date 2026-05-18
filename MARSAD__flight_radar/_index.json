@@ -1,0 +1,40 @@
+{
+  "folder": "MARSAD__flight_radar",
+  "symbol": "MARSAD",
+  "meaning_ar": "مرصد",
+  "meaning_en": "observatory / watchtower",
+  "purpose": "Flight price monitoring and forecasting pipeline — CAI to USA corridor, Business Class and Premium Economy, post-Ramadan 2027",
+  "privacy_level": "private_github",
+  "data_privacy_level": "strict_local",
+  "allowed_contents": [
+    "Python pipeline source (radar/)",
+    "Skill files (via NIZAM__system/skills/)",
+    "JSON schema (via NIZAM__system/schemas/)",
+    "requirements.txt",
+    ".env.example",
+    "tests/",
+    "README.md",
+    "_index.json"
+  ],
+  "gitignored_contents": [
+    "data/",
+    "alerts/",
+    ".env"
+  ],
+  "skill_commands": [
+    "/marsad-discover",
+    "/marsad-monitor",
+    "/marsad-alert",
+    "/marsad-forecast"
+  ],
+  "pipeline_stages": [
+    "DISCOVER — baseline collection (runs once on init)",
+    "MONITOR — daily delta (06:00 UTC scheduled)",
+    "ALERT — BUY_SIGNAL detection (runs after MONITOR)",
+    "FORECAST — trend model update (runs after ALERT)"
+  ],
+  "last_updated": "2026-05-18T00:00:00Z",
+  "registers_to": "POP_MASTER_REGISTER.json",
+  "module_status": "active",
+  "schema_version": "1.0"
+}

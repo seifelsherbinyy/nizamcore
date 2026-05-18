@@ -64,6 +64,17 @@ Each skill is an encoded set of paths, conventions, and procedures — not a fre
 | [ahel-support-log](ahel-support-log.md) | `/ahel-support-log <person_id>` | Log support promise/delivery; recovery_cost mandatory |
 | [ahel-connection-cadence](ahel-connection-cadence.md) | `/ahel-connection-cadence` | Surface ≤3 overdue people/week; SUKOON-aware |
 
+## MARSAD — Flight Intelligence Module (additive module, all phases)
+
+| Skill | Module | Trigger | Purpose |
+|---|---|---|---|
+| [marsad-discover](marsad-discover.md) | MARSAD | `/marsad-discover` | Stage 1: baseline collection — seed full price matrix for CAI-to-USA corridor |
+| [marsad-monitor](marsad-monitor.md) | MARSAD | `/marsad-monitor` | Stage 2: daily delta — fetch current prices, calculate change vs previous |
+| [marsad-alert](marsad-alert.md) | MARSAD | `/marsad-alert` | Stage 3: BUY_SIGNAL detection — price drop threshold + historical percentile + confidence gate |
+| [marsad-forecast](marsad-forecast.md) | MARSAD | `/marsad-forecast` | Stage 4: trend model — SMA→EWM→LR per observation count, 7/14/30-day horizons |
+
+MARSAD is an additive module — does not modify any Phase 1/2/3 stable skill or file. Data is strict_local (gitignored). Entry point: `MARSAD__flight_radar/radar/main.py`. Scheduled: 06:00 UTC daily (MONITOR → ALERT → FORECAST). Discover runs once on init.
+
 ## Phase 3 — scheduled agents (designed; runner choice pending)
 See [`NIZAM__system/docs/SCHEDULED_AGENTS.md`](../docs/SCHEDULED_AGENTS.md) for full cadence map + runner options (Windows Task Scheduler / claude-code-router / GitHub Actions). Recovery-first override is mandatory across all runner choices.
 

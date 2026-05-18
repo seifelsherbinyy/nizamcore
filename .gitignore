@@ -93,6 +93,21 @@ Thumbs.db
 *.pem
 *.key
 
+# ---- MARSAD flight intelligence — data and credentials are strict_local ----
+# flight_prices.json is private_github (price history, no credentials) — committable
+# Ignore backups/ dir and tmp files; allow flight_prices.json through
+MARSAD__flight_radar/data/backups/
+MARSAD__flight_radar/data/*.tmp
+MARSAD__flight_radar/data/*.bak
+MARSAD__flight_radar/alerts/
+MARSAD__flight_radar/.env
+# Python cache / build artifacts inside MARSAD
+MARSAD__flight_radar/__pycache__/
+MARSAD__flight_radar/**/__pycache__/
+MARSAD__flight_radar/*.pyc
+MARSAD__flight_radar/**/*.pyc
+MARSAD__flight_radar/.pytest_cache/
+
 # ---- MAKHZAN archive: keep structure, but archived raw content respects upstream rules ----
 # (Snapshots inside MAKHZAN__archive may contain mirrored copies of strict-local files.
 # Treat snapshot contents as inheriting the privacy of their original location.)

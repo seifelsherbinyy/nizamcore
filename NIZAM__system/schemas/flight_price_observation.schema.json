@@ -1,0 +1,266 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/flight_price_observation.schema.json",
+  "title": "MARSAD flight price observation store",
+  "description": "Append-only time-series store for CAI-to-USA flight price monitoring. Schema version 1.0.",
+  "type": "object",
+  "required": ["schema_version", "module", "created_at", "last_updated", "metadata", "routes"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version — increment on breaking changes; snapshot to MAKHZAN before changing",
+      "example": "1.0"
+    },
+    "module": {
+      "type": "string",
+      "const": "MARSAD"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC — when the store was first initialised"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC — updated on every write"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["travel_window_start", "travel_window_end", "origin", "cabins", "destinations"],
+      "properties": {
+        "travel_window_start": {
+          "type": "string",
+          "format": "date",
+          "description": "Post-Ramadan 2027 window start — default 2027-03-15, update when exact Ramadan end date confirmed"
+        },
+        "travel_window_end": {
+          "type": "string",
+          "format": "date",
+          "example": "2027-09-30"
+        },
+        "origin": {
+          "type": "string",
+          "const": "CAI"
+        },
+        "cabins": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["BUSINESS", "PREMIUM_ECONOMY"] }
+        },
+        "destinations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "USA major airport IATA codes"
+        },
+        "carriers_premium_economy_unavailable": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of 'CARRIER/ROUTE' strings where Premium Economy is confirmed unavailable"
+        }
+      }
+    },
+    "routes": {
+      "type": "object",
+      "description": "Keyed by route string e.g. 'CAI-JFK'",
+      "additionalProperties": {
+        "$ref": "#/definitions/route_entry"
+      }
+    }
+  },
+  "definitions": {
+    "route_entry": {
+      "type": "object",
+      "required": ["origin", "destination", "observations"],
+      "properties": {
+        "origin": { "type": "string", "const": "CAI" },
+        "destination": { "type": "string" },
+        "observations": {
+          "type": "object",
+          "description": "Keyed by series string e.g. 'EK-BUSINESS'",
+          "additionalProperties": {
+            "$ref": "#/definitions/carrier_cabin_series"
+          }
+        }
+      }
+    },
+    "carrier_cabin_series": {
+      "type": "object",
+      "required": ["carrier", "cabin", "route_key", "observation_series", "forecast"],
+      "properties": {
+        "carrier": {
+          "type": "string",
+          "description": "Carrier IATA code e.g. 'EK'"
+        },
+        "cabin": {
+          "type": "string",
+          "enum": ["BUSINESS", "PREMIUM_ECONOMY"]
+        },
+        "route_key": {
+          "type": "string",
+          "description": "e.g. 'CAI-JFK'"
+        },
+        "premium_economy_status": {
+          "type": "string",
+          "enum": ["available", "unavailable", "unknown"],
+          "default": "unknown"
+        },
+        "observation_series": {
+          "type": "array",
+          "description": "APPEND-ONLY — new observations are appended, existing entries are never modified or deleted",
+          "items": { "$ref": "#/definitions/observation" }
+        },
+        "forecast": { "$ref": "#/definitions/forecast_block" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "observation_id", "observation_type", "observed_at",
+        "outbound_date", "return_date", "nights",
+        "price_usd", "outbound_duration_hours", "return_duration_hours",
+        "outbound_stops", "return_stops",
+        "outbound_routing", "return_routing",
+        "source", "alert_flag", "data_quality"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this observation"
+        },
+        "observation_type": {
+          "type": "string",
+          "enum": ["baseline", "daily", "manual", "historical_seed"],
+          "description": "baseline: first-run collection | daily: scheduled monitor | manual: user-triggered | historical_seed: imported from external history source"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when the price was fetched"
+        },
+        "outbound_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Departure date from CAI"
+        },
+        "return_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Return date to CAI"
+        },
+        "nights": {
+          "type": "integer",
+          "minimum": 9,
+          "maximum": 14,
+          "description": "Trip duration in nights — must pass routing constraint (9–14)"
+        },
+        "price_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Round-trip price in USD — canonical currency"
+        },
+        "price_egp": {
+          "type": ["number", "null"],
+          "description": "EGP equivalent — supplementary only, not used for delta calculation"
+        },
+        "price_eur": {
+          "type": ["number", "null"],
+          "description": "EUR equivalent — supplementary only"
+        },
+        "outbound_duration_hours": {
+          "type": "number",
+          "maximum": 30,
+          "description": "One-way outbound flight time — must be ≤ 30 hours per routing constraint"
+        },
+        "return_duration_hours": {
+          "type": "number",
+          "maximum": 30,
+          "description": "One-way return flight time — must be ≤ 30 hours per routing constraint (INDEPENDENT of outbound)"
+        },
+        "outbound_stops": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "return_stops": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outbound_routing": {
+          "type": "string",
+          "description": "e.g. 'CAI-DXB-JFK'"
+        },
+        "return_routing": {
+          "type": "string",
+          "description": "e.g. 'JFK-DXB-CAI'"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["amadeus", "ita_matrix", "kiwi", "google_flights", "manual", "historical_seed"]
+        },
+        "delta_from_previous_usd": {
+          "type": ["number", "null"],
+          "description": "Price change from previous observation in USD. Null for first observation in series."
+        },
+        "delta_pct": {
+          "type": ["number", "null"],
+          "description": "Percentage price change from previous observation. Null for first observation."
+        },
+        "alert_flag": {
+          "type": "boolean",
+          "description": "True when this observation triggered a Stage 3 ALERT"
+        },
+        "data_quality": {
+          "type": "string",
+          "enum": ["confirmed", "estimated", "unavailable"],
+          "description": "confirmed: from API response | estimated: derived/extrapolated | unavailable: placeholder"
+        }
+      }
+    },
+    "forecast_block": {
+      "type": "object",
+      "required": [
+        "observation_count", "forecast_confidence", "buy_signal",
+        "horizon_7d", "horizon_14d", "horizon_30d"
+      ],
+      "properties": {
+        "observation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "forecast_confidence": {
+          "type": "string",
+          "enum": ["LOW", "MEDIUM", "HIGH"],
+          "description": "LOW: < 7 obs (cold start — BUY_SIGNAL hard-gated to False) | MEDIUM: 7–29 | HIGH: 30+"
+        },
+        "last_forecasted_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "horizon_7d": { "$ref": "#/definitions/price_range" },
+        "horizon_14d": { "$ref": "#/definitions/price_range" },
+        "horizon_30d": { "$ref": "#/definitions/price_range" },
+        "buy_signal": {
+          "type": "boolean",
+          "description": "True ONLY when: (1) current < 7d_forecast_low AND (2) current < historical_20th_percentile AND (3) confidence ≥ MEDIUM"
+        },
+        "historical_20th_percentile": {
+          "type": ["number", "null"],
+          "description": "20th percentile of all historical observations for this series"
+        },
+        "model_used": {
+          "type": ["string", "null"],
+          "enum": ["sma", "ewm", "lr", null],
+          "description": "sma: < 7 obs | ewm: 7–29 obs | lr: 30+ obs"
+        }
+      }
+    },
+    "price_range": {
+      "type": "object",
+      "properties": {
+        "low": { "type": ["number", "null"], "description": "Forecast lower bound in USD" },
+        "mid": { "type": ["number", "null"], "description": "Forecast central estimate in USD" },
+        "high": { "type": ["number", "null"], "description": "Forecast upper bound in USD" }
+      }
+    }
+  }
+}

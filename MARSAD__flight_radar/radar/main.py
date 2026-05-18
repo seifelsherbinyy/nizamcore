@@ -9,6 +9,7 @@ Commands:
   forecast   — Stage 4: trend model update
   run-all    — Run all four stages in sequence
   schedule   — Start APScheduler daemon (06:00 UTC daily)
+  dashboard  — Live executive dashboard at http://localhost:7329
   status     — Print current store summary
   validate   — Validate credentials and configuration
 
@@ -83,6 +84,12 @@ def cmd_run_all(args: argparse.Namespace) -> int:
     run_forecast()
 
     print("\nAll stages complete.")
+    return 0
+
+
+def cmd_dashboard(args: argparse.Namespace) -> int:
+    from radar.dashboard import run_dashboard
+    run_dashboard(host=args.host, port=args.port)
     return 0
 
 
@@ -165,6 +172,12 @@ def main() -> int:
     p_all = subparsers.add_parser("run-all", help="Run monitor + alert + forecast in sequence")
     p_all.add_argument("--with-discover", action="store_true", help="Also run discover first")
     p_all.set_defaults(func=cmd_run_all)
+
+    # dashboard
+    p_dash = subparsers.add_parser("dashboard", help="Live executive dashboard at http://localhost:7329")
+    p_dash.add_argument("--port", type=int, default=7329, help="HTTP port (default: 7329)")
+    p_dash.add_argument("--host", default="127.0.0.1", help="Bind host (default: 127.0.0.1)")
+    p_dash.set_defaults(func=cmd_dashboard)
 
     # schedule
     p_schedule = subparsers.add_parser("schedule", help="Start scheduler daemon (06:00 UTC daily)")

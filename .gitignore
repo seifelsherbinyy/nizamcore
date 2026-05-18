@@ -94,7 +94,9 @@ Thumbs.db
 *.key
 
 # ---- MARSAD flight intelligence — data and credentials are strict_local ----
+# flight_prices.json is private_github (price history, no credentials) — committable
 MARSAD__flight_radar/data/
+!MARSAD__flight_radar/data/flight_prices.json
 MARSAD__flight_radar/alerts/
 MARSAD__flight_radar/.env
 # Python cache / build artifacts inside MARSAD

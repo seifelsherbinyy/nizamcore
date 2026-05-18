@@ -10,13 +10,23 @@ load_dotenv(_MODULE_ROOT / ".env")
 
 
 # ── Data source ───────────────────────────────────────────────────────────────
-DATA_SOURCE: str = os.getenv("DATA_SOURCE", "amadeus")
-SECONDARY_SOURCE: str = os.getenv("SECONDARY_SOURCE", "kiwi")
+DATA_SOURCE: str = os.getenv("DATA_SOURCE", "serpapi")
+SECONDARY_SOURCE: str = os.getenv("SECONDARY_SOURCE", "")
 
-# Amadeus API
+# SerpApi (Google Flights) — primary source
+SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")
+# Free tier: 250 searches/month. Paid ($25/mo): 1,000/month.
+# Full daily monitoring = 48 searches/day — paid tier required for full coverage.
+# Set SERPAPI_PRIORITY_ONLY=true to restrict to priority destinations on free tier.
+SERPAPI_PRIORITY_ONLY: bool = os.getenv("SERPAPI_PRIORITY_ONLY", "false").lower() == "true"
+
+# Priority destinations for free-tier usage (8 routes × 2 cabins = 16 searches/day)
+PRIORITY_DESTINATIONS: list[str] = ["JFK", "LAX", "MIA", "ORD", "IAD", "BOS", "EWR", "ATL"]
+
+# Amadeus API (disabled — portal shut down July 2025)
 AMADEUS_CLIENT_ID: str = os.getenv("AMADEUS_CLIENT_ID", "")
 AMADEUS_CLIENT_SECRET: str = os.getenv("AMADEUS_CLIENT_SECRET", "")
-AMADEUS_ENV: str = os.getenv("AMADEUS_ENV", "test")  # test | production
+AMADEUS_ENV: str = os.getenv("AMADEUS_ENV", "test")
 
 # Kiwi Tequila
 KIWI_API_KEY: str = os.getenv("KIWI_API_KEY", "")
@@ -94,7 +104,10 @@ SCHEMA_VERSION: str = "1.0"
 def validate_credentials() -> list[str]:
     """Return list of missing required credentials for the configured data source."""
     missing = []
-    if DATA_SOURCE == "amadeus":
+    if DATA_SOURCE == "serpapi":
+        if not SERPAPI_KEY:
+            missing.append("SERPAPI_KEY")
+    elif DATA_SOURCE == "amadeus":
         if not AMADEUS_CLIENT_ID:
             missing.append("AMADEUS_CLIENT_ID")
         if not AMADEUS_CLIENT_SECRET:

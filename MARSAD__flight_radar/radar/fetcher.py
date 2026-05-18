@@ -25,6 +25,7 @@ from typing import Optional
 from radar.config import DATA_SOURCE, MAX_REQUESTS_PER_SESSION
 from radar.constraints import apply_constraints, FlightItinerary
 from radar.sources.base import FlightOffer, SourceResult
+from radar.sources.serpapi_source import SerpApiSource
 from radar.sources.amadeus_source import AmadeusSource
 from radar.sources.ita_matrix_source import ITAMatrixSource
 from radar.sources.kiwi_source import KiwiSource
@@ -35,15 +36,17 @@ logger = logging.getLogger(__name__)
 
 def _build_source():
     """Return the configured primary source instance."""
-    if DATA_SOURCE == "amadeus":
+    if DATA_SOURCE == "serpapi":
+        return SerpApiSource()
+    elif DATA_SOURCE == "amadeus":
         return AmadeusSource()
     elif DATA_SOURCE == "kiwi":
         return KiwiSource()
     elif DATA_SOURCE == "ita_matrix":
         return ITAMatrixSource()
     else:
-        logger.warning("Unknown DATA_SOURCE=%r — defaulting to AmadeusSource", DATA_SOURCE)
-        return AmadeusSource()
+        logger.warning("Unknown DATA_SOURCE=%r — defaulting to SerpApiSource", DATA_SOURCE)
+        return SerpApiSource()
 
 
 def fetch_best_price(

@@ -7,8 +7,11 @@ python-dotenv>=1.0.0
 pydantic>=2.0.0
 requests>=2.31.0
 
-# Primary data source — Amadeus for Developers API (SWAPPABLE_DEFAULT: primary)
-amadeus>=8.0.0
+# Primary data source — SerpApi Google Flights (SWAPPABLE_DEFAULT: primary)
+google-search-results>=2.4.0
+
+# Amadeus for Developers API — DISABLED (portal shut down July 2025), kept for reference
+# amadeus>=8.0.0
 
 # Secondary / scraping sources (SWAPPABLE_DEFAULT: comment out if not using scraping)
 playwright>=1.40.0          # JS-rendered pages (Google Flights, ITA Matrix, airline sites)

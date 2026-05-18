@@ -298,9 +298,37 @@ class SerpApiSource(BaseFlightSource):
 
     @staticmethod
     def _sample_dates(window_start: date, window_end: date, n: int) -> list[date]:
-        """Return n evenly-spaced dates within the travel window."""
-        total_days = (window_end - window_start).days
+        """
+        Return up to n sample departure dates, probing from window_start forward.
+
+        Caps at the current booking horizon (~10 months / 305 days from today)
+        so we never query dates that Google Flights hasn't opened yet.
+        As months pass the horizon advances and more dates become available.
+        """
+        from datetime import date as date_cls
+        today = date_cls.today()
+        horizon = today + timedelta(days=305)
+
+        effective_end = min(window_end, horizon)
+        if effective_end < window_start:
+            # Entire window is beyond booking horizon — nothing available yet
+            return []
+
+        total_days = (effective_end - window_start).days
         if total_days <= 0:
             return [window_start]
-        step = max(1, total_days // (n + 1))
-        return [window_start + timedelta(days=step * (i + 1)) for i in range(n)]
+
+        # Space samples evenly across the AVAILABLE portion of the window
+        step = max(7, total_days // (n + 1))  # minimum 7-day spacing
+        dates = []
+        for i in range(n):
+            d = window_start + timedelta(days=step * (i + 1))
+            if d > effective_end:
+                break
+            dates.append(d)
+
+        # Always include window_start itself as first probe
+        if window_start not in dates:
+            dates.insert(0, window_start)
+
+        return dates[:n]

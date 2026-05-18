@@ -63,15 +63,17 @@ def run_discover(
     target_carriers = carriers or ALL_CARRIERS
 
     # Determine which combinations already have a baseline observation
-    existing_keys = {
-        f"{k['route_key']}-{k['series_key']}"
+    covered_combos = {
+        (k["origin"], k["destination"], k["cabin"])
         for k in get_all_series_keys()
         if k["observation_count"] > 0
     }
 
     combinations = generate_search_combinations()
-    pending = [c for c in combinations if f"{c['origin']}-{c['destination']}-{c['cabin'].upper()}" not in
-               {k.replace("-", "-", 1) for k in existing_keys}]  # rough dedup
+    pending = [
+        c for c in combinations
+        if (c["origin"], c["destination"].upper(), c["cabin"].upper()) not in covered_combos
+    ]
 
     logger.info(
         "DISCOVER: %d total combinations, %d pending baseline (%d already have data)",
@@ -90,7 +92,7 @@ def run_discover(
         }
 
     results = fetch_all_combinations(
-        combinations=combinations,
+        combinations=pending,
         window_start=window_start,
         window_end=window_end,
         carriers=target_carriers,

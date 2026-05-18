@@ -1,0 +1,38 @@
+# MARSAD — NIZAM Flight Radar dependencies
+# Versions current as of 2026-05-18 — verify against PyPI before install
+# SWAPPABLE_DEFAULT labels indicate replaceable components
+
+# Core
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+requests>=2.31.0
+
+# Primary data source — Amadeus for Developers API (SWAPPABLE_DEFAULT: primary)
+amadeus>=8.0.0
+
+# Secondary / scraping sources (SWAPPABLE_DEFAULT: comment out if not using scraping)
+playwright>=1.40.0          # JS-rendered pages (Google Flights, ITA Matrix, airline sites)
+beautifulsoup4>=4.12.0      # HTML parsing for static pages
+lxml>=4.9.0                 # Fast HTML parser for BeautifulSoup
+
+# Forecasting and analytics (SWAPPABLE_DEFAULT: statsmodels for advanced models)
+pandas>=2.1.0
+numpy>=1.26.0
+# statsmodels>=0.14.0       # Uncomment for Holt-Winters exponential smoothing
+
+# Scheduling (SWAPPABLE_DEFAULT: external cron — remove APScheduler if using cron)
+APScheduler>=3.10.0
+
+# Console output
+rich>=13.0.0
+
+# Development / testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Optional: Slack alerts (uncomment if ALERT_DELIVERY=slack)
+# slack-sdk>=3.25.0
+
+# Install notes:
+#   pip install -r requirements.txt
+#   playwright install chromium    # required if using playwright sources

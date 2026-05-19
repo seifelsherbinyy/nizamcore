@@ -77,18 +77,15 @@ NIZAM__system/
     └── marsad-forecast.md    (NEW)
 ```
 
-## Data files (strict_local — never committed)
+## Data files
 
-```
-MARSAD__flight_radar/
-├── data/
-│   ├── flight_prices.json     (primary data store — append-only)
-│   ├── flight_prices.tmp      (in-flight write buffer — deleted after rename)
-│   └── backups/               (daily snapshots before monitor run)
-│       └── YYYY-MM-DDTHH-MM-SSZ.json
-└── alerts/
-    └── radar_alerts.json      (alert log — append-only)
-```
+| File | Privacy | Committed to Git |
+|---|---|---|
+| `data/flight_prices.json` | private_github | **Yes** — price history, no credentials |
+| `data/flight_prices.tmp` | strict_local | No — transient write buffer |
+| `data/backups/` | strict_local | No — daily pre-monitor snapshots |
+| `alerts/radar_alerts.json` | strict_local | No — alert log |
+| `.env` | strict_local | No — credentials |
 
 ## Routing Constraints
 

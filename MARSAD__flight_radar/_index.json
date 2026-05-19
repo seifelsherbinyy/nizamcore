@@ -17,9 +17,14 @@
     "_index.json"
   ],
   "gitignored_contents": [
-    "data/",
+    "data/backups/",
+    "data/*.tmp",
+    "data/*.bak",
     "alerts/",
     ".env"
+  ],
+  "committed_data_files": [
+    "data/flight_prices.json  (private_github — price history, no credentials)"
   ],
   "skill_commands": [
     "/marsad-discover",

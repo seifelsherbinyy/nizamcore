@@ -95,6 +95,7 @@ class SerpApiSource(BaseFlightSource):
                     ret_date=ret_date,
                     travel_class=travel_class,
                     cabin=cabin,
+                    carriers=carriers,
                 )
                 all_offers.extend(offers)
                 errors.extend(errs)
@@ -118,6 +119,7 @@ class SerpApiSource(BaseFlightSource):
         ret_date: date,
         travel_class: int,
         cabin: str,
+        carriers: Optional[list[str]] = None,
     ) -> tuple[list[FlightOffer], list[str]]:
         """Single SerpApi call with exponential backoff on rate limit."""
         params = {
@@ -133,6 +135,9 @@ class SerpApiSource(BaseFlightSource):
             "hl": "en",
             "api_key": SERPAPI_KEY,
         }
+        if carriers:
+            # SerpApi Google Flights: include_airlines filters to specific IATA codes
+            params["include_airlines"] = ",".join(carriers)
 
         for attempt in range(4):
             try:

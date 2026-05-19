@@ -8,6 +8,7 @@ Commands:
   alert      — Stage 3: price drop signal detection
   forecast   — Stage 4: trend model update
   run-all    — Run all four stages in sequence
+  seed       — Stage 0: import historical price seed from CSV
   schedule   — Start APScheduler daemon (06:00 UTC daily)
   dashboard  — Live executive dashboard at http://localhost:7329
   status     — Print current store summary
@@ -125,6 +126,43 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.seed import import_from_csv, generate_seed_template, seed_status
+    from pathlib import Path
+
+    if args.template:
+        generate_seed_template(Path(args.template))
+        print(f"Seed template written to {args.template}")
+        return 0
+
+    if args.status:
+        status = seed_status()
+        if not status:
+            print("No historical seed observations found.")
+        else:
+            for key, data in status.items():
+                print(f"  {key}: {data['seed_observations']} seed / {data['total_observations']} total")
+        return 0
+
+    if not args.file:
+        print("Error: --file required. Use --template to generate a CSV template first.")
+        return 1
+
+    stats = import_from_csv(Path(args.file), dry_run=args.dry_run)
+    if "error" in stats:
+        print(f"SEED error: {stats['error']}")
+        return 1
+    print(
+        f"\nSEED: {stats['rows_imported']} imported, {stats['rows_filtered']} filtered, "
+        f"{stats['rows_duplicate']} duplicate, {stats['rows_error']} errors "
+        f"(from {stats['rows_read']} rows)"
+    )
+    if stats["filter_reasons"]:
+        for reason in stats["filter_reasons"]:
+            print(f"  filtered — {reason}")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     missing = validate_credentials()
     if missing:
@@ -186,6 +224,14 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical price seed from CSV")
+    p_seed.add_argument("--file", help="Path to CSV with historical price data")
+    p_seed.add_argument("--template", metavar="PATH", help="Generate blank CSV template at this path")
+    p_seed.add_argument("--dry-run", action="store_true", help="Preview without writing to store")
+    p_seed.add_argument("--status", action="store_true", help="Show seed observation counts per series")
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

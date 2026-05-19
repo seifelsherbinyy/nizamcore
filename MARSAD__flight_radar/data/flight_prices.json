@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "module": "MARSAD",
   "created_at": "2026-05-18T10:52:55.789906Z",
-  "last_updated": "2026-05-18T11:32:03.391217Z",
+  "last_updated": "2026-05-19T07:48:54.595848Z",
   "metadata": {
     "travel_window_start": "2027-03-15",
     "travel_window_end": "2027-09-30",
@@ -84,10 +84,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "f5e33c73-21d0-482d-b66b-e56bf3992e50",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:30:11.837356Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 2643.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 12.0,
+              "return_duration_hours": 6.0,
+              "outbound_stops": 0,
+              "return_stops": 0,
+              "outbound_routing": "CAI-JFK",
+              "return_routing": "CAI-JFK",
+              "source": "serpapi",
+              "delta_from_previous_usd": 23.0,
+              "delta_pct": 0.88,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -159,10 +181,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "91ecea8b-a081-44a1-9152-8c70c1cd858e",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:31:12.467958Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1212.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 13.17,
+              "return_duration_hours": 9.33,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FRA-JFK",
+              "return_routing": "FRA-JFK",
+              "source": "serpapi",
+              "delta_from_previous_usd": 16.0,
+              "delta_pct": 1.34,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -315,10 +359,85 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "baad0e4d-c7b7-4a46-a526-dce01382d3bf",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:32:37.864361Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 1394.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.08,
+              "return_duration_hours": 10.0,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-LAX",
+              "return_routing": "MUC-LAX",
+              "source": "serpapi",
+              "delta_from_previous_usd": 19.0,
+              "delta_pct": 1.38,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
+            "forecast_confidence": "LOW",
+            "last_forecasted_at": null,
+            "horizon_7d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_14d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_30d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "buy_signal": false,
+            "historical_20th_percentile": null,
+            "model_used": null
+          }
+        },
+        "MS-BUSINESS": {
+          "carrier": "MS",
+          "cabin": "BUSINESS",
+          "route_key": "CAI-LAX",
+          "premium_economy_status": "unknown",
+          "observation_series": [
+            {
+              "observation_id": "4c46fa59-9266-4378-b56d-a57ad9da4649",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:31:54.623584Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 3057.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 17.9,
+              "return_duration_hours": 11.78,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YVR-LAX",
+              "return_routing": "LHR-YVR-LAX",
+              "source": "serpapi",
+              "delta_from_previous_usd": null,
+              "delta_pct": null,
+              "alert_flag": false,
+              "data_quality": "confirmed"
+            }
+          ],
+          "forecast": {
+            "observation_count": 1,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -471,10 +590,85 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "0e3216c3-d447-479e-956c-db5e4c74f10e",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:33:56.854964Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1543.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 13.75,
+              "return_duration_hours": 10.5,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-CDG-ORD",
+              "return_routing": "CDG-ORD",
+              "source": "serpapi",
+              "delta_from_previous_usd": 25.0,
+              "delta_pct": 1.65,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
+            "forecast_confidence": "LOW",
+            "last_forecasted_at": null,
+            "horizon_7d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_14d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_30d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "buy_signal": false,
+            "historical_20th_percentile": null,
+            "model_used": null
+          }
+        },
+        "MS-BUSINESS": {
+          "carrier": "MS",
+          "cabin": "BUSINESS",
+          "route_key": "CAI-ORD",
+          "premium_economy_status": "unknown",
+          "observation_series": [
+            {
+              "observation_id": "b5ec3e36-d5fb-4908-a227-863377f8af11",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:33:17.214923Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2990.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 15.13,
+              "return_duration_hours": 9.57,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YYZ-ORD",
+              "return_routing": "LHR-YYZ-ORD",
+              "source": "serpapi",
+              "delta_from_previous_usd": null,
+              "delta_pct": null,
+              "alert_flag": false,
+              "data_quality": "confirmed"
+            }
+          ],
+          "forecast": {
+            "observation_count": 1,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -552,10 +746,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "171bacac-ee60-4094-b153-822f1c44dce3",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:34:37.064343Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 2981.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.12,
+              "return_duration_hours": 10.97,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YUL-ATL",
+              "return_routing": "LHR-YUL-ATL",
+              "source": "serpapi",
+              "delta_from_previous_usd": 5.0,
+              "delta_pct": 0.17,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -627,10 +843,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "3877dd73-936b-4c63-81ef-92cd27144da9",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:35:43.093532Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 1630.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 15.6,
+              "return_duration_hours": 11.05,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-YYZ-ATL",
+              "return_routing": "MUC-YYZ-ATL",
+              "source": "serpapi",
+              "delta_from_previous_usd": 14.0,
+              "delta_pct": 0.87,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -708,10 +946,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "217a554f-ffb9-4190-8db1-b812b90bd8de",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:36:39.108131Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 2938.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.68,
+              "return_duration_hours": 10.83,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FCO-YYZ-MIA",
+              "return_routing": "FCO-YYZ-MIA",
+              "source": "serpapi",
+              "delta_from_previous_usd": 6.0,
+              "delta_pct": 0.2,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -783,10 +1043,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "36f22747-b5bf-44f0-a005-21b23fe83655",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:37:35.959514Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 1699.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 15.25,
+              "return_duration_hours": 11.25,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-CDG-MIA",
+              "return_routing": "CDG-MIA",
+              "source": "serpapi",
+              "delta_from_previous_usd": 28.0,
+              "delta_pct": 1.68,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -864,10 +1146,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "c5ea5fc6-bbde-4c2e-9c8d-c2252fe2d7f3",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:38:14.065017Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2923.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 17.28,
+              "return_duration_hours": 11.3,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YVR-SFO",
+              "return_routing": "LHR-YVR-SFO",
+              "source": "serpapi",
+              "delta_from_previous_usd": -266.0,
+              "delta_pct": -8.34,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -939,10 +1243,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "f4380de6-3013-4889-8a6a-8e01baf9ea3e",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:39:10.004047Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2110.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.08,
+              "return_duration_hours": 9.75,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-SFO",
+              "return_routing": "MUC-SFO",
+              "source": "serpapi",
+              "delta_from_previous_usd": 446.0,
+              "delta_pct": 26.8,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1020,10 +1346,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "d57be992-ae87-49d5-995e-d007284153df",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:40:03.092849Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2461.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 13.25,
+              "return_duration_hours": 8.5,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-IAD",
+              "return_routing": "MUC-IAD",
+              "source": "serpapi",
+              "delta_from_previous_usd": 35.0,
+              "delta_pct": 1.44,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1054,6 +1402,59 @@
           "observation_series": [],
           "forecast": {
             "observation_count": 0,
+            "forecast_confidence": "LOW",
+            "last_forecasted_at": null,
+            "horizon_7d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_14d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_30d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "buy_signal": false,
+            "historical_20th_percentile": null,
+            "model_used": null
+          }
+        },
+        "LH-PREMIUM_ECONOMY": {
+          "carrier": "LH",
+          "cabin": "PREMIUM_ECONOMY",
+          "route_key": "CAI-IAD",
+          "premium_economy_status": "unknown",
+          "observation_series": [
+            {
+              "observation_id": "ff466a16-ee32-4367-9cbf-1c20d038820f",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:40:49.011954Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1349.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 14.58,
+              "return_duration_hours": 10.45,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-YYZ-IAD",
+              "return_routing": "MUC-YYZ-IAD",
+              "source": "serpapi",
+              "delta_from_previous_usd": null,
+              "delta_pct": null,
+              "alert_flag": false,
+              "data_quality": "confirmed"
+            }
+          ],
+          "forecast": {
+            "observation_count": 1,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1186,6 +1587,112 @@
             "historical_20th_percentile": null,
             "model_used": null
           }
+        },
+        "TK-BUSINESS": {
+          "carrier": "TK",
+          "cabin": "BUSINESS",
+          "route_key": "CAI-BOS",
+          "premium_economy_status": "unknown",
+          "observation_series": [
+            {
+              "observation_id": "89c079cf-97c5-4bed-9685-cdc3c4a6a903",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:41:46.052784Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2760.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 12.92,
+              "return_duration_hours": 9.83,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-IST-BOS",
+              "return_routing": "IST-BOS",
+              "source": "serpapi",
+              "delta_from_previous_usd": null,
+              "delta_pct": null,
+              "alert_flag": false,
+              "data_quality": "confirmed"
+            }
+          ],
+          "forecast": {
+            "observation_count": 1,
+            "forecast_confidence": "LOW",
+            "last_forecasted_at": null,
+            "horizon_7d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_14d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_30d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "buy_signal": false,
+            "historical_20th_percentile": null,
+            "model_used": null
+          }
+        },
+        "IT-PREMIUM_ECONOMY": {
+          "carrier": "IT",
+          "cabin": "PREMIUM_ECONOMY",
+          "route_key": "CAI-BOS",
+          "premium_economy_status": "unknown",
+          "observation_series": [
+            {
+              "observation_id": "95d26dd3-3109-456d-8c7c-e85ad0a0356e",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:42:27.855673Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1604.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 14.95,
+              "return_duration_hours": 10.05,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FCO-YYZ-BOS",
+              "return_routing": "FCO-YYZ-BOS",
+              "source": "serpapi",
+              "delta_from_previous_usd": null,
+              "delta_pct": null,
+              "alert_flag": false,
+              "data_quality": "confirmed"
+            }
+          ],
+          "forecast": {
+            "observation_count": 1,
+            "forecast_confidence": "LOW",
+            "last_forecasted_at": null,
+            "horizon_7d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_14d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "horizon_30d": {
+              "low": null,
+              "mid": null,
+              "high": null
+            },
+            "buy_signal": false,
+            "historical_20th_percentile": null,
+            "model_used": null
+          }
         }
       }
     },
@@ -1242,10 +1749,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "3a24710b-b574-48f3-91b7-f0afb1acaa9e",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:43:31.969997Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 2649.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 11.83,
+              "return_duration_hours": 5.92,
+              "outbound_stops": 0,
+              "return_stops": 0,
+              "outbound_routing": "CAI-EWR",
+              "return_routing": "CAI-EWR",
+              "source": "serpapi",
+              "delta_from_previous_usd": 23.0,
+              "delta_pct": 0.88,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1317,10 +1846,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "4c480d62-0d74-4ba4-a109-965493416e59",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:44:10.114910Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 1182.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 13.0,
+              "return_duration_hours": 10.42,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-MUC-EWR",
+              "return_routing": "MUC-EWR",
+              "source": "serpapi",
+              "delta_from_previous_usd": -3.0,
+              "delta_pct": -0.25,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1398,10 +1949,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "2e59ef33-6a62-4f78-bef0-29a761ee586a",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:45:02.453977Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 2968.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.95,
+              "return_duration_hours": 11.97,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FCO-YYZ-DFW",
+              "return_routing": "FCO-YYZ-DFW",
+              "source": "serpapi",
+              "delta_from_previous_usd": 25.0,
+              "delta_pct": 0.85,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1473,10 +2046,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "5efc31bb-090a-4d74-a792-bea824416aad",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:45:52.564622Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1641.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.95,
+              "return_duration_hours": 11.97,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FCO-YYZ-DFW",
+              "return_routing": "FCO-YYZ-DFW",
+              "source": "serpapi",
+              "delta_from_previous_usd": 14.0,
+              "delta_pct": 0.86,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1554,10 +2149,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "30c3a999-aa2e-4b9f-bb86-5c9ceac3aa69",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:46:40.009295Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 3085.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 16.03,
+              "return_duration_hours": 10.8,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YVR-SEA",
+              "return_routing": "LHR-YVR-SEA",
+              "source": "serpapi",
+              "delta_from_previous_usd": 25.0,
+              "delta_pct": 0.82,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1629,10 +2246,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "152f9d05-fc1e-4b5d-8f37-8e99930b37bd",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:47:24.737199Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-24",
+              "nights": 9,
+              "price_usd": 1487.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 15.42,
+              "return_duration_hours": 10.12,
+              "outbound_stops": 1,
+              "return_stops": 0,
+              "outbound_routing": "CAI-FRA-SEA",
+              "return_routing": "FRA-SEA",
+              "source": "serpapi",
+              "delta_from_previous_usd": 21.0,
+              "delta_pct": 1.43,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1710,10 +2349,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "83659a31-2ff0-4db4-bb52-a81de4a60e50",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:48:09.690216Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 3109.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 17.45,
+              "return_duration_hours": 10.97,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YVR-LAS",
+              "return_routing": "LHR-YVR-LAS",
+              "source": "serpapi",
+              "delta_from_previous_usd": 25.0,
+              "delta_pct": 0.81,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {
@@ -1785,10 +2446,32 @@
               "delta_pct": 0.0,
               "alert_flag": false,
               "data_quality": "confirmed"
+            },
+            {
+              "observation_id": "7dfd0e9a-4866-479f-9ba4-e5aaea868d49",
+              "observation_type": "daily",
+              "observed_at": "2026-05-19T07:48:54.595821Z",
+              "outbound_date": "2027-03-15",
+              "return_date": "2027-03-29",
+              "nights": 14,
+              "price_usd": 1669.0,
+              "price_egp": null,
+              "price_eur": null,
+              "outbound_duration_hours": 18.73,
+              "return_duration_hours": 12.15,
+              "outbound_stops": 2,
+              "return_stops": 0,
+              "outbound_routing": "CAI-LHR-YUL-LAS",
+              "return_routing": "LHR-YUL-LAS",
+              "source": "serpapi",
+              "delta_from_previous_usd": 14.0,
+              "delta_pct": 0.85,
+              "alert_flag": false,
+              "data_quality": "confirmed"
             }
           ],
           "forecast": {
-            "observation_count": 2,
+            "observation_count": 3,
             "forecast_confidence": "LOW",
             "last_forecasted_at": null,
             "horizon_7d": {

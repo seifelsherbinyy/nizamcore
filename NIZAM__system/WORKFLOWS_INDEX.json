@@ -10,7 +10,8 @@
     { "name": "body_routine",             "scenario": "Daily/weekly body tracking + red-flag handling", "path": "workflows/body_routine.md",             "skills": ["/badan-daily-signal","/badan-weekly-review","/badan-red-flag-check"] },
     { "name": "family_routine",           "scenario": "Family network maintenance, strict-local",       "path": "workflows/family_routine.md",           "skills": ["/ahel-add-person","/ahel-connection-cadence","/ahel-support-log"] },
     { "name": "contradiction_resolution", "scenario": "New info conflicts with existing notes",         "path": "workflows/contradiction_resolution.md", "skills": ["/pop-health","/naqd-reconcile"], "requires_snapshot": true },
-    { "name": "weekly_synthesis",         "scenario": "Sunday or quiet hour for interpretation",        "path": "workflows/weekly_synthesis.md",         "skills": ["/pop-recap","/shura-emerge","/pop-health"] }
+    { "name": "weekly_synthesis",         "scenario": "Sunday or quiet hour for interpretation",        "path": "workflows/weekly_synthesis.md",         "skills": ["/pop-recap","/shura-emerge","/pop-health"] },
+    { "name": "flight_price_check",      "scenario": "Review CAI→USA flight prices, act on BUY_SIGNAL", "path": null, "module": "MARSAD", "skills": ["/marsad-monitor","/marsad-alert","/marsad-forecast"], "notes": "Run in order: MONITOR → ALERT → FORECAST. BUY_SIGNAL requires 7+ observations (cold-start gate). DISCOVER runs once on init only.", "ledger_appends": ["EVENT_LEDGER"] }
   ],
   "gating_rule": "Workflows respect SUKOON state. Heavy cognitive workflows (idea_to_decision, strategy_rollup, finance_decision) downshift or defer under red.",
   "see_also": ["NIZAM__system/workflows/_WORKFLOWS_INDEX.md","NIZAM__system/protocols/_PROTOCOLS_INDEX.md"]

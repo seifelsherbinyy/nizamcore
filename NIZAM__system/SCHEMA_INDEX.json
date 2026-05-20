@@ -18,7 +18,8 @@
     { "name": "body_signal",         "phase": 2, "path": "schemas/body_signal.schema.json",         "describes": "BADAN daily health metric snapshot", "scaffolded": true },
     { "name": "body_weekly_review",  "phase": 2, "path": "schemas/body_weekly_review.schema.json",  "describes": "BADAN trend-based weekly review", "scaffolded": true },
     { "name": "body_red_flag",       "phase": 2, "path": "schemas/body_red_flag.schema.json",       "describes": "BADAN symptom-triggers-professional-review", "scaffolded": true },
-    { "name": "family_person",       "phase": 3, "path": "schemas/family_person.schema.json",       "describes": "AHEL person card", "scaffolded": true, "live": true },
-    { "name": "family_support_event","phase": 3, "path": "schemas/family_support_event.schema.json","describes": "AHEL support-given event", "scaffolded": true, "live": true }
+    { "name": "family_person",           "phase": 3, "path": "schemas/family_person.schema.json",           "describes": "AHEL person card", "scaffolded": true, "live": true },
+    { "name": "family_support_event",    "phase": 3, "path": "schemas/family_support_event.schema.json",    "describes": "AHEL support-given event", "scaffolded": true, "live": true },
+    { "name": "flight_price_observation","phase": "additive", "path": "schemas/flight_price_observation.schema.json", "describes": "MARSAD append-only CAI→USA flight price time-series store", "live": true, "module": "MARSAD" }
   ]
 }

@@ -6,6 +6,8 @@
 
 If you switch agents (Anthropic ↔ OpenAI ↔ Google ↔ open-source), POP's skill library should travel with you. Skill files in `NIZAM__system/skills/*.md` are already platform-agnostic — they encode paths and procedures, not API-specific calls.
 
+**Portable conversational prompt**: [`NIZAM_CONVERSATIONAL_LAYER.md`](NIZAM_CONVERSATIONAL_LAYER.md) is the full pasteable system prompt (three hats, session types, SCRIBE JSON). POP `/nizam-*` skills are thin wrappers that bind paths, gates, and persistence; they reference that doc rather than duplicating it.
+
 ## Platform-specific shims
 
 Each platform expects skill discovery in a different location:

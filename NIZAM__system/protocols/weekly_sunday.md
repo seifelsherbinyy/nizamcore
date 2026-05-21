@@ -6,7 +6,7 @@
 - **Cadence**: Sunday evening (or Saturday for Friday-Saturday weekenders)
 - **Budget**: ~30 minutes total
 - **Gates checked**: SUKOON (each step), THABAT (each step)
-- **Skills chained**: `/pop-recap` → `/munawara-weekly-battle` → `/badan-weekly-review` → `/pop-health`
+- **Skills chained**: `/pop-recap` → (optional `/nizam-almanac`) → `/munawara-weekly-battle` → `/badan-weekly-review` → `/pop-health`
 
 ## Procedure
 
@@ -22,6 +22,9 @@ Synthesize the week from ledgers (EVENT / DECISION / LEARNING).
 - Recovery trend (green/yellow/red day count).
 - Top 3 wins, top 3 frictions, recurring themes.
 - 3 priorities for next week, 1 to defer, 1 to delete.
+
+### Step 1b — `/nizam-almanac` (optional, ~5 min)
+Interpretive weekly review from `YAWMIYAT__journaling/sessions/*.json`: KPIs, blockers, felt-vs-SUKOON divergences, B=MAP themes, one redesign action. Complements Step 1 — does not replace `/pop-recap`.
 
 ### Step 2 — `/munawara-weekly-battle` (~10 min)
 Apply the Dynamic War Strategy protocol:

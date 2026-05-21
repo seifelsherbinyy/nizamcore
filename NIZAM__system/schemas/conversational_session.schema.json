@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/conversational_session.schema.json",
+  "title": "NIZAM conversational session record (SCRIBE output)",
+  "type": "object",
+  "required": ["session_type", "needs_human_confirmation", "confidence"],
+  "additionalProperties": false,
+  "properties": {
+    "session_type": {
+      "type": "string",
+      "enum": ["checkin", "counseling", "assessment", "consultation", "weekly_review"]
+    },
+    "captured_at": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "felt_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "energy": { "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "mood": { "type": ["string", "null"] },
+        "anxiety_baseline": { "type": ["string", "null"] },
+        "gut": { "type": ["string", "null"] },
+        "stimulant_load_felt": { "type": ["string", "null"] },
+        "notable": { "type": ["string", "null"] }
+      }
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW", "UNKNOWN"] },
+        "trend": { "type": ["string", "null"], "enum": ["improving", "stable", "declining", null] },
+        "driver": { "type": ["string", "null"] }
+      }
+    },
+    "pillars": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "voted": { "type": "array", "items": { "type": "string" } },
+        "missed": { "type": "array", "items": { "type": "string" } },
+        "contrary_urges": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pattern": { "type": ["string", "null"] },
+        "bmap_audit": { "type": ["string", "null"] },
+        "continuity_note": { "type": ["string", "null"] }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "priorities": { "type": "array", "items": { "type": "string" } },
+        "recovery_item": { "type": ["string", "null"] },
+        "tiny_versions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "decisions": { "type": "array", "items": { "type": "string" } },
+    "open_questions": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "needs_human_confirmation": { "type": "boolean" }
+  }
+}

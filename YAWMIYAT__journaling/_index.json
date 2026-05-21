@@ -3,12 +3,26 @@
   "symbol": "YAWMIYAT",
   "meaning_ar": "diary / journal",
   "phase": 2,
-  "purpose": "Structured journal entries + weekly reviews. Longer-form than TAFRIGH raw dumps.",
+  "purpose": "Structured journal + NIZAM conversational session records (JSON canonical, optional markdown mirrors).",
   "privacy_level": "strict_local",
-  "allowed_contents": ["daily/{YYYY-MM-DD}.md","weekly/{YYYY-Wnn}.md","monthly/{YYYY-MM}.md","entries/*.md"],
-  "skill_commands": ["(designed) /yawmiyat-daily","(designed) /yawmiyat-weekly","(designed) /yawmiyat-monthly"],
-  "subfolders_planned": ["daily","weekly","monthly","entries"],
-  "last_updated": "2026-05-15T15:30:00Z",
+  "allowed_contents": [
+    "sessions/{YYYY-MM-DD}T{HH-MM-SS}Z__{session_type}.json",
+    "mirrors/{YYYY-MM-DD}T{HH-MM-SS}Z__{session_type}.md",
+    "weekly/{YYYY-Wnn}__almanac.md",
+    "daily/{YYYY-MM-DD}.md",
+    "monthly/{YYYY-MM}.md",
+    "entries/*.md"
+  ],
+  "skill_commands": [
+    "/nizam-checkin",
+    "/nizam-counsel",
+    "/nizam-assess",
+    "/nizam-consult",
+    "/nizam-almanac"
+  ],
+  "subfolders": ["sessions", "mirrors", "weekly", "daily", "monthly", "entries"],
+  "schema_ref": "NIZAM__system/schemas/conversational_session.schema.json",
+  "last_updated": "2026-05-21T12:00:00Z",
   "registers_to": "POP_MASTER_REGISTER.json",
-  "scaffolding_status": "shell only — skills/templates pending future build"
+  "scaffolding_status": "live — NIZAM conversational layer v1"
 }

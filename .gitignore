@@ -11,6 +11,14 @@ SHURA__brainstormer/sessions/
 NAQD__brain_griller/sessions/
 SUKOON__recovery_first/signals/
 SUKOON__recovery_first/overload_flags.jsonl
+
+# ---- YAWMIYAT conversational sessions — NEVER commit ----
+YAWMIYAT__journaling/sessions/
+YAWMIYAT__journaling/mirrors/
+YAWMIYAT__journaling/weekly/
+YAWMIYAT__journaling/daily/
+YAWMIYAT__journaling/monthly/
+YAWMIYAT__journaling/entries/
 HAJR__quarantine/**
 !HAJR__quarantine/README.md
 !HAJR__quarantine/_index.json

@@ -36,3 +36,4 @@ Daily ~60s conversational check-in: felt state, capacity, top pillar vote for th
    - Optionally write mirror to `mirror_folder` from `mirror_template`.
    - Append THABAT to `appends_event_to`: `{"ts":"<ISO8601>","actor":"NIZAM","skill":"/nizam-checkin","gate":"THABAT","event":"conversational_session_committed","artifact":"<path>","note":"checkin committed"}`
    - Mirror sanitized one-liner to `log.md` (no felt-state details).
+   - **Governor (optional):** If operator confirms externalize to NIZAM // POP, invoke [`/nizam-governor-push`](nizam-governor.md) with `session_type: checkin`, `operator_confirmed_externalize: true`, sanitized `drive_narrative` (no raw felt-state), and `source_artifact` path. Skip if HIMAYAH denies.

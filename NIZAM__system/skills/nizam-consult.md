@@ -30,3 +30,4 @@ Decision consultation on a specific topic. Lay out options as a decision tree wi
 4. If decision warrants ADR, suggest `/qarar-decide <topic>` after this session commits.
 5. SCRIBE JSON with `session_type: "consultation"`, `needs_human_confirmation: true`.
 6. **Only after confirmation**: validate, write files, THABAT + `log.md` as in `nizam-checkin.md`.
+7. **Governor (optional):** [`/nizam-governor-push`](nizam-governor.md) with `session_type: consultation`; set `lane` to Amazon or Outreach if topic requires (else Personal).

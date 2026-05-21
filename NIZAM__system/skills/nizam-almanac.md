@@ -48,3 +48,4 @@ Interpretive weekly Almanac from conversational session JSON. Complements `/pop-
    ```
 7. Emit companion SCRIBE JSON summary (can be embedded in markdown § Canonical JSON) with `session_type: "weekly_review"`. Operator confirms before treating as committed.
 8. On confirm: append THABAT `conversational_almanac_committed`, mirror `log.md` one-liner.
+9. **Governor (optional):** [`/nizam-governor-push`](nizam-governor.md) with `session_type: weekly_review` and `drive_path_override` for `Records/Reviews/{YYYY}-W{WW}_Weekly-Review.docx` when operator confirms POP sync.

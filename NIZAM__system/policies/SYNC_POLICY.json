@@ -30,5 +30,22 @@
       "always_denied": ["raw dumps","sessions","signals","finance","body","family","raw strategy plans","SOUL.md"]
     }
   },
-  "approval_workflow": "HIMAYAH gate reads PRIVACY_CLASSIFICATION.json before any sync. Refuses strict_local paths automatically."
+  "approval_workflow": "HIMAYAH gate reads PRIVACY_CLASSIFICATION.json before any sync. Refuses strict_local paths automatically.",
+  "drive_nizam_pop": {
+    "drive_root_id": "1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
+    "repo_mirror": {
+      "source": "github.com/seifelsherbinyy/nizamcore",
+      "branch": "main",
+      "direction": "one_way_only (github -> drive)",
+      "script": "HIFZ__github_version_control/scripts/nizam_drive_mirror.py"
+    },
+    "runtime_records": {
+      "direction": "dual_write (notion + drive)",
+      "paths": ["Records/**", "Records/Reviews/**", "Records/Meetings/**", "Projects/**"],
+      "not_in_repo": true,
+      "script": "HIFZ__github_version_control/scripts/nizam_dual_write.py",
+      "governor_config": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json"
+    },
+    "archive_clutter_to": "_Archive"
+  }
 }

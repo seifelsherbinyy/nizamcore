@@ -23,8 +23,9 @@ Each skill is an encoded set of paths, conventions, and procedures — not a fre
 | [nizam-assess](nizam-assess.md) | NIZAM | `/nizam-assess` | Assessment — pillars, B=MAP, continuity |
 | [nizam-consult](nizam-consult.md) | NIZAM | `/nizam-consult <topic>` | Decision consultation with options tree |
 | [nizam-almanac](nizam-almanac.md) | NIZAM | `/nizam-almanac` | Interpretive weekly Almanac from session JSON |
+| [nizam-governor](nizam-governor.md) | NIZAM | `/nizam-governor-mirror`, `/nizam-governor-push` | Repo→Drive mirror + Notion/Drive dual-write |
 
-Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.md)
+Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.md) · Governor: [`DUAL_WRITE_GOVERNOR.md`](../docs/DUAL_WRITE_GOVERNOR.md)
 
 ## Phase 2 — strategy + finance + body + decisions (14 skills)
 

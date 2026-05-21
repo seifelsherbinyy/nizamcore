@@ -1,0 +1,13 @@
+{
+  "session_type": "checkin",
+  "captured_at": "2026-05-21T12:00:00Z",
+  "slug": "test-checkin",
+  "notion_title": "Recovery Check-In (2026-05-21)",
+  "notion_payload": {
+    "confidence": 0.86
+  },
+  "drive_narrative": "Fixture dual-write test narrative.",
+  "operator_confirmed_externalize": true,
+  "privacy_classification": "strict_local",
+  "habit completion": true
+}

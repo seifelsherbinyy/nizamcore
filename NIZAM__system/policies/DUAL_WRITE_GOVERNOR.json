@@ -1,0 +1,152 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-05-21T00:00:00Z",
+  "schema_ref": "NIZAM__system/schemas/governor_runtime_record.schema.json",
+  "targets": {
+    "github_repo": "seifelsherbinyy/nizamcore",
+    "github_branch": "main",
+    "github_raw_pattern": "https://raw.githubusercontent.com/seifelsherbinyy/nizamcore/main/{path}",
+    "drive_root_id": "1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
+    "drive_root_url": "https://drive.google.com/drive/folders/1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi"
+  },
+  "drive_runtime_paths": {
+    "records_lane": "Records/{lane}/{filename}",
+    "records_weekly": "Records/Reviews/{filename}",
+    "records_meetings": "Records/Meetings/{filename}",
+    "projects": "Projects/{project_folder}/",
+    "archive": "_Archive",
+    "mirror_state": "_Archive/.mirror_state.json"
+  },
+  "drive_runtime_reserved": ["Records", "Reviews", "Meetings", "Projects", "_Archive"],
+  "lanes": [
+    "Personal",
+    "Amazon",
+    "Outreach",
+    "Faith",
+    "Health",
+    "Relationship",
+    "Recovery"
+  ],
+  "record_types": [
+    "CheckIn",
+    "Counseling",
+    "Assessment",
+    "Consultation",
+    "WeeklyReview",
+    "Meeting",
+    "Project"
+  ],
+  "session_type_to_record_type": {
+    "checkin": "CheckIn",
+    "counseling": "Counseling",
+    "assessment": "Assessment",
+    "consultation": "Consultation",
+    "weekly_review": "WeeklyReview"
+  },
+  "default_lane_by_session_type": {
+    "checkin": "Recovery",
+    "counseling": "Recovery",
+    "assessment": "Recovery",
+    "consultation": "Personal",
+    "weekly_review": "Personal"
+  },
+  "notion": {
+    "workspace": "NIZAM // POP",
+    "data_sources": {
+      "pulse": {
+        "name": "Pulse",
+        "data_source_id": "1be25cf8-dac2-45d4-a1c8-25e9824a6afc",
+        "schema_version": "1.0.0"
+      },
+      "witness": {
+        "name": "Witness",
+        "data_source_id": "0b8c702f-5691-4987-9096-b19dc4cafe51",
+        "schema_version": "v1"
+      },
+      "audit_log": {
+        "name": "Audit Log",
+        "data_source_id": "916ed7de-27ef-4051-8e8a-d7fa8fb0d3bf"
+      }
+    },
+    "resolve_by_name": [
+      "Tasks",
+      "Projects",
+      "Inbox",
+      "CRM",
+      "Meetings",
+      "Habits",
+      "Objectives",
+      "Metrics"
+    ],
+    "required_properties": {
+      "dedupe_key": "dedupe_key",
+      "drive_link": "DriveLink",
+      "captured_at": "captured_at"
+    },
+    "pulse_rules": {
+      "stimulant_load_is_prior_day": true
+    }
+  },
+  "human_only_fields": [
+    "habit completion",
+    "Habit Completion",
+    "Decision Made?",
+    "final calendar approval",
+    "Calendar Approved"
+  ],
+  "artifact_routing": [
+    {
+      "source": "conversational_session",
+      "session_type": "checkin",
+      "lane": "Recovery",
+      "type": "CheckIn",
+      "notion_primary": "witness",
+      "notion_secondary": null
+    },
+    {
+      "source": "conversational_session",
+      "session_type": "counseling",
+      "lane": "Recovery",
+      "type": "Counseling",
+      "notion_primary": "witness",
+      "notion_secondary": null
+    },
+    {
+      "source": "conversational_session",
+      "session_type": "assessment",
+      "lane": "Recovery",
+      "type": "Assessment",
+      "notion_primary": "witness",
+      "notion_secondary": "pulse"
+    },
+    {
+      "source": "conversational_session",
+      "session_type": "consultation",
+      "lane": "Personal",
+      "type": "Consultation",
+      "notion_primary": "witness",
+      "notion_secondary": null,
+      "lane_override_from_context": ["Amazon", "Outreach"]
+    },
+    {
+      "source": "conversational_session",
+      "session_type": "weekly_review",
+      "lane": "Personal",
+      "type": "WeeklyReview",
+      "notion_primary": "witness",
+      "drive_path_template": "records_weekly"
+    },
+    {
+      "source": "body_signal",
+      "lane": "Health",
+      "type": "CheckIn",
+      "notion_primary": "pulse",
+      "notion_secondary": null
+    }
+  ],
+  "write_receipt_schema": {
+    "status": ["OK", "FAILED", "NEEDS_CONFIRMATION"],
+    "mode": ["CREATE", "UPDATE"],
+    "scope": ["repo_mirror", "runtime_record"]
+  }
+}

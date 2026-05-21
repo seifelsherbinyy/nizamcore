@@ -30,3 +30,4 @@ Structured evaluation: pillar review, continuity scoring, B=MAP audit on failure
 4. Propose at most 3 priorities + 1 recovery_item + tiny_versions. Confirm with operator.
 5. SCRIBE JSON with `session_type: "assessment"`, `needs_human_confirmation: true`.
 6. **Only after confirmation**: validate, write files, THABAT + `log.md` as in `nizam-checkin.md`.
+7. **Governor (optional):** [`/nizam-governor-push`](nizam-governor.md) with `session_type: assessment` when operator confirms POP externalize; routes Witness + Pulse per governor config.

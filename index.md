@@ -21,6 +21,8 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`NIZAM__system/WORKFLOWS_INDEX.json`](NIZAM__system/WORKFLOWS_INDEX.json) — machine-readable workflow registry
 - [`NIZAM__system/policies/PRIVACY_CLASSIFICATION.json`](NIZAM__system/policies/PRIVACY_CLASSIFICATION.json)
 - [`NIZAM__system/policies/SYNC_POLICY.json`](NIZAM__system/policies/SYNC_POLICY.json)
+- [`NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json`](NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json) — Drive mirror + Notion dual-write
+- [`NIZAM__system/docs/DUAL_WRITE_GOVERNOR.md`](NIZAM__system/docs/DUAL_WRITE_GOVERNOR.md) — governor operator guide
 - [`NIZAM__system/policies/TOOL_ACCESS_MATRIX.json`](NIZAM__system/policies/TOOL_ACCESS_MATRIX.json)
 - [`NIZAM__system/ledgers/`](NIZAM__system/ledgers/) — 8 ledgers (EVENT, DECISION, LEARNING, STRATEGY, BATTLE, FINANCE, BODY, FAMILY)
 - [`NIZAM__system/templates/`](NIZAM__system/templates/) — 28 markdown templates
@@ -48,7 +50,7 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`YAWMIYAT__journaling/`](YAWMIYAT__journaling/) — structured journal + NIZAM conversational sessions (JSON + mirrors)
 - [`HIKMAH__learnings/`](HIKMAH__learnings/) — crystallized insights (shell only)
 - [`NUR__obsidian_vault/`](NUR__obsidian_vault/) — Obsidian mirror (shell only — pending install)
-- [`JADWAL__notion_dashboards/`](JADWAL__notion_dashboards/) — Notion mirror (shell only — pending API setup)
+- [`JADWAL__notion_dashboards/`](JADWAL__notion_dashboards/) — Notion mirror; dual-write via [`nizam-governor`](NIZAM__system/skills/nizam-governor.md)
 - [`HIFZ__github_version_control/`](HIFZ__github_version_control/) — repo automation (shell only)
 
 ## Phase 3 — scaffolded + live

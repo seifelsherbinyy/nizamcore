@@ -18,8 +18,15 @@ Notion mirror as a structured dashboard layer. Databases, filtered views, weekly
 - Notion API token: `$env:NOTION_TOKEN` — never in git.
 - Promotion script reads from environment, never from file.
 
-## Status
-Shell only. To activate:
+## Dual-write governor (active)
+
+Runtime records sync to NIZAM // POP via [`/nizam-governor-push`](../NIZAM__system/skills/nizam-governor.md). Config: [`DUAL_WRITE_GOVERNOR.json`](../NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json).
+
+Pre-flight: `python HIFZ__github_version_control/scripts/notion_preflight.py`
+
+## Status (legacy promote skill)
+
+Shell promote path still deferred. To activate full JADWAL promote:
 1. Create Notion integration token in Notion settings.
 2. Set `$env:NOTION_TOKEN`.
 3. Design databases (Weekly Reviews, Milestones, Decisions, Learning Principles).

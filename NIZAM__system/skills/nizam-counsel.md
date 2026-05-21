@@ -30,3 +30,4 @@ Counseling session when something is heavy. Mostly COUNSELOR; ASSESSOR only if a
 4. Before SCRIBE, reflect back the decision **they** reached in plain language.
 5. Emit SCRIBE JSON with `session_type: "counseling"`, `needs_human_confirmation: true`. Put human-confirmed decisions only in `decisions[]`.
 6. **Only after confirmation**: validate, write `target_folder` + `naming_pattern`, optional mirror, THABAT event `conversational_session_committed`, sanitized `log.md` line.
+7. **Governor (optional):** On operator request to sync to POP workspace, [`/nizam-governor-push`](nizam-governor.md) with `session_type: counseling`, `operator_confirmed_externalize: true`, sanitized narrative only.

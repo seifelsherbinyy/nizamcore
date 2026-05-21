@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/governor_runtime_record.schema.json",
+  "title": "NIZAM dual-write governor runtime record",
+  "type": "object",
+  "required": ["lane", "type", "slug", "captured_at", "drive_narrative"],
+  "additionalProperties": false,
+  "properties": {
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z]+:[A-Za-z]+:[0-9]{4}-[0-9]{2}-[0-9]{2}:[a-z0-9-]{1,30}$"
+    },
+    "lane": {
+      "type": "string",
+      "enum": [
+        "Personal",
+        "Amazon",
+        "Outreach",
+        "Faith",
+        "Health",
+        "Relationship",
+        "Recovery"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "CheckIn",
+        "Counseling",
+        "Assessment",
+        "Consultation",
+        "WeeklyReview",
+        "Meeting",
+        "Project"
+      ]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,30}$"
+    },
+    "captured_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "notion_title": {
+      "type": ["string", "null"]
+    },
+    "notion_primary": {
+      "type": "string",
+      "enum": ["pulse", "witness", "audit_log"]
+    },
+    "notion_secondary": {
+      "type": ["string", "null"],
+      "enum": ["pulse", "witness", null]
+    },
+    "notion_payload": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "drive_narrative": {
+      "type": "string",
+      "minLength": 1
+    },
+    "drive_path_override": {
+      "type": ["string", "null"]
+    },
+    "repo_commit": {
+      "type": ["string", "null"]
+    },
+    "source_artifact": {
+      "type": ["string", "null"]
+    },
+    "human_only_staged": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "operator_confirmed_externalize": {
+      "type": "boolean",
+      "default": false
+    },
+    "privacy_classification": {
+      "type": ["string", "null"]
+    }
+  }
+}

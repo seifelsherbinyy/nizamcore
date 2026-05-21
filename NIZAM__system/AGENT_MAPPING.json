@@ -1,0 +1,296 @@
+{
+  "$schema_note": "Not validated by JSON Schema yet; treat as registry. Sibling of POP_TEMPLE.json.",
+  "version": "1.0.0",
+  "generated": "2026-05-21T00:00:00Z",
+  "repo_version_at_generation": "3.3.0",
+  "contract_doc": "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md",
+  "write_path_runtime": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json",
+  "connector_registry": "NIZAM__system/policies/CONNECTORS.json",
+  "purpose": "Map the eight conceptual agents named in the orchestration contract (Warden, Scribe, Pulse, Witness, Dispatcher, Guardrail, Steward, Almanac) onto existing repo artifacts. Flag every gap explicitly so the next scaffolding pass has a precise checklist.",
+  "shared_boundaries": {
+    "no_cross_writes": [
+      "Pulse never writes subjective fields (felt_state, mood, journal narrative).",
+      "Witness never writes numeric biometrics (HRV, sleep score, RHR).",
+      "Warden never structures or judges — capture only.",
+      "Scribe never invents values — UNKNOWN/null when not provided.",
+      "Dispatcher never overrides Guardrail's contrary-vote kill-switch.",
+      "Steward never auto-deletes audit/identity history without operator confirmation + legal-hold check."
+    ],
+    "human_only_fields_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#human_only_fields"
+  },
+  "confidence_thresholds": {
+    "auto_write_min": 0.78,
+    "manual_review_band": [0.55, 0.77],
+    "dead_letter_below": 0.55,
+    "applies_to": "Scribe",
+    "source": "NIZAM_ORCHESTRATION_LAYER.md \u00a74"
+  },
+  "audit_log_target": {
+    "notion": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.audit_log",
+    "ledger_jsonl": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",
+    "ledger_status": "gitignored (strict_local); spec in POP_TEMPLE.json#ledgers.EVENT_LEDGER"
+  },
+  "agents": {
+    "Warden": {
+      "role": "Capture intake from external channels (Telegram, Gmail, manual paste). Writes CaptureLog only \u2014 no judgment, no structure, no triage.",
+      "reads":  ["external messages", "operator paste"],
+      "writes": ["CaptureLog (raw text + metadata)"],
+      "maps_to": {
+        "folders":  ["TAFRIGH__brain_dumper/", "TAFRIGH__brain_dumper/raw/ (gitignored)"],
+        "skills":   ["NIZAM__system/skills/tafrigh-capture.md"],
+        "personas": ["NIZAM__system/personas/TAFRIGH.json"],
+        "schemas":  []
+      },
+      "gates": ["HIMAYAH"],
+      "boundaries": ["no triage", "no judgment", "no enrichment"],
+      "gaps": [
+        "No Telegram intake adapter exists in repo.",
+        "No Gmail intake adapter exists in repo.",
+        "No Python module \"Warden\" yet; capture is currently manual via /tafrigh-capture."
+      ],
+      "todo_owner": "next scaffolding pass"
+    },
+    "Scribe": {
+      "role": "Convert raw capture into structured, confidence-tagged JSON. Below the confidence floor or schema-invalid \u2192 DeadLetter (never silent drop).",
+      "reads":  ["CaptureLog rows from Warden", "raw operator paste"],
+      "writes": ["conversational_session JSON records", "DeadLetter entries on invalid"],
+      "maps_to": {
+        "folders":  ["YAWMIYAT__journaling/sessions/ (gitignored)", "YAWMIYAT__journaling/mirrors/ (gitignored)"],
+        "skills":   [
+          "NIZAM__system/skills/nizam-checkin.md",
+          "NIZAM__system/skills/nizam-counsel.md",
+          "NIZAM__system/skills/nizam-assess.md",
+          "NIZAM__system/skills/nizam-consult.md"
+        ],
+        "personas": ["NIZAM__system/personas/NIZAM.json"],
+        "schemas":  ["NIZAM__system/schemas/conversational_session.schema.json"],
+        "docs":     ["NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md (SCRIBE hat is \u00a73)"]
+      },
+      "gates": ["SUKOON", "THABAT"],
+      "boundaries": ["never invent fields", "UNKNOWN/null when not provided", "confidence-tag each extracted item"],
+      "dead_letter_target": "NIZAM__system/ledgers/DEAD_LETTER.jsonl (gitignored, to be created on first miss)",
+      "gaps": [
+        "Currently lives as a conceptual \u2018hat\u2019 in the conversational prompt, not as a standalone parser.",
+        "DEAD_LETTER.jsonl ledger path and schema not yet declared in POP_TEMPLE.json#ledgers."
+      ]
+    },
+    "Pulse": {
+      "role": "Objective biometrics ONLY. Never invents values \u2014 numbers come from operator paste or device export.",
+      "reads":  ["operator-pasted biometrics (sleep, HRV, RHR, training load)"],
+      "writes": ["Notion Pulse rows", "SUKOON daily signals", "BADAN daily signals"],
+      "maps_to": {
+        "folders":  [
+          "SUKOON__recovery_first/",
+          "SUKOON__recovery_first/signals/ (gitignored)",
+          "BADAN__body_health_system/",
+          "BADAN__body_health_system/daily_signals/ (gitignored)"
+        ],
+        "skills":   [
+          "NIZAM__system/skills/sukoon-check.md",
+          "NIZAM__system/skills/badan-daily-signal.md",
+          "NIZAM__system/skills/badan-red-flag-check.md",
+          "NIZAM__system/skills/badan-weekly-review.md"
+        ],
+        "personas": ["NIZAM__system/personas/BADAN.json"],
+        "schemas":  [
+          "NIZAM__system/schemas/body_signal.schema.json",
+          "NIZAM__system/schemas/body_red_flag.schema.json",
+          "NIZAM__system/schemas/body_weekly_review.schema.json",
+          "NIZAM__system/schemas/overload_flag.schema.json"
+        ],
+        "notion_data_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.pulse"
+      },
+      "gates": ["SUKOON"],
+      "boundaries": [
+        "no subjective fields",
+        "no narrative",
+        "Stimulant Load = prior day only (per DUAL_WRITE_GOVERNOR.json#notion.pulse_rules)"
+      ],
+      "gaps": [
+        "No device-export ingester yet (e.g. Garmin/Oura/Whoop).",
+        "Notion Pulse DB connection requires NOTION_TOKEN to be set (see CONNECTORS.json)."
+      ]
+    },
+    "Witness": {
+      "role": "Subjective layer ONLY \u2014 journal entries, identity votes, felt-state narrative. Never writes numeric biometrics.",
+      "reads":  ["operator conversation", "felt-state self-report"],
+      "writes": ["YAWMIYAT session records", "Notion Witness rows"],
+      "maps_to": {
+        "folders":  [
+          "YAWMIYAT__journaling/ (sessions/mirrors/weekly all gitignored)"
+        ],
+        "skills":   [
+          "NIZAM__system/skills/nizam-counsel.md",
+          "NIZAM__system/skills/nizam-checkin.md",
+          "NIZAM__system/skills/nizam-consult.md"
+        ],
+        "personas": ["NIZAM__system/personas/NIZAM.json"],
+        "schemas":  ["NIZAM__system/schemas/conversational_session.schema.json"],
+        "docs":     ["NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md (COUNSELOR hat is \u00a73)"],
+        "notion_data_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.witness"
+      },
+      "gates": ["SUKOON", "THABAT"],
+      "boundaries": [
+        "no numeric biometrics",
+        "no shame language (\u00a74 of contract)",
+        "needs_human_confirmation: true until operator commits"
+      ],
+      "gaps": [
+        "Identity-vote schema is implicit; not yet a separate schema file."
+      ]
+    },
+    "Dispatcher": {
+      "role": "Plan the day/week with recovery-first priority. Pulls capacity from Pulse; refuses deep work without grounding.",
+      "reads":  ["Pulse capacity read", "SUKOON state", "MUNAWARA weekly battle plan"],
+      "writes": ["tactical plan records", "battle ledger entries"],
+      "maps_to": {
+        "folders":  [
+          "MUNAWARA__tactical_strategy/",
+          "MUNAWARA__tactical_strategy/weeks/ (gitignored)",
+          "MUNAWARA__tactical_strategy/battle_ledger/ (gitignored)"
+        ],
+        "skills":   [
+          "NIZAM__system/skills/munawara-weekly-battle.md",
+          "NIZAM__system/skills/munawara-quarter-plan.md",
+          "NIZAM__system/skills/munawara-pivot.md"
+        ],
+        "personas": ["NIZAM__system/personas/MUNAWARA.json"],
+        "schemas":  [
+          "NIZAM__system/schemas/tactical_plan.schema.json",
+          "NIZAM__system/schemas/battle_ledger.schema.json"
+        ],
+        "protocols": ["NIZAM__system/protocols/weekly_sunday.md"]
+      },
+      "gates": ["SUKOON"],
+      "boundaries": [
+        "no deep-work block when Pulse capacity = LOW",
+        "must honor /sukoon-check gate state"
+      ],
+      "gaps": [
+        "Capacity\u2192plan computation is currently described in skill prose; no executable allocator yet."
+      ]
+    },
+    "Guardrail": {
+      "role": "Contrary-vote kill-switch. Detects pattern drift, surfaces it without shame, downshifts the session if SUKOON is red.",
+      "reads":  ["recent session records", "pillar votes", "missed pillars", "SUKOON state"],
+      "writes": ["downshift signal", "contradiction notes"],
+      "maps_to": {
+        "folders":  ["NAQD__brain_griller/", "NAQD__brain_griller/sessions/ (gitignored)"],
+        "skills":   [
+          "NIZAM__system/skills/naqd-grill.md",
+          "NIZAM__system/skills/naqd-challenge.md",
+          "NIZAM__system/skills/naqd-reconcile.md"
+        ],
+        "personas": ["NIZAM__system/personas/NAQD.json"],
+        "protocols": ["NIZAM__system/protocols/crisis_sukoon_red.md"],
+        "workflows": ["NIZAM__system/workflows/contradiction_resolution.md"]
+      },
+      "gates": ["SUKOON"],
+      "boundaries": [
+        "no shame language ever",
+        "treat missed pillar as DATA, not moral failure",
+        "auto-downshift to Supportive Reflection on SUKOON red"
+      ],
+      "gaps": [
+        "No automated drift detector; currently triggered by operator request."
+      ]
+    },
+    "Steward": {
+      "role": "Audit, dedupe, retention-tier migration. Owns the Audit Log and the retry/fallback machinery.",
+      "reads":  ["every agent's output", "Audit Log", "retention policy"],
+      "writes": ["Audit Log rows", "retention-migration receipts", "DeadLetter replays"],
+      "maps_to": {
+        "folders":  [
+          "NIZAM__system/ledgers/ (jsonl files gitignored)",
+          "HIFZ__github_version_control/scripts/"
+        ],
+        "skills":   [
+          "NIZAM__system/skills/pop-health.md",
+          "NIZAM__system/skills/nizam-governor.md"
+        ],
+        "policies": [
+          "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json",
+          "NIZAM__system/policies/CONNECTORS.json",
+          "NIZAM__system/policies/SYNC_POLICY.json",
+          "NIZAM__system/policies/PRIVACY_CLASSIFICATION.json"
+        ],
+        "schemas":  ["NIZAM__system/schemas/governor_runtime_record.schema.json"],
+        "scripts":  [
+          "HIFZ__github_version_control/scripts/nizam_governor_lib.py",
+          "HIFZ__github_version_control/scripts/nizam_dual_write.py",
+          "HIFZ__github_version_control/scripts/nizam_drive_mirror.py",
+          "HIFZ__github_version_control/scripts/notion_preflight.py"
+        ],
+        "notion_data_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.audit_log"
+      },
+      "gates": ["HIMAYAH", "THABAT"],
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_seconds": [1, 4, 16],
+        "fallbacks": {
+          "notion_down":  "Drive + sandbox queue; flag notion_pending=true.",
+          "drive_down":   "Notion + dead-letter for later mirror.",
+          "github_down":  "cached/raw repo; queue commits; flag repo_pending.",
+          "all_down":     "serialize full JSON bundle to operator stdout (\u00a71.1)."
+        }
+      },
+      "retention_tiers": {
+        "Hot":     {"window_days": [0,   30],  "notion": "full",     "drive": "Records/"},
+        "Warm":    {"window_days": [30,  90],  "notion": "compact",  "drive": "Records/"},
+        "Cold":    {"window_days": [90,  365], "notion": "summary",  "drive": "_Archive/"},
+        "Archive": {"window_days": [365, null],"notion": "reference","drive": "_Archive/ (max compression, restore-on-request)"}
+      },
+      "legal_hold_guard": "Audit + identity history NEVER auto-deleted; requires operator confirm + legal-hold check.",
+      "boundaries": [
+        "no destructive ops without confirmation",
+        "every write produces an Audit Log row",
+        "audit completeness target \u2265 99%"
+      ],
+      "gaps": [
+        "Retention migrator is a spec; no scheduled job yet (cf. NIZAM__system/docs/SCHEDULED_AGENTS.md).",
+        "DeadLetter ledger path not yet declared in POP_TEMPLE.json#ledgers."
+      ]
+    },
+    "Almanac": {
+      "role": "Weekly review. Aggregates the week's PERSISTED records into KPIs, blockers, felt-vs-reported divergences, and one redesign action.",
+      "reads":  ["Notion Witness/Pulse rows for the week", "Drive Records/ for the week", "EVENT_LEDGER for the week"],
+      "writes": ["weekly review markdown (Drive Records/Reviews/{YYYY}-W{WW}_Weekly-Review.docx)", "Notion weekly summary row"],
+      "maps_to": {
+        "folders":   ["YAWMIYAT__journaling/weekly/ (gitignored)"],
+        "skills":    [
+          "NIZAM__system/skills/nizam-almanac.md",
+          "NIZAM__system/skills/pop-recap.md"
+        ],
+        "protocols": ["NIZAM__system/protocols/weekly_sunday.md"],
+        "workflows": ["NIZAM__system/workflows/weekly_synthesis.md"]
+      },
+      "gates": ["THABAT"],
+      "cadence": {
+        "contract_says": "Friday",
+        "repo_says":     "Sunday (NIZAM__system/protocols/weekly_sunday.md)",
+        "resolution":    "OPERATOR_TO_RECONCILE \u2014 Almanac is interpretive (Friday is fine if shifted), pop-recap is structural and stays Sunday."
+      },
+      "boundaries": [
+        "aggregates only PERSISTED records; never sandbox-only memory.",
+        "never overwrites operator-authored weekly narrative \u2014 appends."
+      ],
+      "gaps": [
+        "No automated aggregator yet; runs as a conversational skill."
+      ]
+    }
+  },
+  "open_questions_for_operator": [
+    "Confirm or correct the agent\u2194module mapping above before any Python agent scaffolding starts.",
+    "Reconcile Almanac cadence: contract says Friday, repo protocol is Sunday.",
+    "Add DEAD_LETTER.jsonl to POP_TEMPLE.json#ledgers with privacy=strict_local and gitignore it.",
+    "Confirm Drive folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi privacy posture (DUAL_WRITE_GOVERNOR already binds it; SYNC_POLICY.json does not yet enumerate a drive_nizam_pop surface beyond the governor doc cross-link)."
+  ],
+  "see_also": [
+    "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md",
+    "NIZAM__system/docs/DUAL_WRITE_GOVERNOR.md",
+    "NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md",
+    "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json",
+    "NIZAM__system/policies/CONNECTORS.json",
+    "tools/nizam_startup.py"
+  ]
+}

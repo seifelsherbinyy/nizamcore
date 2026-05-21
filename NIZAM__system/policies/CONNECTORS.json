@@ -1,0 +1,160 @@
+{
+  "$schema_note": "Not validated by JSON Schema yet; treat as registry. Consumed by Steward (see AGENT_MAPPING.json#agents.Steward).",
+  "version": "1.0.0",
+  "generated": "2026-05-21T00:00:00Z",
+  "contract_doc": "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md",
+  "purpose": "Single source of truth for every external durable layer the orchestration layer may touch. Steward uses this to enforce \u00a75 retry/fallback. Do NOT duplicate Notion/Drive specifics that already live in DUAL_WRITE_GOVERNOR.json \u2014 cross-link instead.",
+  "dedupe_key_formula": {
+    "pattern": "{Lane}:{Type}:{date}:{slug}",
+    "regex":   "^[A-Za-z]+:[A-Za-z]+:[0-9]{4}-[0-9]{2}-[0-9]{2}:[a-z0-9-]{1,30}$",
+    "source":  "NIZAM__system/schemas/governor_runtime_record.schema.json#properties.dedupe_key",
+    "policy":  "Compute before every durable write. Found \u2192 UPDATE in place. Never create a duplicate."
+  },
+  "retry_policy": {
+    "max_attempts": 3,
+    "backoff_seconds": [1, 4, 16],
+    "applies_to": ["github", "drive", "notion"],
+    "on_final_failure": "Enqueue to dead_letter; alert; NEVER drop the payload (\u00a75).",
+    "source": "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md \u00a75"
+  },
+  "fallback_chain": {
+    "notion_down": {
+      "action":        "Write the record to Drive and a local sandbox queue; mark notion_pending=true.",
+      "replay_owner":  "Steward replays queue when Notion returns.",
+      "queue_target":  "dead_letter.notion_pending"
+    },
+    "drive_down": {
+      "action":        "Write to Notion; hold the doc body in the dead-letter queue for later mirror.",
+      "replay_owner":  "Steward replays queue when Drive returns.",
+      "queue_target":  "dead_letter.drive_pending"
+    },
+    "github_down": {
+      "action":        "Keep working from cached/raw repo; queue commits; flag repo_pending.",
+      "replay_owner":  "Steward replays on next successful network probe.",
+      "queue_target":  "dead_letter.repo_pending"
+    },
+    "all_down_or_sandbox_only": {
+      "action":        "Serialize every result to a single JSON bundle and PRINT it in full to stdout (\u00a71.1).",
+      "replay_owner":  "Operator saves the printed payload to a durable layer by hand.",
+      "queue_target":  "stdout (loud, not silent)"
+    }
+  },
+  "dead_letter": {
+    "purpose": "Hold any payload that cannot be persisted after retries. Never silent drop.",
+    "primary_jsonl": "NIZAM__system/ledgers/DEAD_LETTER.jsonl",
+    "primary_jsonl_status": "TODO \u2014 not yet declared in POP_TEMPLE.json#ledgers (operator action: add with privacy=strict_local and gitignore it).",
+    "stdout_fallback": "If even the JSONL cannot be written (e.g. read-only sandbox), Steward prints the full bundle to stdout."
+  },
+  "audit_log": {
+    "schema_fields": ["event_type", "time", "entity_id", "payload_hash", "outcome"],
+    "completeness_target": 0.99,
+    "payload_storage_rule": "HASH ONLY + \u2264 400 chars excerpt. NEVER the full message text or any token. (\u00a73)",
+    "notion_data_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.audit_log",
+    "jsonl_mirror": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",
+    "jsonl_mirror_status": "gitignored (strict_local); spec in POP_TEMPLE.json#ledgers.EVENT_LEDGER"
+  },
+  "secret_scan": {
+    "purpose": "Pre-push and pre-Drive-overwrite check (\u00a73).",
+    "regex_set": [
+      "AKIA[0-9A-Z]{16}",
+      "ghp_[A-Za-z0-9]{20,}",
+      "github_pat_[A-Za-z0-9_]{20,}",
+      "secret_[A-Za-z0-9]{20,}",
+      "sk-[A-Za-z0-9-_]{20,}",
+      "(?i)api[_-]?key\\s*[=:]\\s*['\\\"][^'\\\"]{12,}['\\\"]",
+      "(?i)bearer\\s+[A-Za-z0-9._\\-]{20,}",
+      "-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"
+    ],
+    "on_hit": "Abort the push/write. Surface the file:line so operator can rotate the secret and rewrite history if needed."
+  },
+  "layers": {
+    "github": {
+      "kind":         "version_control",
+      "role":         "Source of truth for code, schemas, contract docs, diagrams (\u00a70). Steward commits + Almanac /docs writes.",
+      "base_url":     "https://github.com/seifelsherbinyy/nizamcore",
+      "raw_url_pattern": "https://raw.githubusercontent.com/seifelsherbinyy/nizamcore/main/{path}",
+      "auth_env":     ["GITHUB_TOKEN (optional \u2014 higher rate limits)"],
+      "auth_default": "git credential helper / SSH key on host",
+      "status":       "up",
+      "owner":        "Steward",
+      "rate_limit":   "5000 req/hr authenticated; 60 unauth"
+    },
+    "drive": {
+      "kind":           "doc_mirror",
+      "role":           "Human-readable narrative companion to every Notion row (\u00a75 dual-write).",
+      "root_folder_id": "1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
+      "root_folder_url":"https://drive.google.com/drive/folders/1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
+      "auth_env":       ["GOOGLE_APPLICATION_CREDENTIALS (preferred)", "GOOGLE_OAUTH_CLIENT_SECRETS + GOOGLE_OAUTH_TOKEN (fallback)"],
+      "status":         "unconfigured",
+      "owner":          "Steward",
+      "see_also":       "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#targets",
+      "runtime_paths":  "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#drive_runtime_paths",
+      "share_policy":   "NOT world-shared; share only with the service account / owner (\u00a73)."
+    },
+    "notion": {
+      "kind":      "database",
+      "role":      "Queryable structured rows (Pulse, Witness, Audit Log).",
+      "workspace": "NIZAM // POP",
+      "data_sources_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources",
+      "required_properties_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.required_properties",
+      "auth_env":  ["NOTION_TOKEN (CLI path)", "Cursor MCP (interactive path)"],
+      "status":    "unconfigured",
+      "owner":     "Steward",
+      "share_policy": "Restricted to the owner; do not change sharing programmatically (\u00a73).",
+      "pulse_rules_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.pulse_rules"
+    },
+    "telegram": {
+      "kind":     "intake_messaging",
+      "role":     "Warden capture channel for ad-hoc operator notes.",
+      "auth_env": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_ALLOWED_CHAT_IDS"],
+      "status":   "TODO_no_adapter",
+      "owner":    "Warden",
+      "gap":      "No adapter exists in repo yet; tracked in AGENT_MAPPING.json#agents.Warden.gaps."
+    },
+    "gmail": {
+      "kind":     "intake_email",
+      "role":     "Warden capture channel for forwarded or labeled email.",
+      "auth_env": ["GMAIL_OAUTH_JSON_PATH", "GMAIL_LABEL_FILTER"],
+      "status":   "TODO_no_adapter",
+      "owner":    "Warden",
+      "gap":      "No adapter exists in repo yet; tracked in AGENT_MAPPING.json#agents.Warden.gaps."
+    },
+    "llm_runtime": {
+      "kind":     "model_provider",
+      "role":     "Backbone for Scribe / Witness / Counselor.",
+      "auth_env": ["CLAUDE_API_KEY (preferred)", "OPENAI_API_KEY (alt)"],
+      "status":   "unconfigured",
+      "owner":    "Scribe, Witness",
+      "note":     "Never log prompts/responses with secrets. Audit Log stores hashes (\u00a73)."
+    },
+    "serpapi_marsad": {
+      "kind":     "data_source_external",
+      "role":     "Primary flight-price feed for MARSAD module (out-of-scope for the orchestration layer; listed here so secret-scan and env-var inventory are exhaustive).",
+      "auth_env": ["SERPAPI_API_KEY"],
+      "status":   "module_owned",
+      "owner":    "MARSAD",
+      "see_also": "MARSAD__flight_radar/requirements.txt"
+    }
+  },
+  "preflight_checks": [
+    "tools/nizam_startup.py (\u00a72 sandbox + gate + connector reachability)",
+    "HIFZ__github_version_control/scripts/notion_preflight.py (Notion DB required-properties check)",
+    "HIFZ__github_version_control/scripts/nizam_drive_mirror.py --dry-run (Drive layout sanity)"
+  ],
+  "open_questions_for_operator": [
+    "Add NIZAM__system/ledgers/DEAD_LETTER.jsonl entry to POP_TEMPLE.json#ledgers (privacy=strict_local) and confirm gitignore covers it.",
+    "Confirm Drive folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi privacy classification; SYNC_POLICY.json#surfaces does not yet enumerate a drive_nizam_pop surface beyond the governor doc.",
+    "Confirm Telegram + Gmail intake adapter scaffolding is in scope before committing to TELEGRAM_BOT_TOKEN / GMAIL_OAUTH_JSON_PATH wiring."
+  ],
+  "see_also": [
+    "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md",
+    "NIZAM__system/docs/DUAL_WRITE_GOVERNOR.md",
+    "NIZAM__system/AGENT_MAPPING.json",
+    "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json",
+    "NIZAM__system/policies/SYNC_POLICY.json",
+    "NIZAM__system/policies/PRIVACY_CLASSIFICATION.json",
+    "NIZAM__system/policies/TOOL_ACCESS_MATRIX.json",
+    ".env.example",
+    "tools/nizam_startup.py"
+  ]
+}

@@ -1,0 +1,41 @@
+%% NIZAM Retention Lifecycle (Hot → Warm → Cold → Archive)
+%% Source of truth: NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md §5 + §6.d
+%% Enforced by Steward (AGENT_MAPPING.json#agents.Steward.retention_tiers)
+%% Legal-hold guard: NEVER auto-delete audit/identity history.
+
+stateDiagram-v2
+    direction LR
+    [*] --> Hot
+
+    Hot: Hot 0-30d (Notion full, Drive Records/)
+    Warm: Warm 30-90d (Notion compact, Drive Records/)
+    Cold: Cold 90-365d (Notion summary, Drive _Archive/)
+    Archive: Archive 1y+ (Notion reference, Drive _Archive/ max compression)
+
+    Hot --> Warm: age > 30d
+    Warm --> Cold: age > 90d
+    Cold --> Archive: age > 365d
+
+    state LegalHoldCheck <<choice>>
+    Archive --> LegalHoldCheck: operator requests delete
+    LegalHoldCheck --> Archive: HOLD active - refuse, log attempt
+    LegalHoldCheck --> Restored: operator restore request
+    LegalHoldCheck --> Deleted: operator confirm + no legal hold
+
+    Restored --> Hot: rehydrate to Hot tier
+    Deleted --> [*]
+
+    note right of Hot
+        Trigger: record created (write-receipt OK).
+        Indexed: dedupe_key in Notion, file in Drive Records/{Lane}/.
+    end note
+
+    note right of Cold
+        Trigger: nightly Steward sweep (cf. SCHEDULED_AGENTS.md).
+        Action: Notion compact-then-link, Drive .docx -> .zip in _Archive/.
+    end note
+
+    note right of LegalHoldCheck
+        Audit Log + identity history are ALWAYS held.
+        No auto-delete EVER without operator confirm + legal-hold check.
+    end note

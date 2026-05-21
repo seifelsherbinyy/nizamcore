@@ -1,0 +1,50 @@
+%% NIZAM Write-Path Sequence (record → dedupe → dual-write → write-back → audit)
+%% Source of truth: NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md §5 + §6.c
+%% Realized in HIFZ__github_version_control/scripts/nizam_dual_write.py
+%% dedupe_key formula: {Lane}:{Type}:{date}:{slug} (governor_runtime_record.schema.json)
+
+sequenceDiagram
+    autonumber
+    participant A as Agent (Scribe/Pulse/Witness/Almanac)
+    participant S as Steward (Governor)
+    participant N as Notion (Pulse/Witness)
+    participant D as Drive (Records/)
+    participant L as Audit Log
+    participant Q as DeadLetter Queue
+    participant O as Operator (stdout)
+
+    A->>S: record + payload
+    S->>S: normalize · compute dedupe_key<br/>{Lane}:{Type}:{date}:{slug}
+    S->>N: query dedupe_key
+    alt found
+        N-->>S: existing page_id (UPDATE mode)
+    else not found
+        N-->>S: none (CREATE mode)
+    end
+    S->>D: check Drive path
+
+    rect rgb(230,245,255)
+        note over S,N: Primary write (retry ladder: 1s · 4s · 16s, max 3)
+        S->>N: write row (CREATE or UPDATE)
+        alt success
+            N-->>S: page_id + url
+        else transient failure
+            S->>S: backoff(1s) · retry
+            S->>S: backoff(4s) · retry
+            S->>S: backoff(16s) · retry
+            S-->>Q: still failing → enqueue, alert (NEVER drop)
+        end
+    end
+
+    S->>D: write Drive doc (header: notion_page_id · dedupe_key · captured_at · repo_commit)
+    D-->>S: drive_url
+    S->>N: write-back DriveLink
+    S->>L: append audit row (event_type · time · entity_id · payload_hash · outcome)
+
+    alt all layers down (§5 last resort)
+        S->>O: serialize FULL JSON bundle to stdout<br/>"§1.1 — operator saves by hand"
+    end
+
+    S-->>A: write-receipt JSON (§7-style)
+
+    note over A,O: COMPLETE only when (a) record persisted, (b) audit row written, (c) pending queue reported.

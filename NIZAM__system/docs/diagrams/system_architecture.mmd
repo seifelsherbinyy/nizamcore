@@ -1,0 +1,37 @@
+%% NIZAM System Architecture
+%% Source of truth: NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md §6.a
+%% Boundary rule: §1.1 — the sandbox is COMPUTE, never the system of record.
+%% Update this file in the SAME commit as any structural change.
+
+flowchart LR
+    subgraph sandbox [Ephemeral Sandbox: COMPUTE ONLY]
+        direction TB
+        clone["git clone nizamcore<br/>or raw URL fallback"]
+        startup["tools/nizam_startup.py<br/>(§2 verifier)"]
+        agents["Agent runtime<br/>Warden · Scribe · Pulse<br/>Witness · Dispatcher<br/>Guardrail · Steward · Almanac"]
+        deadletter["DeadLetter queue<br/>(in-memory, last-resort stdout dump)"]
+
+        clone --> startup
+        startup --> agents
+        agents -.->|"on persist failure (§5)"| deadletter
+    end
+
+    subgraph durable [Durable Layers: SYSTEM OF RECORD]
+        direction TB
+        github["GitHub: nizamcore<br/>(source of truth, v3.3.0+)"]
+        drive["Google Drive<br/>folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi<br/>(human-readable narrative)"]
+        notion["Notion: NIZAM // POP<br/>Pulse · Witness · Audit Log<br/>(queryable rows)"]
+    end
+
+    clone -. "read repo" .- github
+    agents -->|"§5 primary writes"| notion
+    agents -->|"§5 dual-write (DUAL_WRITE_GOVERNOR)"| drive
+    agents -->|"commits + diagrams (§6)"| github
+
+    deadletter ==>|"§1.1: print payload<br/>so operator can save by hand"| operator((Operator))
+
+    classDef boundary stroke-dasharray: 6 4
+    class sandbox,durable boundary
+
+    %% NOTE: The dashed boxes are the explicit "no storage in sandbox" line.
+    %% Nothing inside `sandbox` may be relied on after the session ends.

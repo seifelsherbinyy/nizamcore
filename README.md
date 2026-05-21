@@ -57,7 +57,7 @@ This repo is **public** for the framework and scaffolding. Personal contents are
 
 **Public (in this repo):** schemas, templates, skills, policies, docs, READMEs, master registries, the architecture.
 
-**Strict-local (never committed):** `raw/`, `triaged/`, `sessions/`, `signals/`, `overload_flags.jsonl`, `HAJR/`, `SOUL.md`, all Phase 2/3 ledgers, future `MAL/`, `BADAN/`, `AHEL/` contents, and any `.env` / token / secret files.
+**Strict-local (never committed):** `raw/`, `triaged/`, `sessions/`, `signals/`, `YAWMIYAT__journaling/sessions/`, `mirrors/`, `weekly/`, `overload_flags.jsonl`, `HAJR/`, `SOUL.md`, all Phase 2/3 ledgers, future `MAL/`, `BADAN/`, `AHEL/` contents, and any `.env` / token / secret files.
 
 The framework is openly shareable; the personal life data inside it is not. Treat this repo as a **structural manifest** of how the system works, not a journal.
 
@@ -65,8 +65,9 @@ The framework is openly shareable; the personal life data inside it is not. Trea
 
 **Morning (5–10 min)**:
 1. `/sukoon-check` — log sleep / energy / stress.
-2. `/tafrigh-capture` — brain-dump without judgment.
-3. `/tafrigh-triage` — sort into Now / Next / Later / Delete / Reflect / Escalate.
+2. (optional) `/nizam-checkin` — felt-state + capacity + pillar vote (~60s).
+3. `/tafrigh-capture` — brain-dump without judgment.
+4. `/tafrigh-triage` — sort into Now / Next / Later / Delete / Reflect / Escalate.
 
 **Ad-hoc**:
 - `/shura-brainstorm "<topic>"` for co-thinking with vault-first research.
@@ -74,7 +75,10 @@ The framework is openly shareable; the personal life data inside it is not. Trea
 
 **Weekly (Sunday, ~30 min)**:
 - `/pop-recap` — synthesize the week from ledgers.
+- (optional) `/nizam-almanac` — interpretive review from conversational session JSON.
 - `/pop-health` — audit for stale claims, orphan notes, contradictions.
+
+**Conversational layer**: [`NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md`](NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md) — portable prompt; `/nizam-counsel`, `/nizam-assess`, `/nizam-consult` for deeper sessions.
 
 ## Read order for new visitors
 

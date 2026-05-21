@@ -18,6 +18,13 @@ Each skill is an encoded set of paths, conventions, and procedures — not a fre
 | [sukoon-check](sukoon-check.md) | SUKOON | `/sukoon-check` | Log sleep/energy/stress signals |
 | [pop-recap](pop-recap.md) | NIZAM | `/pop-recap` | Synthesize the week from ledgers |
 | [pop-health](pop-health.md) | NIZAM | `/pop-health` | Audit POP for stale claims, orphans, contradictions, gaps |
+| [nizam-checkin](nizam-checkin.md) | NIZAM | `/nizam-checkin` | Daily felt-state check-in + SCRIBE JSON (~60s) |
+| [nizam-counsel](nizam-counsel.md) | NIZAM | `/nizam-counsel` | Counseling session — COUNSELOR-first |
+| [nizam-assess](nizam-assess.md) | NIZAM | `/nizam-assess` | Assessment — pillars, B=MAP, continuity |
+| [nizam-consult](nizam-consult.md) | NIZAM | `/nizam-consult <topic>` | Decision consultation with options tree |
+| [nizam-almanac](nizam-almanac.md) | NIZAM | `/nizam-almanac` | Interpretive weekly Almanac from session JSON |
+
+Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.md)
 
 ## Phase 2 — strategy + finance + body + decisions (14 skills)
 

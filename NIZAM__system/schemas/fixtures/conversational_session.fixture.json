@@ -1,0 +1,36 @@
+{
+  "session_type": "checkin",
+  "captured_at": "2026-05-21T12:00:00Z",
+  "felt_state": {
+    "energy": 3,
+    "mood": "steady",
+    "anxiety_baseline": "low",
+    "gut": null,
+    "stimulant_load_felt": "one coffee",
+    "notable": null
+  },
+  "capacity": {
+    "level": "MEDIUM",
+    "trend": "stable",
+    "driver": "felt energy 3/5, no red SUKOON flag"
+  },
+  "pillars": {
+    "voted": ["show_up_for_family"],
+    "missed": [],
+    "contrary_urges": []
+  },
+  "assessment": {
+    "pattern": null,
+    "bmap_audit": null,
+    "continuity_note": "showed up despite mediocre sleep"
+  },
+  "plan": {
+    "priorities": ["one deep work block"],
+    "recovery_item": "walk after lunch",
+    "tiny_versions": ["10 min inbox only if energy drops"]
+  },
+  "decisions": [],
+  "open_questions": [],
+  "confidence": 0.85,
+  "needs_human_confirmation": false
+}

@@ -8,6 +8,7 @@
     { "name": "learning_ledger",     "phase": 1, "path": "schemas/learning_ledger.schema.json",     "describes": "LEARNING_LEDGER.jsonl line schema" },
     { "name": "overload_flag",       "phase": 1, "path": "schemas/overload_flag.schema.json",       "describes": "SUKOON overload flag entries" },
     { "name": "note_frontmatter",    "phase": 1, "path": "schemas/note_frontmatter.schema.json",    "describes": "YAML frontmatter on every POP markdown note" },
+    { "name": "conversational_session", "phase": 1, "path": "schemas/conversational_session.schema.json", "describes": "NIZAM SCRIBE session JSON (YAWMIYAT/sessions/)" },
     { "name": "long_horizon_plan",   "phase": 2, "path": "schemas/long_horizon_plan.schema.json",   "describes": "KABIR_SHERBO 10/15/20-yr plan", "scaffolded": true },
     { "name": "tactical_plan",       "phase": 2, "path": "schemas/tactical_plan.schema.json",       "describes": "MUNAWARA 1/3/5-yr plan", "scaffolded": true },
     { "name": "battle_ledger",       "phase": 2, "path": "schemas/battle_ledger.schema.json",       "describes": "MUNAWARA weekly battle outcomes", "scaffolded": true },

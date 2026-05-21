@@ -12,8 +12,9 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 
 ## NIZAM__system (00 — governance)
 - [`NIZAM__system/SCHEMA_INDEX.json`](NIZAM__system/SCHEMA_INDEX.json) — all schemas
-- [`NIZAM__system/personas/`](NIZAM__system/personas/) — 7 persona JSONs (TAFRIGH, SHURA, NAQD, KABIR_SHERBO, MUNAWARA, MAL, BADAN)
-- [`NIZAM__system/skills/`](NIZAM__system/skills/) — 30 POP slash-command skill files (Phase 1 + 2 + 3)
+- [`NIZAM__system/personas/`](NIZAM__system/personas/) — 8 persona JSONs (NIZAM, TAFRIGH, SHURA, NAQD, KABIR_SHERBO, MUNAWARA, MAL, BADAN)
+- [`NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md`](NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md) — portable conversational front-end prompt
+- [`NIZAM__system/skills/`](NIZAM__system/skills/) — 35 POP slash-command skill files (Phase 1 + 2 + 3)
 - [`NIZAM__system/protocols/`](NIZAM__system/protocols/) — 8 cadence-driven skill chains (daily/weekly/monthly/quarterly/annual/crisis/onboarding)
 - [`NIZAM__system/workflows/`](NIZAM__system/workflows/) — 8 scenario-driven skill chains (idea-to-decision, finance-decision, etc.)
 - [`NIZAM__system/PROTOCOLS_INDEX.json`](NIZAM__system/PROTOCOLS_INDEX.json) — machine-readable protocol registry
@@ -44,7 +45,7 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`BADAN__body_health_system/`](BADAN__body_health_system/) — advisory health tracking → [doctrine](NIZAM__system/docs/BADAN_HEALTH_ADVISORY_NOTES.md)
 - [`QARAR__decisions/`](QARAR__decisions/) — ADR-style decision records
 - [`INTAJ__output_engine/`](INTAJ__output_engine/) — tasks / agendas / deliverables (shell only)
-- [`YAWMIYAT__journaling/`](YAWMIYAT__journaling/) — structured journal (shell only)
+- [`YAWMIYAT__journaling/`](YAWMIYAT__journaling/) — structured journal + NIZAM conversational sessions (JSON + mirrors)
 - [`HIKMAH__learnings/`](HIKMAH__learnings/) — crystallized insights (shell only)
 - [`NUR__obsidian_vault/`](NUR__obsidian_vault/) — Obsidian mirror (shell only — pending install)
 - [`JADWAL__notion_dashboards/`](JADWAL__notion_dashboards/) — Notion mirror (shell only — pending API setup)

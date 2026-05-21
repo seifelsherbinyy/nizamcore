@@ -13,6 +13,8 @@
 | `challenge` | `note_frontmatter` | `NAQD/sessions/` | `/naqd-challenge` | strict_local |
 | `reconciliation` | `note_frontmatter` | `NAQD/sessions/` | `/naqd-reconcile` | strict_local |
 | `recovery_signal` | `note_frontmatter` | `SUKOON/signals/` | `/sukoon-check` | strict_local |
+| `conversational_session` | `conversational_session` | `YAWMIYAT/sessions/` | `/nizam-checkin`, `/nizam-counsel`, `/nizam-assess`, `/nizam-consult` | strict_local |
+| `conversational_session_mirror` | `note_frontmatter` | `YAWMIYAT/mirrors/`, `YAWMIYAT/weekly/` | `/nizam-*`, `/nizam-almanac` | strict_local |
 | `decision` | `decision_ledger` + `note_frontmatter` | `QARAR/` | `/qarar-decide` | review_before_commit |
 | `learning` | `learning_ledger` | `HIKMAH/` (Phase 2) | (shell) | review_before_commit |
 | `strategy_plan` (10/15/20yr) | `long_horizon_plan` | `KABIR_SHERBO/{10,15,20}_year/` | `/kabir-sherbo-vision` | strict_local |

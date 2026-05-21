@@ -351,7 +351,7 @@ def dual_write(payload: dict[str, Any], *, dry_run: bool = False) -> dict[str, A
         drive_file_id = existing_drive["id"]
         mode = "UPDATE"
 
-    # Stage 4: WRITE Notion
+    # Stage 4: WRITE Notion (primary)
     props = notion_build_properties(record, config)
     try:
         if page_id:
@@ -363,6 +363,22 @@ def dual_write(payload: dict[str, Any], *, dry_run: bool = False) -> dict[str, A
                 record["notion_title"],
                 props,
             )
+        # Secondary DB (e.g. Pulse for assessment)
+        secondary_key = record.get("notion_secondary")
+        if secondary_key and secondary_key in config["notion"]["data_sources"]:
+            sec_id = config["notion"]["data_sources"][secondary_key]["data_source_id"]
+            sec_page = notion_query_by_dedupe(
+                notion_token, sec_id, record["dedupe_key"], prop_dedupe
+            )
+            if sec_page:
+                notion_update_page(notion_token, sec_page, props)
+            else:
+                notion_create_page(
+                    notion_token,
+                    sec_id,
+                    record["notion_title"],
+                    props,
+                )
     except requests.RequestException as e:
         return runtime_receipt(
             "FAILED",

@@ -8,6 +8,7 @@ Commands:
   alert      — Stage 3: price drop signal detection
   forecast   — Stage 4: trend model update
   run-all    — Run all four stages in sequence
+  seed       — Import historical price data from CSV or JSON (bootstraps cold start)
   schedule   — Start APScheduler daemon (06:00 UTC daily)
   dashboard  — Live executive dashboard at http://localhost:7329
   status     — Print current store summary
@@ -16,6 +17,8 @@ Commands:
 Usage:
   cd MARSAD__flight_radar
   python -m radar.main discover
+  python -m radar.main seed --file prices.csv --dry-run
+  python -m radar.main seed --file prices.csv
   python -m radar.main schedule
 """
 
@@ -61,6 +64,45 @@ def cmd_forecast(args: argparse.Namespace) -> int:
     from radar.stages.forecast import run_forecast
     stats = run_forecast()
     print(f"\nFORECAST: {stats['series_updated']} series updated, {stats['buy_signals']} buy_signals")
+    return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.seed import import_from_csv, import_from_json
+
+    filepath = Path(args.file)
+    if not filepath.exists():
+        print(f"Error: file not found: {filepath}")
+        return 1
+
+    suffix = filepath.suffix.lower()
+    kwargs = dict(
+        source_note=args.source_note,
+        skip_flight_time_check=not args.enforce_flight_time,
+        dry_run=args.dry_run,
+    )
+
+    if suffix == ".json":
+        stats = import_from_json(filepath, **kwargs)
+    elif suffix in (".csv", ".txt"):
+        stats = import_from_csv(filepath, **kwargs)
+    else:
+        print(f"Error: unsupported file format {suffix!r} — use .csv or .json")
+        return 1
+
+    if args.dry_run:
+        print(f"\nSEED (DRY RUN): {stats['rows_imported']} would be imported, "
+              f"{stats['rows_filtered']} filtered, {stats['rows_error']} errors")
+    else:
+        print(f"\nSEED: {stats['rows_imported']} imported, "
+              f"{stats['rows_filtered']} filtered, {stats['rows_error']} errors")
+
+    if stats["rows_imported"] >= 7:
+        print("  → Observation count ≥ 7: series will reach MEDIUM confidence on next forecast run.")
+    elif stats["rows_imported"] > 0:
+        print(f"  → {7 - stats['rows_imported']} more observation(s) needed to exit cold-start period.")
+
     return 0
 
 
@@ -167,6 +209,20 @@ def main() -> int:
     # forecast
     p_forecast = subparsers.add_parser("forecast", help="Stage 4: trend model update")
     p_forecast.set_defaults(func=cmd_forecast)
+
+    # seed
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Import historical prices from CSV or JSON to bootstrap cold start",
+    )
+    p_seed.add_argument("--file", required=True, help="Path to .csv or .json price file")
+    p_seed.add_argument("--source-note", default="manual_import",
+                        help="Label stored in source_note field (default: manual_import)")
+    p_seed.add_argument("--enforce-flight-time", action="store_true",
+                        help="Also apply the 30-hour one-way constraint (off by default for historical data)")
+    p_seed.add_argument("--dry-run", action="store_true",
+                        help="Preview what would be imported without writing to store")
+    p_seed.set_defaults(func=cmd_seed)
 
     # run-all
     p_all = subparsers.add_parser("run-all", help="Run monitor + alert + forecast in sequence")

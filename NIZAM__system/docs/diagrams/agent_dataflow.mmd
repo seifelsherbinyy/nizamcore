@@ -1,0 +1,47 @@
+%% NIZAM Agent Dataflow
+%% Source of truth: NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md §4 + §6.b
+%% Each edge labels the record type or signal that crosses the hop.
+%% Boundary rules from AGENT_MAPPING.json#shared_boundaries are enforced at every arrow.
+
+flowchart TD
+    intake[/"Intake channels<br/>Telegram · Gmail · paste"/]
+
+    Warden["Warden<br/>capture only<br/>(TAFRIGH + /tafrigh-capture)"]
+    Scribe["Scribe<br/>raw → structured JSON<br/>confidence-tagged"]
+    Pulse["Pulse<br/>objective biometrics ONLY<br/>(SUKOON + BADAN)"]
+    Witness["Witness<br/>subjective layer ONLY<br/>(YAWMIYAT)"]
+    Dispatcher["Dispatcher<br/>recovery-first plan<br/>(MUNAWARA)"]
+    Guardrail["Guardrail<br/>contrary-vote kill-switch<br/>(NAQD + crisis protocol)"]
+    Steward["Steward<br/>audit · dedupe · retention<br/>(DUAL_WRITE_GOVERNOR)"]
+    Almanac["Almanac<br/>weekly review<br/>(/nizam-almanac + /pop-recap)"]
+
+    deadletter["DeadLetter<br/>conf &lt; 0.55 OR schema-invalid"]
+    audit[("Audit Log<br/>Notion + EVENT_LEDGER")]
+    durable[("Durable layers<br/>Notion · Drive · GitHub")]
+
+    intake --> Warden
+    Warden -->|"CaptureLog"| Scribe
+
+    Scribe -->|"conf ≥ 0.78 auto-write"| Steward
+    Scribe -->|"0.55 ≤ conf &lt; 0.78<br/>manual review"| Steward
+    Scribe -->|"conf &lt; 0.55 or invalid"| deadletter
+
+    Scribe -->|"numeric biometric fields ONLY"| Pulse
+    Scribe -->|"subjective fields ONLY"| Witness
+
+    Pulse -->|"capacity read"| Dispatcher
+    Witness -->|"identity vote · felt state"| Dispatcher
+
+    Dispatcher -->|"draft plan"| Guardrail
+    Guardrail -->|"approved plan<br/>OR downshift signal"| Steward
+
+    Steward -->|"dual-write + audit row"| durable
+    Steward --> audit
+    deadletter -.->|"replay when layer returns"| Steward
+
+    Steward -->|"end-of-week aggregate (PERSISTED only)"| Almanac
+    Almanac -->|"WeeklyReview doc"| Steward
+
+    %% Boundary annotations (enforced in AGENT_MAPPING.json#shared_boundaries)
+    Pulse -.->|"BOUNDARY: never writes subjective"| Witness
+    Witness -.->|"BOUNDARY: never writes biometrics"| Pulse

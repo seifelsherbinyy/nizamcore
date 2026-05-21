@@ -30,6 +30,17 @@ $1,500 → $3,000 → $5,000 → $7,500 → $10,000+ /month. Promotion criterion
 ## Sibling repo reference
 [`goldminer`](https://github.com/seifelsherbinyy/goldminer) (MIT) implements Python ETL for personal finance. Consider as upstream library or pattern source when ingesting transaction data.
 
+## PFA — Personal Financial Assistant subsystem
+
+The `pfa/` subfolder holds the consolidated personal financial position:
+- `canonical_state.json` — single source of truth (strict_local)
+- `ledgers/` — append-only debt events, payments, decisions (strict_local)
+- `learnings_log.jsonl` — continuous life-learning capture (strict_local)
+
+Debt architecture tracks: HSBC/CIB credit cards, Halan/Valu (BNPL recycling-eligible), TRU/Souhoola (BNPL pure-installment), and family loans. See [`pfa/README.md`](pfa/README.md) for the full runbook.
+
+Schemas: `pfa_canonical_state`, `pfa_debt_event`, `pfa_payment_event`, `pfa_learning` in `NIZAM__system/schemas/`.
+
 ## Doctrine
 [`NIZAM__system/docs/MAL_FINANCIAL_LADDER.md`](../NIZAM__system/docs/MAL_FINANCIAL_LADDER.md)
 

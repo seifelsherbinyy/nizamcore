@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/pfa_learning.schema.json",
+  "title": "PFA learning — append-only entry capturing financial life learnings",
+  "type": "object",
+  "required": ["ts", "module", "event_type", "learning", "rationale"],
+  "properties": {
+    "ts": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC with Z" },
+    "module": { "const": "MAL" },
+    "event_type": {
+      "type": "string",
+      "enum": ["insight", "correction", "pattern_observed", "rule_learned", "mistake_logged", "strategy_validated", "strategy_invalidated", "external_learning"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["debt_management", "cash_flow", "credit_recycling", "bnpl_strategy", "savings", "income", "expense_control", "risk_management", "platform_behavior", "general"]
+    },
+    "learning": { "type": "string", "description": "The learning itself — one clear sentence" },
+    "rationale": { "type": "string", "description": "Why this matters or what triggered it" },
+    "evidence": { "type": ["string", "null"], "description": "What data or event supports this learning" },
+    "related_debt_ids": { "type": "array", "items": { "type": "string" }, "description": "Debt IDs this learning relates to" },
+    "actionable": { "type": "boolean", "description": "Whether this learning changes future behavior" },
+    "supersedes": { "type": ["string", "null"], "description": "Idempotency key of a prior learning this corrects" },
+    "idempotency_key": { "type": "string" },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

@@ -48,6 +48,9 @@ MAL__financial_engine/expenses_debt_assets/
 MAL__financial_engine/monthly_reviews/
 MAL__financial_engine/scenario_models/
 MAL__financial_engine/exchange_rate_log.jsonl
+MAL__financial_engine/pfa/canonical_state.json
+MAL__financial_engine/pfa/ledgers/
+MAL__financial_engine/pfa/learnings_log.jsonl
 
 BADAN__body_health_system/daily_signals/
 BADAN__body_health_system/weekly_reviews/

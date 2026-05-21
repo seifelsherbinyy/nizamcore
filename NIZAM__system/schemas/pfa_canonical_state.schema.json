@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/pfa_canonical_state.schema.json",
+  "title": "PFA canonical state — single source of truth for personal financial position",
+  "type": "object",
+  "required": ["snapshot_date", "currency", "exchange_rate", "income", "debt_architecture", "cash_flow", "provenance"],
+  "properties": {
+    "snapshot_date": { "type": "string", "format": "date" },
+    "currency": { "type": "string", "enum": ["EGP_and_USD", "EGP", "USD"] },
+    "exchange_rate": {
+      "type": "object",
+      "required": ["egp_per_usd", "rate_verified", "rate_date"],
+      "properties": {
+        "egp_per_usd": { "type": "number" },
+        "rate_verified": { "type": "boolean" },
+        "rate_sources": { "type": "array", "items": { "type": "string" } },
+        "rate_date": { "type": "string", "format": "date" }
+      }
+    },
+    "income": {
+      "type": "object",
+      "required": ["stable_net_monthly_egp"],
+      "properties": {
+        "stable_gross_monthly_egp": { "type": ["number", "null"] },
+        "stable_net_monthly_egp": { "type": "number" },
+        "stable_net_monthly_usd_equiv": { "type": ["number", "null"] },
+        "variable_monthly_avg_egp": { "type": ["number", "null"] },
+        "one_off_recent_egp": { "type": ["number", "null"] },
+        "source": { "type": "string" },
+        "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION", "STALE", "MISSING"] }
+      }
+    },
+    "fixed_expenses_monthly_egp": {
+      "type": "object",
+      "properties": {
+        "rent": { "type": ["number", "null"] },
+        "utilities": { "type": ["number", "null"] },
+        "transport": { "type": ["number", "null"] },
+        "subscriptions": { "type": ["number", "null"] },
+        "insurance": { "type": ["number", "null"] },
+        "other": { "type": ["number", "null"] },
+        "total": { "type": ["number", "null"] }
+      }
+    },
+    "variable_expenses_monthly_egp": {
+      "type": "object",
+      "properties": {
+        "food": { "type": ["number", "null"] },
+        "personal": { "type": ["number", "null"] },
+        "family_support": { "type": ["number", "null"] },
+        "other": { "type": ["number", "null"] },
+        "total": { "type": ["number", "null"] }
+      }
+    },
+    "debt_architecture": {
+      "type": "object",
+      "required": ["debts"],
+      "properties": {
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_outstanding_egp": { "type": ["number", "null"] },
+            "total_monthly_obligations_egp": { "type": ["number", "null"] },
+            "recycling_eligible_limit_egp": { "type": ["number", "null"] },
+            "debt_to_income_ratio": { "type": ["number", "null"] }
+          }
+        },
+        "debts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/debt_entry"
+          }
+        }
+      }
+    },
+    "cash_flow": {
+      "type": "object",
+      "properties": {
+        "monthly_income_egp": { "type": "number" },
+        "monthly_fixed_expenses_egp": { "type": ["number", "null"] },
+        "monthly_debt_obligations_egp": { "type": ["number", "null"] },
+        "monthly_variable_expenses_egp": { "type": ["number", "null"] },
+        "monthly_surplus_deficit_egp": { "type": ["number", "null"] }
+      }
+    },
+    "liquidity": {
+      "type": "object",
+      "properties": {
+        "liquid_savings_egp": { "type": ["number", "null"] },
+        "investment_egp": { "type": ["number", "null"] }
+      }
+    },
+    "runway": {
+      "type": "object",
+      "properties": {
+        "months": { "type": ["number", "null"] },
+        "calculation": { "type": "string" }
+      }
+    },
+    "credit_recycling": {
+      "type": "object",
+      "properties": {
+        "eligible_platforms": { "type": "array", "items": { "type": "string" } },
+        "non_eligible_platforms": { "type": "array", "items": { "type": "string" } },
+        "total_recycling_limit_egp": { "type": ["number", "null"] },
+        "strategy_notes": { "type": ["string", "null"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["last_updated", "update_method"],
+      "properties": {
+        "last_updated": { "type": "string", "format": "date-time" },
+        "update_method": { "type": "string", "enum": ["manual_consolidation", "cascade_refresh", "user_update", "partial_update"] },
+        "figures_source": { "type": "string" },
+        "open_items": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "privacy_level": { "const": "strict_local" }
+  },
+  "definitions": {
+    "debt_entry": {
+      "type": "object",
+      "required": ["id", "name", "type", "recycling_eligible"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["credit_card", "bnpl_recycling", "bnpl_installment", "family_loan", "personal_loan", "other"] },
+        "recycling_eligible": { "type": "boolean" },
+        "credit_limit_egp": { "type": ["number", "null"] },
+        "current_balance_egp": { "type": ["number", "null"] },
+        "available_credit_egp": { "type": ["number", "null"] },
+        "original_amount_egp": { "type": ["number", "null"] },
+        "minimum_payment_monthly_egp": { "type": ["number", "null"] },
+        "installment_monthly_egp": { "type": ["number", "null"] },
+        "interest_rate_annual_pct": { "type": ["number", "null"] },
+        "term_total_months": { "type": ["integer", "null"] },
+        "term_remaining_months": { "type": ["integer", "null"] },
+        "status": { "type": "string", "enum": ["active", "paid_off", "restructured", "deferred"] },
+        "as_of_date": { "type": "string", "format": "date" },
+        "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION", "STALE", "MISSING"] },
+        "source": { "type": "string" },
+        "notes": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

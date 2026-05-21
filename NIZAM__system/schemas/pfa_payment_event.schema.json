@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/pfa_payment_event.schema.json",
+  "title": "PFA payment event — append-only ledger entry for payments made",
+  "type": "object",
+  "required": ["ts", "module", "event_type", "debt_id", "amount_egp"],
+  "properties": {
+    "ts": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC with Z" },
+    "module": { "const": "MAL" },
+    "event_type": {
+      "type": "string",
+      "enum": ["scheduled_payment", "extra_payment", "minimum_payment", "full_payoff", "partial_early_payoff"]
+    },
+    "debt_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "debt_name": { "type": "string" },
+    "amount_egp": { "type": "number" },
+    "payment_method": { "type": ["string", "null"], "description": "bank_transfer, card, cash, etc." },
+    "balance_before_egp": { "type": ["number", "null"] },
+    "balance_after_egp": { "type": ["number", "null"] },
+    "credit_freed_egp": { "type": ["number", "null"], "description": "For recycling-eligible debts: credit limit freed by this payment" },
+    "recycling_used": { "type": "boolean", "default": false, "description": "Whether freed credit was immediately reused" },
+    "source": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION"] },
+    "idempotency_key": { "type": "string" },
+    "notes": { "type": ["string", "null"] },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

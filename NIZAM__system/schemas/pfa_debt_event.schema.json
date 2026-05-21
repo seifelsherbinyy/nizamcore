@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/pfa_debt_event.schema.json",
+  "title": "PFA debt event — append-only ledger entry for debt state changes",
+  "type": "object",
+  "required": ["ts", "module", "event_type", "debt_id"],
+  "properties": {
+    "ts": { "type": "string", "format": "date-time", "description": "ISO 8601 UTC with Z" },
+    "module": { "const": "MAL" },
+    "event_type": {
+      "type": "string",
+      "enum": ["debt_opened", "balance_updated", "payment_made", "debt_paid_off", "debt_restructured", "limit_changed", "terms_changed", "debt_snapshot"]
+    },
+    "debt_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "debt_name": { "type": "string" },
+    "debt_type": { "type": "string", "enum": ["credit_card", "bnpl_recycling", "bnpl_installment", "family_loan", "personal_loan", "other"] },
+    "previous_balance_egp": { "type": ["number", "null"] },
+    "new_balance_egp": { "type": ["number", "null"] },
+    "amount_egp": { "type": ["number", "null"], "description": "Amount of the event (payment amount, new limit, etc.)" },
+    "credit_limit_egp": { "type": ["number", "null"] },
+    "available_credit_egp": { "type": ["number", "null"] },
+    "installment_monthly_egp": { "type": ["number", "null"] },
+    "term_remaining_months": { "type": ["integer", "null"] },
+    "source": { "type": "string", "description": "Where this figure came from" },
+    "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION", "STALE"] },
+    "idempotency_key": { "type": "string", "description": "SHA256 of ts+debt_id+event_type to prevent duplicate appends" },
+    "notes": { "type": ["string", "null"] },
+    "privacy_level": { "const": "strict_local" }
+  }
+}

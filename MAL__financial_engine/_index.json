@@ -7,7 +7,21 @@
   "privacy_level": "strict_local",
   "allowed_contents": ["baseline/baseline_*.md","income_growth/<pathway>/*.md","business_pipelines/*.md","expenses_debt_assets/*.md","monthly_reviews/*.md","scenario_models/*.md","exchange_rate_log.jsonl"],
   "skill_commands": ["/mal-baseline","/mal-scenario","/mal-milestone-check","/mal-exchange-rate-check","/mal-decision-score"],
-  "subfolders": ["baseline","income_growth","business_pipelines","expenses_debt_assets","monthly_reviews","scenario_models"],
+  "subfolders": ["baseline","income_growth","business_pipelines","expenses_debt_assets","monthly_reviews","scenario_models","pfa"],
+  "pfa_module": {
+    "purpose": "Consolidated personal financial position — canonical state + append-only ledgers + continuous learnings log",
+    "canonical_state": "MAL__financial_engine/pfa/canonical_state.json",
+    "ledgers": ["MAL__financial_engine/pfa/ledgers/debts.jsonl","MAL__financial_engine/pfa/ledgers/payments.jsonl","MAL__financial_engine/pfa/ledgers/decisions.jsonl"],
+    "learnings_log": "MAL__financial_engine/pfa/learnings_log.jsonl",
+    "schemas": ["pfa_canonical_state","pfa_debt_event","pfa_payment_event","pfa_learning"],
+    "debt_platforms": {
+      "recycling_eligible": ["hsbc_cc","cib_cc","halan","valu"],
+      "pure_installment": ["tru","souhoola"],
+      "family": ["family_loan_01"]
+    },
+    "privacy": "strict_local",
+    "runbook": "MAL__financial_engine/pfa/README.md"
+  },
   "doctrine_doc": "NIZAM__system/docs/MAL_FINANCIAL_LADDER.md",
   "persona": "NIZAM__system/personas/MAL.json",
   "milestone_ladder_usd": [1500,3000,5000,7500,10000],

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://pop.local/schemas/pfa_learning.schema.json",
-  "title": "PFA learning — append-only entry capturing financial life learnings",
+  "$id": "https://pop.local/schemas/finance_learning.schema.json",
+  "title": "MAL learning — append-only entry capturing financial life learnings",
   "type": "object",
   "required": ["ts", "module", "event_type", "learning", "rationale"],
   "properties": {

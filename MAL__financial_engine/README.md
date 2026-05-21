@@ -30,16 +30,16 @@ $1,500 → $3,000 → $5,000 → $7,500 → $10,000+ /month. Promotion criterion
 ## Sibling repo reference
 [`goldminer`](https://github.com/seifelsherbinyy/goldminer) (MIT) implements Python ETL for personal finance. Consider as upstream library or pattern source when ingesting transaction data.
 
-## PFA — Personal Financial Assistant subsystem
+## Financial Position subsystem
 
-The `pfa/` subfolder holds the consolidated personal financial position:
-- `canonical_state.json` — single source of truth (strict_local)
+The `financial_position/` subfolder holds the consolidated personal financial position:
+- `position_state.json` — single source of truth (strict_local)
 - `ledgers/` — append-only debt events, payments, decisions (strict_local)
-- `learnings_log.jsonl` — continuous life-learning capture (strict_local)
+- `learning_ledger.jsonl` — continuous life-learning capture (strict_local)
 
-Debt architecture tracks: HSBC credit cards (recycling-eligible when current), Halan/Valu/TRU/Souhoola (all BNPL pure-installment — no recycling), and family loans. See [`pfa/README.md`](pfa/README.md) for the full runbook.
+Debt architecture tracks: HSBC credit cards (recycling-eligible when current), Halan/Valu/TRU/Souhoola (all BNPL pure-installment — no recycling), and family loans. See [`financial_position/README.md`](financial_position/README.md) for the full runbook.
 
-Schemas: `pfa_canonical_state`, `pfa_debt_event`, `pfa_payment_event`, `pfa_learning` in `NIZAM__system/schemas/`.
+Schemas: `finance_position`, `finance_debt_event`, `finance_payment_event`, `finance_learning` in `NIZAM__system/schemas/`.
 
 ## Doctrine
 [`NIZAM__system/docs/MAL_FINANCIAL_LADDER.md`](../NIZAM__system/docs/MAL_FINANCIAL_LADDER.md)

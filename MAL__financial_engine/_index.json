@@ -7,13 +7,13 @@
   "privacy_level": "strict_local",
   "allowed_contents": ["baseline/baseline_*.md","income_growth/<pathway>/*.md","business_pipelines/*.md","expenses_debt_assets/*.md","monthly_reviews/*.md","scenario_models/*.md","exchange_rate_log.jsonl"],
   "skill_commands": ["/mal-baseline","/mal-scenario","/mal-milestone-check","/mal-exchange-rate-check","/mal-decision-score"],
-  "subfolders": ["baseline","income_growth","business_pipelines","expenses_debt_assets","monthly_reviews","scenario_models","pfa"],
-  "pfa_module": {
-    "purpose": "Consolidated personal financial position — canonical state + append-only ledgers + continuous learnings log",
-    "canonical_state": "MAL__financial_engine/pfa/canonical_state.json",
-    "ledgers": ["MAL__financial_engine/pfa/ledgers/debts.jsonl","MAL__financial_engine/pfa/ledgers/payments.jsonl","MAL__financial_engine/pfa/ledgers/decisions.jsonl"],
-    "learnings_log": "MAL__financial_engine/pfa/learnings_log.jsonl",
-    "schemas": ["pfa_canonical_state","pfa_debt_event","pfa_payment_event","pfa_learning"],
+  "subfolders": ["baseline","income_growth","business_pipelines","expenses_debt_assets","monthly_reviews","scenario_models","financial_position"],
+  "financial_position": {
+    "purpose": "Consolidated personal financial position — position state + append-only ledgers + continuous learning ledger",
+    "position_state": "MAL__financial_engine/financial_position/position_state.json",
+    "ledgers": ["MAL__financial_engine/financial_position/ledgers/debt_ledger.jsonl","MAL__financial_engine/financial_position/ledgers/payment_ledger.jsonl","MAL__financial_engine/financial_position/ledgers/decision_ledger.jsonl"],
+    "learning_ledger": "MAL__financial_engine/financial_position/learning_ledger.jsonl",
+    "schemas": ["finance_position","finance_debt_event","finance_payment_event","finance_learning"],
     "debt_platforms": {
       "credit_card": ["hsbc_8071","hsbc_5411"],
       "bnpl_installment": ["tru","halan","souhoola","valu"],
@@ -22,7 +22,7 @@
       "recycling_status": "blocked — all cards at/over limit as of 2026-03-04"
     },
     "privacy": "strict_local",
-    "runbook": "MAL__financial_engine/pfa/README.md"
+    "runbook": "MAL__financial_engine/financial_position/README.md"
   },
   "doctrine_doc": "NIZAM__system/docs/MAL_FINANCIAL_LADDER.md",
   "persona": "NIZAM__system/personas/MAL.json",

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://pop.local/schemas/pfa_debt_event.schema.json",
-  "title": "PFA debt event — append-only ledger entry for debt state changes",
+  "$id": "https://pop.local/schemas/finance_debt_event.schema.json",
+  "title": "MAL debt event — append-only ledger entry for debt state changes",
   "type": "object",
   "required": ["ts", "module", "event_type", "debt_id"],
   "properties": {

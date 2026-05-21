@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://pop.local/schemas/pfa_canonical_state.schema.json",
-  "title": "PFA canonical state — single source of truth for personal financial position",
+  "$id": "https://pop.local/schemas/finance_position.schema.json",
+  "title": "MAL finance position — single source of truth for personal financial position",
   "type": "object",
   "required": ["snapshot_date", "currency", "exchange_rate", "income", "debt_architecture", "cash_flow", "provenance"],
   "properties": {

@@ -37,7 +37,7 @@ The `pfa/` subfolder holds the consolidated personal financial position:
 - `ledgers/` — append-only debt events, payments, decisions (strict_local)
 - `learnings_log.jsonl` — continuous life-learning capture (strict_local)
 
-Debt architecture tracks: HSBC/CIB credit cards, Halan/Valu (BNPL recycling-eligible), TRU/Souhoola (BNPL pure-installment), and family loans. See [`pfa/README.md`](pfa/README.md) for the full runbook.
+Debt architecture tracks: HSBC credit cards (recycling-eligible when current), Halan/Valu/TRU/Souhoola (all BNPL pure-installment — no recycling), and family loans. See [`pfa/README.md`](pfa/README.md) for the full runbook.
 
 Schemas: `pfa_canonical_state`, `pfa_debt_event`, `pfa_payment_event`, `pfa_learning` in `NIZAM__system/schemas/`.
 

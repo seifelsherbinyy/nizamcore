@@ -33,14 +33,15 @@ All in `NIZAM__system/schemas/`:
 
 | Type | Platforms | Recycling | Description |
 |---|---|---|---|
-| `credit_card` | HSBC, CIB | Yes | Revolving credit. Freed limit reusable after payment. |
-| `bnpl_recycling` | Halan, Valu | Yes | Card-based BNPL. Freed limit reusable after payment. |
-| `bnpl_installment` | TRU, Souhoola | No | Fixed installments. No credit recycling. Payoff frees nothing. |
-| `family_loan` | (varies) | No | Informal. Typically interest-free, flexible terms. |
+| `credit_card` | HSBC 8071, HSBC 5411 | When current + under limit | Revolving credit. Freed limit reusable after payment — but currently blocked (arrears/overlimit). |
+| `bnpl_installment` | TRU, Halan, Souhoola, Valu | No | Fixed installments. No credit recycling. Payoff reduces balance but frees no reusable limit. |
+| `family_loan` | Matthew, Yahia | No | Informal. Terms (interest, schedule) vary and may not be documented. |
+
+**Correction (2026-05-21)**: Halan and Valu were originally assumed to support card-based recycling. Actual dashboard data shows pure installment behavior — reclassified to `bnpl_installment`.
 
 ### Credit recycling rule
 
-Only `credit_card` and `bnpl_recycling` types are recycling-eligible. When a payment frees credit on these platforms, the freed amount becomes available liquidity. Pure-installment platforms (`bnpl_installment`, `family_loan`) do not recycle — payments reduce outstanding balance but do not free reusable credit.
+Only `credit_card` types are recycling-eligible, and only when cards are: (1) current (no arrears), (2) under their credit limit, and (3) 30+ days clean. As of 2026-03-04, recycling is blocked on ALL platforms. All BNPL platforms are pure-installment — payments reduce balance but do not free reusable credit.
 
 ## Confidence Labels
 

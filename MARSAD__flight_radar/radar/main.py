@@ -8,6 +8,7 @@ Commands:
   alert      — Stage 3: price drop signal detection
   forecast   — Stage 4: trend model update
   run-all    — Run all four stages in sequence
+  seed       — Load historical price data from a JSON/CSV file (fast-track cold start)
   schedule   — Start APScheduler daemon (06:00 UTC daily)
   dashboard  — Live executive dashboard at http://localhost:7329
   status     — Print current store summary
@@ -115,13 +116,24 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print("\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
     print(f"  Total observations:{total_obs}")
     print(f"  Active BUY_SIGNAL: {buy_signals}")
     print(f"  Travel window:     {store.get('metadata', {}).get('travel_window_start')} → {store.get('metadata', {}).get('travel_window_end')}")
+    return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.seeds.seed_loader import run_seed
+    stats = run_seed(path=args.file, source=args.source, dry_run=args.dry_run)
+    print(f"\nSEED: {stats['rows_imported']}/{stats['total_rows']} observations imported")
+    if stats["rows_skipped_constraint"]:
+        print(f"  Skipped (constraint): {stats['rows_skipped_constraint']}")
+    if stats["rows_skipped_error"]:
+        print(f"  Skipped (error):      {stats['rows_skipped_error']}")
     return 0
 
 
@@ -186,6 +198,13 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Load historical price data from a seed file into the store")
+    p_seed.add_argument("--file", required=True, help="Path to seed file (.json or .csv)")
+    p_seed.add_argument("--source", default="historical_seed", help="Source label for imported observations (default: historical_seed)")
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate and count rows without writing to store")
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

@@ -1,0 +1,51 @@
+[
+  {
+    "origin": "CAI",
+    "destination": "JFK",
+    "cabin": "BUSINESS",
+    "carrier": "EK",
+    "price_usd": 3450.0,
+    "outbound_date": "2027-04-01",
+    "return_date": "2027-04-12",
+    "outbound_duration_hours": 14.5,
+    "return_duration_hours": 15.0,
+    "outbound_stops": 1,
+    "return_stops": 1,
+    "outbound_routing": "CAI-DXB-JFK",
+    "return_routing": "JFK-DXB-CAI",
+    "source": "google_flights_history",
+    "data_quality": "estimated",
+    "price_egp": null,
+    "price_eur": null
+  },
+  {
+    "origin": "CAI",
+    "destination": "JFK",
+    "cabin": "BUSINESS",
+    "carrier": "EK",
+    "price_usd": 3200.0,
+    "outbound_date": "2027-05-01",
+    "return_date": "2027-05-12",
+    "outbound_duration_hours": 14.5,
+    "return_duration_hours": 15.0,
+    "outbound_stops": 1,
+    "return_stops": 1,
+    "outbound_routing": "CAI-DXB-JFK",
+    "return_routing": "JFK-DXB-CAI",
+    "source": "google_flights_history",
+    "data_quality": "estimated"
+  },
+  {
+    "origin": "CAI",
+    "destination": "MIA",
+    "cabin": "PREMIUM_ECONOMY",
+    "carrier": "AF",
+    "price_usd": 1550.0,
+    "outbound_date": "2027-06-01",
+    "return_date": "2027-06-11",
+    "outbound_routing": "CAI-CDG-MIA",
+    "return_routing": "MIA-CDG-CAI",
+    "source": "kayak_history",
+    "data_quality": "estimated"
+  }
+]

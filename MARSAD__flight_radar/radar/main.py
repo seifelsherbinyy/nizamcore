@@ -87,6 +87,33 @@ def cmd_run_all(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed_from_csv, run_seed_backfill, print_seed_research
+    from pathlib import Path
+
+    if args.research:
+        print_seed_research()
+        return 0
+
+    if args.from_csv:
+        stats = run_seed_from_csv(Path(args.from_csv), dry_run=args.dry_run)
+        print(f"\nSEED: {stats['rows_imported']} imported, "
+              f"{stats['rows_skipped_constraint']} constraint failures, "
+              f"{stats['rows_skipped_parse_error']} parse errors")
+        if stats.get("errors"):
+            for err in stats["errors"][:10]:
+                print(f"  {err}")
+        return 0
+
+    if args.backfill_days:
+        stats = run_seed_backfill(days=args.backfill_days, dry_run=args.dry_run)
+        print(f"\nSEED backfill: {stats.get('observations_written', 0)} observations written")
+        return 0
+
+    print("No seed action specified. Use --from-csv, --backfill-days, or --research.")
+    return 1
+
+
 def cmd_dashboard(args: argparse.Namespace) -> int:
     from radar.dashboard import run_dashboard
     run_dashboard(host=args.host, port=args.port)
@@ -115,7 +142,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
@@ -182,6 +209,17 @@ def main() -> int:
     # schedule
     p_schedule = subparsers.add_parser("schedule", help="Start scheduler daemon (06:00 UTC daily)")
     p_schedule.set_defaults(func=cmd_schedule)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: historical price seed import")
+    p_seed.add_argument("--from-csv", metavar="FILE", help="Import historical prices from CSV file")
+    p_seed.add_argument("--backfill-days", type=int, metavar="N",
+                        help="Query data source for past N days (uses API credits)")
+    p_seed.add_argument("--research", action="store_true",
+                        help="Print historical source research documentation and exit")
+    p_seed.add_argument("--dry-run", action="store_true",
+                        help="Validate without writing to store")
+    p_seed.set_defaults(func=cmd_seed)
 
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")

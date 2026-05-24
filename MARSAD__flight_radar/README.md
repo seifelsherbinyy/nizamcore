@@ -123,34 +123,63 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY (primary source)
 pip install -r requirements.txt
 
-# Run baseline collection (Stage 1 — first time only)
+# Stage 0 (optional — accelerates forecasting): seed historical data
+python -m radar.main seed --research             # read source research notes
+python -m radar.main seed --from-csv prices.csv  # import manual historical CSV
+python -m radar.main seed --backfill-days 30     # query SerpApi for past 30 days
+
+# Stage 1: baseline collection (run once on init)
 python -m radar.main discover
 
-# Run daily monitor (Stage 2 — or let scheduler run it)
+# Stage 2: daily monitor (or let scheduler run it)
 python -m radar.main monitor
 
-# Run alert check (Stage 3)
+# Stage 3: alert check
 python -m radar.main alert
 
-# Run forecast update (Stage 4)
+# Stage 4: forecast update
 python -m radar.main forecast
 
-# Run all stages in sequence
+# Run monitor + alert + forecast in sequence
 python -m radar.main run-all
 
 # Start scheduler daemon (runs 06:00 UTC daily)
 python -m radar.main schedule
+
+# View live dashboard at http://localhost:7329
+python -m radar.main dashboard
+
+# Print store summary
+python -m radar.main status
+
+# Validate credentials
+python -m radar.main validate
 ```
+
+## Seed CSV Format
+
+To import historical prices manually collected from Kayak, Google Flights, or any source:
+
+```csv
+origin,destination,carrier,cabin,outbound_date,return_date,price_usd,outbound_duration_hours,return_duration_hours,outbound_stops,return_stops,outbound_routing,return_routing,source
+CAI,JFK,EK,BUSINESS,2027-04-01,2027-04-12,3200.0,14.5,15.0,1,1,CAI-DXB-JFK,JFK-DXB-CAI,manual_kayak
+CAI,LAX,QR,PREMIUM_ECONOMY,2027-05-01,2027-05-12,1450.0,16.5,17.0,1,1,CAI-DOH-LAX,LAX-DOH-CAI,manual_google_flights
+```
+
+All rows are validated against the routing constraint engine. Rows that fail
+(wrong cabin, outside travel window, duration > 30h, etc.) are logged and skipped.
+Run with `--dry-run` to preview what would import without writing.
 
 ## SWAPPABLE_DEFAULT REGISTRY
 
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Primary source | SerpApi (Google Flights) | Amadeus API (disabled Jul 2025) | Set `DATA_SOURCE=amadeus` if Amadeus re-opens |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` — review ToS first |
 | Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |

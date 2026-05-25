@@ -3,6 +3,7 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
+  seed       — Stage 0: import historical price seed data (CSV or SerpApi calendar)
   discover   — Stage 1: baseline collection (run once on init)
   monitor    — Stage 2: daily delta
   alert      — Stage 3: price drop signal detection
@@ -115,13 +116,27 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
     print(f"  Total observations:{total_obs}")
     print(f"  Active BUY_SIGNAL: {buy_signals}")
     print(f"  Travel window:     {store.get('metadata', {}).get('travel_window_start')} → {store.get('metadata', {}).get('travel_window_end')}")
+    return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.historical_seed import seed_from_csv, seed_from_serpapi_calendar
+    if args.source == "csv":
+        if not args.file:
+            print("ERROR: --file required when --source csv")
+            return 1
+        from pathlib import Path
+        stats = seed_from_csv(Path(args.file), dry_run=args.dry_run)
+    else:
+        stats = seed_from_serpapi_calendar(dry_run=args.dry_run)
+    print(f"\nSEED: {stats['observations_written']} observations written")
     return 0
 
 
@@ -186,6 +201,13 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical price seed data")
+    p_seed.add_argument("--source", choices=["csv", "serpapi"], required=True)
+    p_seed.add_argument("--file", help="CSV file path (required when --source csv)")
+    p_seed.add_argument("--dry-run", action="store_true")
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

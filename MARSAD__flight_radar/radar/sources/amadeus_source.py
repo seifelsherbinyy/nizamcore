@@ -244,9 +244,19 @@ class AmadeusSource(BaseFlightSource):
 
     @staticmethod
     def _sample_dates(window_start: date, window_end: date, n: int) -> list[date]:
-        """Return n evenly-spaced dates within the travel window."""
-        total_days = (window_end - window_start).days
+        """
+        Return n evenly-spaced dates within the travel window.
+        Caps at 305-day booking horizon — same cap as SerpApiSource.
+        """
+        from datetime import date as date_cls
+        today = date_cls.today()
+        horizon = today + timedelta(days=305)
+        effective_end = min(window_end, horizon)
+        if effective_end < window_start:
+            return []
+        total_days = (effective_end - window_start).days
         if total_days <= 0:
             return [window_start]
         step = max(1, total_days // (n + 1))
-        return [window_start + timedelta(days=step * (i + 1)) for i in range(n)]
+        return [window_start + timedelta(days=step * (i + 1)) for i in range(n)
+                if window_start + timedelta(days=step * (i + 1)) <= effective_end]

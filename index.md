@@ -53,6 +53,13 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`JADWAL__notion_dashboards/`](JADWAL__notion_dashboards/) — Notion mirror; dual-write via [`nizam-governor`](NIZAM__system/skills/nizam-governor.md)
 - [`HIFZ__github_version_control/`](HIFZ__github_version_control/) — repo automation (shell only)
 
+## MARSAD — Flight Intelligence Module (additive, active)
+- [`MARSAD__flight_radar/`](MARSAD__flight_radar/) — CAI-to-USA price monitoring pipeline (Business + Premium Economy, post-Ramadan 2027)
+  - Skills: `/marsad-discover` → `/marsad-monitor` → `/marsad-alert` → `/marsad-forecast`
+  - Entry point: `cd MARSAD__flight_radar && python -m radar.main <command>`
+  - Data store: `data/flight_prices.json` (private_github — price time series, no credentials)
+  - Alerts log: `alerts/radar_alerts.json` (strict_local — gitignored)
+
 ## Phase 3 — scaffolded + live
 - [`AHEL__family_network/`](AHEL__family_network/) — strictest privacy family map → [doctrine](NIZAM__system/docs/AHEL_FAMILY_PRIVACY_RULES.md)
 - [`BASIRA__future_visualization/`](BASIRA__future_visualization/) — graph/dashboard layer (shell only)

@@ -23,6 +23,7 @@
     { "path": "NUR__obsidian_vault",                   "phase": 2, "symbol": "NUR",          "meaning_ar": "light/illumination", "privacy": "mirror_curated_only", "registers": "_index.json", "scaffolded": true },
     { "path": "JADWAL__notion_dashboards",             "phase": 2, "symbol": "JADWAL",       "meaning_ar": "table/schedule",  "privacy": "mirror_sanitized_metadata_only", "registers": "_index.json", "scaffolded": true },
     { "path": "HIFZ__github_version_control",          "phase": 2, "symbol": "HIFZ",         "meaning_ar": "preservation",    "privacy": "review_before_commit", "registers": "_index.json", "scaffolded": true },
-    { "path": "BASIRA__future_visualization",          "phase": 3, "symbol": "BASIRA",       "meaning_ar": "insight/vision",  "privacy": "review_before_commit", "registers": "_index.json", "scaffolded": true }
+    { "path": "BASIRA__future_visualization",          "phase": 3, "symbol": "BASIRA",       "meaning_ar": "insight/vision",  "privacy": "review_before_commit", "registers": "_index.json", "scaffolded": true },
+    { "path": "MARSAD__flight_radar",                  "phase": 2, "symbol": "MARSAD",        "meaning_ar": "مرصد — observatory/watchtower", "privacy": "private_github", "data_privacy": "strict_local", "registers": "_index.json", "module_status": "active", "entry_point": "MARSAD__flight_radar/radar/main.py" }
   ]
 }

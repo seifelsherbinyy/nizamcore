@@ -115,7 +115,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")

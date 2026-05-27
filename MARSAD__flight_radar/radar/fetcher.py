@@ -70,6 +70,37 @@ def fetch_best_price(
     all_errors: list[str] = []
     qualifying: list[FlightOffer] = []
 
+    # Normalise requested carriers for post-fetch filtering (SerpApi and other
+    # sources that don't support server-side carrier filtering return all carriers;
+    # we filter client-side when the caller specifies a carrier list).
+    requested_carriers: set[str] | None = (
+        {c.upper() for c in carriers} if carriers else None
+    )
+
+    def _accept_offer(offer: FlightOffer) -> bool:
+        """Return True if the offer passes constraint + carrier filters."""
+        itin = FlightItinerary(
+            origin=offer.origin,
+            destination=offer.destination,
+            cabin=offer.cabin,
+            outbound_date=offer.outbound_date,
+            return_date=offer.return_date,
+            outbound_duration_hours=offer.outbound_duration_hours,
+            return_duration_hours=offer.return_duration_hours,
+            carrier=offer.carrier,
+            price_usd=offer.price_usd,
+        )
+        constraint_result = apply_constraints(itin)
+        if not constraint_result:
+            logger.debug("Offer filtered (constraints): %s", constraint_result.failures)
+            return False
+        if requested_carriers and offer.carrier.upper() not in requested_carriers:
+            logger.debug(
+                "Offer filtered (carrier): %s not in %s", offer.carrier, requested_carriers
+            )
+            return False
+        return True
+
     # Primary source
     primary = _build_source()
     result = primary.search(
@@ -83,22 +114,8 @@ def fetch_best_price(
     all_errors.extend(result.errors)
 
     for offer in result.offers:
-        itin = FlightItinerary(
-            origin=offer.origin,
-            destination=offer.destination,
-            cabin=offer.cabin,
-            outbound_date=offer.outbound_date,
-            return_date=offer.return_date,
-            outbound_duration_hours=offer.outbound_duration_hours,
-            return_duration_hours=offer.return_duration_hours,
-            carrier=offer.carrier,
-            price_usd=offer.price_usd,
-        )
-        constraint_result = apply_constraints(itin)
-        if constraint_result:
+        if _accept_offer(offer):
             qualifying.append(offer)
-        else:
-            logger.debug("Offer filtered: %s", constraint_result.failures)
 
     # Secondary source (Kiwi) if requested and we have remaining session budget
     if use_secondary and primary._request_count < MAX_REQUESTS_PER_SESSION:
@@ -114,18 +131,7 @@ def fetch_best_price(
         all_errors.extend(kiwi_result.errors)
 
         for offer in kiwi_result.offers:
-            itin = FlightItinerary(
-                origin=offer.origin,
-                destination=offer.destination,
-                cabin=offer.cabin,
-                outbound_date=offer.outbound_date,
-                return_date=offer.return_date,
-                outbound_duration_hours=offer.outbound_duration_hours,
-                return_duration_hours=offer.return_duration_hours,
-                carrier=offer.carrier,
-                price_usd=offer.price_usd,
-            )
-            if apply_constraints(itin):
+            if _accept_offer(offer):
                 qualifying.append(offer)
 
     if not qualifying:

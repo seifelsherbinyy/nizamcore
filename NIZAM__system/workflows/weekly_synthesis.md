@@ -46,7 +46,7 @@ Audit POP:
 - Orphan notes (no inbound or outbound wikilinks)
 - Contradictions (cross-grep opposing claims in last 30 days)
 - Schema violations
-- Orphan strategic goals (KABIR_SHERBO objectives without MUNAWARA roll-down)
+- Orphan strategic goals (TARIQ objectives without MUNAWARA roll-down)
 - Ledger sanity (which haven't grown in 7+ days)
 
 Write audit to `NIZAM__system/docs/health_audit_{YYYY-MM-DD}.md`. Recommend specific actions.

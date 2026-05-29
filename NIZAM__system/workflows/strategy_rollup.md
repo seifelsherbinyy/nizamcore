@@ -3,9 +3,9 @@
 > Scenario: turning a long-horizon vision into something you do this week.
 
 ## Skill chain
-1. `/kabir-sherbo-vision 10` — set / verify 10-year vision
-2. `/kabir-sherbo-vision 15` and `/kabir-sherbo-vision 20` (optional outer horizons)
-3. Define MUNAWARA 5-year plan (manual; rolls to KABIR_SHERBO)
+1. `/tariq-vision 10` — set / verify 10-year vision
+2. `/tariq-vision 15` and `/tariq-vision 20` (optional outer horizons)
+3. Define MUNAWARA 5-year plan (manual; rolls to TARIQ)
 4. Define MUNAWARA 3-year plan (rolls to 5-year)
 5. Define MUNAWARA 1-year plan (rolls to 3-year)
 6. `/munawara-quarter-plan` (rolls to 1-year)
@@ -16,15 +16,15 @@
 ## When to use
 - First time setting up POP's strategic layer.
 - After a major life event prompts a re-anchor.
-- Annually as part of `/kabir-sherbo-annual-review`.
+- Annually as part of `/tariq-annual-review`.
 
 ## Procedure
 
-### Layer 1 — 10/15/20-year vision (KABIR_SHERBO)
+### Layer 1 — 10/15/20-year vision (TARIQ)
 Cover all 11 domains (wealth, career, body, family, faith, location, learning, relationships, business, assets, identity). Define 3–5 strategic pillars. Write decisive battles.
 
 ### Layer 2 — 5-year plan (MUNAWARA)
-For each KABIR_SHERBO strategic pillar, define what year-5 looks like. Each 5-year objective must reference the parent pillar in frontmatter.
+For each TARIQ strategic pillar, define what year-5 looks like. Each 5-year objective must reference the parent pillar in frontmatter.
 
 ### Layer 3 — 3-year plan (MUNAWARA)
 For each 5-year objective, define year-3 milestone. This is where speculation starts becoming concrete.
@@ -45,7 +45,7 @@ Inside the quarter plan, define 3 monthly checkpoints per objective.
 The daily morning protocol picks 1 Now-item that should be a step in this week's primary battle.
 
 ## The roll-up audit
-`/pop-health` flags **orphan strategic goals** — any KABIR_SHERBO objective without MUNAWARA roll-down, or any MUNAWARA objective without a parent reference. Run weekly.
+`/pop-health` flags **orphan strategic goals** — any TARIQ objective without MUNAWARA roll-down, or any MUNAWARA objective without a parent reference. Run weekly.
 
 ## Anti-patterns
 - Building a 10-year vision but never doing the 5/3/1-year work — fantasy.
@@ -53,7 +53,7 @@ The daily morning protocol picks 1 Now-item that should be a step in this week's
 - Treating each layer as immutable — pivots are expected at annual / quarterly close.
 
 ## Output
-- 1 KABIR_SHERBO 10-yr vision (minimum)
+- 1 TARIQ 10-yr vision (minimum)
 - 1 MUNAWARA 5-yr plan
 - 1 MUNAWARA 3-yr plan
 - 1 MUNAWARA 1-yr plan

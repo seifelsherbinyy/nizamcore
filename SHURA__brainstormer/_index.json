@@ -8,5 +8,5 @@
   "skill_commands": ["/shura-brainstorm", "/shura-connect", "/shura-emerge", "/shura-graduate", "/pop-recap"],
   "subfolders": ["sessions"],
   "last_updated": "2026-05-15T14:17:30Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

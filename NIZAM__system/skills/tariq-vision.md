@@ -1,11 +1,11 @@
 ---
-name: kabir-sherbo-vision
-module: KABIR_SHERBO
-trigger: "/kabir-sherbo-vision <horizon>"
+name: tariq-vision
+module: TARIQ
+trigger: "/tariq-vision <horizon>"
 target_folders:
-  10_year: KABIR_SHERBO__long_horizon_strategy/10_year/
-  15_year: KABIR_SHERBO__long_horizon_strategy/15_year/
-  20_year: KABIR_SHERBO__long_horizon_strategy/20_year/
+  10_year: TARIQ__long_horizon_strategy/10_year/
+  15_year: TARIQ__long_horizon_strategy/15_year/
+  20_year: TARIQ__long_horizon_strategy/20_year/
 naming_pattern: "{horizon}_vision_{YYYY-MM-DD}.md"
 template_lookup:
   10_year: NIZAM__system/templates/10_year_vision.template.md
@@ -23,7 +23,7 @@ Craft or update a 10 / 15 / 20-year Long War Map. Cover all 11 domains. Force ev
 
 ## Procedure
 
-1. Read `CRITICAL_FACTS.md`, `SOUL.md`, `NIZAM__system/personas/KABIR_SHERBO.json`.
+1. Read `CRITICAL_FACTS.md`, `SOUL.md`, `NIZAM__system/personas/TARIQ.json`.
 2. Check SUKOON gate. If red, suggest deferring this session (long-horizon planning under recovery debt produces fantasy).
 3. Pick the template by horizon argument: 10 / 15 / 20.
 4. For each of the 11 domains (wealth, career, body, family, faith, location, learning, relationships, business, assets, identity), elicit:

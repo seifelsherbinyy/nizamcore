@@ -29,11 +29,11 @@ Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.m
 
 ## Phase 2 — strategy + finance + body + decisions (14 skills)
 
-### KABIR_SHERBO (long horizon)
+### TARIQ (long horizon)
 | Skill | Trigger | Purpose |
 |---|---|---|
-| [kabir-sherbo-vision](kabir-sherbo-vision.md) | `/kabir-sherbo-vision <horizon>` | Craft/update a 10/15/20-yr plan |
-| [kabir-sherbo-annual-review](kabir-sherbo-annual-review.md) | `/kabir-sherbo-annual-review` | Annual scoring + pivot identification |
+| [tariq-vision](tariq-vision.md) | `/tariq-vision <horizon>` | Craft/update a 10/15/20-yr plan |
+| [tariq-annual-review](tariq-annual-review.md) | `/tariq-annual-review` | Annual scoring + pivot identification |
 
 ### MUNAWARA (tactical)
 | Skill | Trigger | Purpose |
@@ -108,7 +108,7 @@ See [`NIZAM__system/workflows/_WORKFLOWS_INDEX.md`](../workflows/_WORKFLOWS_INDE
 [`NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md`](../docs/SKILL_DESIGN_PRINCIPLES.md)
 
 ## Doctrine docs per module
-- KABIR_SHERBO → [`BIG_SHERBO_LONG_WAR_DOCTRINE.md`](../docs/BIG_SHERBO_LONG_WAR_DOCTRINE.md)
+- TARIQ → [`TARIQ_LONG_WAR_DOCTRINE.md`](../docs/TARIQ_LONG_WAR_DOCTRINE.md)
 - MUNAWARA → [`MUNAWARA_TACTICAL_DOCTRINE.md`](../docs/MUNAWARA_TACTICAL_DOCTRINE.md)
 - MAL → [`MAL_FINANCIAL_LADDER.md`](../docs/MAL_FINANCIAL_LADDER.md)
 - BADAN → [`BADAN_HEALTH_ADVISORY_NOTES.md`](../docs/BADAN_HEALTH_ADVISORY_NOTES.md)

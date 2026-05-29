@@ -1,6 +1,6 @@
 ---
 type: strategy_plan
-pop_module: KABIR_SHERBO
+pop_module: TARIQ
 pop_privacy: strict_local
 updated: <YYYY-MM-DD>
 confidence: speculative
@@ -33,5 +33,5 @@ recency_anchor: "<YYYY-MM>"
 - Contribution:
 
 ## Roll-down references
-- [[KABIR_SHERBO 15_year vision]]
-- [[KABIR_SHERBO 10_year vision]]
+- [[TARIQ 15_year vision]]
+- [[TARIQ 10_year vision]]

@@ -3,7 +3,7 @@
 Hard facts every Claude session needs. Keep this file tiny.
 
 - **User**: Seif Elsherbiny. Location: Egypt (assumed; UTC+2/+3).
-- **POP root**: `C:\Users\selsherb\POP`. Off OneDrive. Local-first.
+- **NIZAM root**: `D:\NIZAM\nizamcore`. Off OneDrive. Local-first.
 - **Recovery-first**: SUKOON gate overrides tactical pressure.
 - **Three gates**: HIMAYAH (privacy) · SUKOON (recovery) · THABAT (continuity).
 - **Never commit**: `raw/`, `triaged/`, `sessions/`, `signals/`, `YAWMIYAT__journaling/sessions/`, `mirrors/`, `weekly/`, `SOUL.md`, future `MAL/`, `BADAN/`, `AHEL/`.

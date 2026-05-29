@@ -28,6 +28,133 @@
       "write": ["commits respecting .gitignore"],
       "note": "Private repo only. Verify visibility before every push."
     },
+    "ammar_steward": {
+      "codename": "Ammar",
+      "archetype": "STEWARD",
+      "module": "NIZAM__governor",
+      "read":  [
+        "NIZAM__system/policies/**",
+        "NIZAM__system/schemas/**",
+        "NIZAM__system/ledgers/**",
+        "NIZAM__system/governor/**",
+        "NIZAM_TEMPLE.json",
+        "NIZAM_MASTER_REGISTER.json"
+      ],
+      "write": [
+        "NIZAM__system/ledgers/*.jsonl",
+        "NIZAM__system/ledgers/.cost-month.json",
+        "NIZAM__system/ledgers/.merkle/**"
+      ],
+      "gated_by": ["HIMAYAH","THABAT"],
+      "note": "STEWARD governor. Sole ledger writer. Read access is broad; write access is ONLY to ledgers + governor state files. Cannot mutate persona JSONs or policies."
+    },
+    "amin_tafrigh": {
+      "codename": "Amin",
+      "archetype": "BRAIN_DUMPER",
+      "module": "TAFRIGH",
+      "read":  ["SOUL.md", "CRITICAL_FACTS.md", "NIZAM__system/personas/TAFRIGH.json"],
+      "write": ["TAFRIGH__brain_dumper/raw/**", "TAFRIGH__brain_dumper/triaged/**"],
+      "gated_by": ["SUKOON","HIMAYAH","THABAT"],
+      "note": "Capture-only. Ledger writes flow through Ammar."
+    },
+    "salman_shura": {
+      "codename": "Salman",
+      "archetype": "BRAINSTORMER",
+      "module": "SHURA",
+      "read":  ["SOUL.md", "CRITICAL_FACTS.md", "NIZAM_TEMPLE.json",
+                "NIZAM__system/personas/SHURA.json",
+                "TAFRIGH__brain_dumper/raw/**"],
+      "write": ["SHURA__brainstormer/sessions/**"],
+      "gated_by": ["SUKOON","HIMAYAH","THABAT"],
+      "note": "Synthesis. Ledger writes flow through Ammar."
+    },
+    "hazim_naqd": {
+      "codename": "Hazim",
+      "archetype": "RED_TEAM",
+      "module": "NAQD",
+      "read":  ["SOUL.md", "CRITICAL_FACTS.md", "NIZAM_TEMPLE.json",
+                "NIZAM__system/personas/NAQD.json",
+                "SHURA__brainstormer/sessions/**",
+                "TARIQ__long_horizon_strategy/**",
+                "MUNAWARA__tactical_strategy/**"],
+      "write": ["NAQD__brain_griller/sessions/**"],
+      "gated_by": ["SUKOON","HIMAYAH","THABAT"],
+      "note": "Critique only. Reconciliation requires MAKHZAN snapshot."
+    },
+    "tariq_strategy": {
+      "codename": "Tariq",
+      "archetype": "LONG_HORIZON_COMMANDER",
+      "module": "TARIQ",
+      "read":  ["SOUL.md", "CRITICAL_FACTS.md", "NIZAM_TEMPLE.json",
+                "NIZAM__system/personas/TARIQ.json",
+                "TARIQ__long_horizon_strategy/**",
+                "MUNAWARA__tactical_strategy/**"],
+      "write": ["TARIQ__long_horizon_strategy/**"],
+      "gated_by": ["SUKOON","HIMAYAH","THABAT"],
+      "note": "Strategic-command triad with Khalid + Tahir."
+    },
+    "khalid_munawara": {
+      "codename": "Khalid",
+      "archetype": "TACTICAL_COMMANDER",
+      "module": "MUNAWARA",
+      "read":  ["SOUL.md", "NIZAM__system/personas/MUNAWARA.json",
+                "TARIQ__long_horizon_strategy/**",
+                "MUNAWARA__tactical_strategy/**"],
+      "write": ["MUNAWARA__tactical_strategy/**"],
+      "gated_by": ["SUKOON","HIMAYAH","THABAT"],
+      "note": "Tactical execution. Roll-up to Tariq required for quarters."
+    },
+    "tahir_marsad": {
+      "codename": "Tahir",
+      "archetype": "INTEL_SCOUT",
+      "module": "MARSAD",
+      "read":  ["NIZAM__system/personas/MARSAD.json",
+                "MARSAD__flight_radar/watchlist/**"],
+      "write": ["MARSAD__flight_radar/scans/**",
+                "MARSAD__flight_radar/briefs/**"],
+      "gated_by": ["HIMAYAH","THABAT"],
+      "note": "Pull-only. External fetches go through HIMAYAH egress check."
+    },
+    "khaldun_hikmah": {
+      "codename": "Khaldun",
+      "archetype": "WEEKLY_SYNTHESIST",
+      "module": "HIKMAH",
+      "read":  ["SOUL.md", "NIZAM__system/personas/HIKMAH.json",
+                "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",
+                "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl"],
+      "write": ["HIKMAH__weekly_synthesis/**"],
+      "gated_by": ["HIMAYAH","THABAT"],
+      "note": "Read-only over EVENT_LEDGER; promotes patterns to LEARNING_LEDGER via Ammar."
+    },
+    "hayat_badan": {
+      "codename": "Hayat",
+      "archetype": "BIOMETRIC_TRACKER",
+      "module": "BADAN",
+      "read":  ["NIZAM__system/personas/BADAN.json",
+                "BADAN__body_health_system/**"],
+      "write": ["BADAN__body_health_system/**"],
+      "gated_by": ["HIMAYAH","SUKOON","THABAT"],
+      "note": "Advisory only. Red flags route to qualified professional."
+    },
+    "yusra_ahel": {
+      "codename": "Yusra",
+      "archetype": "FAMILY_STEWARD",
+      "module": "AHEL",
+      "read":  ["NIZAM__system/personas/AHEL.json"],
+      "write": ["AHEL__family_network/**"],
+      "gated_by": ["HIMAYAH","SUKOON","THABAT"],
+      "note": "strict_local_maximum. Separate keypair, LUKS volume, LOCAL model only. HARD-BLOCKED from VPS plaintext, GitHub, Notion, Drive-clear."
+    },
+    "sadiq_mal": {
+      "codename": "Sadiq",
+      "archetype": "FINANCIAL_ANALYST",
+      "module": "MAL",
+      "read":  ["NIZAM__system/personas/MAL.json",
+                "MAL__financial_engine/**"],
+      "write": ["MAL__financial_engine/**"],
+      "gated_by": ["HIMAYAH","SUKOON","THABAT"],
+      "note": "Phase 2. Decision-grade conversions require /mal-exchange-rate-check."
+    },
     "future_agents": {
       "note": "Any new agent must be added here with explicit read/write scopes before being granted access."
     }

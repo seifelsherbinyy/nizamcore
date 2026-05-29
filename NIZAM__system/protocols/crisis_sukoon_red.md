@@ -24,7 +24,7 @@ When stressed, the instinct is to "push through" — write more plans, double ba
 - `/munawara-weekly-battle` — auto-cuts 50% but defer entirely if possible.
 - `/mal-baseline`, `/mal-decision-score` — financial decisions under stress are biased.
 - `/qarar-decide` — defer non-urgent decisions.
-- `/kabir-sherbo-vision`, `/kabir-sherbo-annual-review` — fantasy fuel.
+- `/tariq-vision`, `/tariq-annual-review` — fantasy fuel.
 - `/ahel-connection-cadence` — drop to 1 person from `strong` status (uplifting), not 3.
 
 ## Conditional skills

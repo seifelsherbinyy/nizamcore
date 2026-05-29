@@ -5,7 +5,7 @@
   "workflows": [
     { "name": "idea_to_decision",         "scenario": "A notable decision is forming", "path": "workflows/idea_to_decision.md",         "skills": ["/tafrigh-capture","/shura-brainstorm","/naqd-grill","/qarar-decide"], "ledger_appends": ["DECISION_LEDGER"] },
     { "name": "idea_to_project",          "scenario": "An idea has earned execution",  "path": "workflows/idea_to_project.md",          "skills": ["/tafrigh-capture","/tafrigh-triage","/shura-graduate"] },
-    { "name": "strategy_rollup",          "scenario": "Set up / refresh strategic stack",    "path": "workflows/strategy_rollup.md",          "skills": ["/kabir-sherbo-vision","/munawara-quarter-plan","/munawara-weekly-battle"] },
+    { "name": "strategy_rollup",          "scenario": "Set up / refresh strategic stack",    "path": "workflows/strategy_rollup.md",          "skills": ["/tariq-vision","/munawara-quarter-plan","/munawara-weekly-battle"] },
     { "name": "finance_decision",         "scenario": "Financial decision ≥ $1k impact or cross-currency", "path": "workflows/finance_decision.md",         "skills": ["/mal-exchange-rate-check","/mal-baseline","/mal-scenario","/mal-decision-score","/qarar-decide","/mal-milestone-check"] },
     { "name": "body_routine",             "scenario": "Daily/weekly body tracking + red-flag handling", "path": "workflows/body_routine.md",             "skills": ["/badan-daily-signal","/badan-weekly-review","/badan-red-flag-check"] },
     { "name": "family_routine",           "scenario": "Family network maintenance, strict-local",       "path": "workflows/family_routine.md",           "skills": ["/ahel-add-person","/ahel-connection-cadence","/ahel-support-log"] },

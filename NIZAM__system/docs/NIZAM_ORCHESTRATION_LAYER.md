@@ -13,7 +13,7 @@
 | Field | Value |
 |-------|-------|
 | Persisted on | 2026-05-21 |
-| Repo version (at persistence) | `POP_TEMPLE.json` → `platform_version` `3.3.0` |
+| Repo version (at persistence) | `NIZAM_TEMPLE.json` → `platform_version` `3.3.0` |
 | Branch persisted from | `cursor/nizam-orchestration-layer-228d` |
 | Companion artifacts | [`AGENT_MAPPING.json`](../AGENT_MAPPING.json) · [`policies/CONNECTORS.json`](../policies/CONNECTORS.json) · [`diagrams/`](diagrams/) |
 | Companion runtime | [`DUAL_WRITE_GOVERNOR.md`](DUAL_WRITE_GOVERNOR.md) · [`policies/DUAL_WRITE_GOVERNOR.json`](../policies/DUAL_WRITE_GOVERNOR.json) |
@@ -81,7 +81,7 @@ The sandbox filesystem is wiped between sessions. Therefore:
    GitHub/Drive/Notion are reachable. Report what is and isn't available.
 2. **PULL the repo:** `git clone https://github.com/seifelsherbinyy/nizamcore` (or pull if cached).
    If git is unavailable, reconstruct from raw URLs per the pattern above.
-3. Read [`POP_TEMPLE.json`](../../POP_TEMPLE.json) and [`log.md`](../../log.md) **FIRST** — they
+3. Read [`NIZAM_TEMPLE.json`](../../NIZAM_TEMPLE.json) and [`log.md`](../../log.md) **FIRST** — they
    declare current version, gates, and module map. Reconcile against live repo; never assume
    v3.3.0 if newer.
 4. Verify the three gates are intact: **HIMAYAH**, **SUKOON**, **THABAT**. If a gate file is
@@ -211,7 +211,7 @@ commit as any change they describe — never let the map drift from the system.*
 ```json
 {
   "sandbox": {"python": "x.y", "git": true, "net": true},
-  "repo":    {"version": "from POP_TEMPLE.json", "gates_ok": true},
+  "repo":    {"version": "from NIZAM_TEMPLE.json", "gates_ok": true},
   "durable_layers": {"github": "up|down", "drive": "up|down", "notion": "up|down"},
   "ready":   true
 }

@@ -34,7 +34,7 @@
     "FORECAST — trend model update (runs after ALERT)"
   ],
   "last_updated": "2026-05-18T00:00:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json",
+  "registers_to": "NIZAM_MASTER_REGISTER.json",
   "module_status": "active",
   "schema_version": "1.0"
 }

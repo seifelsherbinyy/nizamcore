@@ -30,5 +30,5 @@
   "exchange_rate_verification": "≥2 sources, median, snapshot to exchange_rate_log.jsonl",
   "sibling_repo_reference": "https://github.com/seifelsherbinyy/goldminer",
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

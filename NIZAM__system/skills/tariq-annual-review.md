@@ -1,15 +1,15 @@
 ---
-name: kabir-sherbo-annual-review
-module: KABIR_SHERBO
-trigger: "/kabir-sherbo-annual-review"
+name: tariq-annual-review
+module: TARIQ
+trigger: "/tariq-annual-review"
 sources:
-  - KABIR_SHERBO__long_horizon_strategy/10_year/
+  - TARIQ__long_horizon_strategy/10_year/
   - MUNAWARA__tactical_strategy/quarters/
   - NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl
   - NIZAM__system/ledgers/BATTLE_LEDGER.jsonl
   - NIZAM__system/ledgers/DECISION_LEDGER.jsonl
   - NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
-target_folder: KABIR_SHERBO__long_horizon_strategy/reviews/annual/
+target_folder: TARIQ__long_horizon_strategy/reviews/annual/
 naming_pattern: "{YYYY}_annual_review.md"
 template: NIZAM__system/templates/annual_review.template.md
 gates: [SUKOON, THABAT]

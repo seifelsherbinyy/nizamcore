@@ -10,6 +10,6 @@
   "subfolders_planned": ["principles","mistakes","patterns","heuristics"],
   "ledger_writes_to": ["LEARNING_LEDGER.jsonl"],
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json",
+  "registers_to": "NIZAM_MASTER_REGISTER.json",
   "scaffolding_status": "shell only — skills/templates pending future build"
 }

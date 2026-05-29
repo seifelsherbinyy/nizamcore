@@ -10,5 +10,5 @@
   "template": "NIZAM__system/templates/adr_decision.template.md",
   "ledger_writes_to": ["DECISION_LEDGER.jsonl"],
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

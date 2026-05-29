@@ -4,7 +4,7 @@ These 11 folders are designed in the v3.0 plan but NOT scaffolded in Phase 1. Th
 
 | Folder | Symbol meaning | Purpose | Privacy default |
 |---|---|---|---|
-| `KABIR_SHERBO__long_horizon_strategy/` | "great/big" | 10/15/20-yr Long War Map (wealth, career, body, family, faith, location, learning, relationships, business, assets, identity) | strict_local |
+| `TARIQ__long_horizon_strategy/` | "great/big" | 10/15/20-yr Long War Map (wealth, career, body, family, faith, location, learning, relationships, business, assets, identity) | strict_local |
 | `MUNAWARA__tactical_strategy/` | "illuminated" (or rename to TADBIR) | 1/3/5-yr → quarters → months → weeks → battles | strict_local |
 | `MAL__financial_engine/` | "wealth/money" | $900 → $10k/mo milestone ladder; exchange-rate verification | strict_local |
 | `BADAN__body_health_system/` | "body" | Advisory health tracking, NOT diagnostic | strict_local |

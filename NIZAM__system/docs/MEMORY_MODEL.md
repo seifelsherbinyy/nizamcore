@@ -16,8 +16,8 @@
 │ Layer 4 — CANONICAL CONTENT       <Module>__<function>/     │ ← evolves via reconcile
 │   Brain dumps, sessions, plans, signals, person cards       │
 ├─────────────────────────────────────────────────────────────┤
-│ Layer 3 — REGISTRIES + INDEXES    POP_TEMPLE.json + ...     │ ← updated with structure
-│   POP_TEMPLE, POP_MASTER_REGISTER, SCHEMA_INDEX,            │
+│ Layer 3 — REGISTRIES + INDEXES    NIZAM_TEMPLE.json + ...     │ ← updated with structure
+│   NIZAM_TEMPLE, NIZAM_MASTER_REGISTER, SCHEMA_INDEX,            │
 │   PROTOCOLS_INDEX, WORKFLOWS_INDEX, _SKILLS_INDEX,          │
 │   per-folder _index.json                                    │
 ├─────────────────────────────────────────────────────────────┤
@@ -39,7 +39,7 @@ When any Claude session opens POP, it should read in this order:
 1. **`CRITICAL_FACTS.md`** (~120 tokens) — load mandatory constraints into the working set.
 2. **`SOUL.md`** — if present, load identity / values / non-negotiables.
 3. **`index.md`** — get the page catalog so you know where things live.
-4. **`POP_TEMPLE.json`** — load the master commandments + gate definitions.
+4. **`NIZAM_TEMPLE.json`** — load the master commandments + gate definitions.
 5. **The specific skill file you were invoked for** — read its frontmatter binding paths.
 6. **Module-relevant persona JSON** — load tone + operating rules for the module.
 

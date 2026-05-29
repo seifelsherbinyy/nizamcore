@@ -1,0 +1,191 @@
+{
+  "schema_ref": "NIZAM__system/schemas/folder_index.schema.json",
+  "version": "3.0.0",
+  "generated": "2026-05-15T14:17:30Z",
+  "root": "D:\\NIZAM\\nizamcore",
+  "folders": [
+    {
+      "path": "NIZAM__system",
+      "phase": 1,
+      "symbol": "NIZAM",
+      "meaning_ar": "system/order",
+      "privacy": "private_github_after_review",
+      "registers": "_index.json"
+    },
+    {
+      "path": "TAFRIGH__brain_dumper",
+      "phase": 1,
+      "symbol": "TAFRIGH",
+      "meaning_ar": "unloading/emptying",
+      "privacy": "strict_local",
+      "registers": "_index.json"
+    },
+    {
+      "path": "SHURA__brainstormer",
+      "phase": 1,
+      "symbol": "SHURA",
+      "meaning_ar": "consultation",
+      "privacy": "strict_local",
+      "registers": "_index.json"
+    },
+    {
+      "path": "NAQD__brain_griller",
+      "phase": 1,
+      "symbol": "NAQD",
+      "meaning_ar": "critique",
+      "privacy": "strict_local",
+      "registers": "_index.json"
+    },
+    {
+      "path": "SUKOON__recovery_first",
+      "phase": 1,
+      "symbol": "SUKOON",
+      "meaning_ar": "calm/stillness",
+      "privacy": "strict_local",
+      "registers": "_index.json"
+    },
+    {
+      "path": "MAKHZAN__archive",
+      "phase": 1,
+      "symbol": "MAKHZAN",
+      "meaning_ar": "warehouse/storehouse",
+      "privacy": "review_before_commit",
+      "registers": "_index.json"
+    },
+    {
+      "path": "HAJR__quarantine",
+      "phase": 1,
+      "symbol": "HAJR",
+      "meaning_ar": "isolation/quarantine",
+      "privacy": "strict_local",
+      "registers": "_index.json"
+    },
+    {
+      "path": "TARIQ__long_horizon_strategy",
+      "phase": 2,
+      "symbol": "TARIQ",
+      "meaning_ar": "knocker / morning star — long-horizon commander (after Tariq ibn Ziyad)",
+      "privacy": "strict_local",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "MUNAWARA__tactical_strategy",
+      "phase": 2,
+      "symbol": "MUNAWARA",
+      "meaning_ar": "illuminated (flagged in §2; rename to TADBIR if preferred)",
+      "privacy": "strict_local",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "MAL__financial_engine",
+      "phase": 2,
+      "symbol": "MAL",
+      "meaning_ar": "wealth/money",
+      "privacy": "strict_local",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "BADAN__body_health_system",
+      "phase": 2,
+      "symbol": "BADAN",
+      "meaning_ar": "body",
+      "privacy": "strict_local",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "AHEL__family_network",
+      "phase": 3,
+      "symbol": "AHEL",
+      "meaning_ar": "family/kin",
+      "privacy": "strict_local_maximum",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "INTAJ__output_engine",
+      "phase": 2,
+      "symbol": "INTAJ",
+      "meaning_ar": "production",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "YAWMIYAT__journaling",
+      "phase": 2,
+      "symbol": "YAWMIYAT",
+      "meaning_ar": "diary/journal",
+      "privacy": "strict_local",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "QARAR__decisions",
+      "phase": 2,
+      "symbol": "QARAR",
+      "meaning_ar": "decision",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "HIKMAH__learnings",
+      "phase": 2,
+      "symbol": "HIKMAH",
+      "meaning_ar": "wisdom/insight",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "NUR__obsidian_vault",
+      "phase": 2,
+      "symbol": "NUR",
+      "meaning_ar": "light/illumination",
+      "privacy": "mirror_curated_only",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "JADWAL__notion_dashboards",
+      "phase": 2,
+      "symbol": "JADWAL",
+      "meaning_ar": "table/schedule",
+      "privacy": "mirror_sanitized_metadata_only",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "HIFZ__github_version_control",
+      "phase": 2,
+      "symbol": "HIFZ",
+      "meaning_ar": "preservation",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "BASIRA__future_visualization",
+      "phase": 3,
+      "symbol": "BASIRA",
+      "meaning_ar": "insight/vision",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true
+    },
+    {
+      "path": "MARSAD__flight_radar",
+      "phase": 2,
+      "symbol": "MARSAD",
+      "meaning_ar": "watchtower / observation post — intel scout",
+      "privacy": "review_before_commit",
+      "registers": "_index.json",
+      "scaffolded": true,
+      "live": true
+    }
+  ]
+}

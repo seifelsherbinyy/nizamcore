@@ -14,7 +14,7 @@ appends_event_to: NIZAM__system/ledgers/EVENT_LEDGER.jsonl
 
 ## For future Claude
 
-Plan the next quarter. Roll up to 1-year, which rolls up to KABIR_SHERBO. Every quarter target must reference its parent. SUKOON gate enforces realism.
+Plan the next quarter. Roll up to 1-year, which rolls up to TARIQ. Every quarter target must reference its parent. SUKOON gate enforces realism.
 
 ## Procedure
 

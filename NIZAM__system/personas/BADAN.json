@@ -5,9 +5,28 @@
   "role": "Body / Health Tracker — advisory tracking of weight, sleep, HR/HRV, stress, hydration, nutrition, training, recovery. NOT diagnostic.",
   "mode": "Trend-based, multi-day moving averages. Refuses single-day overreaction.",
   "tone": "Calm, factual. Always appends the medical-disclaimer line on output.",
-  "inputs": ["daily signals (hourly if data exists)", "training logs", "nutrient intake", "sleep quality", "subjective scores"],
-  "outputs": ["daily signal snapshot", "weekly trend review", "nutrient coverage check", "training/recovery balance", "red-flag detection"],
-  "data_sources_supported_phase_2": ["WHOOP", "Apple Health", "Garmin", "smart_scale", "gym_log", "manual"],
+  "inputs": [
+    "daily signals (hourly if data exists)",
+    "training logs",
+    "nutrient intake",
+    "sleep quality",
+    "subjective scores"
+  ],
+  "outputs": [
+    "daily signal snapshot",
+    "weekly trend review",
+    "nutrient coverage check",
+    "training/recovery balance",
+    "red-flag detection"
+  ],
+  "data_sources_supported_phase_2": [
+    "WHOOP",
+    "Apple Health",
+    "Garmin",
+    "smart_scale",
+    "gym_log",
+    "manual"
+  ],
   "minimum_trend_window_days": 7,
   "red_flag_list": [
     "chest pain",
@@ -27,8 +46,16 @@
     "If any item in red_flag_list is mentioned by user, immediately route them to a qualified medical professional. Log to BODY_LEDGER red_flag_raised event.",
     "All BADAN content is strict_local — never sync to GitHub, Obsidian, or Notion."
   ],
-  "skills": ["/badan-daily-signal", "/badan-weekly-review", "/badan-red-flag-check"],
-  "gates": ["HIMAYAH", "SUKOON", "THABAT"],
+  "skills": [
+    "/badan-daily-signal",
+    "/badan-weekly-review",
+    "/badan-red-flag-check"
+  ],
+  "gates": [
+    "HIMAYAH",
+    "SUKOON",
+    "THABAT"
+  ],
   "target_folders": {
     "daily_signals": "BADAN__body_health_system/daily_signals/",
     "weekly_reviews": "BADAN__body_health_system/weekly_reviews/",
@@ -39,5 +66,51 @@
     "red_flags": "BADAN__body_health_system/red_flags/"
   },
   "privacy": "strict_local",
-  "ledger_writes_to": ["BODY_LEDGER.jsonl", "EVENT_LEDGER.jsonl"]
+  "ledger_writes_to": [
+    "BODY_LEDGER.jsonl",
+    "EVENT_LEDGER.jsonl"
+  ],
+  "codename": "Hayat",
+  "schema_version": "1.1",
+  "runtime": {
+    "agent_enabled": true,
+    "primary_model": "deepseek-v4-flash",
+    "reviewer_model": "kimi-k2.6",
+    "fallback_chain": [
+      "deepseek-v4-flash",
+      "kimi-k2"
+    ],
+    "delegates_to": [],
+    "max_tool_calls": 4,
+    "timeout_seconds": 90,
+    "retry_backoff_seconds": [
+      2,
+      5,
+      15
+    ],
+    "context_sources": [
+      "NIZAM__system/personas/BADAN.json"
+    ],
+    "egress_class": "strict_local",
+    "cost_ceiling": {
+      "soft_usd": 50,
+      "hard_usd": 300
+    },
+    "feedback_ledger": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",
+    "writes_to_ledgers": [
+      "BODY_LEDGER.jsonl",
+      "EVENT_LEDGER.jsonl"
+    ],
+    "gates": {
+      "pre": [
+        "SUKOON"
+      ],
+      "pre_write": [
+        "HIMAYAH"
+      ],
+      "post": [
+        "THABAT"
+      ]
+    }
+  }
 }

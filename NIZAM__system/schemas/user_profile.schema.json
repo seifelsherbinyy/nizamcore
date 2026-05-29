@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/user_profile.schema.json",
+  "title": "USER_PROFILE — operator surface model",
+  "description": "What every agent is allowed to read about the operator without an AHEL gate. The 'public face' inside the system. Loaded by the coordinator before any LLM call. Mirroring updates feed this through /feedback + GEPA; structural overhauls require an operator approval ledger row. Privacy class: review_before_commit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "identity",
+    "values",
+    "current_focus",
+    "voice",
+    "guardrails",
+    "preferences",
+    "version_meta"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_name", "pronouns", "primary_locale"],
+      "properties": {
+        "display_name": { "type": "string" },
+        "pronouns": { "type": "string" },
+        "primary_locale": { "type": "string" },
+        "secondary_locales": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "weight"],
+        "properties": {
+          "name": { "type": "string", "maxLength": 60 },
+          "weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "description": { "type": "string", "maxLength": 240 }
+        }
+      },
+      "description": "Operator-declared values, weighted. Used by Tariq (long-horizon) and Khaldun (weekly synthesis) when arbitrating between recommendations."
+    },
+    "current_focus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizon", "rocks"],
+      "properties": {
+        "horizon": {
+          "type": "string",
+          "enum": ["this_week", "this_month", "this_quarter", "this_year"]
+        },
+        "rocks": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label"],
+            "properties": {
+              "label": { "type": "string", "maxLength": 120 },
+              "due": {
+                "type": ["string", "null"],
+                "description": "ISO date or null."
+              },
+              "owner_agent": { "type": ["string", "null"] }
+            }
+          },
+          "description": "Up to 5 active rocks. EOS-style. Khaldun reviews weekly."
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preferred_pacing", "default_brevity"],
+      "properties": {
+        "preferred_pacing": {
+          "type": "string",
+          "enum": ["slow_and_warm", "neutral", "tight_and_clinical"]
+        },
+        "default_brevity": {
+          "type": "string",
+          "enum": ["paragraph", "bullets_3_to_5", "headline_only"]
+        },
+        "tone_preferences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "no_motivational_filler",
+              "no_emojis",
+              "no_first_person_assistant",
+              "name_costs_explicitly",
+              "name_uncertainty_explicitly",
+              "challenge_when_appropriate"
+            ]
+          }
+        }
+      }
+    },
+    "guardrails": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topics_off_limits", "agents_to_quiet"],
+      "properties": {
+        "topics_off_limits": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 80 }
+        },
+        "agents_to_quiet": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Codenames the operator has paused. Coordinator must skip these."
+        },
+        "max_messages_per_day_normal_mode": {
+          "type": "integer", "minimum": 1, "maximum": 200
+        },
+        "max_messages_per_day_crisis_mode": {
+          "type": "integer", "minimum": 0, "maximum": 20
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "morning_window_local": { "type": "string", "description": "HH:MM-HH:MM" },
+        "evening_window_local": { "type": "string" },
+        "preferred_models": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "deepseek-v4-pro",
+              "kimi-k2-6",
+              "claude-sonnet-4-6",
+              "local-llama-3b",
+              "local-deterministic"
+            ]
+          }
+        },
+        "operator_checkpoints_enabled": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "C8_every_strict_local_write",
+              "C9_every_external_tool_call",
+              "C10_every_model_swap"
+            ]
+          }
+        }
+      }
+    },
+    "version_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "updated_ts", "updated_by", "source_refs"],
+      "properties": {
+        "version": { "type": "integer", "minimum": 1 },
+        "updated_ts": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "updated_by": {
+          "type": "string",
+          "enum": ["Operator", "Ammar", "Khaldun"]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "gepa_signature": {
+          "type": ["string", "null"],
+          "description": "When updated by Khaldun via the GEPA loop, the signature lets the operator audit the lineage."
+        }
+      }
+    }
+  }
+}

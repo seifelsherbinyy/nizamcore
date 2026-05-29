@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pop.local/schemas/long_horizon_plan.schema.json",
-  "title": "KABIR_SHERBO 10/15/20-year plan",
+  "title": "TARIQ 10/15/20-year plan",
   "type": "object",
   "required": ["horizon_years","created","domains","strategic_pillars","non_negotiables"],
   "properties": {

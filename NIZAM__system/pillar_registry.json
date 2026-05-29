@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "title": "NIZAM pillar registry — single source of truth for pillar naming",
+  "generated": "2026-05-28",
+  "source": "live disk topology (21 top-level dirs)",
+  "cross_refs": [
+    "NIZAM_MASTER_REGISTER.json (per-folder metadata)",
+    "NIZAM_TEMPLE.json#modules (runtime config)",
+    "NIZAM__system/AGENT_MAPPING.json (conceptual layer)"
+  ],
+  "pillars": [
+    {"symbol": "NIZAM",    "folder": "NIZAM__system",                "phase": 1, "kind": "system",         "meaning_ar": "order / discipline"},
+    {"symbol": "TAFRIGH",  "folder": "TAFRIGH__brain_dumper",        "phase": 1, "kind": "module",         "meaning_ar": "release / unloading — verbatim capture"},
+    {"symbol": "SHURA",    "folder": "SHURA__brainstormer",          "phase": 1, "kind": "module",         "meaning_ar": "consultation — brainstorm / theme extraction"},
+    {"symbol": "NAQD",     "folder": "NAQD__brain_griller",          "phase": 1, "kind": "module",         "meaning_ar": "critique — red-team / steelman"},
+    {"symbol": "SUKOON",   "folder": "SUKOON__recovery_first",       "phase": 1, "kind": "gate_and_module", "meaning_ar": "tranquillity — recovery / overload gate"},
+    {"symbol": "TARIQ",    "folder": "TARIQ__long_horizon_strategy", "phase": 2, "kind": "module",         "meaning_ar": "knocker / morning star — long-horizon commander (after Tariq ibn Ziyad)"},
+    {"symbol": "MUNAWARA", "folder": "MUNAWARA__tactical_strategy",  "phase": 2, "kind": "module",         "meaning_ar": "illuminated — tactical 1/3/5-yr strategy"},
+    {"symbol": "MAL",      "folder": "MAL__financial_engine",        "phase": 2, "kind": "module",         "meaning_ar": "wealth — finance engine"},
+    {"symbol": "BADAN",    "folder": "BADAN__body_health_system",    "phase": 2, "kind": "module",         "meaning_ar": "body — biometric advisory"},
+    {"symbol": "QARAR",    "folder": "QARAR__decisions",             "phase": 2, "kind": "module",         "meaning_ar": "decision"},
+    {"symbol": "INTAJ",    "folder": "INTAJ__output_engine",         "phase": 2, "kind": "module",         "meaning_ar": "production — output engine"},
+    {"symbol": "YAWMIYAT", "folder": "YAWMIYAT__journaling",         "phase": 2, "kind": "module",         "meaning_ar": "dailies — journaling"},
+    {"symbol": "HIKMAH",   "folder": "HIKMAH__learnings",            "phase": 2, "kind": "module",         "meaning_ar": "wisdom — weekly synthesis"},
+    {"symbol": "NUR",      "folder": "NUR__obsidian_vault",          "phase": 2, "kind": "module",         "meaning_ar": "light — Obsidian vault mirror"},
+    {"symbol": "JADWAL",   "folder": "JADWAL__notion_dashboards",    "phase": 2, "kind": "module",         "meaning_ar": "schedule / table — Notion dashboards"},
+    {"symbol": "HIFZ",     "folder": "HIFZ__github_version_control", "phase": 2, "kind": "module",         "meaning_ar": "preservation — version control"},
+    {"symbol": "MARSAD",   "folder": "MARSAD__flight_radar",         "phase": 2, "kind": "module",         "meaning_ar": "watchtower / observation post — intel scout"},
+    {"symbol": "AHEL",     "folder": "AHEL__family_network",         "phase": 3, "kind": "module",         "meaning_ar": "family / kin — strict_local_maximum"},
+    {"symbol": "BASIRA",   "folder": "BASIRA__future_visualization", "phase": 3, "kind": "module",         "meaning_ar": "insight / foresight"},
+    {"symbol": "MAKHZAN",  "folder": "MAKHZAN__archive",             "phase": 0, "kind": "infrastructure", "meaning_ar": "store / warehouse — immutable rollback anchors"},
+    {"symbol": "HAJR",     "folder": "HAJR__quarantine",             "phase": 0, "kind": "infrastructure", "meaning_ar": "isolation — quarantine for unsafe artifacts"}
+  ],
+  "invariants": {
+    "pillar_count": 21,
+    "phase_1_count": 5,
+    "phase_2_count": 12,
+    "phase_3_count": 2,
+    "infrastructure_count": 2,
+    "must_match_disk": true,
+    "must_match_temple_modules_plus_infrastructure": true
+  }
+}

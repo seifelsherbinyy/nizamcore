@@ -1,0 +1,208 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/agent_message.schema.json",
+  "title": "AGENT_MESSAGE envelope (inter-agent communication)",
+  "description": "Standard envelope for any message that crosses an agent boundary in NIZAM. Used by SHURA -> NAQD delegation, MARSAD -> Tariq briefs, Hayat -> Salman annotations, the coordinator -> any agent, etc. Carries trace_id end-to-end so a single user turn can be reconstructed across multiple LLM calls. Every field is required unless marked optional.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trace_id",
+    "message_id",
+    "ts",
+    "from_agent",
+    "to_agent",
+    "delegation_depth",
+    "kind",
+    "purpose",
+    "privacy_class",
+    "egress_class",
+    "payload",
+    "context_refs",
+    "needs_operator_confirm"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Bumped only on breaking changes."
+    },
+    "trace_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Stable per user turn. Persists across hops so the chain summary can reconstruct the full agent path."
+    },
+    "message_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique per envelope. Enables idempotent re-delivery."
+    },
+    "parent_message_id": {
+      "type": ["string", "null"],
+      "description": "Set on every hop after the first; null on the operator-originated turn."
+    },
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "from_agent": {
+      "type": "string",
+      "description": "Codename: Operator, Ammar, Amin, Salman, Hazim, Tariq, Khalid, Khaldun, Tahir, Hayat, Yusra, Sadiq."
+    },
+    "to_agent": {
+      "type": "string",
+      "description": "Codename of the recipient agent or 'Operator' for an outbound reply."
+    },
+    "delegation_depth": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8,
+      "description": "0 = operator turn. Each agent->agent hop increments by 1. Hops <= 3 auto-permitted; >3 forces needs_operator_confirm=true. Hard cap 8 (defense in depth)."
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "request",
+        "response",
+        "delegation",
+        "annotation",
+        "challenge",
+        "synthesis",
+        "alert",
+        "operator_reply"
+      ],
+      "description": "request: ask for output. delegation: route to another specialist. annotation: side-channel addition (e.g., Hayat -> Salman). challenge: NAQD red-team. synthesis: Khaldun weekly. alert: SUKOON/HIMAYAH gate event. operator_reply: outbound Telegram."
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 240,
+      "description": "Single sentence: WHY this message exists. Used by NAQD when arbitrating conflicts."
+    },
+    "privacy_class": {
+      "type": "string",
+      "enum": [
+        "strict_local_maximum",
+        "strict_local",
+        "review_before_commit",
+        "private_github",
+        "mirror_sanitized"
+      ],
+      "description": "Most-sensitive tier of any field in payload. Coordinator MUST enforce against egress_class."
+    },
+    "egress_class": {
+      "type": "string",
+      "enum": [
+        "no_egress",
+        "deterministic_local_only",
+        "zdr_inference_only",
+        "operator_only",
+        "framework_egress"
+      ],
+      "description": "Tightest egress the envelope is permitted to traverse. AHEL must be no_egress or deterministic_local_only. Strict_local may be zdr_inference_only or operator_only."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Free-form per agent contract. Each agent defines its own payload sub-schema; the envelope only requires that the payload is a JSON object.",
+      "additionalProperties": true
+    },
+    "context_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "persona",
+              "soul",
+              "ledger_row",
+              "config",
+              "fixture",
+              "user_profile",
+              "user_deep",
+              "policy"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "description": "Path or stable identifier. e.g., 'NIZAM__system/personas/SHURA.json', 'EVENT_LEDGER#<row_id>'."
+          }
+        }
+      },
+      "description": "Anti-hallucination: every claim the sender makes should ideally cite a context_ref. NAQD enforces this when challenging."
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Sender's own confidence in payload. Used by NAQD threshold (default 0.15 spread between alternatives triggers arbitration)."
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "confidence"],
+        "properties": {
+          "label": { "type": "string" },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "rationale": { "type": ["string", "null"] }
+        }
+      },
+      "description": "Optional ranked alternatives. NAQD reads these when arbitrating."
+    },
+    "needs_operator_confirm": {
+      "type": "boolean",
+      "description": "Coordinator sets true when (a) delegation_depth>3, (b) privacy_class >= strict_local AND first egress, (c) cost guardrail crosses soft ceiling. Operator-in-the-loop checkpoint (E1.4)."
+    },
+    "operator_confirm_reason": {
+      "type": ["string", "null"],
+      "description": "When needs_operator_confirm=true, the coordinator explains why in one sentence."
+    },
+    "cost_cents": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Estimated LLM cost in cents for this hop, when known. Aggregated by cost_ceiling."
+    },
+    "model": {
+      "type": ["string", "null"],
+      "description": "Concrete model used (e.g., 'deepseek-v4-pro', 'claude-sonnet-4-6', 'local-llama-3b', 'local-deterministic'). Null for purely deterministic hops."
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool"],
+        "properties": {
+          "tool": { "type": "string" },
+          "args_hash": { "type": ["string", "null"] }
+        }
+      },
+      "description": "Tool calls this hop made, by name. args_hash is sha256 of canonicalized args (no plaintext stored)."
+    },
+    "gate_decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gate", "decision"],
+        "properties": {
+          "gate": {
+            "type": "string",
+            "enum": ["HIMAYAH", "SUKOON", "THABAT"]
+          },
+          "decision": {
+            "type": "string",
+            "enum": ["pass", "block", "downshift", "escalate"]
+          },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

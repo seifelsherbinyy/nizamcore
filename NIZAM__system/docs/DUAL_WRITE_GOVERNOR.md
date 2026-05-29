@@ -52,7 +52,7 @@ Never invent data, never finalize human-only fields, never duplicate.
 
 ### 3. STAGE 0 — REPO → DRIVE MIRROR
 
-Inside Drive root, recreate the nizamcore tree (module folders verbatim, `POP_TEMPLE.json`, `log.md`, all top-level repo files). Use `nizam_drive_mirror.py`. Off-repo clutter → `_Archive/`. Never delete repo-backed items without confirmation.
+Inside Drive root, recreate the nizamcore tree (module folders verbatim, `NIZAM_TEMPLE.json`, `log.md`, all top-level repo files). Use `nizam_drive_mirror.py`. Off-repo clutter → `_Archive/`. Never delete repo-backed items without confirmation.
 
 ### 4. NAMING (runtime records)
 

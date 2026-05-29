@@ -10,7 +10,7 @@
 
 ## What's public on this repo
 - README, LICENSE, CHANGELOG, .gitignore
-- POP_TEMPLE.json, POP_MASTER_REGISTER.json, index.md, CRITICAL_FACTS.md
+- NIZAM_TEMPLE.json, NIZAM_MASTER_REGISTER.json, index.md, CRITICAL_FACTS.md
 - NIZAM__system/schemas/**, templates/**, skills/**, policies/**, docs/**, personas/**
 - Each folder's _index.json and README.md
 - MAKHZAN__archive/<ts>/MANIFEST.json (the snapshot hashes only; snapshot contents that mirror strict-local paths are themselves gitignored)
@@ -22,7 +22,7 @@
 - `HAJR__quarantine/**`
 - `SOUL.md` (identity / values placeholder)
 - All `*_LEDGER.jsonl` files (EVENT, DECISION, LEARNING, STRATEGY, BATTLE, FINANCE, BODY, FAMILY)
-- All Phase 2/3 strict-local folder contents: `KABIR_SHERBO/{10,15,20}_year/`, `MUNAWARA/{1,3,5}_year/` etc., `MAL/**`, `BADAN/**`, `AHEL/**`
+- All Phase 2/3 strict-local folder contents: `TARIQ/{10,15,20}_year/`, `MUNAWARA/{1,3,5}_year/` etc., `MAL/**`, `BADAN/**`, `AHEL/**`
 - `MAKHZAN__archive/**/{raw,triaged,sessions,signals}/**` (snapshots inherit privacy)
 - All secrets: `.env`, `*token*`, `*secret*`, `*credentials*`
 
@@ -57,4 +57,4 @@ To flip back to private:
 gh repo edit seifelsherbinyy/nizamcore --visibility private --accept-visibility-change-consequences
 ```
 
-Update this doc and `POP_TEMPLE.json` to reflect the new state.
+Update this doc and `NIZAM_TEMPLE.json` to reflect the new state.

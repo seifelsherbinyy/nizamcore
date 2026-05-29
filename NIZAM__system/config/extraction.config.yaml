@@ -1,0 +1,35 @@
+# NIZAM extraction.config.yaml
+# Theme / tension / loop extraction confidence thresholds (Salman/SHURA stage).
+# Updated: 2026-05-28 (NIZAM Next Plan v2 G11)
+
+schema_version: 1.0.0
+
+extraction:
+  model: deepseek-v4-pro
+  reviewer_model: kimi-k2.6
+
+# Confidence bands for extracted items (themes/tensions/loops)
+extraction_confidence:
+  high_min: 0.75              # surface to operator without confirm prompt
+  medium_min: 0.55            # surface with "is this right?" toggle
+  low_min: 0.35               # park in scratch; do not surface
+  drop_below: 0.35            # silently drop (kept in DEAD_LETTER for replay)
+
+# Artifact separation invariant — Amin (Artifact A) vs Salman (Artifact B)
+artifact_separation:
+  artifact_a_owner: Amin
+  artifact_b_owner: Salman
+  test_count: 6
+  tests:
+    - artifact_a_contains_zero_themes
+    - artifact_a_contains_zero_tensions
+    - artifact_a_contains_zero_loops
+    - artifact_a_preserves_verbatim_capture
+    - artifact_b_cites_artifact_a_offsets
+    - artifact_b_no_fabricated_quotes
+  enforcer: NIZAM__system/governor/classifier.py
+
+# Dry-run fixture
+fixture:
+  path: NIZAM__system/config/fixtures/extraction_10_inputs.jsonl
+  expected_separation_pass_rate: 1.00   # all 6 tests must pass on every input

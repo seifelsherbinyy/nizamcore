@@ -1,0 +1,35 @@
+{
+  "folder": "TARIQ__long_horizon_strategy",
+  "symbol": "TARIQ",
+  "meaning_ar": "knocker / morning star — long-horizon commander (after Tariq ibn Ziyad)",
+  "phase": 2,
+  "purpose": "Long-horizon (10/15/20-yr) Long War Map. Identity-level objectives. Rolls down to MUNAWARA.",
+  "privacy_level": "strict_local",
+  "allowed_contents": [
+    "10_year/*.md",
+    "15_year/*.md",
+    "20_year/*.md",
+    "identity_strategy/*.md",
+    "major_pivots/pivot_*.md",
+    "domains/<domain>.md",
+    "reviews/annual/{YYYY}_annual_review.md"
+  ],
+  "skill_commands": [
+    "/tariq-vision",
+    "/tariq-annual-review",
+    "/munawara-pivot"
+  ],
+  "subfolders": [
+    "10_year",
+    "15_year",
+    "20_year",
+    "identity_strategy",
+    "major_pivots",
+    "domains",
+    "reviews"
+  ],
+  "doctrine_doc": "NIZAM__system/docs/TARIQ_LONG_WAR_DOCTRINE.md",
+  "persona": "NIZAM__system/personas/TARIQ.json",
+  "last_updated": "2026-05-15T15:30:00Z",
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
+}

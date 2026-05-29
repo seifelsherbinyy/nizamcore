@@ -17,9 +17,9 @@
 | `conversational_session_mirror` | `note_frontmatter` | `YAWMIYAT/mirrors/`, `YAWMIYAT/weekly/` | `/nizam-*`, `/nizam-almanac` | strict_local |
 | `decision` | `decision_ledger` + `note_frontmatter` | `QARAR/` | `/qarar-decide` | review_before_commit |
 | `learning` | `learning_ledger` | `HIKMAH/` (Phase 2) | (shell) | review_before_commit |
-| `strategy_plan` (10/15/20yr) | `long_horizon_plan` | `KABIR_SHERBO/{10,15,20}_year/` | `/kabir-sherbo-vision` | strict_local |
-| `strategy_plan` (annual review) | `note_frontmatter` | `KABIR_SHERBO/reviews/annual/` | `/kabir-sherbo-annual-review` | strict_local |
-| `strategy_pivot` | `strategy_pivot` | `KABIR_SHERBO/major_pivots/` | `/munawara-pivot` | strict_local |
+| `strategy_plan` (10/15/20yr) | `long_horizon_plan` | `TARIQ/{10,15,20}_year/` | `/tariq-vision` | strict_local |
+| `strategy_plan` (annual review) | `note_frontmatter` | `TARIQ/reviews/annual/` | `/tariq-annual-review` | strict_local |
+| `strategy_pivot` | `strategy_pivot` | `TARIQ/major_pivots/` | `/munawara-pivot` | strict_local |
 | `strategy_plan` (1/3/5yr / quarter) | `tactical_plan` | `MUNAWARA/{1,3,5}_year/, quarters/` | `/munawara-quarter-plan` | strict_local |
 | `battle` (weekly) | `note_frontmatter` | `MUNAWARA/weeks/` | `/munawara-weekly-battle` | strict_local |
 | (battle outcome) | `battle_ledger` | `BATTLE_LEDGER.jsonl` | `/munawara-weekly-battle` | strict_local |
@@ -70,7 +70,7 @@ Plus schema-specific fields per ledger.
 POP uses `[[wikilinks]]` for cross-references between artifacts. Convention:
 - Wikilink target = the artifact's filename without extension.
 - Bidirectional backlinks are NOT auto-maintained — `/pop-health` audits for orphans.
-- Wikilinks across phases respected (e.g., a SHURA session can `[[KABIR_SHERBO 10-yr vision]]`).
+- Wikilinks across phases respected (e.g., a SHURA session can `[[TARIQ 10-yr vision]]`).
 
 ## Identifiers
 
@@ -99,7 +99,7 @@ Each schema file is committable. Major schema changes:
 | Level | Meaning | Where it lives |
 |---|---|---|
 | `strict_local_maximum` | Never leaves disk; never syncs anywhere | AHEL/** |
-| `strict_local` | Never commits; on-disk only | TAFRIGH/raw, triaged, SHURA/sessions, NAQD/sessions, SUKOON/signals, MAL/**, BADAN/**, KABIR_SHERBO content, MUNAWARA content, all P2/P3 ledgers, SOUL.md |
+| `strict_local` | Never commits; on-disk only | TAFRIGH/raw, triaged, SHURA/sessions, NAQD/sessions, SUKOON/signals, MAL/**, BADAN/**, TARIQ content, MUNAWARA content, all P2/P3 ledgers, SOUL.md |
 | `review_before_commit` | Committable only after manual review | ledgers (EVENT/DECISION/LEARNING), log.md |
 | `private_github` | Default-committable in private repo | schemas, templates, skills, protocols, workflows, docs, personas, manifests |
 | `mirror_curated_only` | Curated selection to Obsidian | NUR (Phase 2) |

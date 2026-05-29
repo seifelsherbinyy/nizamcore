@@ -1,19 +1,34 @@
 """
 Shared utilities for NIZAM dual-write governor scripts.
+
+NOTE (B1.1): generic helpers refactored to
+`NIZAM__system/governor/utils.py`. This module re-exports them for
+backward compatibility and keeps the Notion/Drive-specific bridge.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import os
-import re
-from datetime import datetime, timezone
+import sys
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 CONFIG_PATH = REPO_ROOT / "NIZAM__system" / "policies" / "DUAL_WRITE_GOVERNOR.json"
 PRIVACY_PATH = REPO_ROOT / "NIZAM__system" / "policies" / "PRIVACY_CLASSIFICATION.json"
+
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from NIZAM__system.governor.utils import (  # noqa: E402,F401
+    compute_dedupe_key,
+    date_from_captured_at,
+    normalize_percent,
+    payload_hash,
+    slugify,
+    stage_human_only_fields,
+    utc_now_iso,
+)
 
 
 def load_config() -> dict[str, Any]:
@@ -24,23 +39,6 @@ def load_config() -> dict[str, Any]:
 def load_privacy() -> dict[str, Any]:
     with open(PRIVACY_PATH, encoding="utf-8") as f:
         return json.load(f)
-
-
-def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def slugify(text: str, max_len: int = 30) -> str:
-    s = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
-    return (s[:max_len] if s else "record").rstrip("-")
-
-
-def compute_dedupe_key(lane: str, record_type: str, date_str: str, slug: str) -> str:
-    return f"{lane}:{record_type}:{date_str}:{slug}"
-
-
-def date_from_captured_at(captured_at: str) -> str:
-    return captured_at[:10]
 
 
 def build_drive_record_filename(
@@ -59,42 +57,6 @@ def build_weekly_review_path(year: int, week: int) -> str:
 
 def build_meeting_path(date_str: str, meeting_slug: str) -> str:
     return f"Records/Meetings/{date_str}_{meeting_slug}_MoM.docx"
-
-
-def normalize_percent(value: Any) -> Any:
-    """Convert 86 or '86%' to 0.86 for Notion decimals."""
-    if value is None:
-        return None
-    if isinstance(value, (int, float)):
-        if value > 1:
-            return round(value / 100.0, 4)
-        return float(value)
-    if isinstance(value, str):
-        s = value.strip().rstrip("%")
-        try:
-            n = float(s)
-            return round(n / 100.0, 4) if n > 1 else n
-        except ValueError:
-            return value
-    return value
-
-
-def payload_hash(payload: dict[str, Any]) -> str:
-    raw = json.dumps(payload, sort_keys=True, default=str)
-    return hashlib.sha256(raw.encode()).hexdigest()[:16]
-
-
-def stage_human_only_fields(
-    payload: dict[str, Any], human_only: list[str]
-) -> tuple[dict[str, Any], list[str]]:
-    """Remove human-only keys from payload; return cleaned copy + staged names."""
-    staged: list[str] = []
-    cleaned = dict(payload)
-    for key in list(cleaned.keys()):
-        if key in human_only:
-            staged.append(key)
-            del cleaned[key]
-    return cleaned, staged
 
 
 def check_privacy_gate(

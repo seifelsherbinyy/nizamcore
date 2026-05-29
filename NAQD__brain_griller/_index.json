@@ -10,5 +10,5 @@
   "emotional_state_check": "SUKOON__recovery_first/overload_flags.jsonl (24h window)",
   "fallback_mode_on_distress": "supportive_reflection",
   "last_updated": "2026-05-15T14:17:30Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

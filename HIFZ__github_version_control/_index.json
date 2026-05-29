@@ -9,6 +9,6 @@
   "skill_commands": ["(designed) /hifz-precommit-check","(designed) /hifz-snapshot"],
   "subfolders_planned": ["hooks","scripts","docs"],
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json",
+  "registers_to": "NIZAM_MASTER_REGISTER.json",
   "scaffolding_status": "shell only — hooks/scripts pending future build"
 }

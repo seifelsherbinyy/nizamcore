@@ -55,7 +55,7 @@ This is the foundation everything else references.
 
 ## Anti-patterns during onboarding
 - Filling SOUL.md with what you wish were true (instead of what is). Future-Claude will misread you.
-- Trying KABIR_SHERBO 10-yr vision on day 3 — too much architecture, too fast.
+- Trying TARIQ 10-yr vision on day 3 — too much architecture, too fast.
 - Adding Phase 2 (strategy, finance, body) skills before daily morning is habitual — Phase 1 collapses.
 - "I should be journaling more" — that's TAFRIGH being mistaken for YAWMIYAT. TAFRIGH is capture, not reflection. They're different tools.
 

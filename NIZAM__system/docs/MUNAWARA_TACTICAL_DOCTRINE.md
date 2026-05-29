@@ -32,7 +32,7 @@ Every battle outcome at week close gets one line in `BATTLE_LEDGER.jsonl`:
 
 ## Roll-up enforcement
 
-Every quarter objective must reference a 1-year objective. Every 1-year objective must reference a 3-year. Every 3-year must reference a 5-year. Every 5-year must reference KABIR_SHERBO 10-year. `/pop-health` audits the chain.
+Every quarter objective must reference a 1-year objective. Every 1-year objective must reference a 3-year. Every 3-year must reference a 5-year. Every 5-year must reference TARIQ 10-year. `/pop-health` audits the chain.
 
 ## Anti-patterns
 

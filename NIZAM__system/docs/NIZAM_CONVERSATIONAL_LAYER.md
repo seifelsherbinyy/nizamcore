@@ -127,7 +127,7 @@ When running inside POP (not a bare LLM paste):
 
 ### Read order
 
-1. `CRITICAL_FACTS.md` → `SOUL.md` (if present) → `POP_TEMPLE.json`
+1. `CRITICAL_FACTS.md` → `SOUL.md` (if present) → `NIZAM_TEMPLE.json`
 2. This document + `NIZAM__system/personas/NIZAM.json`
 3. The invoked skill file (`NIZAM__system/skills/nizam-*.md`) for path bindings
 

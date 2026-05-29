@@ -14,5 +14,5 @@
   "data_sources_supported": ["WHOOP","Apple_Health","Garmin","smart_scale","gym_log","manual"],
   "mandatory_disclaimer": "Advisory only — not medical diagnosis. Red flags route to qualified professionals.",
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

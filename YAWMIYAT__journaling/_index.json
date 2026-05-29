@@ -23,6 +23,6 @@
   "subfolders": ["sessions", "mirrors", "weekly", "daily", "monthly", "entries"],
   "schema_ref": "NIZAM__system/schemas/conversational_session.schema.json",
   "last_updated": "2026-05-21T12:00:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json",
+  "registers_to": "NIZAM_MASTER_REGISTER.json",
   "scaffolding_status": "live — NIZAM conversational layer v1"
 }

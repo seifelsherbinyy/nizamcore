@@ -25,5 +25,28 @@
   },
   "privacy": "strict_local_maximum",
   "ledger_writes_to": ["FAMILY_LEDGER.jsonl", "EVENT_LEDGER.jsonl"],
-  "log_md_policy": "Only sanitized one-liners like 'AHEL skill invoked — strict_local'. NEVER quote names, relations, or details."
+  "log_md_policy": "Only sanitized one-liners like 'AHEL skill invoked — strict_local'. NEVER quote names, relations, or details.",
+  "codename": "Yusra",
+  "namesake": "Yusra — the steady, capable companion. Local-only by design.",
+  "runtime": {
+    "agent_enabled": true,
+    "primary_model": "local-llama-3b",
+    "reviewer_model": "local-llama-3b",
+    "fallback_chain": [],
+    "delegates_to": [],
+    "max_tool_calls": 2,
+    "timeout_seconds": 60,
+    "retry_backoff_seconds": [2, 5],
+    "context_sources": [
+      "NIZAM__system/personas/AHEL.json"
+    ],
+    "egress_class": "strict_local_maximum",
+    "cost_ceiling": {"soft_usd": 0, "hard_usd": 0},
+    "feedback_ledger": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",
+    "writes_to_ledgers": ["FAMILY_LEDGER.jsonl", "EVENT_LEDGER.jsonl"],
+    "gates": {"pre": ["HIMAYAH", "SUKOON"], "pre_write": ["HIMAYAH"], "post": ["THABAT"]},
+    "separate_keypair_required": true,
+    "luks_volume_required": true
+  },
+  "schema_version": "1.1"
 }

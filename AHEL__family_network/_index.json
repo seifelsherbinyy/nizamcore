@@ -14,5 +14,5 @@
   "cadence_overload_protection": "max 3 people per week surfaced by /ahel-connection-cadence",
   "log_md_policy": "sanitized only — never names, relations, or details",
   "last_updated": "2026-05-15T16:00:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

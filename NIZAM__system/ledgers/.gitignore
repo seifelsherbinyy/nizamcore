@@ -1,0 +1,15 @@
+# Operational append-only ledgers. NEVER commit content.
+# Bootstrap rows live in MAKHZAN; live rows are strict_local or
+# review_before_commit (depends on ledger; see NIZAM_TEMPLE#ledgers).
+*.jsonl
+*.merkle
+*.sth
+# Signed Tree Heads expose ledger size/timing metadata for strict_local
+# ledgers whose payload is never pushed — keep the anchors local too.
+*.sth.json
+sth/
+# Integration-test receipt (paths + counts) — local artifact, do not push.
+T1_receipt.json
+!.gitignore
+!README.md
+!schemas/

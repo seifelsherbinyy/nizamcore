@@ -1,6 +1,6 @@
-# BIG_SHERBO Long War Doctrine
+# TARIQ Long War Doctrine
 
-> KABIR_SHERBO is named for the "Big Sherbo" codename. The doctrine is about playing the long game across decades.
+> TARIQ is named after Tariq ibn Ziyad — long-horizon campaign commander. The doctrine is about playing the long game across decades.
 
 ## Principles
 

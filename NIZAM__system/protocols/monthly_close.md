@@ -45,7 +45,7 @@ Aggregate 4 weekly reviews. Spot patterns:
 - Are any cadence settings creating unintended pressure? Adjust.
 
 ### Step 6 — pivot opportunity assessment (~5–10 min, optional)
-Has any KABIR_SHERBO pillar shown evidence-based weakness this month? Candidate for `/munawara-pivot`? If so, schedule the pivot conversation explicitly — don't pivot on a Sunday.
+Has any TARIQ pillar shown evidence-based weakness this month? Candidate for `/munawara-pivot`? If so, schedule the pivot conversation explicitly — don't pivot on a Sunday.
 
 ## Anti-patterns
 - Promoting a finance rung after one good month — wait the 3-month rolling window.

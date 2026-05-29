@@ -9,6 +9,6 @@
   "skill_commands": ["(designed) /intaj-tasks","(designed) /intaj-agenda","(designed) /intaj-deliverable"],
   "subfolders_planned": ["tasks","agendas","execution_plans","deliverables"],
   "last_updated": "2026-05-15T15:30:00Z",
-  "registers_to": "POP_MASTER_REGISTER.json",
+  "registers_to": "NIZAM_MASTER_REGISTER.json",
   "scaffolding_status": "shell only — skills/templates pending future build"
 }

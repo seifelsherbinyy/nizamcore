@@ -1,6 +1,6 @@
 ---
 type: strategy_plan
-pop_module: KABIR_SHERBO
+pop_module: TARIQ
 pop_privacy: strict_local
 updated: <YYYY-MM-DD>
 confidence: medium

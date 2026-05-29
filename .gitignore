@@ -32,13 +32,13 @@ NIZAM__system/ledgers/DECISION_LEDGER.jsonl
 NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
 
 # ---- Phase 2 strategic + finance + body — NEVER commit content ----
-KABIR_SHERBO__long_horizon_strategy/10_year/
-KABIR_SHERBO__long_horizon_strategy/15_year/
-KABIR_SHERBO__long_horizon_strategy/20_year/
-KABIR_SHERBO__long_horizon_strategy/identity_strategy/
-KABIR_SHERBO__long_horizon_strategy/major_pivots/
-KABIR_SHERBO__long_horizon_strategy/domains/
-KABIR_SHERBO__long_horizon_strategy/reviews/
+TARIQ__long_horizon_strategy/10_year/
+TARIQ__long_horizon_strategy/15_year/
+TARIQ__long_horizon_strategy/20_year/
+TARIQ__long_horizon_strategy/identity_strategy/
+TARIQ__long_horizon_strategy/major_pivots/
+TARIQ__long_horizon_strategy/domains/
+TARIQ__long_horizon_strategy/reviews/
 
 MUNAWARA__tactical_strategy/1_year/
 MUNAWARA__tactical_strategy/3_year/
@@ -126,3 +126,19 @@ MAKHZAN__archive/**/raw/
 MAKHZAN__archive/**/triaged/
 MAKHZAN__archive/**/sessions/
 MAKHZAN__archive/**/signals/
+
+# ---- User profile (operator personal context) — keep OFF GitHub ----
+# user.md       = review_before_commit (personal communication prefs)
+# user_deep.md  = strict_local_maximum (family / mental-health context)
+# HERMES reads these on the VPS via the encrypted lane, never via git.
+user.md
+user_deep.md
+
+# ---- MAKHZAN snapshots are LOCAL rollback anchors — never push full snapshots ----
+# Snapshot dirs are ISO-timestamp named (e.g. 2026-05-28T20-12-29Z).
+MAKHZAN__archive/*T*Z/
+
+# ---- Router/extraction dry-run fixtures model real life-domains ----
+# (family / health / finance / geography). Treat as strict_local; keep local.
+# The validator CODE (fixtures/*.py) is still committed; only data stays off git.
+NIZAM__system/config/fixtures/*.jsonl

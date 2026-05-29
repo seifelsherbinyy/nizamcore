@@ -54,7 +54,7 @@ For "should I take this taxi or Uber" type questions: skip Step 1, 2, 3, 4. Ment
 For "salary growth at current vs. GCC remote role" type: run `/mal-scenario` twice, once per pathway. Compare scenarios side-by-side in the QARAR record.
 
 ### Multi-year financial commitment (mortgage, etc.)
-Add an explicit roll-up reference to KABIR_SHERBO 10-yr wealth domain in the QARAR record. Schedule a NAQD grill at month 6 of the commitment.
+Add an explicit roll-up reference to TARIQ 10-yr wealth domain in the QARAR record. Schedule a NAQD grill at month 6 of the commitment.
 
 ## Anti-patterns
 - Skipping exchange-rate verification because "the rate is roughly X" — when EGP fluctuates 10%+ in a quarter, "roughly" produces wrong decisions.

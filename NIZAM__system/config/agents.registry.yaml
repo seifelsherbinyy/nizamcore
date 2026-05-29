@@ -1,0 +1,206 @@
+# NIZAM agents.registry.yaml
+# Runtime registry: codename -> persona file -> delegates -> gates
+# Schema cross-ref: NIZAM__system/schemas/persona.schema.json (runtime block)
+# Source of truth for codename mapping: NIZAM__system/agent_personas.json
+# Source of truth for pillar naming: NIZAM__system/pillar_registry.json
+# Updated: 2026-05-28 (NIZAM Next Plan v2 G9)
+
+schema_version: 1.0.0
+
+defaults:
+  # Per locked operator decision Q4 (cloud stack, Kimi K2 default reviewer)
+  primary_model: deepseek-v4-pro
+  reviewer_model: kimi-k2.6
+  fallback_chain:
+    - deepseek-v4-flash
+    - kimi-k2
+  max_tool_calls: 8
+  timeout_seconds: 120
+  retry_backoff_seconds: [2, 5, 15]
+  egress_class: strict_local
+  cost_ceiling:
+    soft_usd: 50
+    hard_usd: 300
+  gates:
+    pre: [SUKOON]
+    pre_write: [HIMAYAH]
+    post: [THABAT]
+  zdr_required: true   # Verify provider ZDR before first strict_local egress
+
+agents:
+
+  # ─── Phase 1 boot loop ───────────────────────────────────────────
+  Amin:
+    persona: NIZAM__system/personas/TAFRIGH.json
+    module: TAFRIGH
+    primary_model: deepseek-v4-flash    # routing-class workload
+    reviewer_model: kimi-k2.6
+    delegates_to: [Salman]
+    context_sources:
+      - SOUL.md
+      - CRITICAL_FACTS.md
+      - NIZAM__system/personas/TAFRIGH.json
+    writes_to_ledgers: [EVENT_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  Salman:
+    persona: NIZAM__system/personas/SHURA.json
+    module: SHURA
+    primary_model: deepseek-v4-pro
+    reviewer_model: kimi-k2.6
+    delegates_to: [Hazim, Khalid]
+    context_sources:
+      - SOUL.md
+      - CRITICAL_FACTS.md
+      - NIZAM_TEMPLE.json
+      - NIZAM__system/personas/SHURA.json
+    writes_to_ledgers: [EVENT_LEDGER, LEARNING_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  Hazim:
+    persona: NIZAM__system/personas/NAQD.json
+    module: NAQD
+    primary_model: claude-sonnet-4-6     # upgrade-only for red-team
+    reviewer_model: kimi-k2.6
+    delegates_to: []
+    context_sources:
+      - SOUL.md
+      - CRITICAL_FACTS.md
+      - NIZAM_TEMPLE.json
+      - NIZAM__system/personas/NAQD.json
+    writes_to_ledgers: [EVENT_LEDGER, LEARNING_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  # ─── Strategic-command triad ─────────────────────────────────────
+  Tariq:
+    persona: NIZAM__system/personas/TARIQ.json
+    module: TARIQ
+    primary_model: claude-sonnet-4-6     # ultra-thinking long-horizon
+    reviewer_model: kimi-k2.6
+    delegates_to: [Khaldun, Khalid, Tahir]
+    context_sources:
+      - SOUL.md
+      - CRITICAL_FACTS.md
+      - NIZAM_TEMPLE.json
+      - NIZAM__system/personas/TARIQ.json
+      - TARIQ__long_horizon_strategy/
+    writes_to_ledgers: [STRATEGY_LEDGER, EVENT_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  Khalid:
+    persona: NIZAM__system/personas/MUNAWARA.json
+    module: MUNAWARA
+    primary_model: deepseek-v4-pro
+    reviewer_model: kimi-k2.6
+    delegates_to: [Khaldun, Tariq]
+    context_sources:
+      - SOUL.md
+      - NIZAM__system/personas/MUNAWARA.json
+      - MUNAWARA__tactical_strategy/
+    writes_to_ledgers: [STRATEGY_LEDGER, EVENT_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  Tahir:
+    persona: NIZAM__system/personas/MARSAD.json
+    module: MARSAD
+    primary_model: deepseek-v4-flash     # scouting / news ingestion
+    reviewer_model: kimi-k2.6
+    delegates_to: [Salman]
+    context_sources:
+      - NIZAM__system/personas/MARSAD.json
+      - MARSAD__flight_radar/
+    writes_to_ledgers: [EVENT_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  # ─── Weekly synthesis ────────────────────────────────────────────
+  Khaldun:
+    persona: NIZAM__system/personas/HIKMAH.json
+    module: HIKMAH
+    primary_model: claude-sonnet-4-6     # ultra-thinking weekly synthesis
+    reviewer_model: kimi-k2.6
+    delegates_to: []
+    context_sources:
+      - SOUL.md
+      - NIZAM__system/personas/HIKMAH.json
+      - NIZAM__system/ledgers/EVENT_LEDGER.jsonl
+      - NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    writes_to_ledgers: [LEARNING_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  # ─── Biometric ───────────────────────────────────────────────────
+  Hayat:
+    persona: NIZAM__system/personas/BADAN.json
+    module: BADAN
+    primary_model: deepseek-v4-flash
+    reviewer_model: kimi-k2.6
+    delegates_to: []
+    context_sources:
+      - NIZAM__system/personas/BADAN.json
+    writes_to_ledgers: [BODY_LEDGER, EVENT_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    egress_class: strict_local
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  # ─── Family (strict_local_maximum) ───────────────────────────────
+  Yusra:
+    persona: NIZAM__system/personas/AHEL.json
+    module: AHEL
+    primary_model: local-llama-3b        # NEVER cloud per locked decision
+    reviewer_model: local-llama-3b
+    delegates_to: []
+    context_sources:
+      - NIZAM__system/personas/AHEL.json
+    writes_to_ledgers: [FAMILY_LEDGER]
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    egress_class: strict_local_maximum   # hard-blocked from VPS+cloud
+    separate_keypair: true
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
+
+  # ─── Governance (STEWARD) ────────────────────────────────────────
+  Ammar:
+    persona: NIZAM__system/personas/AMMAR.json
+    module: NIZAM__governor
+    primary_model: local-deterministic   # no LLM calls; rule evaluation only
+    reviewer_model: null
+    delegates_to: []
+    context_sources:
+      - NIZAM__system/policies/PRIVACY_CLASSIFICATION.json
+      - NIZAM__system/policies/TOOL_ACCESS_MATRIX.json
+      - NIZAM__system/policies/SYNC_POLICY.json
+      - NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json
+      - NIZAM_TEMPLE.json
+    writes_to_ledgers:
+      - EVENT_LEDGER
+      - LEARNING_LEDGER
+      - DEAD_LETTER
+      - STRATEGY_LEDGER
+      - DECISION_LEDGER
+      - FINANCE_LEDGER
+      - BODY_LEDGER
+      - FAMILY_LEDGER
+      - BATTLE_LEDGER
+    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
+    egress_class: deterministic_local_only
+    cost_ceiling: {soft_usd: 0, hard_usd: 0}
+    max_tool_calls: 0
+    timeout_seconds: 30
+    role_note: |
+      Egress firewall, cost ceiling enforcement, kill switch, sync arbiter,
+      sole writer to ledgers. Sits inline between every agent's output and
+      every persistence/egress operation. Originates no content of its own.
+    gates: {pre: [], pre_write: [], post: []}
+
+invariants:
+  delegation_depth_max: 3
+  delegation_depth_operator_confirm_at: 4
+  default_max_tool_calls: 8
+  kill_switch_env: NIZAM_KILL_ALL
+  conflict_arbitrator: Hazim
+  conflict_threshold: 0.15   # confidence delta requiring arbitration

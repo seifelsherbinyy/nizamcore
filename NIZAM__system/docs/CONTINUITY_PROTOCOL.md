@@ -10,7 +10,7 @@
 
 ### Session open
 1. Read orientation files (Layer 1 of memory model).
-2. Read POP_TEMPLE.json + relevant persona JSONs.
+2. Read NIZAM_TEMPLE.json + relevant persona JSONs.
 3. Read the specific skill file invoked.
 4. Read `log.md` last 10 lines for recent context.
 5. Read EVENT_LEDGER last 10 entries for cross-skill context (optional, when relevant).
@@ -38,8 +38,8 @@
 | Body trajectory | BODY_LEDGER.jsonl (strict_local) |
 | Family support history | FAMILY_LEDGER.jsonl (strict_local) |
 | Identity / values | SOUL.md |
-| Architecture / commandments | POP_TEMPLE.json |
-| Folder inventory + privacy | POP_MASTER_REGISTER.json |
+| Architecture / commandments | NIZAM_TEMPLE.json |
+| Folder inventory + privacy | NIZAM_MASTER_REGISTER.json |
 | Schemas (data contracts) | NIZAM/schemas/*.json |
 | Skill procedures | NIZAM/skills/*.md |
 | Templates | NIZAM/templates/*.md |
@@ -56,7 +56,7 @@ The system is designed to be readable by future-Seif in 5, 10, 20 years. Specifi
 2. **No vendor lock-in**: agent-portable (any LLM with file access can use POP).
 3. **No silent erasure**: MAKHZAN preserves prior states.
 4. **Self-documenting structure**: README + _index.json in every folder explains itself.
-5. **Versioned registries**: POP_TEMPLE.json carries `platform_version` semver.
+5. **Versioned registries**: NIZAM_TEMPLE.json carries `platform_version` semver.
 
 ## Agent-handoff protocol
 
@@ -72,7 +72,7 @@ If switching agents (Claude → Codex → Gemini → OpenCode):
 
 POP is designed to outlast any specific tool. Things that must survive a decade:
 - **SOUL.md** — identity / values / non-negotiables. User-maintained.
-- **POP_TEMPLE.json** — operating commandments.
+- **NIZAM_TEMPLE.json** — operating commandments.
 - **All canonical content** in module folders.
 - **All ledgers** (append-only forever).
 - **All MAKHZAN snapshots** (immutable forever).

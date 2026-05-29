@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/user_deep.schema.json",
+  "title": "USER_DEEP — strict_local operator model",
+  "description": "The strict_local layer of operator self-knowledge. Lives next to AHEL on the encrypted volume. Only Coordinator, Ammar, and the named pillar's agents may read it; never crosses VPS plaintext or any GitHub remote. Backed by a Honcho-pattern peer model post-spike (E2.6).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "privacy_class",
+    "consent",
+    "selfmodel",
+    "version_meta"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "privacy_class": {
+      "type": "string",
+      "const": "strict_local",
+      "description": "Hard-pinned. user_deep is strict_local. Items inside that are strict_local_maximum move to a separate AHEL document."
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_ts", "operator_acknowledged"],
+      "properties": {
+        "created_ts": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "operator_acknowledged": {
+          "type": "boolean",
+          "description": "True iff the operator signed the consent statement at the bottom of user_deep.md. Coordinator refuses to load the file until this is true."
+        },
+        "may_use_for_personalization": { "type": "boolean" },
+        "may_use_for_anti_drift_signal": { "type": "boolean" }
+      }
+    },
+    "selfmodel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operating_style", "stress_responses", "recovery_anchors"],
+      "properties": {
+        "operating_style": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 160 },
+          "description": "Free-form sentences. e.g., 'thinks in lists when overwhelmed.'"
+        },
+        "stress_responses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["trigger", "default_response"],
+            "properties": {
+              "trigger": { "type": "string", "maxLength": 160 },
+              "default_response": { "type": "string", "maxLength": 240 },
+              "preferred_intervention": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "recovery_anchors": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 160 },
+          "description": "Concrete things that consistently restore. e.g., 'walking after dhuhr', 'tea + 30 min no-screen'."
+        },
+        "horizons_view": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "twelve_month": { "type": "string", "maxLength": 320 },
+            "three_year": { "type": "string", "maxLength": 320 },
+            "ten_year": { "type": "string", "maxLength": 320 }
+          }
+        }
+      }
+    },
+    "dialectic": {
+      "type": "object",
+      "description": "Outputs from a Dialectic API (Honcho-pattern) caller. Optional pre-spike (E2.6).",
+      "additionalProperties": false,
+      "properties": {
+        "last_inference_ts": { "type": ["string", "null"] },
+        "model_used": { "type": ["string", "null"] },
+        "summary": { "type": ["string", "null"], "maxLength": 1000 },
+        "inferred_facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["fact", "confidence"],
+            "properties": {
+              "fact": { "type": "string", "maxLength": 240 },
+              "confidence": {
+                "type": "number", "minimum": 0.0, "maximum": 1.0
+              },
+              "support_refs": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mirroring_fidelity": {
+      "type": "object",
+      "description": "Anti-drift score (E2.8). Updated weekly by Khaldun.",
+      "additionalProperties": false,
+      "properties": {
+        "score": {
+          "type": ["number", "null"], "minimum": 0.0, "maximum": 1.0
+        },
+        "last_measured_ts": { "type": ["string", "null"] },
+        "method": {
+          "type": ["string", "null"],
+          "description": "Brief description of how the score was computed."
+        },
+        "trend": {
+          "type": ["string", "null"],
+          "enum": ["improving", "stable", "drifting", null]
+        }
+      }
+    },
+    "version_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "updated_ts", "updated_by"],
+      "properties": {
+        "version": { "type": "integer", "minimum": 1 },
+        "updated_ts": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "updated_by": {
+          "type": "string",
+          "enum": ["Operator", "Khaldun", "Ammar"]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

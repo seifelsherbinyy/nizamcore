@@ -14,7 +14,7 @@ Workflows are **scenario-driven skill chains**. Unlike protocols (cadence-driven
 | Workflow | Trigger scenario | Skills chained |
 |---|---|---|
 | [idea_to_project](idea_to_project.md) | An idea has earned execution | `/tafrigh-capture` → `/tafrigh-triage` → `/shura-graduate` → route to INTAJ or MUNAWARA |
-| [strategy_rollup](strategy_rollup.md) | Setting up or refreshing the strategic stack | `/kabir-sherbo-vision` → MUNAWARA 5/3/1-yr → `/munawara-quarter-plan` → `/munawara-weekly-battle` → daily Now |
+| [strategy_rollup](strategy_rollup.md) | Setting up or refreshing the strategic stack | `/tariq-vision` → MUNAWARA 5/3/1-yr → `/munawara-quarter-plan` → `/munawara-weekly-battle` → daily Now |
 
 ## Finance
 
@@ -55,7 +55,7 @@ See [`protocols/_PROTOCOLS_INDEX.md`](../protocols/_PROTOCOLS_INDEX.md).
 ## Workflows that span phases
 - `idea_to_project` references INTAJ (Phase 2 shell-only). Until INTAJ skills are live, fragments accumulate in `SHURA/sessions/` with `phase_2_target` frontmatter.
 - `family_routine` is AHEL-bound (Phase 3 live).
-- `strategy_rollup` requires KABIR_SHERBO + MUNAWARA (both Phase 2 live).
+- `strategy_rollup` requires TARIQ + MUNAWARA (both Phase 2 live).
 
 ## When to write a new workflow
 - A user repeatedly chains 2+ skills in the same order for the same scenario type.

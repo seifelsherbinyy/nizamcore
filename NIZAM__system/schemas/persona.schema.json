@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/seifelsherbinyy/nizamcore/schemas/persona.schema.json",
+  "title": "NIZAM persona file (14 soul fields + v1.1 runtime block)",
+  "description": "Validates NIZAM__system/personas/*.json. Soul fields are immutable across versions; runtime block is additive per Blueprint v7 sec.6 (persona v1.1).",
+  "type": "object",
+  "required": [
+    "module", "meaning_ar", "phase", "role", "mode", "tone",
+    "inputs", "outputs", "operating_rules", "skills",
+    "gates", "privacy", "ledger_writes_to"
+  ],
+  "properties": {
+    "module": {
+      "type": "string",
+      "description": "Persona module symbol; matches pillar_registry.json entry.",
+      "pattern": "^[A-Z][A-Z_]*$"
+    },
+    "meaning_ar": {
+      "type": "string",
+      "description": "Arabic root meaning + role gloss."
+    },
+    "phase": {
+      "type": "integer",
+      "enum": [1, 2, 3]
+    },
+    "role": {
+      "type": "string",
+      "description": "One-sentence functional role."
+    },
+    "mode": {
+      "type": "string",
+      "description": "Operating mode descriptor."
+    },
+    "tone": {
+      "type": "string",
+      "description": "Voice + posture."
+    },
+    "inputs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "domains_covered": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "operating_rules": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^/[a-z][a-z0-9-]*$"
+      }
+    },
+    "gates": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {"type": "string", "enum": ["HIMAYAH", "SUKOON", "THABAT"]}
+        },
+        {
+          "type": "object",
+          "properties": {
+            "pre": {"type": "array", "items": {"type": "string"}},
+            "pre_write": {"type": "array", "items": {"type": "string"}},
+            "post": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      ]
+    },
+    "target_folders": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "target_folder": {"type": "string"},
+    "privacy": {
+      "type": "string",
+      "enum": [
+        "review_before_commit",
+        "strict_local",
+        "strict_local_maximum",
+        "private_github",
+        "mirror_sanitized"
+      ]
+    },
+    "ledger_writes_to": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "opening_voice": {
+      "type": ["object", "string", "null"],
+      "description": "Optional. INVARIANT: must surface zero subjective/scored inner state. Only objective biometric fields permitted (BADAN/Hayat). Validated by separate lint, not JSON-Schema alone."
+    },
+    "runtime": {
+      "type": "object",
+      "description": "v1.1 additive block. Append-only — do not rewrite the 14 soul fields above.",
+      "required": [
+        "agent_enabled",
+        "primary_model",
+        "reviewer_model",
+        "fallback_chain",
+        "delegates_to",
+        "max_tool_calls",
+        "timeout_seconds",
+        "retry_backoff_seconds",
+        "context_sources",
+        "egress_class",
+        "cost_ceiling",
+        "feedback_ledger",
+        "writes_to_ledgers",
+        "gates"
+      ],
+      "properties": {
+        "agent_enabled": {"type": "boolean"},
+        "primary_model": {
+          "type": "string",
+          "enum": [
+            "deepseek-v4-pro",
+            "deepseek-v4-flash",
+            "kimi-k2",
+            "kimi-k2.6",
+            "claude-sonnet-4-6",
+            "local-llama-3b",
+            "local-deterministic"
+          ]
+        },
+        "reviewer_model": {
+          "type": ["string", "null"],
+          "enum": [
+            "kimi-k2",
+            "kimi-k2.6",
+            "deepseek-v4-pro",
+            "claude-sonnet-4-6",
+            "local-llama-3b",
+            null
+          ]
+        },
+        "fallback_chain": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "delegates_to": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "max_tool_calls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 600
+        },
+        "retry_backoff_seconds": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1},
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "context_sources": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Explicit file paths (anti-hallucination)."
+        },
+        "egress_class": {
+          "type": "string",
+          "enum": [
+            "strict_local_maximum",
+            "strict_local",
+            "ephemeral_zdr",
+            "review_before_commit",
+            "private_github",
+            "mirror_sanitized",
+            "deterministic_local_only"
+          ]
+        },
+        "cost_ceiling": {
+          "type": "object",
+          "required": ["soft_usd", "hard_usd"],
+          "properties": {
+            "soft_usd": {"type": "number", "minimum": 0},
+            "hard_usd": {"type": "number", "minimum": 0}
+          }
+        },
+        "feedback_ledger": {"type": "string"},
+        "writes_to_ledgers": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "gates": {
+          "type": "object",
+          "properties": {
+            "pre": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["HIMAYAH", "SUKOON", "THABAT"]}
+            },
+            "pre_write": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["HIMAYAH", "SUKOON", "THABAT"]}
+            },
+            "post": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["HIMAYAH", "SUKOON", "THABAT"]}
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

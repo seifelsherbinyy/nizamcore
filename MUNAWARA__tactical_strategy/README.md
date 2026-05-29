@@ -3,7 +3,7 @@
 Arabic: منورة — "illuminated." (Alt naming: **TADBIR** تدبير — planning/strategy — if you prefer strictly secular.)
 
 ## Purpose
-Translate KABIR_SHERBO long-horizon bets to 1 / 3 / 5-yr plans → quarters → months → weeks → current battles. Apply the Dynamic War Strategy protocol weekly.
+Translate TARIQ long-horizon bets to 1 / 3 / 5-yr plans → quarters → months → weeks → current battles. Apply the Dynamic War Strategy protocol weekly.
 
 ## Skills
 - `/munawara-quarter-plan` — quarter plan with roll-up to 1-year.

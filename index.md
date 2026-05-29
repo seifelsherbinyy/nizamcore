@@ -5,14 +5,14 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 ## Orientation (root)
 - [`SOUL.md`](SOUL.md) — Seif's identity, values, operating principles (gitignored)
 - [`CRITICAL_FACTS.md`](CRITICAL_FACTS.md) — ~120 tokens always loaded
-- [`POP_TEMPLE.json`](POP_TEMPLE.json) — master registry
-- [`POP_MASTER_REGISTER.json`](POP_MASTER_REGISTER.json) — folder inventory + privacy
+- [`NIZAM_TEMPLE.json`](NIZAM_TEMPLE.json) — master registry
+- [`NIZAM_MASTER_REGISTER.json`](NIZAM_MASTER_REGISTER.json) — folder inventory + privacy
 - [`log.md`](log.md) — human-readable activity timeline
 - [`CHANGELOG.md`](CHANGELOG.md) — versioned change history
 
 ## NIZAM__system (00 — governance)
 - [`NIZAM__system/SCHEMA_INDEX.json`](NIZAM__system/SCHEMA_INDEX.json) — all schemas
-- [`NIZAM__system/personas/`](NIZAM__system/personas/) — 8 persona JSONs (NIZAM, TAFRIGH, SHURA, NAQD, KABIR_SHERBO, MUNAWARA, MAL, BADAN)
+- [`NIZAM__system/personas/`](NIZAM__system/personas/) — 8 persona JSONs (NIZAM, TAFRIGH, SHURA, NAQD, TARIQ, MUNAWARA, MAL, BADAN)
 - [`NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md`](NIZAM__system/docs/NIZAM_CONVERSATIONAL_LAYER.md) — portable conversational front-end prompt
 - [`NIZAM__system/skills/`](NIZAM__system/skills/) — 35 POP slash-command skill files (Phase 1 + 2 + 3)
 - [`NIZAM__system/protocols/`](NIZAM__system/protocols/) — 8 cadence-driven skill chains (daily/weekly/monthly/quarterly/annual/crisis/onboarding)
@@ -41,7 +41,7 @@ Claude reads this FIRST in any POP session. Keep it curated and current.
 - [`HAJR__quarantine/`](HAJR__quarantine/) — uncertain / unclassified holding pen
 
 ## Strategic + Life Branches (Phase 2 — scaffolded with skills/schemas/templates; content awaits user fill)
-- [`KABIR_SHERBO__long_horizon_strategy/`](KABIR_SHERBO__long_horizon_strategy/) — 10/15/20-yr Long War Map → [doctrine](NIZAM__system/docs/BIG_SHERBO_LONG_WAR_DOCTRINE.md)
+- [`TARIQ__long_horizon_strategy/`](TARIQ__long_horizon_strategy/) — 10/15/20-yr Long War Map → [doctrine](NIZAM__system/docs/TARIQ_LONG_WAR_DOCTRINE.md)
 - [`MUNAWARA__tactical_strategy/`](MUNAWARA__tactical_strategy/) — 1/3/5-yr → quarters → weeks → battles → [doctrine](NIZAM__system/docs/MUNAWARA_TACTICAL_DOCTRINE.md)
 - [`MAL__financial_engine/`](MAL__financial_engine/) — $1.5k → $10k+ /mo milestone ladder → [doctrine](NIZAM__system/docs/MAL_FINANCIAL_LADDER.md)
 - [`BADAN__body_health_system/`](BADAN__body_health_system/) — advisory health tracking → [doctrine](NIZAM__system/docs/BADAN_HEALTH_ADVISORY_NOTES.md)

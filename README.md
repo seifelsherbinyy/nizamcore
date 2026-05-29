@@ -31,7 +31,7 @@ A fourth foundation module — **SUKOON** (سكون — "calm") — tracks recov
 | `SUKOON__recovery_first/` | 1 | daily recovery signals + overload flags |
 | `MAKHZAN__archive/` | 1 | immutable timestamped snapshots with `MANIFEST.json` SHA256 |
 | `HAJR__quarantine/` | 1 | uncertain / unclassified holding pen |
-| `KABIR_SHERBO__long_horizon_strategy/` | 2 | 10/15/20-yr Long War Map |
+| `TARIQ__long_horizon_strategy/` | 2 | 10/15/20-yr Long War Map |
 | `MUNAWARA__tactical_strategy/` | 2 | 1/3/5-yr → quarters → weeks → battles |
 | `MAL__financial_engine/` | 2 | personal-finance milestone ladder + exchange-rate verification |
 | `BADAN__body_health_system/` | 2 | advisory health-signal tracking (not diagnostic) |
@@ -84,7 +84,7 @@ The framework is openly shareable; the personal life data inside it is not. Trea
 
 1. [`CRITICAL_FACTS.md`](CRITICAL_FACTS.md) — always-loaded context (~120 tokens)
 2. [`index.md`](index.md) — page catalog
-3. [`POP_TEMPLE.json`](POP_TEMPLE.json) — master commandments
+3. [`NIZAM_TEMPLE.json`](NIZAM_TEMPLE.json) — master commandments
 4. [`NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md`](NIZAM__system/docs/SKILL_DESIGN_PRINCIPLES.md) — how skills work
 5. Any [`NIZAM__system/skills/*.md`](NIZAM__system/skills/) you want to understand
 

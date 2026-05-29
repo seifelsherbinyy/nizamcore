@@ -1,6 +1,6 @@
 ---
 type: strategy_plan
-pop_module: KABIR_SHERBO
+pop_module: TARIQ
 pop_privacy: strict_local
 updated: <YYYY-MM-DD>
 confidence: high
@@ -45,4 +45,4 @@ Major pivot record. Schema-validated. Snapshot affected plans to MAKHZAN before 
 - [[<plan 2>]]
 
 ## STRATEGY_LEDGER event
-`{"ts":"...", "module":"KABIR_SHERBO", "privacy_level":"strict_local", "event_type":"major_pivot", "pivot_from":"...", "pivot_to":"...", "summary":"..."}`
+`{"ts":"...", "module":"TARIQ", "privacy_level":"strict_local", "event_type":"major_pivot", "pivot_from":"...", "pivot_to":"...", "summary":"..."}`

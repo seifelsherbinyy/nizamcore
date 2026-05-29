@@ -35,5 +35,28 @@
   },
   "privacy": "strict_local",
   "ledger_writes_to": ["FINANCE_LEDGER.jsonl", "EVENT_LEDGER.jsonl"],
-  "phase_2_reference": "Consider patterns from sibling repo github.com/seifelsherbinyy/goldminer (Python ETL for personal finance, pandas + SQLite + anomaly detection). See NIZAM/docs/MAL_FINANCIAL_LADDER.md."
+  "phase_2_reference": "Consider patterns from sibling repo github.com/seifelsherbinyy/goldminer (Python ETL for personal finance, pandas + SQLite + anomaly detection). See NIZAM/docs/MAL_FINANCIAL_LADDER.md.",
+  "codename": "Sadiq",
+  "namesake": "Sadiq — the truth-teller about numbers. Conservative, honest, evidence-bound.",
+  "runtime": {
+    "agent_enabled": false,
+    "primary_model": "deepseek-v4-flash",
+    "reviewer_model": "kimi-k2.6",
+    "fallback_chain": ["deepseek-v4-pro", "kimi-k2"],
+    "delegates_to": ["Salman"],
+    "max_tool_calls": 6,
+    "timeout_seconds": 120,
+    "retry_backoff_seconds": [2, 5, 15],
+    "context_sources": [
+      "NIZAM__system/personas/MAL.json",
+      "MAL__financial_engine/baseline/",
+      "MAL__financial_engine/exchange_rate_log.jsonl"
+    ],
+    "egress_class": "strict_local",
+    "cost_ceiling": {"soft_usd": 50, "hard_usd": 300},
+    "feedback_ledger": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",
+    "writes_to_ledgers": ["FINANCE_LEDGER.jsonl", "EVENT_LEDGER.jsonl"],
+    "gates": {"pre": ["SUKOON"], "pre_write": ["HIMAYAH"], "post": ["THABAT"]}
+  },
+  "schema_version": "1.1"
 }

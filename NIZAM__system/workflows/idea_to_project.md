@@ -19,7 +19,7 @@
 ### Step 1 — Confirm graduation criterion
 Don't promote every idea. Use one of:
 - Recurrence (3+ TAFRIGH mentions in last 30 days).
-- Strategic fit (maps to a KABIR_SHERBO pillar).
+- Strategic fit (maps to a TARIQ pillar).
 - Time-bounded opportunity (expires if not acted on this quarter).
 
 ### Step 2 — `/shura-graduate "<fragment>"`

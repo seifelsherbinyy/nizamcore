@@ -9,5 +9,5 @@
   "subfolders": ["signals"],
   "gate_authority": "SUKOON gate uses overload_flags.jsonl to red/yellow/green other modules.",
   "last_updated": "2026-05-15T14:17:30Z",
-  "registers_to": "POP_MASTER_REGISTER.json"
+  "registers_to": "NIZAM_MASTER_REGISTER.json"
 }

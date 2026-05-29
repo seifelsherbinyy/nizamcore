@@ -20,6 +20,6 @@ can run without installing dependencies.
 
 - Stdlib only. No `pip install` requirements.
 - Exit 0 on success, exit 2 on a §2 HALT condition (missing gate, unreadable
-  `POP_TEMPLE.json`, etc.). Per §1.1 / §9, we fail loud, not silent.
+  `NIZAM_TEMPLE.json`, etc.). Per §1.1 / §9, we fail loud, not silent.
 - Output goes to **stdout** as a fenced JSON block matching §7. Pipe-friendly.
 - Never write to disk. The sandbox is COMPUTE, not storage.

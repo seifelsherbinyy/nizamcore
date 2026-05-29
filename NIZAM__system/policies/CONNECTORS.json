@@ -42,7 +42,7 @@
   "dead_letter": {
     "purpose": "Hold any payload that cannot be persisted after retries. Never silent drop.",
     "primary_jsonl": "NIZAM__system/ledgers/DEAD_LETTER.jsonl",
-    "primary_jsonl_status": "TODO \u2014 not yet declared in POP_TEMPLE.json#ledgers (operator action: add with privacy=strict_local and gitignore it).",
+    "primary_jsonl_status": "TODO \u2014 not yet declared in NIZAM_TEMPLE.json#ledgers (operator action: add with privacy=strict_local and gitignore it).",
     "stdout_fallback": "If even the JSONL cannot be written (e.g. read-only sandbox), Steward prints the full bundle to stdout."
   },
   "audit_log": {
@@ -51,7 +51,7 @@
     "payload_storage_rule": "HASH ONLY + \u2264 400 chars excerpt. NEVER the full message text or any token. (\u00a73)",
     "notion_data_source": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources.audit_log",
     "jsonl_mirror": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",
-    "jsonl_mirror_status": "gitignored (strict_local); spec in POP_TEMPLE.json#ledgers.EVENT_LEDGER"
+    "jsonl_mirror_status": "gitignored (strict_local); spec in NIZAM_TEMPLE.json#ledgers.EVENT_LEDGER"
   },
   "secret_scan": {
     "purpose": "Pre-push and pre-Drive-overwrite check (\u00a73).",
@@ -142,7 +142,7 @@
     "HIFZ__github_version_control/scripts/nizam_drive_mirror.py --dry-run (Drive layout sanity)"
   ],
   "open_questions_for_operator": [
-    "Add NIZAM__system/ledgers/DEAD_LETTER.jsonl entry to POP_TEMPLE.json#ledgers (privacy=strict_local) and confirm gitignore covers it.",
+    "Add NIZAM__system/ledgers/DEAD_LETTER.jsonl entry to NIZAM_TEMPLE.json#ledgers (privacy=strict_local) and confirm gitignore covers it.",
     "Confirm Drive folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi privacy classification; SYNC_POLICY.json#surfaces does not yet enumerate a drive_nizam_pop surface beyond the governor doc.",
     "Confirm Telegram + Gmail intake adapter scaffolding is in scope before committing to TELEGRAM_BOT_TOKEN / GMAIL_OAUTH_JSON_PATH wiring."
   ],

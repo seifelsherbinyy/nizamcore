@@ -33,7 +33,7 @@ from pathlib import Path
 
 # REPO_ROOT = tools/.. (assuming this script stays at tools/nizam_startup.py)
 REPO_ROOT = Path(__file__).resolve().parent.parent
-POP_TEMPLE = REPO_ROOT / "POP_TEMPLE.json"
+NIZAM_TEMPLE = REPO_ROOT / "NIZAM_TEMPLE.json"
 LOG_MD = REPO_ROOT / "log.md"
 CONTRACT_DOC = REPO_ROOT / "NIZAM__system" / "docs" / "NIZAM_ORCHESTRATION_LAYER.md"
 AGENT_MAPPING = REPO_ROOT / "NIZAM__system" / "AGENT_MAPPING.json"
@@ -90,21 +90,21 @@ def have_net() -> bool:
 def read_repo_version() -> tuple[str | None, list[str], dict | None]:
     """Returns (version, missing_orientation_files, temple_dict)."""
     missing: list[str] = []
-    if not POP_TEMPLE.exists():
-        missing.append("POP_TEMPLE.json")
+    if not NIZAM_TEMPLE.exists():
+        missing.append("NIZAM_TEMPLE.json")
     if not LOG_MD.exists():
         missing.append("log.md")
-    if not POP_TEMPLE.exists():
+    if not NIZAM_TEMPLE.exists():
         return None, missing, None
     try:
-        temple = json.loads(POP_TEMPLE.read_text(encoding="utf-8"))
+        temple = json.loads(NIZAM_TEMPLE.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None, missing, None
     return temple.get("platform_version"), missing, temple
 
 
 def verify_gates(temple: dict | None) -> tuple[bool, list[str]]:
-    """Verifies HIMAYAH/SUKOON/THABAT are all present in POP_TEMPLE.json#gates."""
+    """Verifies HIMAYAH/SUKOON/THABAT are all present in NIZAM_TEMPLE.json#gates."""
     if not temple:
         return False, list(REQUIRED_GATES)
     gates = temple.get("gates", {})
@@ -167,9 +167,9 @@ def build_receipt(skip_net: bool) -> tuple[dict, list[str]]:
     if missing_files:
         halt_reasons.append(f"orientation files missing: {missing_files}")
     if not gates_ok:
-        halt_reasons.append(f"gates missing in POP_TEMPLE.json: {missing_gates}")
+        halt_reasons.append(f"gates missing in NIZAM_TEMPLE.json: {missing_gates}")
     if version is None:
-        halt_reasons.append("POP_TEMPLE.json#platform_version unreadable")
+        halt_reasons.append("NIZAM_TEMPLE.json#platform_version unreadable")
 
     durable = {k: "skipped" for k in NETWORK_TARGETS} if skip_net else (
         {k: probe_url(v) for k, v in NETWORK_TARGETS.items()} if have_net() else

@@ -7,6 +7,7 @@ Commands:
   monitor    — Stage 2: daily delta
   alert      — Stage 3: price drop signal detection
   forecast   — Stage 4: trend model update
+  seed-csv   — Import historical prices from CSV to accelerate forecasting cold-start
   run-all    — Run all four stages in sequence
   schedule   — Start APScheduler daemon (06:00 UTC daily)
   dashboard  — Live executive dashboard at http://localhost:7329
@@ -16,6 +17,7 @@ Commands:
 Usage:
   cd MARSAD__flight_radar
   python -m radar.main discover
+  python -m radar.main seed-csv --file /path/to/history.csv
   python -m radar.main schedule
 """
 
@@ -115,13 +117,47 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
     print(f"  Total observations:{total_obs}")
     print(f"  Active BUY_SIGNAL: {buy_signals}")
     print(f"  Travel window:     {store.get('metadata', {}).get('travel_window_start')} → {store.get('metadata', {}).get('travel_window_end')}")
+    return 0
+
+
+def cmd_seed_csv(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.stages.seed import run_seed_csv, export_template
+
+    if args.export_template:
+        output = Path(args.export_template)
+        export_template(output_path=output)
+        print(f"\nTemplate written to: {output}")
+        print("Fill in the CSV and re-run: python -m radar.main seed-csv --file <path>")
+        return 0
+
+    if not args.file:
+        print("Error: --file <path.csv> is required (or --export-template <path.csv>)")
+        return 1
+
+    csv_path = Path(args.file)
+    stats = run_seed_csv(csv_path=csv_path, dry_run=args.dry_run)
+
+    if "error" in stats:
+        print(f"\nSEED ERROR: {stats['error']}")
+        return 1
+
+    mode = "DRY_RUN" if args.dry_run else "IMPORTED"
+    print(f"\nSEED ({mode}): {stats['rows_imported']}/{stats['rows_read']} rows imported, "
+          f"{stats['rows_rejected']} rejected")
+    if stats["rejection_reasons"]:
+        print("Rejection reasons (first 5):")
+        for r in stats["rejection_reasons"][:5]:
+            print(f"  {r}")
+    if stats.get("baseline_accelerated") and not args.dry_run:
+        print("  COLD-START UNLOCKED: ≥7 observations imported — run `forecast` to activate MEDIUM confidence")
     return 0
 
 
@@ -167,6 +203,20 @@ def main() -> int:
     # forecast
     p_forecast = subparsers.add_parser("forecast", help="Stage 4: trend model update")
     p_forecast.set_defaults(func=cmd_forecast)
+
+    # seed-csv
+    p_seed = subparsers.add_parser(
+        "seed-csv",
+        help="Import historical prices from CSV to accelerate forecasting cold-start",
+    )
+    p_seed.add_argument("--file", help="Path to CSV file with historical prices")
+    p_seed.add_argument(
+        "--export-template",
+        metavar="PATH",
+        help="Write a blank CSV template to PATH and exit",
+    )
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate without writing")
+    p_seed.set_defaults(func=cmd_seed_csv)
 
     # run-all
     p_all = subparsers.add_parser("run-all", help="Run monitor + alert + forecast in sequence")

@@ -22,7 +22,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-REPO = Path(r"D:\NIZAM\nizamcore")
+REPO = Path(__file__).resolve().parents[3]
 CFG = REPO / "NIZAM__system" / "config" / "router.config.yaml"
 
 

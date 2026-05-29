@@ -21,7 +21,7 @@ import json
 import sys
 from pathlib import Path
 
-REPO = Path(r"D:\NIZAM\nizamcore")
+REPO = Path(__file__).resolve().parents[3]
 CFG = REPO / "NIZAM__system" / "config" / "extraction.config.yaml"
 FIX = REPO / "NIZAM__system" / "config" / "fixtures" / "extraction_10_inputs.jsonl"
 

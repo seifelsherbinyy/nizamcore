@@ -23,7 +23,7 @@ import re
 import sys
 from pathlib import Path
 
-REPO = Path(r"D:\NIZAM\nizamcore")
+REPO = Path(__file__).resolve().parents[3]
 ROUTER_YAML = REPO / "NIZAM__system" / "config" / "router.config.yaml"
 EXEMPLARS_YAML = REPO / "NIZAM__system" / "config" / "intent_exemplars.yaml"
 FIXTURE = REPO / "NIZAM__system" / "config" / "fixtures" / "router_10_inputs.jsonl"

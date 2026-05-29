@@ -38,6 +38,15 @@ intents:
   decision_log:         { target: Sadiq,  examples_ref: intent_exemplars.yaml#decision_log }
   capture:              { target: Amin,   examples_ref: intent_exemplars.yaml#capture }
 
+# Telegram command registry (NIZAM_HERMES_WIRING_v1.0)
+commands:
+  "/dump":    { target: Amin,   kind: COMMAND }
+  "/shura":   { target: Salman, kind: COMMAND }
+  "/naqd":    { target: Hazim,  kind: COMMAND }
+  "/confirm": { control: relay_confirm }
+  "/pause":   { control: relay_pause }
+  "/cost":    { control: relay_cost_report }
+
 # Crisis detection
 crisis_signals:
   hard_keywords: ["crisis", "emergency", "help", "panic", "overload red"]
@@ -48,6 +57,8 @@ operator_in_the_loop:
   delegation_depth_at: 4    # auto chains capped at 3
   cost_step_at_usd: 5.0     # any single step projected > $5 -> confirm
   egress_first_call_per_provider: true
+  tool_budget: {default: 3, hard_cap: 7}   # R2, mirrors registry hermes block
+  session_reset: after_each_pillar_task
 
 # Dry-run fixture
 fixture:

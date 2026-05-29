@@ -15,11 +15,13 @@ brainstorm:
   - "I want to think out loud about Q3."
   - "Brain dump on whether to take the Cairo opportunity."
   - "/shura-brainstorm wealth"
+  - "/shura"
 
 redteam:
   - "Tear apart this idea: launch a paid product before Series A."
   - "Steelman the case for shutting down JADWAL."
   - "/naqd-grill my Q3 plan"
+  - "/naqd"
   - "What am I missing about the 10-yr plan?"
 
 long_horizon:
@@ -65,4 +67,5 @@ capture:
   - "No idea where this goes."
   - "Random thought."
   - "/tafrigh-capture"
+  - "/dump"
   - "Need to dump this before I forget."

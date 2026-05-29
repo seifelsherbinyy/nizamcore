@@ -37,5 +37,28 @@
     "NIZAM__system/protocols/crisis_sukoon_red.md",
     "NIZAM__system/protocols/daily_morning.md",
     "NIZAM__system/protocols/weekly_sunday.md"
-  ]
+  ],
+  "codename": "Coordinator",
+  "schema_version": "1.1",
+  "runtime": {
+    "agent_enabled": true,
+    "primary_model": "deepseek-v4-flash",
+    "reviewer_model": "kimi-k2.6",
+    "fallback_chain": ["deepseek-v4-pro"],
+    "delegates_to": ["Amin", "Salman", "Hazim"],
+    "max_tool_calls": 3,
+    "timeout_seconds": 120,
+    "retry_backoff_seconds": [2, 5, 15],
+    "context_sources": [
+      "CRITICAL_FACTS.md",
+      "SOUL.md",
+      "NIZAM_TEMPLE.json",
+      "NIZAM__system/personas/NIZAM.json"
+    ],
+    "egress_class": "strict_local",
+    "cost_ceiling": {"soft_usd": 50, "hard_usd": 300},
+    "feedback_ledger": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",
+    "writes_to_ledgers": ["EVENT_LEDGER.jsonl"],
+    "gates": {"pre": ["SUKOON"], "pre_write": ["HIMAYAH"], "post": ["THABAT"]}
+  }
 }

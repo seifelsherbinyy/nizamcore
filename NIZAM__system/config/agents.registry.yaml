@@ -26,8 +26,36 @@ defaults:
     pre_write: [HIMAYAH]
     post: [THABAT]
   zdr_required: true   # Verify provider ZDR before first strict_local egress
+  # ── Hermes Agent binding (NIZAM_HERMES_WIRING_v1.0) ──
+  hermes:
+    runtime: "hermes-agent>=0.12"        # NEVER the Hermes-4 model family
+    backend_provider: openrouter          # ALL model calls via OpenRouter only (R4)
+    profiles_root: "~/.hermes/profiles"
+    tool_budget: {default: 3, hard_cap: 7}   # R2: clamps persona max_tool_calls
+    session_reset: after_each_pillar_task
+    context_window_cap_days: 90
+    gepa_self_improve: false              # Phase-1 OFF (cron disabled per non-goals)
+    memory_store_tier: strict_local       # ~/.hermes/profiles/<p>/memory — never egress
 
 agents:
+
+  # ─── Conversational coordinator (orchestrator; initiates ledger writes) ───
+  Coordinator:
+    persona: NIZAM__system/personas/NIZAM.json
+    module: NIZAM
+    hermes_profile: nizam-coord
+    primary_model: deepseek-v4-flash      # routing / classification class
+    reviewer_model: kimi-k2.6
+    delegates_to: [Amin, Salman, Hazim]
+    context_sources:
+      - CRITICAL_FACTS.md
+      - SOUL.md
+      - NIZAM_TEMPLE.json
+      - NIZAM__system/personas/NIZAM.json
+    ledger_role: initiator                # R1: physical writer remains Ammar
+    physical_ledger_writer: Ammar
+    writes_to_ledgers: [EVENT_LEDGER]
+    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
 
   # ─── Phase 1 boot loop ───────────────────────────────────────────
   Amin:
@@ -47,8 +75,9 @@ agents:
   Salman:
     persona: NIZAM__system/personas/SHURA.json
     module: SHURA
+    hermes_profile: shura
     primary_model: deepseek-v4-pro
-    reviewer_model: kimi-k2.6
+    reviewer_model: anthropic/claude-sonnet-4.6   # C2 dual-lane critic (via OpenRouter per C1)
     delegates_to: [Hazim, Khalid]
     context_sources:
       - SOUL.md
@@ -62,6 +91,8 @@ agents:
   Hazim:
     persona: NIZAM__system/personas/NAQD.json
     module: NAQD
+    hermes_profile: naqd
+    backend_provider: openrouter         # R4: claude-sonnet via OpenRouter, not direct
     primary_model: claude-sonnet-4-6     # upgrade-only for red-team
     reviewer_model: kimi-k2.6
     delegates_to: []

@@ -135,8 +135,8 @@ user.md
 user_deep.md
 
 # ---- MAKHZAN snapshots are LOCAL rollback anchors — never push full snapshots ----
-# Snapshot dirs are ISO-timestamp named (e.g. 2026-05-28T20-12-29Z).
-MAKHZAN__archive/*T*Z/
+# Snapshot dirs are ISO-timestamp named (e.g. 2026-05-28T20-12-29Z[-suffix]).
+MAKHZAN__archive/*T*Z*/
 
 # ---- Router/extraction dry-run fixtures model real life-domains ----
 # (family / health / finance / geography). Treat as strict_local; keep local.

@@ -18,6 +18,7 @@ Source priority order:
 from __future__ import annotations
 
 import logging
+import random
 import time
 from datetime import date
 from typing import Optional
@@ -184,10 +185,7 @@ def fetch_all_combinations(
         request_count += 1
 
         if i < total - 1:
-            # Rate limit between combinations
-            import random
             from radar.config import FETCH_DELAY_MIN_SEC, FETCH_DELAY_MAX_SEC
-            delay = random.uniform(FETCH_DELAY_MIN_SEC, FETCH_DELAY_MAX_SEC)
-            time.sleep(delay)
+            time.sleep(random.uniform(FETCH_DELAY_MIN_SEC, FETCH_DELAY_MAX_SEC))
 
     return results

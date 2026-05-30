@@ -28,7 +28,7 @@ from radar.schema_store import (
     append_observation,
     backup_store,
     get_all_series_keys,
-    load_store,
+    load_store,  # used for pre-loop snapshot
 )
 
 logger = logging.getLogger(__name__)
@@ -70,6 +70,9 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "observations_written": 0,
     }
 
+    # Load store once to read previous observations — append_observation reloads internally
+    store_snapshot = load_store()
+
     for key_info in all_keys:
         origin = key_info["origin"]
         destination = key_info["destination"]
@@ -101,13 +104,12 @@ def run_monitor(use_secondary: bool = False) -> dict:
             )
             continue
 
-        # Fetch previous price from store for delta display logging
-        store = load_store()
+        # Read previous price from the pre-loop snapshot for delta display logging
         rk = f"{origin}-{destination}"
         sk = f"{carrier}-{cabin}"
         prev_obs = None
         try:
-            series = store["routes"][rk]["observations"][sk]["observation_series"]
+            series = store_snapshot["routes"][rk]["observations"][sk]["observation_series"]
             if series:
                 prev_obs = series[-1]
         except KeyError:

@@ -3,15 +3,16 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
-  discover   — Stage 1: baseline collection (run once on init)
-  monitor    — Stage 2: daily delta
-  alert      — Stage 3: price drop signal detection
-  forecast   — Stage 4: trend model update
-  run-all    — Run all four stages in sequence
-  schedule   — Start APScheduler daemon (06:00 UTC daily)
-  dashboard  — Live executive dashboard at http://localhost:7329
-  status     — Print current store summary
-  validate   — Validate credentials and configuration
+  seed-history — Stage 0: import historical prices to accelerate cold start
+  discover     — Stage 1: baseline collection (run once on init)
+  monitor      — Stage 2: daily delta
+  alert        — Stage 3: price drop signal detection
+  forecast     — Stage 4: trend model update
+  run-all      — Run all four stages in sequence
+  schedule     — Start APScheduler daemon (06:00 UTC daily)
+  dashboard    — Live executive dashboard at http://localhost:7329
+  status       — Print current store summary
+  validate     — Validate credentials and configuration
 
 Usage:
   cd MARSAD__flight_radar
@@ -125,6 +126,31 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed_history(args: argparse.Namespace) -> int:
+    from radar.seed_history import run_seed_from_file, run_seed_serpapi_historical
+    from pathlib import Path
+
+    if args.serpapi_historical:
+        stats = run_seed_serpapi_historical(
+            months_back=args.months_back,
+            dry_run=args.dry_run,
+        )
+        print(f"\nSEED_HISTORY (serpapi): {stats.get('imported', 0)} imported, "
+              f"{stats.get('no_data', 0)} no data, {len(stats.get('fetch_errors', []))} errors")
+    elif args.file:
+        stats = run_seed_from_file(Path(args.file), dry_run=args.dry_run)
+        print(f"\nSEED_HISTORY ({args.file}): {stats['imported']}/{stats['total_records']} imported, "
+              f"{stats['filtered_by_constraints']} filtered by constraints")
+        if stats["constraint_failures"]:
+            print(f"  Constraint failures (first 3):")
+            for f in stats["constraint_failures"][:3]:
+                print(f"    {f['record']}: {f['failures']}")
+    else:
+        print("Error: specify --file <path> or --serpapi-historical")
+        return 1
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     missing = validate_credentials()
     if missing:
@@ -186,6 +212,27 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed-history
+    p_seed = subparsers.add_parser(
+        "seed-history",
+        help="Stage 0: import historical price data to accelerate forecasting cold start",
+    )
+    p_seed.add_argument("--file", metavar="PATH", help="CSV or JSON seed file to import")
+    p_seed.add_argument(
+        "--serpapi-historical",
+        action="store_true",
+        help="Fetch past prices via SerpApi (consumes API quota)",
+    )
+    p_seed.add_argument(
+        "--months-back",
+        type=int,
+        default=3,
+        metavar="N",
+        help="How many months of history to fetch via SerpApi (default: 3)",
+    )
+    p_seed.add_argument("--dry-run", action="store_true", help="Preview without writing")
+    p_seed.set_defaults(func=cmd_seed_history)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -34,7 +34,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install requests python-dotenv pydantic rich
+        run: pip install requests python-dotenv pydantic rich pandas numpy APScheduler
         working-directory: MARSAD__flight_radar
 
       - name: Write .env from secrets

@@ -76,12 +76,13 @@ Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.m
 
 | Skill | Module | Trigger | Purpose |
 |---|---|---|---|
+| [marsad-seed-history](marsad-seed-history.md) | MARSAD | `/marsad-seed-history` | Stage 0: import historical prices (manual CSV/JSON or SerpApi) — exits cold start before DISCOVER |
 | [marsad-discover](marsad-discover.md) | MARSAD | `/marsad-discover` | Stage 1: baseline collection — seed full price matrix for CAI-to-USA corridor |
 | [marsad-monitor](marsad-monitor.md) | MARSAD | `/marsad-monitor` | Stage 2: daily delta — fetch current prices, calculate change vs previous |
 | [marsad-alert](marsad-alert.md) | MARSAD | `/marsad-alert` | Stage 3: BUY_SIGNAL detection — price drop threshold + historical percentile + confidence gate |
 | [marsad-forecast](marsad-forecast.md) | MARSAD | `/marsad-forecast` | Stage 4: trend model — SMA→EWM→LR per observation count, 7/14/30-day horizons |
 
-MARSAD is an additive module — does not modify any Phase 1/2/3 stable skill or file. Data is strict_local (gitignored). Entry point: `MARSAD__flight_radar/radar/main.py`. Scheduled: 06:00 UTC daily (MONITOR → ALERT → FORECAST). Discover runs once on init.
+MARSAD is an additive module — does not modify any Phase 1/2/3 stable skill or file. Data is strict_local (gitignored). Entry point: `MARSAD__flight_radar/radar/main.py`. Scheduled: 06:00 UTC daily (MONITOR → ALERT → FORECAST). Discover runs once on init. Seed-history optional pre-run to accelerate cold start.
 
 ## Phase 3 — scheduled agents (designed; runner choice pending)
 See [`NIZAM__system/docs/SCHEDULED_AGENTS.md`](../docs/SCHEDULED_AGENTS.md) for full cadence map + runner options (Windows Task Scheduler / claude-code-router / GitHub Actions). Recovery-first override is mandatory across all runner choices.

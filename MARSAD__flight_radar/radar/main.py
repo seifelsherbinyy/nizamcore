@@ -115,7 +115,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
@@ -123,6 +123,26 @@ def cmd_status(args: argparse.Namespace) -> int:
     print(f"  Active BUY_SIGNAL: {buy_signals}")
     print(f"  Travel window:     {store.get('metadata', {}).get('travel_window_start')} → {store.get('metadata', {}).get('travel_window_end')}")
     return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.stages.seed import run_seed
+    stats = run_seed(
+        file_path=Path(args.file),
+        dry_run=args.dry_run,
+        skip_constraint_errors=not args.strict,
+    )
+    imported = stats["records_imported"]
+    skipped = stats["records_constraint_skipped"]
+    errors = len(stats["fetch_errors"])
+    print(
+        f"\nSEED: {stats['records_read']} read, {imported} imported, "
+        f"{skipped} constraint-skipped, {errors} errors"
+    )
+    if args.dry_run:
+        print("(dry run — nothing written)")
+    return 0 if not errors else 1
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -186,6 +206,22 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Import historical price observations from a JSON or CSV file",
+    )
+    p_seed.add_argument(
+        "--file", required=True,
+        help="Path to .json or .csv seed file (see stages/seed.py for format)",
+    )
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate without writing")
+    p_seed.add_argument(
+        "--strict", action="store_true",
+        help="Fail on constraint violations instead of skipping them",
+    )
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

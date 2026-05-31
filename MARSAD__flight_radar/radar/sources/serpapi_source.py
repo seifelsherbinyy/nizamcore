@@ -214,16 +214,24 @@ class SerpApiSource(BaseFlightSource):
             return None
 
         total_duration_min = item.get("total_duration", 0)
-        total_duration_hours = round(total_duration_min / 60, 2) if total_duration_min else 0.0
 
-        # Google Flights returns the full round-trip duration in total_duration
-        # For one-way constraints we split roughly 50/50 — actual per-leg data
-        # is in the flights array when available
+        # SerpAPI round-trip: total_duration is the OUTBOUND leg only.
+        # return_flights key (if present) contains the inbound segments.
         outbound_flights = [f for f in flights if not f.get("is_return", False)]
-        return_flights = [f for f in flights if f.get("is_return", False)]
+        return_flights_raw = item.get("return_flights", [])
+        return_flights = return_flights_raw or [f for f in flights if f.get("is_return", False)]
 
-        outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else total_duration_min // 2
-        return_dur = sum(f.get("duration", 0) for f in return_flights) if return_flights else total_duration_min // 2
+        if outbound_flights:
+            outbound_dur = sum(f.get("duration", 0) for f in outbound_flights)
+        else:
+            outbound_dur = total_duration_min
+
+        if return_flights:
+            return_dur = sum(f.get("duration", 0) for f in return_flights)
+        else:
+            # No return leg data — use outbound as the best available proxy.
+            # This is conservative: CAI-USA return legs are similar in length.
+            return_dur = outbound_dur
 
         outbound_hours = round(outbound_dur / 60, 2)
         return_hours = round(return_dur / 60, 2)

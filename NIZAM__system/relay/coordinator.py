@@ -31,18 +31,17 @@ from NIZAM__system.relay import sukoon_gate  # noqa: E402
 
 
 def _route(input_text: str) -> tuple[str, str, float]:
-    """Use the deterministic dry-run router."""
-    sys.path.insert(0, str(REPO / "NIZAM__system" / "config" / "fixtures"))
-    import router_dry_run as r
-    cfg = r._read_yaml(REPO / "NIZAM__system" / "config" / "router.config.yaml")
-    ex = r._read_yaml(REPO / "NIZAM__system" / "config" / "intent_exemplars.yaml")
-    kind = r._detect_kind(input_text, cfg)
-    if kind == "CRISIS":
-        return "CRISIS", "protocol:crisis_sukoon_red", 1.0
-    bucket, conf = r._match_intent(input_text, ex)
-    intents = cfg.get("intents", {})
-    target = (intents.get(bucket) or {}).get("target", "Amin")
-    return kind, target, conf
+    """Deterministic IR-1..IR-8 resolver (shared with governor + dry-run)."""
+    sys.path.insert(0, str(REPO / "NIZAM__system" / "config"))
+    import nizam_router
+    cfg_path = REPO / "NIZAM__system" / "config" / "router.config.yaml"
+    ex_path = REPO / "NIZAM__system" / "config" / "intent_exemplars.yaml"
+    cfg = nizam_router.load_config(cfg_path)
+    ex = nizam_router.load_exemplars(ex_path)
+    sukoon = sukoon_gate.pre_gate(input_text)
+    hot = sukoon.get("downshift") and sukoon.get("mode") != "crisis_protocol"
+    out = nizam_router.resolve(input_text, cfg, ex, sukoon_hot=hot)
+    return out["kind"], out["target"], float(out["confidence"])
 
 
 def _agent_stub(target: str, input_text: str, trace_id: str) -> dict:

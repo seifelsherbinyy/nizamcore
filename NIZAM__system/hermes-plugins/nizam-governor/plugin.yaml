@@ -1,0 +1,11 @@
+name: nizam-governor
+version: 1.11.2
+description: "NIZAM governance — capture-first dual-write w/ secret-scrubber + AHEL at-rest encryption (AHEL=ordinary context, no block) written VPS-ledger-only and NEVER mirrored to Drive. Drive mirror covers ALL operational ledgers each cycle (LEARNING/EVENT/egress_audit/COSTS/BODY), AHEL-filtered per-row (no ahel:true row ever leaves; strict_local_capture never staged). Hayat capacity + opening_voice, AUDIT/muhasaba, HIMAYAH egress governance, persona router + self-intro, SUKOON downshift, token soft-warn (no hard caps), cost+ledger, operator commands."
+author: Sherbiny / NIZAM
+provides_hooks:
+  - pre_gateway_dispatch
+  - pre_llm_call
+  - post_llm_call
+  - pre_tool_call
+  - transform_llm_output
+  - on_session_start

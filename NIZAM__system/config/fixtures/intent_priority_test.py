@@ -27,9 +27,9 @@ CFG = REPO / "NIZAM__system" / "config" / "router.config.yaml"
 
 
 def _load_priority() -> list[dict]:
-    sys.path.insert(0, str(Path(__file__).parent))
-    import router_dry_run as r
-    cfg = r._read_yaml(CFG)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import nizam_router as r
+    cfg = r.load_config(CFG)
     return cfg.get("routing_priority", [])
 
 

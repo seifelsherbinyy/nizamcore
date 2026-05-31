@@ -1,6 +1,6 @@
 # NIZAM router.config.yaml
 # Per Routing v7 sec.4; capture_before_judge default; LLM-as-router primary.
-# Updated: 2026-05-28 (NIZAM Next Plan v2 G10)
+# Updated: 2026-05-31 (IR-1..IR-8 intent router stage 1)
 
 schema_version: 1.0.0
 
@@ -41,6 +41,7 @@ intents:
 # Telegram command registry (NIZAM_HERMES_WIRING_v1.0)
 commands:
   "/dump":    { target: Amin,   kind: COMMAND }
+  "/pulse":   { target: Hayat,  kind: COMMAND }
   "/shura":   { target: Salman, kind: COMMAND }
   "/naqd":    { target: Hazim,  kind: COMMAND }
   "/confirm": { control: relay_confirm }
@@ -62,5 +63,5 @@ operator_in_the_loop:
 
 # Dry-run fixture
 fixture:
-  path: NIZAM__system/config/fixtures/router_10_inputs.jsonl
+  path: NIZAM__system/config/fixtures/router_13_inputs.jsonl
   expected_routing_min_accuracy: 0.80

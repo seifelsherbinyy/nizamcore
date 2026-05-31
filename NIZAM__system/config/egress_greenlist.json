@@ -1,0 +1,4 @@
+{
+  "_note": "P4 HIMAYAH egress greenlist â€” approved outbound integrations. Every external write is audited to HIMAYAH__egress_audit.jsonl; anything NOT on this list is flagged (Telegram soft-warn + AUDIT), never silently blocked. Add a new integration with /greenlight <name>. Deploys to ~/.hermes/nizam/egress_greenlist.json.",
+  "approved": ["openrouter", "anthropic", "elevenlabs", "telegram", "google_drive", "github", "web"]
+}

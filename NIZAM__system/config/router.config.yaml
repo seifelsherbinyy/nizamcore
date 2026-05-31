@@ -9,7 +9,7 @@ router:
   model: deepseek-v4-flash     # routing-class, low cost, fast
   reviewer_model: kimi-k2.6    # used only when confidence sits in confirm band
 
-# Confidence thresholds — capture_before_judge default
+# Confidence thresholds â€” capture_before_judge default
 route_confidence:
   auto_route_min: 0.70         # >= 0.70 -> auto-route to target codename
   confirm_band_min: 0.50       # 0.50 - 0.70 -> single confirmation prompt MAX

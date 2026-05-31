@@ -1,4 +1,4 @@
-# NIZAM intent_exemplars.yaml — starter set
+# NIZAM intent_exemplars.yaml â€” starter set
 # Pulled from Telegram-style brain-dump inputs + skill triggers.
 # Marked as STARTER. Tune from real session traffic post-Phase-1.
 # Updated: 2026-05-28 (NIZAM Next Plan v2 G12)
@@ -55,7 +55,7 @@ family_record:
   - "Note about Dad's appointment Tuesday."
   - "Family budget thought."
   - "/ahel-note"
-  # NOTE: strict_local_maximum — never routed through cloud models.
+  # NOTE: strict_local_maximum â€” never routed through cloud models.
 
 decision_log:
   - "Decision: defer Cairo move to Q4."

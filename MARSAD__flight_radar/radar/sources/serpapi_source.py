@@ -219,11 +219,16 @@ class SerpApiSource(BaseFlightSource):
         # Google Flights returns the full round-trip duration in total_duration
         # For one-way constraints we split roughly 50/50 — actual per-leg data
         # is in the flights array when available
-        outbound_flights = [f for f in flights if not f.get("is_return", False)]
-        return_flights = [f for f in flights if f.get("is_return", False)]
+        # SerpApi round-trip responses don't tag segments with is_return —
+        # all segments appear in the outbound flights array.
+        # Return leg data (routing, duration) must be inferred or approximated.
+        outbound_flights = flights  # all segments are outbound for SerpApi round-trip
+        return_flights: list = []
 
-        outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else total_duration_min // 2
-        return_dur = sum(f.get("duration", 0) for f in return_flights) if return_flights else total_duration_min // 2
+        outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else total_duration_min
+        # SerpApi total_duration covers outbound only for round-trip searches.
+        # Symmetric assumption: return ≈ outbound (same route, opposite direction).
+        return_dur = outbound_dur
 
         outbound_hours = round(outbound_dur / 60, 2)
         return_hours = round(return_dur / 60, 2)
@@ -234,15 +239,20 @@ class SerpApiSource(BaseFlightSource):
         # Map airline name to IATA code where possible
         carrier_iata = self._name_to_iata(carrier_name) or carrier_name[:2].upper()
 
-        # Build routing strings
-        outbound_routing = self._build_routing(outbound_flights or flights[:len(flights)//2 or 1])
-        return_routing = self._build_routing(return_flights or flights[len(flights)//2:])
+        # Build outbound routing from segment chain
+        outbound_routing = self._build_routing(outbound_flights)
 
-        # Fallback routing from departure/arrival airport codes
+        # Fallback outbound routing from first/last airport codes
         if not outbound_routing and flights:
             dep = flights[0].get("departure_airport", {}).get("id", "")
-            arr = flights[0].get("arrival_airport", {}).get("id", "")
+            arr = flights[-1].get("arrival_airport", {}).get("id", "")
             outbound_routing = f"{dep}-{arr}" if dep and arr else ""
+
+        # Return routing is the reverse of outbound (SerpApi doesn't provide it)
+        if outbound_routing:
+            return_routing = "-".join(reversed(outbound_routing.split("-")))
+        else:
+            return_routing = ""
 
         return FlightOffer(
             origin=dep_date and flights[0].get("departure_airport", {}).get("id", "CAI") or "CAI",

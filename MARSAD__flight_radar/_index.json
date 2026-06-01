@@ -17,7 +17,8 @@
     "_index.json"
   ],
   "gitignored_contents": [
-    "data/",
+    "data/backups/",
+    "data/*.tmp",
     "alerts/",
     ".env"
   ],
@@ -33,7 +34,7 @@
     "ALERT — BUY_SIGNAL detection (runs after MONITOR)",
     "FORECAST — trend model update (runs after ALERT)"
   ],
-  "last_updated": "2026-05-18T00:00:00Z",
+  "last_updated": "2026-06-01T00:00:00Z",
   "registers_to": "NIZAM_MASTER_REGISTER.json",
   "module_status": "active",
   "schema_version": "1.0"

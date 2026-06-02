@@ -16,6 +16,11 @@ BUY_SIGNAL alerts when a price is genuinely anomalous against its own history.
 ```
 MARSAD PIPELINE
 │
+├─ SEED (optional — run before DISCOVER to accelerate cold-start)
+│  └─ Imports historical prices from CSV → observation_type: 'historical_seed'
+│     Accepts data from Google Flights history, Kayak, Hopper, manual entry
+│     ≥7 seeded observations per series skips the 7-day cold-start period
+│
 ├─ STAGE 1: DISCOVER (baseline collection — runs once on init or manual trigger)
 │  └─ Fetches full price matrix across all carrier × cabin × destination
 │     Observation type: 'baseline'
@@ -25,8 +30,8 @@ MARSAD PIPELINE
 │     Observation type: 'daily'
 │
 ├─ STAGE 3: ALERT (price drop signal detection)
-│  └─ Fires when: single-day drop ≥ threshold AND price < 20th percentile historical
-│     BUY_SIGNAL requires BOTH conditions + forecast_confidence ≥ MEDIUM
+│  └─ BUY_SIGNAL requires ALL THREE: drop ≥ threshold AND price < 20th percentile
+│     AND forecast_confidence ≥ MEDIUM (hard gate — no exceptions)
 │
 └─ STAGE 4: FORECAST (trend and prediction)
    └─ SMA (< 7 obs) → EWM (7–29 obs) → Linear Regression (30+ obs)
@@ -59,7 +64,8 @@ MARSAD__flight_radar/
 │   │   ├── discover.py        (Stage 1 — baseline collection)
 │   │   ├── monitor.py         (Stage 2 — daily delta)
 │   │   ├── alert.py           (Stage 3 — BUY_SIGNAL engine)
-│   │   └── forecast.py        (Stage 4 — trend model)
+│   │   ├── forecast.py        (Stage 4 — trend model)
+│   │   └── seed.py            (Historical price importer — CSV → historical_seed observations)
 │   └── scheduler.py           (APScheduler 06:00 UTC daily)
 └── tests/
     ├── test_constraints.py
@@ -69,12 +75,13 @@ MARSAD__flight_radar/
 
 NIZAM__system/
 ├── schemas/
-│   └── flight_price_observation.schema.json  (NEW)
+│   └── flight_price_observation.schema.json
 └── skills/
-    ├── marsad-discover.md    (NEW)
-    ├── marsad-monitor.md     (NEW)
-    ├── marsad-alert.md       (NEW)
-    └── marsad-forecast.md    (NEW)
+    ├── marsad-discover.md
+    ├── marsad-monitor.md
+    ├── marsad-alert.md
+    ├── marsad-forecast.md
+    └── marsad-seed.md
 ```
 
 ## Data files (strict_local — never committed)
@@ -109,12 +116,23 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Current default: SerpApi Google Flights** (`DATA_SOURCE=serpapi` in .env)
+
+SerpApi provides a clean programmatic interface to Google Flights results at $25/month for 1,000
+searches. Full daily monitoring (12 destinations × 2 cabins = 24 searches/day) requires the paid
+tier. Set `SERPAPI_PRIORITY_ONLY=true` to restrict to 8 priority destinations during free-tier
+testing (16 searches/day — still exceeds free tier; treat as paid-only in practice).
+
+**Amadeus for Developers** (`DATA_SOURCE=amadeus`) — portal shut down July 2025. Implementation
+retained for reference; disabled by default.
+
+**Kiwi Tequila** (`DATA_SOURCE=kiwi`) — invitation-only for new users as of 2025. Implementation
+retained; disabled by default.
 
 ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 - Google's ToS prohibits automated access without prior written permission
 - Bot detection will likely block headless browser automation within 24 hours
-- Use only if you have reviewed the ToS and accept the risk
+- Use only after ToS review — gated behind `ITA_MATRIX_ENABLED=true`
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
@@ -123,11 +141,21 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (get a key at serpapi.com)
 pip install -r requirements.txt
+
+# Validate credentials
+python -m radar.main validate
 
 # Run baseline collection (Stage 1 — first time only)
 python -m radar.main discover
+
+# [Optional] Accelerate forecasting cold-start by importing historical prices
+# Generate a CSV template, fill it in, then import:
+python -m radar.main seed-csv --export-template seed_template.csv
+# ... fill in seed_template.csv with historical prices from Google Flights, Kayak, Hopper ...
+python -m radar.main seed-csv --file seed_template.csv --dry-run   # validate first
+python -m radar.main seed-csv --file seed_template.csv             # import
 
 # Run daily monitor (Stage 2 — or let scheduler run it)
 python -m radar.main monitor
@@ -143,6 +171,9 @@ python -m radar.main run-all
 
 # Start scheduler daemon (runs 06:00 UTC daily)
 python -m radar.main schedule
+
+# Live dashboard at http://localhost:7329
+python -m radar.main dashboard
 ```
 
 ## SWAPPABLE_DEFAULT REGISTRY
@@ -150,12 +181,14 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
-| Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first; or `DATA_SOURCE=kiwi` if invitation obtained |
+| Secondary source | (disabled) | Kiwi Tequila | Set `DATA_SOURCE=kiwi` in .env once invitation obtained |
+| Historical seed source | Manual CSV | SerpApi chart endpoint | `engine=google_flights_chart` via SerpApi — Economy fares only |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
-| Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |
-| Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
+| Scheduler | APScheduler | cron / GitHub Actions | See `.github/workflows/marsad_monitor.yml` |
+| Alert delivery | Console + JSON file | Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
 | Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary |
+| Travel window start | 2027-03-15 | Confirmed Ramadan end +6 days | Set `RADAR_WINDOW_START=YYYY-MM-DD` in .env once official date confirmed |
 
 ## Privacy
 

@@ -87,6 +87,38 @@ def cmd_run_all(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.stages.historical_seed import run_seed_from_csv, run_seed_from_serpapi_calendar
+
+    if args.csv:
+        stats = run_seed_from_csv(Path(args.csv), dry_run=args.dry_run)
+        print(f"\nHISTORICAL_SEED (CSV): {stats['imported']}/{stats['total_rows']} rows imported")
+        if stats["skipped_constraint"]:
+            print(f"  Skipped (constraint fail): {stats['skipped_constraint']}")
+        if stats["skipped_error"]:
+            print(f"  Skipped (parse error): {stats['skipped_error']}")
+    elif args.serpapi:
+        if not args.route or not args.cabin:
+            print("Error: --serpapi requires --route (e.g. CAI-JFK) and --cabin (BUSINESS or PREMIUM_ECONOMY)")
+            return 1
+        parts = args.route.upper().split("-")
+        if len(parts) != 2:
+            print("Error: --route must be in format CAI-JFK")
+            return 1
+        stats = run_seed_from_serpapi_calendar(
+            origin=parts[0], destination=parts[1], cabin=args.cabin.upper(),
+            dry_run=args.dry_run,
+        )
+        print(f"\nHISTORICAL_SEED (SerpApi calendar): {stats['imported']} imported")
+        if stats.get("errors"):
+            print(f"  Errors: {stats['errors']}")
+    else:
+        print("Specify --csv <path> or --serpapi --route CAI-JFK --cabin BUSINESS")
+        return 1
+    return 0
+
+
 def cmd_dashboard(args: argparse.Namespace) -> int:
     from radar.dashboard import run_dashboard
     run_dashboard(host=args.host, port=args.port)
@@ -115,7 +147,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
@@ -150,6 +182,15 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Import historical price data (CSV or SerpApi calendar)")
+    p_seed.add_argument("--csv", help="Path to CSV file (see radar/stages/historical_seed.py for format)")
+    p_seed.add_argument("--serpapi", action="store_true", help="Fetch from SerpApi price calendar")
+    p_seed.add_argument("--route", help="Route for --serpapi, e.g. CAI-JFK")
+    p_seed.add_argument("--cabin", help="Cabin for --serpapi: BUSINESS or PREMIUM_ECONOMY")
+    p_seed.add_argument("--dry-run", action="store_true", help="Preview without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

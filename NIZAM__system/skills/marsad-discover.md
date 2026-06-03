@@ -7,7 +7,7 @@ naming_pattern: "flight_prices.json (append-only — no new file created)"
 template: null
 frontmatter_schema: flight_price_observation.schema.json
 gates: [HIMAYAH, THABAT]
-privacy: strict_local
+privacy: private_github
 appends_event_to: NIZAM__system/ledgers/EVENT_LEDGER.jsonl
 entry_point: "cd MARSAD__flight_radar && python -m radar.main discover"
 run_frequency: once_on_init (or manual re-trigger after window change)
@@ -40,4 +40,4 @@ The baseline may not complete in a single run due to API rate limits — the DIS
 - Travel window start: `RADAR_WINDOW_START` env var (default: 2027-03-15 = conservative post-Ramadan buffer)
 - Ramadan 2027 estimated end: ~2027-03-09 (±1–2 days, moon-sighting dependent)
 - Update `RADAR_WINDOW_START` in `.env` when exact date is confirmed
-- Data written to: `MARSAD__flight_radar/data/flight_prices.json` (strict_local — never committed)
+- Data written to: `MARSAD__flight_radar/data/flight_prices.json` (private_github — committed; backups/ and .tmp excluded by .gitignore)

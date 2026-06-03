@@ -7,7 +7,7 @@ naming_pattern: "flight_prices.json (append-only — no new file created)"
 template: null
 frontmatter_schema: flight_price_observation.schema.json
 gates: [HIMAYAH, THABAT]
-privacy: strict_local
+privacy: private_github
 appends_event_to: NIZAM__system/ledgers/EVENT_LEDGER.jsonl
 entry_point: "cd MARSAD__flight_radar && python -m radar.main monitor"
 run_frequency: daily_06:00_UTC (via scheduler daemon) or manual

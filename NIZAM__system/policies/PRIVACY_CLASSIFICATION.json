@@ -37,6 +37,8 @@
     { "path_glob": "tools/**",                                                  "classification": "private_github" },
     { "path_glob": "HIFZ__github_version_control/scripts/**",                    "classification": "private_github" },
     { "path_glob": "MARSAD__flight_radar/{radar,tests}/**",                     "classification": "private_github" },
+    { "path_glob": "MARSAD__flight_radar/{requirements.txt,.env.example,README.md,_index.json}", "classification": "private_github" },
+    { "path_glob": "MARSAD__flight_radar/data/flight_prices.json",             "classification": "private_github" },
     { "path_glob": "{AHEL__family_network,BADAN__body_health_system,MAL__financial_engine,HAJR__quarantine}/_index.json", "classification": "private_github" },
     { "path_glob": "{AHEL__family_network,BADAN__body_health_system,MAL__financial_engine,HAJR__quarantine}/README.md", "classification": "private_github" },
     { "path_glob": "log.md",                                                    "classification": "review_before_commit" }

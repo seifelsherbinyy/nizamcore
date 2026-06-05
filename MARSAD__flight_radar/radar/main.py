@@ -115,13 +115,24 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
     print(f"  Total observations:{total_obs}")
     print(f"  Active BUY_SIGNAL: {buy_signals}")
     print(f"  Travel window:     {store.get('metadata', {}).get('travel_window_start')} → {store.get('metadata', {}).get('travel_window_end')}")
+    return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed_loader import run_seed
+    stats = run_seed(file_path=args.file, dry_run=args.dry_run)
+    print(f"\nSEED: {stats['observations_imported']} observations imported from {args.file}")
+    if stats["rows_skipped_constraint"]:
+        print(f"  {stats['rows_skipped_constraint']} rows skipped (constraint filter)")
+    if stats["rows_skipped_error"]:
+        print(f"  {stats['rows_skipped_error']} rows skipped (parse error)")
     return 0
 
 
@@ -186,6 +197,15 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Import historical price observations from CSV or JSON (observation_type: historical_seed)",
+    )
+    p_seed.add_argument("--file", required=True, help="Path to CSV or JSON seed file")
+    p_seed.add_argument("--dry-run", action="store_true", help="Log what would be imported without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

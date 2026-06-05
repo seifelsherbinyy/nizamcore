@@ -123,8 +123,12 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (or AMADEUS_CLIENT_ID + AMADEUS_CLIENT_SECRET)
 pip install -r requirements.txt
+
+# (Optional) Seed historical prices first to skip the 7-day cold-start period
+python -m radar.main seed --file /path/to/history.csv --dry-run  # preview
+python -m radar.main seed --file /path/to/history.csv            # import
 
 # Run baseline collection (Stage 1 — first time only)
 python -m radar.main discover
@@ -143,14 +147,59 @@ python -m radar.main run-all
 
 # Start scheduler daemon (runs 06:00 UTC daily)
 python -m radar.main schedule
+
+# Print current store summary
+python -m radar.main status
+
+# Validate credentials and configuration
+python -m radar.main validate
 ```
+
+## Historical Price Seed Research
+
+Seeding historical observations accelerates the forecasting model from LOW confidence (cold start)
+to MEDIUM (7+ observations) or HIGH (30+ observations) without waiting 30 days of daily monitoring.
+All seed observations are imported as `observation_type: historical_seed` with `data_quality: estimated`.
+
+### Available sources for CAI-to-USA historical prices
+
+| Source | Historical depth | Access method | Format | Integration |
+|---|---|---|---|---|
+| **Google Flights price history** | ~3 months (rolling) | Browser — search a route, view price history chart | Manual transcription | CSV seed file |
+| **Hopper** | ~12 months | App — search route, view price calendar | Manual transcription / app export | CSV seed file |
+| **Kayak price history charts** | ~6 months | Browser — search route, "Price History" tab | Manual transcription | CSV seed file |
+| **Momondo** | ~3 months | Browser — search route, price trend chart | Manual transcription | CSV seed file |
+| **SerpApi `google_flights` `price_insights`** | 0 (real-time only) | API — `price_insights.typical_price_range` field | JSON | Automated via serpapi_source.py |
+| **ITA Matrix historical search** | No persistent history | Point-in-time search only | N/A | Not applicable |
+
+### Practical recommendation
+
+Google Flights and Hopper are the most useful sources. For the CAI→USA corridor:
+- Search CAI→JFK in the Google Flights app, select the calendar view, and transcribe the lowest weekly
+  prices visible in the chart (~12 weeks of history, ~$50–$100 price steps typical).
+- Repeat for LAX, ORD, ATL, MIA — the highest-traffic destinations first.
+- 7–10 historical observations per series is sufficient to unlock MEDIUM confidence and BUY_SIGNAL
+  eligibility before the daily monitor accumulates them organically.
+
+### Seed file format
+
+CSV (recommended for manual transcription):
+```
+origin,destination,carrier,cabin,price_usd,outbound_date,return_date,outbound_duration_hours,return_duration_hours,outbound_stops,return_stops,outbound_routing,return_routing,source
+CAI,JFK,EK,BUSINESS,3200.00,2027-04-15,2027-04-26,14.5,15.0,1,1,CAI-DXB-JFK,JFK-DXB-CAI,historical_seed
+CAI,JFK,EK,BUSINESS,3350.00,2027-05-01,2027-05-12,14.5,15.0,1,1,CAI-DXB-JFK,JFK-DXB-CAI,historical_seed
+```
+
+Use `python -m radar.main seed --file history.csv --dry-run` to validate before importing.
+All rows are passed through the routing constraint engine — Economy, >30h, outside 9–14 nights,
+and outside the travel window are filtered silently.
 
 ## SWAPPABLE_DEFAULT REGISTRY
 
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
 | Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |

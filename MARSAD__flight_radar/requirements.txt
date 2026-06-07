@@ -8,7 +8,9 @@ pydantic>=2.0.0
 requests>=2.31.0
 
 # Primary data source — SerpApi Google Flights (SWAPPABLE_DEFAULT: primary)
-google-search-results>=2.4.0
+# SerpApi is accessed via raw HTTP (requests) — no SDK package required.
+# Register at serpapi.com to get SERPAPI_KEY. Free: 250/mo. Paid: $25/mo → 1,000/mo.
+# serpapi_source.py posts directly to https://serpapi.com/search — no extra install.
 
 # Amadeus for Developers API — DISABLED (portal shut down July 2025), kept for reference
 # amadeus>=8.0.0

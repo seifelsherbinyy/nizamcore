@@ -36,6 +36,18 @@ def _setup_logging() -> None:
     )
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed
+    stats = run_seed(file_path=args.file, dry_run=args.dry_run)
+    action = "would import" if args.dry_run else "imported"
+    print(
+        f"\nSEED: {stats['records_imported'] if not args.dry_run else stats['records_constraint_passed']} "
+        f"records {action} from {stats['records_read']} read "
+        f"({stats['records_constraint_failed']} constraint-failed)"
+    )
+    return 0
+
+
 def cmd_discover(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     stats = run_discover(dry_run=args.dry_run)
@@ -115,7 +127,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
@@ -150,6 +162,12 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed (Stage 0 — pre-discover, optional)
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical price data to bootstrap forecasting")
+    p_seed.add_argument("--file", required=True, help="Path to CSV or JSON file with historical prices")
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate and log what would be imported without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

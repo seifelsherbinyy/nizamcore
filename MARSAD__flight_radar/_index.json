@@ -22,12 +22,14 @@
     ".env"
   ],
   "skill_commands": [
+    "/marsad-seed",
     "/marsad-discover",
     "/marsad-monitor",
     "/marsad-alert",
     "/marsad-forecast"
   ],
   "pipeline_stages": [
+    "SEED — historical data import (optional, pre-DISCOVER, bootstraps forecast cold start)",
     "DISCOVER — baseline collection (runs once on init)",
     "MONITOR — daily delta (06:00 UTC scheduled)",
     "ALERT — BUY_SIGNAL detection (runs after MONITOR)",

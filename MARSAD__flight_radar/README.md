@@ -50,9 +50,10 @@ MARSAD__flight_radar/
 │   ├── sources/
 │   │   ├── __init__.py
 │   │   ├── base.py            (abstract source interface + shared rate-limit logic)
-│   │   ├── amadeus_source.py  (PRIMARY — Amadeus for Developers API)
+│   │   ├── serpapi_source.py  (PRIMARY — SerpApi Google Flights API, SWAPPABLE_DEFAULT)
+│   │   ├── amadeus_source.py  (DISABLED — Amadeus portal shut down July 2025)
 │   │   ├── ita_matrix_source.py  (OPTIONAL — requires ToS review before enabling)
-│   │   ├── kiwi_source.py     (secondary aggregator)
+│   │   ├── kiwi_source.py     (secondary aggregator — invitation-only as of 2025)
 │   │   └── google_flights_source.py  (validation-only, rate-limited)
 │   ├── stages/
 │   │   ├── __init__.py
@@ -109,9 +110,20 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Active default: SerpApi Google Flights** (`DATA_SOURCE=serpapi` in .env)
 
-ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
+SerpApi provides a clean programmatic interface to Google Flights data, is terms-compliant
+(paid service), and requires no browser automation. Register at serpapi.com to obtain a key.
+
+Free tier: 250 searches/month — sufficient for testing and partial monitoring.
+Paid tier ($25/mo, 1,000 searches): required for full daily monitoring of all 12 destinations.
+Set `SERPAPI_PRIORITY_ONLY=true` in `.env` to restrict to 8 priority destinations on the free tier.
+
+**Amadeus for Developers API** — the originally planned primary source — is no longer available.
+The Amadeus self-service developer portal was shut down in July 2025. The `AmadeusSource` class
+is kept in source for reference but `DATA_SOURCE=amadeus` will return credential errors.
+
+**ITA Matrix** (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 - Google's ToS prohibits automated access without prior written permission
 - Bot detection will likely block headless browser automation within 24 hours
 - Use only if you have reviewed the ToS and accept the risk
@@ -123,7 +135,7 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (get from serpapi.com)
 pip install -r requirements.txt
 
 # Run baseline collection (Stage 1 — first time only)
@@ -150,8 +162,8 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
-| Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Secondary source | Kiwi Tequila (invitation-only) | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |
 | Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |

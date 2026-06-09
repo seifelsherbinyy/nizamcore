@@ -25,6 +25,7 @@
     { "name": "pfa_canonical_state", "phase": 2, "path": "schemas/pfa_canonical_state.schema.json", "describes": "PFA single source of truth — income, expenses, debt architecture, cash flow, runway", "live": true },
     { "name": "pfa_debt_event",      "phase": 2, "path": "schemas/pfa_debt_event.schema.json",      "describes": "PFA append-only debt state change ledger entry", "live": true },
     { "name": "pfa_payment_event",   "phase": 2, "path": "schemas/pfa_payment_event.schema.json",   "describes": "PFA append-only payment record ledger entry", "live": true },
-    { "name": "pfa_learning",        "phase": 2, "path": "schemas/pfa_learning.schema.json",        "describes": "PFA append-only financial life learning entry", "live": true }
+    { "name": "pfa_learning",        "phase": 2, "path": "schemas/pfa_learning.schema.json",        "describes": "PFA append-only financial life learning entry", "live": true },
+    { "name": "flight_price_observation", "phase": 2, "path": "schemas/flight_price_observation.schema.json", "describes": "MARSAD append-only flight price time-series store — CAI-to-USA corridor, Business and Premium Economy", "live": true }
   ]
 }

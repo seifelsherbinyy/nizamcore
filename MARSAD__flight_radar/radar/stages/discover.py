@@ -115,11 +115,13 @@ def run_discover(
         if best_offer is None:
             stats["combinations_no_data"] += 1
             logger.warning(
-                "No qualifying offer: %s→%s %s",
+                "No qualifying offer: %s→%s %s — skipping (may retry on next run)",
                 combo["origin"], combo["destination"], combo["cabin"],
             )
-            if combo["cabin"].upper() == "PREMIUM_ECONOMY":
-                mark_premium_economy_unavailable(combo["origin"], combo["destination"], "UNKNOWN")
+            # Do NOT mark Premium Economy as unavailable on a single failed fetch.
+            # Absence of search results ≠ route does not exist — it may be a transient
+            # API miss, rate limit, or booking horizon limitation. Routes are only
+            # marked PREMIUM_ECONOMY unavailable after explicit carrier confirmation.
             continue
 
         stats["combinations_fetched"] += 1

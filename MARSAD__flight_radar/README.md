@@ -109,12 +109,20 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Current default: SerpApi** (`DATA_SOURCE=serpapi` in .env)
 
-ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
+SerpApi provides a programmatic Google Flights API — terms-compliant with a registered
+key. Register at serpapi.com. Free tier: 250 searches/month. Paid tier ($25/mo):
+1,000 searches/month — required for full daily monitoring across all 12 destinations.
+
+Amadeus for Developers (`DATA_SOURCE=amadeus`) is implemented but the self-service
+developer portal shut down in July 2025. Credentials from before that date still work
+against the production API; new registrations require contacting Amadeus enterprise sales.
+
+ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged HIGH risk:
 - Google's ToS prohibits automated access without prior written permission
 - Bot detection will likely block headless browser automation within 24 hours
-- Use only if you have reviewed the ToS and accept the risk
+- Enable only after ToS review: set `ITA_MATRIX_ENABLED=true` in .env
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
@@ -150,7 +158,8 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Primary source | SerpApi (Google Flights) | Amadeus API | Set `DATA_SOURCE=amadeus` in .env — requires pre-July 2025 credentials |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
 | Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |

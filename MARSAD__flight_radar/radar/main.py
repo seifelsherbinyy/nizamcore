@@ -36,6 +36,16 @@ def _setup_logging() -> None:
     )
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.stages.seed import run_seed
+    csv_path = Path(args.csv) if args.csv else None
+    json_path = Path(args.json_file) if args.json_file else None
+    stats = run_seed(csv_path=csv_path, json_path=json_path, dry_run=args.dry_run)
+    print(f"\nSEED: {stats['rows_imported']} imported, {stats['rows_filtered']} filtered, {stats['rows_error']} errors")
+    return 0
+
+
 def cmd_discover(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     stats = run_discover(dry_run=args.dry_run)
@@ -150,6 +160,13 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed (Stage 0 — historical import, runs before discover)
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical price seed data (CSV or JSON)")
+    p_seed.add_argument("--csv", default="", help="Path to seed CSV file")
+    p_seed.add_argument("--json-file", default="", dest="json_file", help="Path to seed JSON file")
+    p_seed.add_argument("--dry-run", action="store_true", help="Parse and validate without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

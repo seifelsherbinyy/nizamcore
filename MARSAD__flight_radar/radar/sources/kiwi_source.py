@@ -127,7 +127,6 @@ class KiwiSource(BaseFlightSource):
                 dep_date = date.fromtimestamp(dep_ts) if dep_ts else date.today()
                 ret_date = date.fromtimestamp(ret_ts) if ret_ts else dep_date
 
-                out_dur = sum(r.get("flyDuration", "0:0").split(":")[0:1], [])
                 outbound_hours = self._calc_duration(outbound)
                 return_hours = self._calc_duration(inbound)
 

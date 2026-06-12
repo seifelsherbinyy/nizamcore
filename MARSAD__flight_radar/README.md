@@ -47,25 +47,30 @@ MARSAD__flight_radar/
 │   ├── config.py              (all env vars and constants loaded here)
 │   ├── constraints.py         (ROUTING CONSTRAINT ENGINE — single source of truth)
 │   ├── schema_store.py        (append-only JSON store — write-to-temp-then-rename)
+│   ├── seed_historical.py     (Stage 0 — historical price seed for cold-start acceleration)
 │   ├── sources/
 │   │   ├── __init__.py
 │   │   ├── base.py            (abstract source interface + shared rate-limit logic)
-│   │   ├── amadeus_source.py  (PRIMARY — Amadeus for Developers API)
+│   │   ├── serpapi_source.py  (PRIMARY — SerpApi Google Flights API)
+│   │   ├── kiwi_source.py     (secondary aggregator — Kiwi Tequila)
+│   │   ├── amadeus_source.py  (DISABLED — Amadeus portal shut down July 2025)
 │   │   ├── ita_matrix_source.py  (OPTIONAL — requires ToS review before enabling)
-│   │   ├── kiwi_source.py     (secondary aggregator)
-│   │   └── google_flights_source.py  (validation-only, rate-limited)
+│   │   └── google_flights_source.py  (prototype stub)
 │   ├── stages/
 │   │   ├── __init__.py
 │   │   ├── discover.py        (Stage 1 — baseline collection)
 │   │   ├── monitor.py         (Stage 2 — daily delta)
 │   │   ├── alert.py           (Stage 3 — BUY_SIGNAL engine)
 │   │   └── forecast.py        (Stage 4 — trend model)
+│   ├── dashboard.py           (stdlib HTTP dashboard — localhost:7329)
 │   └── scheduler.py           (APScheduler 06:00 UTC daily)
 └── tests/
     ├── test_constraints.py
     ├── test_schema_store.py
     ├── test_alert.py
-    └── test_forecast.py
+    ├── test_forecast.py
+    ├── test_generic_base.py
+    └── test_seed_historical.py
 
 NIZAM__system/
 ├── schemas/
@@ -109,7 +114,11 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Active: SerpApi Google Flights API** (`DATA_SOURCE=serpapi` in .env — current default)
+
+- Free tier: 250 searches/month ≈ 8/day — insufficient for full daily monitoring
+- Paid tier ($25/mo for 1,000 searches) covers full matrix with headroom
+- To stay within free tier during testing: set `SERPAPI_PRIORITY_ONLY=true` in .env
 
 ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 - Google's ToS prohibits automated access without prior written permission
@@ -123,8 +132,15 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (get key at serpapi.com)
 pip install -r requirements.txt
+
+# (Optional) Seed historical price data to accelerate cold-start (Stage 0)
+# Back-fetches up to 30 days of past prices to build forecast confidence faster
+python -m radar.main seed --days-back 30
+# Or import from a manually-collected CSV/JSON:
+python -m radar.main seed --csv path/to/seed.csv
+python -m radar.main seed --json path/to/seed.json
 
 # Run baseline collection (Stage 1 — first time only)
 python -m radar.main discover
@@ -150,7 +166,7 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Primary source | SerpApi Google Flights | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
 | Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |

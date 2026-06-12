@@ -245,8 +245,10 @@ class SerpApiSource(BaseFlightSource):
             outbound_routing = f"{dep}-{arr}" if dep and arr else ""
 
         return FlightOffer(
-            origin=dep_date and flights[0].get("departure_airport", {}).get("id", "CAI") or "CAI",
-            destination=flights[-1].get("arrival_airport", {}).get("id", "???") if flights else "???",
+            origin=flights[0].get("departure_airport", {}).get("id", "CAI"),
+            destination=(outbound_flights[-1] if outbound_flights else flights[0]).get(
+                "arrival_airport", {}
+            ).get("id", "???"),
             cabin=cabin,
             carrier=carrier_iata,
             outbound_date=dep_date,

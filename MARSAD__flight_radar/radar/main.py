@@ -3,6 +3,7 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
+  seed       — Stage 0: import historical prices to accelerate cold-start
   discover   — Stage 1: baseline collection (run once on init)
   monitor    — Stage 2: daily delta
   alert      — Stage 3: price drop signal detection
@@ -125,6 +126,23 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    if args.csv:
+        from radar.seed_historical import import_csv_seed
+        stats = import_csv_seed(args.csv)
+    elif args.json:
+        from radar.seed_historical import import_json_seed
+        stats = import_json_seed(args.json)
+    else:
+        from radar.seed_historical import run_seed_backfill
+        stats = run_seed_backfill(
+            days_back=args.days_back,
+            step_days=args.step_days,
+        )
+    print(f"\nSEED: {stats}")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     missing = validate_credentials()
     if missing:
@@ -186,6 +204,14 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: seed historical price data to accelerate cold-start")
+    p_seed.add_argument("--csv", type=str, default=None, help="Path to CSV seed file")
+    p_seed.add_argument("--json", type=str, default=None, help="Path to JSON seed file")
+    p_seed.add_argument("--days-back", type=int, default=30, help="Days to probe back (SerpAPI backfill, default: 30)")
+    p_seed.add_argument("--step-days", type=int, default=7, help="Step between probe dates (default: 7)")
+    p_seed.set_defaults(func=cmd_seed)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

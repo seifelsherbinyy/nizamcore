@@ -1,0 +1,39 @@
+name: MARSAD Tests
+
+on:
+  push:
+    paths:
+      - "MARSAD__flight_radar/**"
+      - ".github/workflows/marsad_ci.yml"
+  pull_request:
+    paths:
+      - "MARSAD__flight_radar/**"
+      - ".github/workflows/marsad_ci.yml"
+
+jobs:
+  test:
+    name: Run MARSAD test suite
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: MARSAD__flight_radar
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: MARSAD__flight_radar/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          # No real API keys — tests use monkeypatching and tmp dirs
+          SERPAPI_KEY: ""
+          KIWI_API_KEY: ""
+        run: python -m pytest tests/ -v --tb=short

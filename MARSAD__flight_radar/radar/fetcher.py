@@ -9,10 +9,10 @@ Rules enforced here:
 - Each source fetched sequentially, results accumulated
 
 Source priority order:
-  1. Amadeus API (primary — terms-compliant)
-  2. Kiwi Tequila (secondary aggregator)
-  3. Google Flights (validation-only, prototype)
-  4. ITA Matrix (optional, requires ToS acceptance)
+  1. SerpApi / Google Flights (primary — DATA_SOURCE=serpapi, default)
+  2. Kiwi Tequila (secondary aggregator — DATA_SOURCE=kiwi)
+  3. Amadeus API (DISABLED — portal shut down July 2025)
+  4. ITA Matrix (GATED — requires explicit ToS review before enabling)
 """
 
 from __future__ import annotations

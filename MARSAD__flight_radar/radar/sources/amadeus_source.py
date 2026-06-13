@@ -1,20 +1,14 @@
 """
-PRIMARY DATA SOURCE — Amadeus for Developers API.
+AMADEUS FOR DEVELOPERS API — DISABLED (portal shut down July 2025).
 
-SWAPPABLE_DEFAULT: Set DATA_SOURCE=amadeus in .env (default).
-Requires AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET.
+Kept as reference implementation. Do not use in production.
+Primary source is SerpApi (DATA_SOURCE=serpapi) — see serpapi_source.py.
 
-API: Flight Offers Search v2
-Docs: https://developers.amadeus.com/self-service/category/flights/api-doc/flight-offers-search
+Original API: Flight Offers Search v2
+Original docs: https://developers.amadeus.com/self-service/category/flights/api-doc/flight-offers-search
 
-Coverage verification needed at deployment:
-- CAI route coverage — confirm Cairo is in the catalogue
-- Business / Premium Economy cabin availability on CAI corridor
-- Amadeus sandbox (AMADEUS_ENV=test) uses limited test data — switch to production for real prices
-
-Rate limits (free tier as of 2026): ~1000 requests/month in test, higher in production.
-For daily monitoring: estimate ~(12 destinations × 2 cabins) = 24 requests/day → ~720/month.
-Fits comfortably in free tier for monitoring; production key needed for DISCOVER baseline.
+If Amadeus service is restored, restore this source by setting DATA_SOURCE=amadeus and
+providing AMADEUS_CLIENT_ID + AMADEUS_CLIENT_SECRET environment variables.
 """
 
 from __future__ import annotations

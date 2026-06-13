@@ -11,7 +11,7 @@ TO ENABLE:
 2. Set ITA_MATRIX_ENABLED=true in .env ONLY after accepting the ToS risk
 3. Set DATA_SOURCE=ita_matrix in .env
 
-RECOMMENDED ALTERNATIVE: Use AmadeusSource (DATA_SOURCE=amadeus) for terms-compliant access.
+RECOMMENDED ALTERNATIVE: Use SerpApiSource (DATA_SOURCE=serpapi, current default) for terms-compliant access via the SerpApi Google Flights API.
 
 This implementation is provided for completeness and for users who have obtained
 appropriate authorization. It is disabled by default and cannot be activated
@@ -56,7 +56,7 @@ class ITAMatrixSource(BaseFlightSource):
                 offers=[],
                 errors=[
                     "ITA Matrix is disabled. Set ITA_MATRIX_ENABLED=true in .env after ToS review. "
-                    "See README SWAPPABLE_DEFAULT REGISTRY for swap instructions."
+                    "Use DATA_SOURCE=serpapi (SerpApi Google Flights) for terms-compliant access."
                 ],
             )
 
@@ -70,7 +70,7 @@ class ITAMatrixSource(BaseFlightSource):
         logger.warning(
             "ITA Matrix source enabled but Playwright automation is PROTOTYPE_GRADE. "
             "Full implementation requires manual ToS review and CAPTCHA handling strategy. "
-            "Returning empty result — switch to DATA_SOURCE=amadeus for production use."
+            "Returning empty result — switch to DATA_SOURCE=serpapi for production use."
         )
 
         return SourceResult(
@@ -79,6 +79,6 @@ class ITAMatrixSource(BaseFlightSource):
             errors=[
                 "ITA Matrix Playwright automation is prototype-grade. "
                 "Production implementation requires ToS clearance. "
-                "See README for Amadeus API swap instructions."
+                "See README for SerpApi swap instructions (DATA_SOURCE=serpapi)."
             ],
         )

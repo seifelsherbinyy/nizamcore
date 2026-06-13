@@ -43,24 +43,28 @@ MARSAD__flight_radar/
 ├── requirements.txt
 ├── radar/
 │   ├── __init__.py
-│   ├── main.py                (entry point — CLI + scheduler bootstrap)
-│   ├── config.py              (all env vars and constants loaded here)
-│   ├── constraints.py         (ROUTING CONSTRAINT ENGINE — single source of truth)
-│   ├── schema_store.py        (append-only JSON store — write-to-temp-then-rename)
+│   ├── main.py                (entry point — CLI: discover/monitor/alert/forecast/schedule/dashboard/status/validate)
+│   ├── config.py              (all env vars and constants loaded here — single load point)
+│   ├── constraints.py         (ROUTING CONSTRAINT ENGINE — single source of truth, called by all four stages)
+│   ├── schema_store.py        (append-only JSON store — write-to-temp-then-rename, backup before monitor)
+│   ├── fetcher.py             (staged sequential fetching — rate limits, backoff, session budget)
+│   ├── scheduler.py           (APScheduler daemon — 06:00 UTC: MONITOR → ALERT → FORECAST)
+│   ├── dashboard.py           (live HTTP dashboard at http://localhost:7329 — Chart.js, auto-refresh 60s)
 │   ├── sources/
 │   │   ├── __init__.py
-│   │   ├── base.py            (abstract source interface + shared rate-limit logic)
-│   │   ├── amadeus_source.py  (PRIMARY — Amadeus for Developers API)
-│   │   ├── ita_matrix_source.py  (OPTIONAL — requires ToS review before enabling)
-│   │   ├── kiwi_source.py     (secondary aggregator)
-│   │   └── google_flights_source.py  (validation-only, rate-limited)
-│   ├── stages/
-│   │   ├── __init__.py
-│   │   ├── discover.py        (Stage 1 — baseline collection)
-│   │   ├── monitor.py         (Stage 2 — daily delta)
-│   │   ├── alert.py           (Stage 3 — BUY_SIGNAL engine)
-│   │   └── forecast.py        (Stage 4 — trend model)
-│   └── scheduler.py           (APScheduler 06:00 UTC daily)
+│   │   ├── base.py            (abstract source interface + shared rate-limit / backoff utilities)
+│   │   ├── serpapi_source.py  (PRIMARY — SerpApi Google Flights API, DATA_SOURCE=serpapi)
+│   │   ├── kiwi_source.py     (secondary aggregator — DATA_SOURCE=kiwi)
+│   │   ├── amadeus_source.py  (DISABLED — Amadeus portal shut down July 2025; kept as reference)
+│   │   ├── ita_matrix_source.py  (GATED — Google ToS prohibits automated access; requires ITA_MATRIX_ENABLED=true)
+│   │   ├── google_flights_source.py  (prototype-grade — validation-only, not for production)
+│   │   └── generic_base.py    (abstract intel source for non-flight signals — Signal/SourceBundle contract)
+│   └── stages/
+│       ├── __init__.py
+│       ├── discover.py        (Stage 1 — baseline collection, runs once on init)
+│       ├── monitor.py         (Stage 2 — daily delta, backs up store before each run)
+│       ├── alert.py           (Stage 3 — three-condition BUY_SIGNAL engine)
+│       └── forecast.py        (Stage 4 — SMA→EWM→LR trend model, 7/14/30-day horizons)
 └── tests/
     ├── test_constraints.py
     ├── test_schema_store.py
@@ -109,12 +113,19 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Current primary: SerpApi Google Flights API** (`DATA_SOURCE=serpapi` in .env, default)
 
-ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
-- Google's ToS prohibits automated access without prior written permission
-- Bot detection will likely block headless browser automation within 24 hours
-- Use only if you have reviewed the ToS and accept the risk
+SerpApi provides programmatic access to Google Flights results. Register at serpapi.com.
+- Free tier: 250 searches/month (suitable for limited testing)
+- Paid ($25/mo): 1,000 searches/month — required for full daily monitoring (24 searches/day)
+- Set `SERPAPI_PRIORITY_ONLY=true` to restrict to 8 priority destinations on free tier
+
+**Disabled sources:**
+- **Amadeus for Developers** (`DATA_SOURCE=amadeus`) — portal shut down July 2025, kept as reference only
+- **Kiwi Tequila** (`DATA_SOURCE=kiwi`) — invitation-only for new users as of 2025
+
+**Gated source:**
+- **ITA Matrix** (`DATA_SOURCE=ita_matrix`) — Google's ToS prohibits automated access without written permission; bot detection blocks headless browsers within 24 hours; requires `ITA_MATRIX_ENABLED=true` plus ToS acceptance
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
@@ -123,7 +134,7 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (get key at serpapi.com)
 pip install -r requirements.txt
 
 # Run baseline collection (Stage 1 — first time only)
@@ -150,12 +161,14 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
-| Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
+| Primary source | SerpApi (Google Flights) | ITA Matrix (ToS risk) | Set `DATA_SOURCE=ita_matrix` + `ITA_MATRIX_ENABLED=true` — review ToS first |
+| Priority mode | Full 12 destinations | 8 priority destinations | Set `SERPAPI_PRIORITY_ONLY=true` in .env (free tier usage) |
+| Secondary source | Kiwi Tequila | Other aggregator | Set `SECONDARY_SOURCE=kiwi` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |
-| Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
-| Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary |
+| Alert delivery | Console + JSON file | Slack | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
+| Alert delivery | Console + JSON file | Webhook | Set `ALERT_DELIVERY=webhook` and `ALERT_WEBHOOK_URL` in .env |
+| Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary fields |
 
 ## Privacy
 

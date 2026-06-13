@@ -37,10 +37,10 @@ class GoogleFlightsSource(BaseFlightSource):
         # with explicit ToS review. Current use: return empty with informational message.
         logger.debug(
             "GoogleFlightsSource: prototype-grade, returning empty result. "
-            "Use AmadeusSource for production data."
+            "Use SerpApiSource (DATA_SOURCE=serpapi) for production data."
         )
         return SourceResult(
             source_name=self.name,
             offers=[],
-            errors=["Google Flights source is prototype-grade — use for validation only after implementation"],
+            errors=["Google Flights direct scrape is prototype-grade — use SerpApi (DATA_SOURCE=serpapi) for production"],
         )

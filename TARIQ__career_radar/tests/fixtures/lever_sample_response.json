@@ -1,0 +1,15 @@
+[
+  {
+    "id": "abc-lever-123",
+    "text": "Data Analyst",
+    "url": "https://jobs.acme.lever.co/apply/abc-lever-123",
+    "categories": {
+      "location": "Remote",
+      "commitment": "Full-time",
+      "team": "Data",
+      "level": "Mid-level"
+    },
+    "createdAt": 1623052800000,
+    "updatedAt": 1686398400000
+  }
+]

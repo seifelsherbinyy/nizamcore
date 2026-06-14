@@ -1,0 +1,18 @@
+{
+  "name": "Acme Corp",
+  "url": "https://acme.workable.com",
+  "jobs": [
+    {
+      "id": "job-wk-001",
+      "title": "AI Ops Coordinator",
+      "location": {
+        "country": "United States",
+        "region": "Remote",
+        "city": null
+      },
+      "job_url": "https://acme.workable.com/jobs/wk-001",
+      "published_on": "2026-06-14",
+      "updated_on": "2026-06-14"
+    }
+  ]
+}

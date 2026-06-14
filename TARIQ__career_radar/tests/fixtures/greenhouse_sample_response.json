@@ -1,0 +1,15 @@
+{
+  "jobs": [
+    {
+      "id": 123456,
+      "title": "AI Operations Manager",
+      "location": {"name": "Remote"},
+      "company_name": "Acme Corp",
+      "absolute_url": "https://boards.greenhouse.io/acme/jobs/123456",
+      "content": "<p>Description</p>",
+      "salary_min": 90000,
+      "salary_max": 110000,
+      "salary_currency": "USD"
+    }
+  ]
+}

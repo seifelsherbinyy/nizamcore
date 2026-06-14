@@ -1,0 +1,18 @@
+{
+  "jobPostings": [
+    {
+      "id": "uuid-ashby-001",
+      "title": "ML Platform Engineer",
+      "country": "United States",
+      "state": "CA",
+      "location": "Remote",
+      "remotePolicy": "fully_remote",
+      "url": "https://jobs.ashbyhq.com/acme/uuid-ashby-001",
+      "compensation": {
+        "salary": {"min": 120000, "max": 160000, "currency": "USD"}
+      },
+      "updatedAt": "2026-06-14T10:00:00Z",
+      "department": "Engineering"
+    }
+  ]
+}

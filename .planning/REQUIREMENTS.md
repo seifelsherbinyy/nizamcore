@@ -100,13 +100,43 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | — | Pending |
+| DATA-01 | Phase 1: Foundation & Data Model | Pending |
+| DATA-02 | Phase 1: Foundation & Data Model | Pending |
+| DATA-03 | Phase 1: Foundation & Data Model | Pending |
+| DATA-04 | Phase 1: Foundation & Data Model | Pending |
+| DATA-05 | Phase 1: Foundation & Data Model | Pending |
+| SRC-01 | Phase 2: Tier 1 ATS Sourcing | Pending |
+| SRC-02 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
+| SRC-03 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
+| SRC-04 | Phase 2: Tier 1 ATS Sourcing | Pending |
+| SRC-05 | Phase 2: Tier 1 ATS Sourcing | Pending |
+| SRC-06 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
+| DEDUP-01 | Phase 4: Deduplication Engine | Pending |
+| DEDUP-02 | Phase 4: Deduplication Engine | Pending |
+| DEDUP-03 | Phase 4: Deduplication Engine | Pending |
+| SCORE-01 | Phase 5: Scoring Engine | Pending |
+| SCORE-02 | Phase 5: Scoring Engine | Pending |
+| SCORE-03 | Phase 7: Tagging & Profile Matching | Pending |
+| SALARY-01 | Phase 6: Salary & Confidence Discipline | Pending |
+| SALARY-02 | Phase 6: Salary & Confidence Discipline | Pending |
+| TAG-01 | Phase 7: Tagging & Profile Matching | Pending |
+| TAG-02 | Phase 7: Tagging & Profile Matching | Pending |
+| RPT-01 | Phase 8: Telegram Report | Pending |
+| RPT-02 | Phase 9: Drive Evidence Report & Ledger | Pending |
+| RPT-03 | Phase 9: Drive Evidence Report & Ledger | Pending |
+| DELIV-01 | Phase 9: Drive Evidence Report & Ledger | Pending |
+| DELIV-02 | Phase 9: Drive Evidence Report & Ledger | Pending |
+| DELIV-03 | Phase 10: Delivery Continuity (Retry & Safety) | Pending |
+| RUN-01 | Phase 11: On-Demand Trigger & NIZAM Wiring | Pending |
+| RUN-02 | Phase 11: On-Demand Trigger & NIZAM Wiring | Pending |
+| ROUTE-01 | Phase 12: Strategic Routing (MAL/TARIQ/MUNAWARA) | Pending |
+| VAL-01 | Phase 13: Validation & Safety Sign-Off | Pending |
 
 **Coverage:**
 - v1 requirements: 30 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 30 ⚠️
+- Mapped to phases: 30 (100% coverage) ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-14*
-*Last updated: 2026-06-14 after initial definition*
+*Last updated: 2026-06-14 after roadmap creation*

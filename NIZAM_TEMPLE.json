@@ -18,7 +18,6 @@
     "long_horizon_rolls_to_tactical",
     "finance_verifies_before_computes",
     "health_advisory_not_diagnostic",
-    "family_strict_local",
     "no_silent_operations"
   ],
   "gates": {
@@ -87,9 +86,11 @@
       "note": "hosts conversational session JSON + mirrors"
     },
     "HIKMAH": {
-      "phase": 2,
-      "persona": null,
-      "scaffolded": "shell_only"
+      "phase": 1,
+      "persona": "NIZAM__system/personas/HIKMAH.json",
+      "mode_bundle": "NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/",
+      "live": true,
+      "note": "Khaldun — weekly synthesis + Islamic Cosmic Wisdom Mode"
     },
     "NUR": {
       "phase": 2,
@@ -105,13 +106,6 @@
       "phase": 2,
       "persona": null,
       "scaffolded": "shell_only"
-    },
-    "AHEL": {
-      "phase": 3,
-      "persona": "NIZAM__system/personas/AHEL.json",
-      "scaffolded": true,
-      "live": true,
-      "privacy": "strict_local_maximum"
     },
     "BASIRA": {
       "phase": 3,
@@ -162,10 +156,9 @@
     "MARSAD"
   ],
   "phase_3_folders": [
-    "BASIRA",
-    "AHEL"
+    "BASIRA"
   ],
-  "canonical_source_of_truth": "local working tree at D:\\NIZAM\\nizamcore",
+  "canonical_source_of_truth": "local working tree at D:\\NIZAM",
   "canonical_remote": {
     "url": "https://github.com/seifelsherbinyy/nizamcore",
     "visibility": "private",
@@ -195,9 +188,9 @@
     "DEAD_LETTER": {
       "path": "NIZAM__system/ledgers/DEAD_LETTER.jsonl",
       "phase": 1,
-      "privacy": "review_before_commit",
+      "privacy": "strict_local",
       "owner": "Ammar",
-      "purpose": "failed / dropped messages for replay; max retries = 5"
+      "purpose": "failed or dropped messages; max attempts = 3; manual approval required for replay"
     },
     "STRATEGY_LEDGER": {
       "path": "NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl",
@@ -223,11 +216,6 @@
     "BODY_LEDGER": {
       "path": "NIZAM__system/ledgers/BODY_LEDGER.jsonl",
       "phase": 2,
-      "privacy": "strict_local"
-    },
-    "FAMILY_LEDGER": {
-      "path": "NIZAM__system/ledgers/FAMILY_LEDGER.jsonl",
-      "phase": 3,
       "privacy": "strict_local"
     }
   },

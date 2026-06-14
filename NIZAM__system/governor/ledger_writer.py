@@ -35,7 +35,8 @@ KNOWN_LEDGERS = {
     "BATTLE_LEDGER",
     "FINANCE_LEDGER",
     "BODY_LEDGER",
-    "FAMILY_LEDGER",
+    "PULSATION_LEDGER",
+    "COUNCIL_LEDGER",
 }
 
 
@@ -107,8 +108,6 @@ def append(
         if name in {"EVENT_LEDGER", "LEARNING_LEDGER", "DECISION_LEDGER",
                     "DEAD_LETTER"}:
             privacy_class = "review_before_commit"
-        elif name == "FAMILY_LEDGER":
-            privacy_class = "strict_local_maximum"
         else:
             privacy_class = "strict_local"
 

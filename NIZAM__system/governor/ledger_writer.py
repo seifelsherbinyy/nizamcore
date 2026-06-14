@@ -37,6 +37,7 @@ KNOWN_LEDGERS = {
     "BODY_LEDGER",
     "PULSATION_LEDGER",
     "COUNCIL_LEDGER",
+    "CAREER_RADAR_LEDGER",  # TARIQ Career Radar run log
 }
 
 

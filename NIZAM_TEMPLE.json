@@ -217,6 +217,13 @@
       "path": "NIZAM__system/ledgers/BODY_LEDGER.jsonl",
       "phase": 2,
       "privacy": "strict_local"
+    },
+    "CAREER_RADAR_LEDGER": {
+      "path": "NIZAM__system/ledgers/CAREER_RADAR_LEDGER.jsonl",
+      "phase": 1,
+      "privacy": "review_before_commit",
+      "owner": "Tariq",
+      "purpose": "Career radar run events, opportunity counts, delivery status, error tracking"
     }
   },
   "external_pattern_sources": [

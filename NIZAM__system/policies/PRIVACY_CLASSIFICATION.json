@@ -40,6 +40,9 @@
     { "path_glob": "MARSAD__flight_radar/{radar,tests}/**",                     "classification": "private_github" },
     { "path_glob": "{BADAN__body_health_system,MAL__financial_engine,HAJR__quarantine}/_index.json", "classification": "private_github" },
     { "path_glob": "{BADAN__body_health_system,MAL__financial_engine,HAJR__quarantine}/README.md", "classification": "private_github" },
-    { "path_glob": "log.md",                                                    "classification": "review_before_commit" }
+    { "path_glob": "log.md",                                                    "classification": "review_before_commit" },
+    { "path_glob": "TARIQ__career_radar/data/profile_cache.json",               "classification": "strict_local_maximum" },
+    { "path_glob": "TARIQ__career_radar/data/**",                               "classification": "strict_local" },
+    { "path_glob": "NIZAM__system/ledgers/CAREER_RADAR_LEDGER.jsonl",           "classification": "review_before_commit" }
   ]
 }

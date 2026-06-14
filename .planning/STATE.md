@@ -1,7 +1,21 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+last_updated: "2026-06-14T20:12:15.088Z"
+progress:
+  total_phases: 13
+  completed_phases: 0
+  total_plans: 6
+  completed_plans: 1
+  percent: 17
+---
+
 # STATE: TARIQ Career Radar v1
 
-**Last Updated:** 2026-06-14  
-**Current Milestone:** Roadmap created, ready for planning
+**Last Updated:** 2026-06-14T20:11:05Z  
+**Current Milestone:** Phase 1 execution — Plan 01-01 complete (Wave 0 TDD scaffold)
 
 ---
 
@@ -28,10 +42,12 @@
 
 ## Current Position
 
-**Phase:** 0 / 13 (Roadmap created, no phases planned yet)  
-**Plan:** None active  
-**Status:** Ready for Phase 1 planning  
-**Progress:** Roadmap complete, requirements fully mapped
+**Phase:** 1 / 13 (Foundation Data Model — in execution)  
+**Plan:** 01-01 complete; Plan 01-02 next  
+**Status:** Executing Phase 1  
+**Progress:** [██░░░░░░░░] 17% (1/6 Phase 1 plans complete)
+
+**Stopped At:** Completed 01-foundation-data-model/01-01-PLAN.md (Wave 0 TDD scaffold)
 
 **Work Completed:**
 - Analyzed 30 v1 requirements
@@ -39,6 +55,12 @@
 - Mapped 100% of requirements to phases (no orphans)
 - Documented success criteria (2–5 observable behaviors per phase)
 - Honored all non-negotiables as cross-cutting constraints
+- **[01-01]** Wave 0 TDD scaffold: 13 tests collectible + failing RED across 6 test files (DATA-01..05); conftest.py fixtures; TARIQ package roots; .gitignore data exclusions
+
+**Phase 1 Execution Decisions:**
+- try/except ImportError + _require_module() pattern for collectible-but-failing TDD tests (direct top-level imports cause collection errors, not test failures)
+- parents[2] from test files in TARIQ__career_radar/tests/ resolves to repo root (not parents[3] as plan interface specified)
+- test_profile_not_in_egress uses pytest.skip when profile_cache.json absent — correct TDD approach
 
 ---
 
@@ -89,6 +111,7 @@
 | On-demand trigger before unattended cron | Live data + privacy warrant human review | Locked |
 | Connect findings to MAL/TARIQ/MUNAWARA | Strategic intelligence, not generic alerts | Locked |
 | Validation as final phase + explicit gate | Safety bar before automation | Locked |
+| Phase 01-foundation-data-model P01 | 5 | 2 tasks | 11 files |
 
 ### Known Risks & Mitigations
 

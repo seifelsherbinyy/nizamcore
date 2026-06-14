@@ -9,11 +9,11 @@
 
 ### Foundation & Data Model
 
-- [ ] **DATA-01**: Canonical opportunity record schema exists (title, company, location, remote_status, salary_low/high, role_link, source, source_type, access_date, fit_score, growth_score, confidence, tags, next_action, profile_gap, run_id, observed_at, lane)
-- [ ] **DATA-02**: Profile seed (role keyword groups + target-role taxonomy from Seif's profile) is stored as a local-only file, never exported
-- [ ] **DATA-03**: A persistent seen-role store (SQLite or JSONL) survives across runs
-- [ ] **DATA-04**: Module folder/layout follows NIZAM conventions, mirroring the MARSAD radar module placement
-- [ ] **DATA-05**: A dedicated append-only Career Radar ledger is registered with NIZAM (TEMPLE/known-ledgers) and privacy path-rules are added to PRIVACY_CLASSIFICATION
+- [x] **DATA-01**: Canonical opportunity record schema exists (title, company, location, remote_status, salary_low/high, role_link, source, source_type, access_date, fit_score, growth_score, confidence, tags, next_action, profile_gap, run_id, observed_at, lane)
+- [x] **DATA-02**: Profile seed (role keyword groups + target-role taxonomy from Seif's profile) is stored as a local-only file, never exported
+- [x] **DATA-03**: A persistent seen-role store (SQLite or JSONL) survives across runs
+- [x] **DATA-04**: Module folder/layout follows NIZAM conventions, mirroring the MARSAD radar module placement
+- [x] **DATA-05**: A dedicated append-only Career Radar ledger is registered with NIZAM (TEMPLE/known-ledgers) and privacy path-rules are added to PRIVACY_CLASSIFICATION
 
 ### Sourcing
 
@@ -100,11 +100,11 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1: Foundation & Data Model | Pending |
-| DATA-02 | Phase 1: Foundation & Data Model | Pending |
-| DATA-03 | Phase 1: Foundation & Data Model | Pending |
-| DATA-04 | Phase 1: Foundation & Data Model | Pending |
-| DATA-05 | Phase 1: Foundation & Data Model | Pending |
+| DATA-01 | Phase 1: Foundation & Data Model | Complete |
+| DATA-02 | Phase 1: Foundation & Data Model | Complete |
+| DATA-03 | Phase 1: Foundation & Data Model | Complete |
+| DATA-04 | Phase 1: Foundation & Data Model | Complete |
+| DATA-05 | Phase 1: Foundation & Data Model | Complete |
 | SRC-01 | Phase 2: Tier 1 ATS Sourcing | Pending |
 | SRC-02 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
 | SRC-03 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |

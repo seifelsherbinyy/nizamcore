@@ -68,17 +68,11 @@ BADAN__body_health_system/sleep_recovery/
 BADAN__body_health_system/body_composition/
 BADAN__body_health_system/red_flags/
 
-# ---- Phase 3 family — strictest privacy ----
-AHEL__family_network/**
-!AHEL__family_network/README.md
-!AHEL__family_network/_index.json
-
 # ---- Phase 2/3 strict-local ledgers ----
 NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl
 NIZAM__system/ledgers/BATTLE_LEDGER.jsonl
 NIZAM__system/ledgers/FINANCE_LEDGER.jsonl
 NIZAM__system/ledgers/BODY_LEDGER.jsonl
-NIZAM__system/ledgers/FAMILY_LEDGER.jsonl
 
 # ---- nizamcore mirror (read-only fetch, not pushed back) ----
 NIZAM__system/_imported/
@@ -98,6 +92,10 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+NIZAM-secrets.json
+nizam-prod-oauthclient.json
+NIZAM__system/connectors/oauth-token.json
+NIZAM__system/connectors/oauth-client.json
 *token*
 *secret*
 *credentials*
@@ -118,6 +116,17 @@ MARSAD__flight_radar/**/__pycache__/
 MARSAD__flight_radar/*.pyc
 MARSAD__flight_radar/**/*.pyc
 MARSAD__flight_radar/.pytest_cache/
+
+# ---- TARIQ career radar — data and profile cache are strict_local / strict_local_maximum ----
+# profile_cache.json is strict_local_maximum (personal career profile, salary floor, visa status)
+# data/ directory contains seen-store SQLite and profile; never commit
+TARIQ__career_radar/data/
+# Python cache / build artifacts inside TARIQ
+TARIQ__career_radar/__pycache__/
+TARIQ__career_radar/**/__pycache__/
+TARIQ__career_radar/*.pyc
+TARIQ__career_radar/**/*.pyc
+TARIQ__career_radar/.pytest_cache/
 
 # ---- MAKHZAN archive: keep structure, but archived raw content respects upstream rules ----
 # (Snapshots inside MAKHZAN__archive may contain mirrored copies of strict-local files.
@@ -142,3 +151,17 @@ MAKHZAN__archive/*T*Z*/
 # (family / health / finance / geography). Treat as strict_local; keep local.
 # The validator CODE (fixtures/*.py) is still committed; only data stays off git.
 NIZAM__system/config/fixtures/*.jsonl
+
+# ---- P0 hermes-phase1-wiring additions (NIZAM_HERMES_GSD_PHASING_v1.0) ----
+**/secrets/
+**/.venv/
+strict_local/
+__pycache__/
+NIZAM__system/relay/.state/
+
+# ---- NIZAM_HERMES_LIVE_PRODUCTION_v2.1 PRE additions ----
+# OAuth client secret staged at repo root — NEVER commit
+*oauthclient*.json
+# Local virtualenv (not caught by **/.venv/) — never commit
+hermes-venv/
+*rclone-crypt*

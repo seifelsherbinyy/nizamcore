@@ -59,13 +59,15 @@ MARSAD__flight_radar/
 │   │   ├── discover.py        (Stage 1 — baseline collection)
 │   │   ├── monitor.py         (Stage 2 — daily delta)
 │   │   ├── alert.py           (Stage 3 — BUY_SIGNAL engine)
-│   │   └── forecast.py        (Stage 4 — trend model)
+│   │   ├── forecast.py        (Stage 4 — trend model)
+│   │   └── seed_import.py     (Historical seed import — bypasses cold-start)
 │   └── scheduler.py           (APScheduler 06:00 UTC daily)
 └── tests/
     ├── test_constraints.py
     ├── test_schema_store.py
     ├── test_alert.py
-    └── test_forecast.py
+    ├── test_forecast.py
+    └── test_seed_import.py
 
 NIZAM__system/
 ├── schemas/
@@ -109,12 +111,20 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Active default: SerpAPI** (`DATA_SOURCE=serpapi` in .env)
 
-ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
-- Google's ToS prohibits automated access without prior written permission
-- Bot detection will likely block headless browser automation within 24 hours
-- Use only if you have reviewed the ToS and accept the risk
+SerpAPI proxies the Google Flights endpoint and handles CAPTCHAs, so no
+browser automation is required. Set `SERPAPI_KEY` in `.env` — free tier
+is sufficient for daily monitoring at this route count.
+
+Source status as of 2025:
+
+| Source | Status | Notes |
+|---|---|---|
+| SerpAPI (Google Flights) | **Active default** | Works reliably; no ToS issues |
+| Amadeus for Developers | Deprecated | Amadeus developer portal shut down July 2025 |
+| ITA Matrix | Avoid | Google ToS prohibits automated access; bot detection ~24 h |
+| Kiwi Tequila | Invitation-only | Closed to new partners as of 2025 |
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
@@ -123,8 +133,12 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum
 pip install -r requirements.txt
+
+# Optional: import historical prices to bypass the 7-observation cold start
+python -m radar.main seed-import --file prices.csv
+python -m radar.main seed-import --template seed_template.csv  # write example CSV
 
 # Run baseline collection (Stage 1 — first time only)
 python -m radar.main discover
@@ -145,20 +159,99 @@ python -m radar.main run-all
 python -m radar.main schedule
 ```
 
+## Historical Price Seed Research
+
+The forecast model requires ≥ 7 observations for MEDIUM confidence and ≥ 30 for HIGH.
+Without seed data the pipeline stays in LOW-confidence (BUY_SIGNAL hard-gated off) for
+the first week of live monitoring. `seed-import` ingests historical data to bypass this.
+
+### Viable Sources for CAI → USA Historical Prices
+
+**Google Flights price calendar (manual export)**
+
+Google Flights shows a ±3-month price calendar on individual route searches. For each
+`CAI → DESTINATION` pair in your target window, open the price calendar view and note the
+lowest Business/Premium Economy fare shown per week. Export to a CSV manually. This is
+the most reliable free source because the data comes directly from Google's index.
+
+Steps:
+1. Go to flights.google.com, set CAI → destination, cabin = Business (or Premium Economy)
+2. Click the price calendar icon (grid view)
+3. Screenshot or manually record fare + date pairs for the Mar–Sep 2027 window
+4. Fill in `seed_template.csv` (generate with `python -m radar.main seed-import --template out.csv`)
+5. Set `data_quality=estimated` for calendar prices (they show range midpoints, not exact quotes)
+
+**Hopper**
+
+Hopper's "Watch a trip" feature shows a 12-month price history chart per route. CAI routes
+may have limited coverage depending on the destination. Hopper does not provide data export;
+you must read prices from the chart visually. Set `data_quality=estimated`.
+
+**Kayak Price Forecast / Explore**
+
+Kayak shows historical price trends on the Explore map and on individual search results.
+Data granularity is weekly. Coverage for CAI is inconsistent; Business cabin data is often
+absent for specific carrier/date combos. Read from chart, set `data_quality=estimated`.
+
+**Manual agency quotes**
+
+If you have quotes from a travel agent covering the target window, these are the highest
+quality seed data. Set `data_quality=confirmed` for exact quoted prices. Include the
+carrier, routing, cabin, and outbound/return dates precisely.
+
+### CSV Seed Format
+
+Required columns:
+```
+origin, destination, carrier, cabin, outbound_date, return_date, price_usd,
+outbound_duration_hours, return_duration_hours, outbound_stops, return_stops,
+outbound_routing, return_routing
+```
+
+Optional columns: `price_egp`, `price_eur`, `data_quality` (defaults to `estimated`)
+
+Generate a template with:
+```bash
+python -m radar.main seed-import --template seed_template.csv
+```
+
+### Importing
+
+```bash
+# Dry run — validate and count without writing
+python -m radar.main seed-import --file prices.csv --dry-run
+
+# Live import
+python -m radar.main seed-import --file prices.csv
+
+# JSON format
+python -m radar.main seed-import --file prices.json --format json
+
+# Abort on first parse error instead of skipping
+python -m radar.main seed-import --file prices.csv --strict
+```
+
+All records are filtered through the routing constraint engine before storage.
+Economy cabin, flights > 30 hours, and dates outside the travel window are silently dropped.
+Importing the same file twice is safe — the store is append-only and does not deduplicate.
+
+---
+
 ## SWAPPABLE_DEFAULT REGISTRY
 
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
-| Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
+| Primary source | SerpAPI | Any source in `sources/` | Set `DATA_SOURCE=<name>` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
-| Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |
-| Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
+| Scheduler | APScheduler | cron / GitHub Actions | See `.github/workflows/marsad_monitor.yml` |
+| Alert delivery | Console + JSON file | Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
 | Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary |
 
 ## Privacy
 
-Framework code: `private_github` (committed)
-Data files (`data/`, `alerts/`): `strict_local` (never committed — gitignored)
-Credentials: `.env` — strict_local (never committed)
+Framework code (`radar/`): `private_github` (committed)
+Price data (`data/flight_prices.json`): `private_github` (committed — price history, no personal data)
+Backups (`data/backups/`): `strict_local` (gitignored — redundant copies)
+Alert log (`alerts/`): `strict_local` (gitignored)
+Credentials (`.env`): `strict_local` (never committed)

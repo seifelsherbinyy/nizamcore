@@ -2,45 +2,53 @@ name: MARSAD Daily Monitor
 
 on:
   schedule:
-    # 06:00 UTC daily — matches APScheduler default in radar/config.py
+    # 06:00 UTC daily — matches SCHEDULER_HOUR=6 in radar/config.py
     - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       stage:
-        description: "Stage to run: monitor | discover | forecast | alert | run-all"
+        description: "Stage: monitor | discover | alert | forecast | run-all"
         required: false
-        default: monitor
+        default: run-all
 
 permissions:
   contents: write
 
 jobs:
   monitor:
-    name: Run MARSAD pipeline stage
+    name: MARSAD pipeline
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: MARSAD__flight_radar/requirements.txt
 
       - name: Install dependencies
-        run: pip install requests python-dotenv pydantic rich
-        working-directory: MARSAD__flight_radar
-
-      - name: Write .env from secrets
         working-directory: MARSAD__flight_radar
         run: |
-          cat > .env <<EOF
+          pip install \
+            requests \
+            python-dotenv \
+            pydantic \
+            rich \
+            pandas \
+            numpy \
+            google-search-results
+
+      - name: Write .env from repository secrets
+        working-directory: MARSAD__flight_radar
+        run: |
+          cat > .env <<'EOF'
           DATA_SOURCE=serpapi
           SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
           SERPAPI_PRIORITY_ONLY=false
@@ -58,20 +66,21 @@ jobs:
           LOG_LEVEL=INFO
           EOF
 
-      - name: Run stage
+      - name: Run MARSAD pipeline stage
         working-directory: MARSAD__flight_radar
         run: |
-          STAGE="${{ github.event.inputs.stage || 'monitor' }}"
+          STAGE="${{ github.event.inputs.stage || 'run-all' }}"
+          echo "Running stage: $STAGE"
           python -m radar.main "$STAGE"
 
-      - name: Commit updated data store
+      - name: Commit updated price store
         run: |
-          git config user.name "MARSAD"
+          git config user.name "MARSAD[bot]"
           git config user.email "noreply@github.com"
           git add MARSAD__flight_radar/data/flight_prices.json
           if git diff --cached --quiet; then
-            echo "No changes to store — nothing to commit"
+            echo "No price changes — nothing to commit"
           else
-            git commit -m "marsad: daily monitor $(date -u +%Y-%m-%d)"
+            git commit -m "marsad: price snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             git push
           fi

@@ -3,11 +3,20 @@
 Wave 0 (TDD scaffold): fixtures are stable contracts; implementation plans
 must satisfy them.  These fixtures do NOT import from TARIQ__career_radar.radar
 so conftest loads cleanly even before implementation exists.
+
+Wave 1 additions (Phase 2, Plan 02-01):
+  - fixtures_dir: path to tests/fixtures/
+  - mock_*_response: load recorded ATS JSON fixtures
+  - fake_requests_get: factory for injecting fake HTTP (no network)
 """
 from __future__ import annotations
+import json
 import sys
+import unittest.mock
 import uuid
 from pathlib import Path
+
+import requests
 
 # Ensure repo root is on sys.path for cross-module imports
 _REPO = Path(__file__).resolve().parents[1]
@@ -89,3 +98,72 @@ def sample_profile() -> dict:
             "preferred_timezones": ["UTC-5", "UTC-8"],
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 additions — fake-HTTP transport + ATS fixture loaders
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def fixtures_dir() -> Path:
+    """Return the absolute path to TARIQ__career_radar/tests/fixtures/."""
+    return Path(__file__).parent / "tests" / "fixtures"
+
+
+@pytest.fixture
+def mock_greenhouse_response(fixtures_dir: Path) -> dict:
+    """Load the recorded Greenhouse API response from disk."""
+    with open(fixtures_dir / "greenhouse_sample_response.json") as fh:
+        return json.load(fh)
+
+
+@pytest.fixture
+def mock_lever_response(fixtures_dir: Path) -> list:
+    """Load the recorded Lever API response from disk."""
+    with open(fixtures_dir / "lever_sample_response.json") as fh:
+        return json.load(fh)
+
+
+@pytest.fixture
+def mock_ashby_response(fixtures_dir: Path) -> dict:
+    """Load the recorded Ashby API response from disk."""
+    with open(fixtures_dir / "ashby_sample_response.json") as fh:
+        return json.load(fh)
+
+
+@pytest.fixture
+def mock_workable_response(fixtures_dir: Path) -> dict:
+    """Load the recorded Workable API response from disk."""
+    with open(fixtures_dir / "workable_sample_response.json") as fh:
+        return json.load(fh)
+
+
+@pytest.fixture
+def fake_requests_get():
+    """Return a factory that creates fake requests.get callables.
+
+    Usage in tests:
+        monkeypatch.setattr(requests, "get", fake_requests_get(200, my_data))
+        monkeypatch.setattr(requests, "get",
+                            fake_requests_get(raise_exc=requests.Timeout()))
+
+    The factory never makes a real network call — all responses are
+    constructed from the provided status_code and json_data arguments.
+    """
+    def make_fake_get(status_code: int = 200, json_data=None, raise_exc=None):
+        def fake_get(*args, **kwargs):
+            if raise_exc is not None:
+                raise raise_exc
+            resp = unittest.mock.MagicMock()
+            resp.status_code = status_code
+            resp.json.return_value = json_data if json_data is not None else {}
+            if status_code < 400:
+                resp.raise_for_status.side_effect = None
+            else:
+                resp.raise_for_status.side_effect = requests.exceptions.HTTPError(
+                    f"{status_code}"
+                )
+            return resp
+        return fake_get
+
+    return make_fake_get

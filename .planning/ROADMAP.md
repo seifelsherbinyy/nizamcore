@@ -67,7 +67,7 @@ Plans:
 3. API errors (connection failures, rate limits, missing endpoints) are logged to blocked-sources list and do not abort the run
 4. A run with zero sources returning results degrades gracefully (reports zero opportunities, marks sources as blocked, continues to next phase)
 
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
 - [ ] 02-01-PLAN.md — Wave 1: TDD scaffold (11 failing tests, fixtures, fake-HTTP conftest)
@@ -273,7 +273,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
-| 2. Tier 1 ATS Sourcing | 0/? | Not started | — |
+| 2. Tier 1 ATS Sourcing | 1/4 | In Progress|  |
 | 3. Tier 2 RSS & Manual Sourcing | 0/? | Not started | — |
 | 4. Deduplication Engine | 0/? | Not started | — |
 | 5. Scoring Engine | 0/? | Not started | — |

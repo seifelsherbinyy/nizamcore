@@ -97,15 +97,6 @@
       "scaffolded": true
     },
     {
-      "path": "AHEL__family_network",
-      "phase": 3,
-      "symbol": "AHEL",
-      "meaning_ar": "family/kin",
-      "privacy": "strict_local_maximum",
-      "registers": "_index.json",
-      "scaffolded": true
-    },
-    {
       "path": "INTAJ__output_engine",
       "phase": 2,
       "symbol": "INTAJ",
@@ -186,6 +177,18 @@
       "registers": "_index.json",
       "scaffolded": true,
       "live": true
+    },
+    {
+      "path": "TARIQ__career_radar",
+      "phase": 1,
+      "symbol": "TARIQ",
+      "meaning_ar": "knocker / morning star — career radar module",
+      "privacy": "private_github",
+      "module": "TARIQ_CAREER_RADAR",
+      "description": "Career opportunity radar — Remote USD lane",
+      "registers": "_index.json",
+      "scaffolded": true,
+      "status": "scaffolded"
     }
   ]
 }

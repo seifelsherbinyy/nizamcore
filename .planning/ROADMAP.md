@@ -9,7 +9,8 @@
 
 ## Phases
 
-- [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration (completed 2026-06-14)
+- [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration
+ (completed 2026-06-14)
 - [ ] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling
 - [ ] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering
 - [ ] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee
@@ -66,7 +67,13 @@ Plans:
 3. API errors (connection failures, rate limits, missing endpoints) are logged to blocked-sources list and do not abort the run
 4. A run with zero sources returning results degrades gracefully (reports zero opportunities, marks sources as blocked, continues to next phase)
 
-**Plans:** TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Wave 1: TDD scaffold (11 failing tests, fixtures, fake-HTTP conftest)
+- [ ] 02-02-PLAN.md — Wave 2: BaseSource interface + GreenhouseSource + LeverSource + seed config
+- [ ] 02-03-PLAN.md — Wave 2: AshbySource + WorkableSource connectors
+- [ ] 02-04-PLAN.md — Wave 3: run_fetch orchestrator + normalization + blocked-sources manifest
 
 ---
 

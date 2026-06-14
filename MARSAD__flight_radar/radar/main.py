@@ -3,15 +3,16 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
-  discover   — Stage 1: baseline collection (run once on init)
-  monitor    — Stage 2: daily delta
-  alert      — Stage 3: price drop signal detection
-  forecast   — Stage 4: trend model update
-  run-all    — Run all four stages in sequence
-  schedule   — Start APScheduler daemon (06:00 UTC daily)
-  dashboard  — Live executive dashboard at http://localhost:7329
-  status     — Print current store summary
-  validate   — Validate credentials and configuration
+  discover     — Stage 1: baseline collection (run once on init)
+  monitor      — Stage 2: daily delta
+  alert        — Stage 3: price drop signal detection
+  forecast     — Stage 4: trend model update
+  run-all      — Run all four stages in sequence
+  seed-import  — Import historical prices from CSV/JSON to bootstrap forecasting
+  schedule     — Start APScheduler daemon (06:00 UTC daily)
+  dashboard    — Live executive dashboard at http://localhost:7329
+  status       — Print current store summary
+  validate     — Validate credentials and configuration
 
 Usage:
   cd MARSAD__flight_radar
@@ -125,6 +126,25 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed_import(args: argparse.Namespace) -> int:
+    from radar.stages.seed_import import run_seed_import, generate_seed_template
+    if args.template:
+        path = generate_seed_template(args.template)
+        print(f"\nSeed template written to: {path}")
+        return 0
+    if not args.file:
+        print("Error: --file is required (or use --template to generate a CSV template)")
+        return 1
+    stats = run_seed_import(
+        file_path=args.file,
+        fmt=args.format,
+        dry_run=args.dry_run,
+        skip_invalid=not args.strict,
+    )
+    print(f"\nSEED_IMPORT: {stats}")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     missing = validate_credentials()
     if missing:
@@ -186,6 +206,18 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed-import
+    p_seed = subparsers.add_parser(
+        "seed-import",
+        help="Import historical price observations from CSV or JSON to bootstrap forecasting",
+    )
+    p_seed.add_argument("--file", help="Path to CSV or JSON seed file")
+    p_seed.add_argument("--format", choices=["csv", "json"], default="csv", help="Seed file format (default: csv)")
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate and count without writing")
+    p_seed.add_argument("--strict", action="store_true", help="Abort on first parse error (default: skip and continue)")
+    p_seed.add_argument("--template", metavar="PATH", help="Write a CSV template to PATH and exit")
+    p_seed.set_defaults(func=cmd_seed_import)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

@@ -195,7 +195,7 @@
         },
         "source": {
           "type": "string",
-          "enum": ["amadeus", "ita_matrix", "kiwi", "google_flights", "manual", "historical_seed"]
+          "enum": ["serpapi", "amadeus", "ita_matrix", "kiwi", "google_flights", "manual", "historical_seed"]
         },
         "delta_from_previous_usd": {
           "type": ["number", "null"],

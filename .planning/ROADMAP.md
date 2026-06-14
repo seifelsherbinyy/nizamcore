@@ -9,7 +9,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration
+- [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration (completed 2026-06-14)
 - [ ] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling
 - [ ] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering
 - [ ] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee
@@ -41,7 +41,7 @@
 4. Module folder structure follows NIZAM conventions (mirroring MARSAD placement)
 5. Career Radar ledger is registered in NIZAM/TEMPLE/known-ledgers with privacy path-rules added to PRIVACY_CLASSIFICATION
 
-**Plans:** 5/6 plans executed
+**Plans:** 6/6 plans complete
 
 Plans:
 - [ ] 01-01-PLAN.md — Wave 0: Test scaffold (12 failing tests across all DATA-01..05 requirements)
@@ -265,7 +265,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Model | 5/6 | In Progress|  |
+| 1. Foundation & Data Model | 6/6 | Complete   | 2026-06-14 |
 | 2. Tier 1 ATS Sourcing | 0/? | Not started | — |
 | 3. Tier 2 RSS & Manual Sourcing | 0/? | Not started | — |
 | 4. Deduplication Engine | 0/? | Not started | — |

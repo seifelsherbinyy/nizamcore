@@ -20,11 +20,10 @@
     { "name": "body_signal",         "phase": 2, "path": "schemas/body_signal.schema.json",         "describes": "BADAN daily health metric snapshot", "scaffolded": true },
     { "name": "body_weekly_review",  "phase": 2, "path": "schemas/body_weekly_review.schema.json",  "describes": "BADAN trend-based weekly review", "scaffolded": true },
     { "name": "body_red_flag",       "phase": 2, "path": "schemas/body_red_flag.schema.json",       "describes": "BADAN symptom-triggers-professional-review", "scaffolded": true },
-    { "name": "family_person",       "phase": 3, "path": "schemas/family_person.schema.json",       "describes": "AHEL person card", "scaffolded": true, "live": true },
-    { "name": "family_support_event","phase": 3, "path": "schemas/family_support_event.schema.json","describes": "AHEL support-given event", "scaffolded": true, "live": true },
     { "name": "pfa_canonical_state", "phase": 2, "path": "schemas/pfa_canonical_state.schema.json", "describes": "PFA single source of truth — income, expenses, debt architecture, cash flow, runway", "live": true },
     { "name": "pfa_debt_event",      "phase": 2, "path": "schemas/pfa_debt_event.schema.json",      "describes": "PFA append-only debt state change ledger entry", "live": true },
     { "name": "pfa_payment_event",   "phase": 2, "path": "schemas/pfa_payment_event.schema.json",   "describes": "PFA append-only payment record ledger entry", "live": true },
-    { "name": "pfa_learning",        "phase": 2, "path": "schemas/pfa_learning.schema.json",        "describes": "PFA append-only financial life learning entry", "live": true }
+    { "name": "pfa_learning",        "phase": 2, "path": "schemas/pfa_learning.schema.json",        "describes": "PFA append-only financial life learning entry", "live": true },
+    { "name": "career_opportunity_record", "phase": 1, "path": "schemas/career_opportunity_record.schema.json", "describes": "Individual career opportunity record for TARIQ Career Radar: scoring, matching, salary provenance, evidence fields", "live": false, "scaffolded": true }
   ]
 }

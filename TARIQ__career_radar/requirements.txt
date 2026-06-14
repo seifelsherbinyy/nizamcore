@@ -1,0 +1,1 @@
+# Phase 1: stdlib only. rapidfuzz added in Phase 4.

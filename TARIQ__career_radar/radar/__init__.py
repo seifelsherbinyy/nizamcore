@@ -1,1 +1,2 @@
-# TARIQ__career_radar.radar package root
+"""TARIQ Career Radar — core pipeline package."""
+from __future__ import annotations

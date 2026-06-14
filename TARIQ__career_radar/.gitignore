@@ -1,0 +1,16 @@
+# TARIQ Career Radar — gitignore
+# Blocks all data files (strict_local / strict_local_maximum) from git.
+
+# Data directory — never commit any data files
+data/
+data/*.sqlite
+data/*.jsonl
+data/profile_cache.json
+data/backups/
+
+# Python artifacts
+*.pyc
+__pycache__/
+
+# Secrets
+.env

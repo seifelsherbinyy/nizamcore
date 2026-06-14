@@ -1,0 +1,11 @@
+{
+  "module": "TARIQ_CAREER_RADAR",
+  "name": "TARIQ Career Radar",
+  "phase": 1,
+  "privacy_level": "private_github",
+  "description": "Career opportunity radar — Remote USD lane. Fetches, deduplicates, scores, and delivers evidence-backed opportunity intelligence.",
+  "persona": "NIZAM__system/personas/TARIQ.json",
+  "owner": "Tariq",
+  "created": "2026-06-14",
+  "folder": "TARIQ__career_radar/"
+}

@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/schemas/career_opportunity_record.schema.json",
+  "title": "Career Opportunity Record (TARIQ Career Radar)",
+  "description": "Individual job opportunity record with scoring, matching, salary provenance, and evidence fields.",
+  "type": "object",
+  "required": [
+    "opportunity_id",
+    "title",
+    "company",
+    "location",
+    "remote_status",
+    "source",
+    "source_type",
+    "source_url",
+    "access_date",
+    "fit_score",
+    "growth_score",
+    "confidence",
+    "tags",
+    "salary_usd_low",
+    "salary_usd_high",
+    "salary_evidence_type",
+    "salary_confidence",
+    "observed_at",
+    "lane",
+    "data_quality"
+  ],
+  "properties": {
+    "opportunity_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier (UUIDv4)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title (normalized, e.g. 'AI Operations Manager')"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name (normalized, e.g. 'Outlier.ai')"
+    },
+    "location": {
+      "type": "string",
+      "description": "Work location (normalized; 'Remote', 'Cairo, Egypt', 'San Francisco, CA', etc.)"
+    },
+    "remote_status": {
+      "type": "string",
+      "enum": ["fully_remote", "hybrid_remote_preferred", "hybrid_onsite_required", "onsite_only"],
+      "description": "Remote work classification"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source name (e.g. 'outlier', 'remotive', 'upwork', 'greenhouse')"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": ["api", "rss_feed", "web_scrape", "job_board", "ats", "manual"],
+      "description": "How the opportunity was sourced"
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Direct link to the job posting (for evidence + reference)"
+    },
+    "access_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when posting was accessed (e.g. '2026-06-14T12:30:00Z')"
+    },
+    "fit_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Profile fit score (0-100) based on role keyword match + required skills"
+    },
+    "growth_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Growth potential score (0-100) based on role leverage + company + skill development"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"],
+      "description": "Overall confidence in opportunity record (aggregate of fit + salary + data_quality)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "APPLY_NOW",
+          "REFERRAL_FIRST",
+          "WATCHLIST",
+          "PROFILE_GAP",
+          "LOW_CONFIDENCE",
+          "SIDE_INCOME",
+          "RELOCATION_BET",
+          "USD_CASHFLOW"
+        ]
+      },
+      "description": "Action tags (assigned Phase 4+; empty array in Phase 1)"
+    },
+    "salary_usd_low": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Salary range low in USD (null if not disclosed)"
+    },
+    "salary_usd_high": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Salary range high in USD (null if not disclosed)"
+    },
+    "salary_evidence_type": {
+      "type": "string",
+      "enum": [
+        "employer_posted",
+        "recruiter_stated",
+        "guide_based",
+        "community_reported",
+        "estimated",
+        "not_disclosed"
+      ],
+      "description": "Provenance of salary data (credibility ranked)"
+    },
+    "salary_confidence": {
+      "type": "string",
+      "enum": ["HIGH", "MEDIUM", "LOW"],
+      "description": "Confidence in salary accuracy (HIGH: employer-posted; MEDIUM: guide/recruiter; LOW: community-only)"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when this record was created (e.g. '2026-06-14T12:30:00Z')"
+    },
+    "lane": {
+      "type": "string",
+      "enum": ["Remote USD", "GCC", "Europe"],
+      "description": "Career lane / geographic focus (v1 = Remote USD only)"
+    },
+    "data_quality": {
+      "type": "string",
+      "enum": ["confirmed", "estimated", "partial"],
+      "description": "Data quality flag: 'confirmed' (all from API), 'partial' (missing salary/company), 'estimated' (inferred)"
+    },
+    "role_category": {
+      "type": "string",
+      "enum": [
+        "AI_OPERATIONS",
+        "AI_RESEARCH",
+        "LLM_EVALUATION",
+        "DATA_SCIENCE",
+        "DATA_ANNOTATION",
+        "BUSINESS_ANALYST",
+        "COMMERCIAL_PLANNING",
+        "VENDOR_MANAGEMENT",
+        "CATEGORY_MANAGEMENT",
+        "E_COMMERCE",
+        "GROWTH_ANALYST",
+        "BI_ANALYST",
+        "PROJECT_COORDINATOR"
+      ],
+      "description": "Role category from target-role taxonomy (e.g. 'AI_OPERATIONS', 'DATA_SCIENCE')"
+    },
+    "salary_usd_annual": {
+      "type": ["number", "null"],
+      "description": "Annual equivalent if hourly rate was provided"
+    },
+    "company_strength_signal": {
+      "type": ["string", "null"],
+      "enum": ["strong_tier1", "strong_tier2", "emerging", "unknown", null],
+      "description": "Company stability signal (where available)"
+    },
+    "visa_feasibility": {
+      "type": "string",
+      "enum": [
+        "visa_sponsored_likely",
+        "visa_sponsored_unclear",
+        "visa_not_sponsored",
+        "not_applicable"
+      ],
+      "description": "Visa sponsorship feasibility for Egyptian applicant"
+    },
+    "profile_gap": {
+      "type": ["object", "null"],
+      "description": "Gap analysis vs profile (null in Phase 1)",
+      "properties": {
+        "missing_skills": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "required_cert": { "type": ["string", "null"] },
+        "visa_constraint": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      }
+    },
+    "next_action": {
+      "type": ["string", "null"],
+      "description": "Suggested next step (assigned Phase 4+)"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Identifies which radar run created this record (for traceability)"
+    },
+    "is_duplicate_of": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Opportunity ID of earlier record if this is a duplicate (null for new)"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Free-form notes from sourcing or manual review"
+    }
+  }
+}

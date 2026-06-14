@@ -41,7 +41,15 @@
 4. Module folder structure follows NIZAM conventions (mirroring MARSAD placement)
 5. Career Radar ledger is registered in NIZAM/TEMPLE/known-ledgers with privacy path-rules added to PRIVACY_CLASSIFICATION
 
-**Plans:** TBD
+**Plans:** 6 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Wave 0: Test scaffold (12 failing tests across all DATA-01..05 requirements)
+- [ ] 01-02-PLAN.md — Wave 1: JSON Schema definition for opportunity record (DATA-01)
+- [ ] 01-03-PLAN.md — Wave 1: Module folder layout + NIZAM registration (DATA-04)
+- [ ] 01-04-PLAN.md — Wave 2: Profile seed file, strict_local_maximum (DATA-02)
+- [ ] 01-05-PLAN.md — Wave 2: SQLite dedup engine + normalization (DATA-03)
+- [ ] 01-06-PLAN.md — Wave 3: Ledger registration ceremony in 3 live NIZAM files (DATA-05)
 
 ---
 

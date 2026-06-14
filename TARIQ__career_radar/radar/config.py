@@ -11,6 +11,8 @@ from pathlib import Path
 
 MODULE_ROOT = Path(__file__).resolve().parent.parent
 PROFILE_CACHE_PATH = MODULE_ROOT / "data" / "profile_cache.json"
+# Private alias used by load_profile_seed() so tests can monkeypatch it cleanly.
+_PROFILE_PATH = PROFILE_CACHE_PATH
 
 
 def load_profile_seed() -> dict:
@@ -22,12 +24,12 @@ def load_profile_seed() -> dict:
     Returns:
         dict with at least: role_keywords, target_roles, constraints
     """
-    if not PROFILE_CACHE_PATH.exists():
+    if not _PROFILE_PATH.exists():
         raise ValueError(
-            f"Profile seed not found at {PROFILE_CACHE_PATH}. "
+            f"Profile seed not found at {_PROFILE_PATH}. "
             "Create it before running (see README.md for shape)."
         )
-    with PROFILE_CACHE_PATH.open("r", encoding="utf-8") as fh:
+    with _PROFILE_PATH.open("r", encoding="utf-8") as fh:
         profile = json.load(fh)
     required = {"role_keywords", "target_roles", "constraints"}
     missing = required - set(profile.keys())

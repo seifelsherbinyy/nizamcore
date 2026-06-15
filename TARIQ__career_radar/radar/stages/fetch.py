@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml  # PyYAML — already pinned in requirements.txt
@@ -28,7 +28,10 @@ from radar.sources.greenhouse_source import GreenhouseSource
 from radar.sources.lever_source import LeverSource
 from radar.sources.ashby_source import AshbySource
 from radar.sources.workable_source import WorkableSource
+from radar.sources.rss_source import RemotiveSource, WeWorkRemotelySource, RemoteOKSource
+from radar.sources.manual_import_source import ManualImportSource
 from radar.sources.base import OpportunityRaw
+from radar.stages.filter import run_filter
 from radar.dedup_engine import normalize_title, normalize_company, normalize_location
 
 logger = logging.getLogger(__name__)
@@ -124,7 +127,7 @@ def normalize_opportunity(raw: OpportunityRaw, run_id: str) -> dict:
         Dict conforming to career_opportunity_record.schema.json (all required fields
         present).  opportunity_id is a fresh UUIDv4 per record.
     """
-    now_iso = datetime.utcnow().isoformat() + "Z"
+    now_iso = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
     has_salary = bool(raw.salary_usd_low)
 
     # Extract remotePolicy from raw_payload (Ashby provides this field)
@@ -189,6 +192,31 @@ def _load_ats_config() -> dict:
     }
 
 
+def _load_tier2_config() -> dict:
+    """Load tier_2_rss and manual_import config from config_sources.yaml.
+
+    Returns dict with tier_2_rss, manual_import, role_filter keys.
+    Falls back to all-disabled if file not found.
+    """
+    config_path = MODULE_ROOT / "radar" / "config_sources.yaml"
+    if config_path.exists():
+        try:
+            with open(config_path, encoding="utf-8") as fh:
+                full = yaml.safe_load(fh) or {}
+                return {
+                    "tier_2_rss": full.get("tier_2_rss", {"enabled": False}),
+                    "manual_import": full.get("manual_import", {"enabled": False}),
+                    "role_filter": full.get("role_filter", {"enabled": False}),
+                }
+        except Exception as exc:
+            logger.warning("Failed to load tier2 config: %s — tier 2 disabled", exc)
+    return {
+        "tier_2_rss": {"enabled": False},
+        "manual_import": {"enabled": False},
+        "role_filter": {"enabled": False},
+    }
+
+
 # ---------------------------------------------------------------------------
 # Source instance builder — supports both inline and YAML-based configs
 # ---------------------------------------------------------------------------
@@ -238,6 +266,41 @@ def _build_sources_from_inline(constraints: dict) -> list:
     return sources
 
 
+def _build_tier2_sources(tier2_cfg: dict) -> list:
+    """Build Tier 2 source instances from tier2 config section.
+
+    Returns list of (source_instance, board_identifier) tuples for enabled sources.
+    Mirrors the _build_sources_from_yaml() pattern.
+    """
+    sources = []
+    rss_cfg = tier2_cfg.get("tier_2_rss", {})
+
+    if rss_cfg.get("enabled", False):
+        rem_cfg = rss_cfg.get("remotive", {})
+        if rem_cfg.get("enabled", False):
+            sources.append((RemotiveSource(rem_cfg), rem_cfg.get("feed_url", "")))
+
+        wwr_cfg = rss_cfg.get("weworkremotely", {})
+        if wwr_cfg.get("enabled", False):
+            sources.append((WeWorkRemotelySource(wwr_cfg), wwr_cfg.get("feed_url", "")))
+
+        rok_cfg = rss_cfg.get("remoteok", {})
+        if rok_cfg.get("enabled", False):
+            sources.append((RemoteOKSource(rok_cfg), rok_cfg.get("api_url", "")))
+
+    manual_cfg = tier2_cfg.get("manual_import", {})
+    if manual_cfg.get("enabled", False):
+        # Resolve import_file_path relative to MODULE_ROOT if not absolute
+        import_path = manual_cfg.get("import_file_path", "")
+        if import_path and not Path(import_path).is_absolute():
+            import_path = str(MODULE_ROOT / import_path)
+        cfg_with_abs = dict(manual_cfg)
+        cfg_with_abs["import_file_path"] = import_path
+        sources.append((ManualImportSource(cfg_with_abs), import_path))
+
+    return sources
+
+
 def _build_sources_from_yaml() -> list:
     """Build source instances from config_sources.yaml (CLI / production use).
 
@@ -279,6 +342,10 @@ def _build_sources_from_yaml() -> list:
             cfg["enabled"] = True
             src = WorkableSource(cfg)
             sources.append((src, cfg.get("account_subdomain", "")))
+
+    # Tier 2: RSS feeds + manual import (Phase 3)
+    tier2_cfg = _load_tier2_config()
+    sources.extend(_build_tier2_sources(tier2_cfg))
 
     return sources
 
@@ -364,19 +431,47 @@ def run_fetch(constraints: dict, run_id: str) -> dict:
                 "%s [%s]: crashed unexpectedly", source_instance.name, board_id
             )
 
+    # Apply role-keyword filter (SRC-06) — Stage 1.5
+    # Keeps only in-scope opportunities; out_of_scope logged for transparency
+    if not all_opportunities:
+        filter_result = {
+            "in_scope": [],
+            "out_of_scope": [],
+            "filter_summary": {
+                "total": 0,
+                "in_scope_count": 0,
+                "out_of_scope_count": 0,
+                "filter_rate": 0.0,
+            }
+        }
+        in_scope_opportunities = []
+        filter_summary = filter_result["filter_summary"]
+    else:
+        filter_result = run_filter(all_opportunities)
+        in_scope_opportunities = filter_result["in_scope"]
+        filter_summary = filter_result["filter_summary"]
+        if filter_summary.get("out_of_scope_count", 0) > 0:
+            logger.info(
+                "run_filter: %d out-of-scope opportunities excluded (%.1f%% pass rate)",
+                filter_summary["out_of_scope_count"],
+                100.0 * filter_summary.get("filter_rate", 0.0),
+            )
+
     # Determine run result
     if not blocked_sources:
         run_result = "success"
-    elif all_opportunities:
+    elif in_scope_opportunities:
         run_result = "partial_success"
     else:
         run_result = "failure"
 
     return {
-        "opportunities": all_opportunities,
+        "opportunities": in_scope_opportunities,
         "blocked_sources": blocked_sources,
+        "out_of_scope_opportunities": filter_result["out_of_scope"],
+        "filter_summary": filter_summary,
         "fetch_summary": {
-            "total_fetched": len(all_opportunities),
+            "total_fetched": len(in_scope_opportunities),
             "total_blocked_sources": len(blocked_sources),
             "run_result": run_result,
         },

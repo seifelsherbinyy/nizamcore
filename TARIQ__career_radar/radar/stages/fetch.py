@@ -33,6 +33,7 @@ from radar.sources.manual_import_source import ManualImportSource
 from radar.sources.base import OpportunityRaw
 from radar.stages.filter import run_filter
 from radar.stages.dedup import run_dedup_pass
+from radar.stages.score import run_scoring_pass
 from radar.dedup_engine import normalize_title, normalize_company, normalize_location, _DEFAULT_DB_PATH
 
 logger = logging.getLogger(__name__)
@@ -465,6 +466,9 @@ def run_fetch(constraints: dict, run_id: str) -> dict:
         in_scope_opportunities = deduped
     except Exception as exc:
         print(f"[DEDUP] WARNING: dedup pass failed ({exc}); returning raw results")
+
+    # Phase 5: score deduplicated opportunities
+    in_scope_opportunities = run_scoring_pass(in_scope_opportunities)
 
     # Determine run result
     if not blocked_sources:

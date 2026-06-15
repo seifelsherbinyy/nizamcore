@@ -11,7 +11,7 @@
 
 - [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration
  (completed 2026-06-14)
-- [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
+- [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
 - [ ] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering
 - [ ] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee
 - [ ] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties
@@ -90,7 +90,13 @@ Plans:
 3. All fetched opportunities are filtered to remote-USD AI/data/AI-ops/coordination roles matching Seif's role keyword groups
 4. Combined sources (Tier 1 + Tier 2) yield ≥5 distinct opportunities in a test run
 
-**Plans:** TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Wave 1: TDD scaffold (9 failing tests, 5 fixture files, conftest Phase-3 augmentation)
+- [ ] 03-02-PLAN.md — Wave 2: RSS connectors (RemotiveSource, WeWorkRemotelySource, RemoteOKSource) in rss_source.py
+- [ ] 03-03-PLAN.md — Wave 2: ManualImportSource + RoleKeywordFilter (manual_import_source.py + filter.py)
+- [ ] 03-04-PLAN.md — Wave 3: Wire Tier 2 sources + filter into run_fetch; config_sources.yaml additions; .gitignore
 
 ---
 
@@ -274,7 +280,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
-| 3. Tier 2 RSS & Manual Sourcing | 0/? | Not started | — |
+| 3. Tier 2 RSS & Manual Sourcing | 0/4 | In planning | — |
 | 4. Deduplication Engine | 0/? | Not started | — |
 | 5. Scoring Engine | 0/? | Not started | — |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |
@@ -287,6 +293,3 @@ Plans:
 | 13. Validation & Safety Sign-Off | 0/? | Not started | — |
 
 ---
-
-**Roadmap Status:** Ready for planning  
-**Next:** `/gsd:plan-phase 1` (Foundation & Data Model)

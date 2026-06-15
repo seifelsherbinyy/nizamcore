@@ -23,6 +23,12 @@ _REPO = Path(__file__).resolve().parents[1]
 if str(_REPO) not in sys.path:
     sys.path.insert(0, str(_REPO))
 
+# Ensure TARIQ__career_radar/ is on sys.path so that `radar.*` short imports
+# work inside test_sources.py (Wave 1/2 connectors use `radar.sources.*` paths).
+_TARIQ_PKG = Path(__file__).resolve().parent
+if str(_TARIQ_PKG) not in sys.path:
+    sys.path.insert(0, str(_TARIQ_PKG))
+
 import pytest
 
 

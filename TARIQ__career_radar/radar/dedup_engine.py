@@ -13,9 +13,17 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
+from rapidfuzz import fuzz
+
 # Default DB path (relative to module root: TARIQ__career_radar/)
 _MODULE_ROOT = Path(__file__).resolve().parent.parent
 _DEFAULT_DB_PATH = _MODULE_ROOT / "data" / "seen_roles.sqlite"
+
+# ---------------------------------------------------------------------------
+# Phase 4 constants (fuzzy dedup + freshness rule)
+# ---------------------------------------------------------------------------
+FUZZY_THRESHOLD: float = 0.88        # Minimum token_sort_ratio to flag as duplicate
+REPOST_FRESHNESS_DAYS: int = 30      # Days before a re-seen role is treated as new
 
 
 # ---------------------------------------------------------------------------
@@ -104,6 +112,87 @@ def compute_dedup_key(title: str, company: str, location: str) -> tuple[str, str
         normalize_title(title),
         normalize_company(company),
         normalize_location(location),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 functions: fuzzy dedup + freshness rule
+# ---------------------------------------------------------------------------
+
+
+def fuzzy_match_opportunities(
+    new_opp: dict,
+    candidates: list[dict],
+    threshold: float = FUZZY_THRESHOLD,
+) -> tuple[bool, float]:
+    """Check if new_opp title fuzzy-matches any candidate in this run.
+
+    Uses token_sort_ratio (handles word-order variants like "AI Ops Manager"
+    vs "Manager, AI Ops"). Fuzzy match is title-ONLY; company/location are
+    not compared (avoid false positives — see RESEARCH.md anti-pattern #3).
+
+    Args:
+        new_opp:    dict with at least "title" key
+        candidates: list of already-approved dicts from THIS run
+        threshold:  minimum score to consider a match (default FUZZY_THRESHOLD=0.88)
+
+    Returns:
+        (is_match: bool, best_score: float)
+        is_match=True if any candidate scored >= threshold
+    """
+    # Fuzzy title match only; company/location exact (see RESEARCH.md anti-pattern #3)
+    if not candidates:
+        return (False, 0.0)
+    title_new = normalize_title(new_opp.get("title", ""))
+    best_score = 0.0
+    for candidate in candidates:
+        title_cand = normalize_title(candidate.get("title", ""))
+        score = fuzz.partial_token_sort_ratio(title_new, title_cand) / 100.0
+        if score > best_score:
+            best_score = score
+        if best_score >= threshold:
+            return (True, best_score)
+    return (False, best_score)
+
+
+def is_fresh_repost(
+    first_seen_iso: str,
+    current_access_iso: str,
+    threshold_days: int = REPOST_FRESHNESS_DAYS,
+) -> bool:
+    """Return True if gap between first_seen and current_access >= threshold_days.
+
+    Used when check_or_add() finds a duplicate to decide whether the role is a
+    genuine repost (gap >= 30 days → surface as new) or still a duplicate (< 30 days).
+
+    Args:
+        first_seen_iso:     ISO 8601 string of when role was first stored (UTC)
+        current_access_iso: ISO 8601 string of current run's access time (UTC)
+        threshold_days:     Days required to treat re-sighting as new (default 30)
+
+    Returns:
+        True  → enough time has passed; treat as a new posting
+        False → within freshness window; suppress as duplicate
+    """
+    t_first = datetime.datetime.fromisoformat(first_seen_iso.replace("Z", "+00:00"))
+    t_current = datetime.datetime.fromisoformat(current_access_iso.replace("Z", "+00:00"))
+    gap_days = (t_current - t_first).days
+    return gap_days >= threshold_days
+
+
+# ---------------------------------------------------------------------------
+# run_dedup_pass — Wave 2 stub (implemented in Plan 04-03)
+# ---------------------------------------------------------------------------
+
+
+def run_dedup_pass(opportunities: list[dict], db_path: Path = _DEFAULT_DB_PATH) -> list[dict]:
+    """Deduplicate a batch of opportunities using DedupeEngine + fuzzy matching.
+
+    NOTE: This is a stub — full implementation in Plan 04-03 (Wave 2).
+    """
+    raise NotImplementedError(
+        "run_dedup_pass() is implemented in Plan 04-03. "
+        "This stub exists so Phase-4 symbols can be imported together."
     )
 
 

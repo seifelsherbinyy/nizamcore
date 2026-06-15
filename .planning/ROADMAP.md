@@ -13,7 +13,7 @@
  (completed 2026-06-14)
 - [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
 - [x] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering (completed 2026-06-15)
-- [ ] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee
+- [x] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee (completed 2026-06-15)
 - [ ] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties
 - [ ] **Phase 6: Salary & Confidence Discipline** - Tag salaries with provenance + confidence, avoid fabrication, ranges only when unclear
 - [ ] **Phase 7: Tagging & Profile Matching** - Assign 8 action tags, compute local profile fit, flag scams/unpaid, no raw data egress
@@ -113,7 +113,7 @@ Plans:
 3. Re-running the radar against the same sources does not re-surface already-seen roles; seen-store is consulted before including in results
 4. Freshness rule allows genuine reposts (same role posted >30 days after first seen) to surface as new
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 04-01-PLAN.md — Wave 1: TDD RED scaffold (6 failing tests, dedup_test_data.jsonl, Phase-4 conftest fixtures)
@@ -286,7 +286,7 @@ Plans:
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 3/4 | Complete    | 2026-06-15 |
-| 4. Deduplication Engine | 2/3 | In Progress|  |
+| 4. Deduplication Engine | 3/3 | Complete   | 2026-06-15 |
 | 5. Scoring Engine | 0/? | Not started | — |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |
 | 7. Tagging & Profile Matching | 0/? | Not started | — |

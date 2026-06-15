@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Completed 04-deduplication-engine/04-03-PLAN.md (Wave 2 impl: run_dedup_pass orchestrator; stages/dedup.py; wired into run_fetch; 9/9 dedup tests + 36/36 full suite GREEN; DEDUP-03)"
-last_updated: "2026-06-15T14:16:29.857Z"
+stopped_at: "Completed 05-scoring-engine/05-01-PLAN.md (Wave 0 TDD scaffold: 18 RED scoring tests; scoring_test_data.jsonl 8 records; 5 conftest fixtures; 36/36 prior tests GREEN; SCORE-01, SCORE-02)"
+last_updated: "2026-06-15T14:45:04.597Z"
 progress:
   total_phases: 13
   completed_phases: 4
-  total_plans: 17
-  completed_plans: 17
-  percent: 100
+  total_plans: 20
+  completed_plans: 18
+  percent: 90
 ---
 
 ---
@@ -61,9 +61,9 @@ progress:
 **Phase:** 1 / 13 (Foundation Data Model — in execution)  
 **Plan:** 01-01 complete; Plan 01-02 next  
 **Status:** Ready to plan
-**Progress:** [██████████] 100%
+**Progress:** [█████████░] 90%
 
-**Stopped At:** Completed 04-deduplication-engine/04-03-PLAN.md (Wave 2 impl: run_dedup_pass orchestrator; stages/dedup.py; wired into run_fetch; 9/9 dedup tests + 36/36 full suite GREEN; DEDUP-03)
+**Stopped At:** Completed 05-scoring-engine/05-01-PLAN.md (Wave 0 TDD scaffold: 18 RED scoring tests; scoring_test_data.jsonl 8 records; 5 conftest fixtures; 36/36 prior tests GREEN; SCORE-01, SCORE-02)
 
 **Work Completed:**
 - Analyzed 30 v1 requirements
@@ -143,6 +143,7 @@ progress:
 | Phase 04-deduplication-engine P01 | 154s | 2 tasks | 3 files |
 | Phase 04-deduplication-engine P02 | 145s | 2 tasks | 1 files |
 | Phase 04-deduplication-engine P03 | 278s | 2 tasks | 4 files |
+| Phase 05-scoring-engine P01 | 13min | 3 tasks | 3 files |
 
 ### Known Risks & Mitigations
 

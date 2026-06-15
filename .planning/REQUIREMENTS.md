@@ -32,8 +32,8 @@
 
 ### Scoring, Salary & Tagging
 
-- [ ] **SCORE-01**: Every opportunity receives a deterministic 0–100 score using weights: fit 25, salary upside 20, growth 15, visa/remote feasibility 10, company strength 10, referral/application leverage 10, freshness 5, side-income 5
-- [ ] **SCORE-02**: Scoring applies penalties for no-evidence, scam risk, unclear pay, severe skill mismatch, and exploitative unpaid work
+- [x] **SCORE-01**: Every opportunity receives a deterministic 0–100 score using weights: fit 25, salary upside 20, growth 15, visa/remote feasibility 10, company strength 10, referral/application leverage 10, freshness 5, side-income 5
+- [x] **SCORE-02**: Scoring applies penalties for no-evidence, scam risk, unclear pay, severe skill mismatch, and exploitative unpaid work
 - [ ] **SCORE-03**: Profile fit is computed locally against the profile seed (no raw profile data leaves the machine)
 - [ ] **SALARY-01**: Every salary claim is tagged with provenance (employer-posted / estimated / recruiter-stated / guide-based / community-reported) and a confidence level
 - [ ] **SALARY-02**: When salary evidence is unclear, confidence is marked low and no exact number is invented (ranges only, with methodology)
@@ -114,8 +114,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | DEDUP-01 | Phase 4: Deduplication Engine | Complete |
 | DEDUP-02 | Phase 4: Deduplication Engine | Complete |
 | DEDUP-03 | Phase 4: Deduplication Engine | Complete |
-| SCORE-01 | Phase 5: Scoring Engine | Pending |
-| SCORE-02 | Phase 5: Scoring Engine | Pending |
+| SCORE-01 | Phase 5: Scoring Engine | Complete |
+| SCORE-02 | Phase 5: Scoring Engine | Complete |
 | SCORE-03 | Phase 7: Tagging & Profile Matching | Pending |
 | SALARY-01 | Phase 6: Salary & Confidence Discipline | Pending |
 | SALARY-02 | Phase 6: Salary & Confidence Discipline | Pending |

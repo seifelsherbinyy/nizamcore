@@ -13,6 +13,11 @@ Wave 4 additions (Phase 4, Plan 04-01):
   - dedup_opp_pairs: loads dedup_test_data.jsonl, returns all records
   - dedup_fresh_record: returns a seen_roles-like row with first_seen 45 days ago
   - cross_source_batch: 4-item list with cross-source duplicate pairs
+
+Wave 4 additions (Phase 4, Plan 04-03):
+  - _isolate_dedup_db (autouse, session-scoped): redirects _DEFAULT_DB_PATH to a
+    temporary session directory so that tests never write to the production
+    seen_roles.sqlite and cross-test dedup contamination is eliminated.
 """
 from __future__ import annotations
 import datetime
@@ -36,6 +41,58 @@ if str(_TARIQ_PKG) not in sys.path:
     sys.path.insert(0, str(_TARIQ_PKG))
 
 import pytest
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 (Plan 04-03): isolate dedup DB so tests never pollute production
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(autouse=True)
+def _isolate_dedup_db(tmp_path: Path) -> None:
+    """Function-scoped autouse fixture: redirect _DEFAULT_DB_PATH to a per-test temp dir.
+
+    Without this, every call to run_fetch() in test_sources.py would write
+    fixture opportunities to the real data/seen_roles.sqlite. Tests that use
+    the same mock opportunity (e.g. "AI Operations Manager" at "Acme Corp")
+    would suppress each other via the dedup seen-store.
+
+    This fixture patches the module-level _DEFAULT_DB_PATH binding in both
+    dedup_engine and stages/fetch so every test gets a clean, isolated SQLite DB.
+    """
+    test_db_path = tmp_path / "seen_roles_test.sqlite"
+    _original_de_path = None
+    _original_sf_path = None
+
+    try:
+        import radar.dedup_engine as _de
+        _original_de_path = _de._DEFAULT_DB_PATH
+        _de._DEFAULT_DB_PATH = test_db_path
+    except ImportError:
+        pass
+
+    try:
+        import radar.stages.fetch as _sf
+        _original_sf_path = _sf._DEFAULT_DB_PATH
+        _sf._DEFAULT_DB_PATH = test_db_path
+    except ImportError:
+        pass
+
+    yield
+
+    # Restore originals after each test
+    try:
+        import radar.dedup_engine as _de
+        if _original_de_path is not None:
+            _de._DEFAULT_DB_PATH = _original_de_path
+    except ImportError:
+        pass
+
+    try:
+        import radar.stages.fetch as _sf
+        if _original_sf_path is not None:
+            _sf._DEFAULT_DB_PATH = _original_sf_path
+    except ImportError:
+        pass
 
 
 @pytest.fixture

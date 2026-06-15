@@ -32,7 +32,8 @@ from radar.sources.rss_source import RemotiveSource, WeWorkRemotelySource, Remot
 from radar.sources.manual_import_source import ManualImportSource
 from radar.sources.base import OpportunityRaw
 from radar.stages.filter import run_filter
-from radar.dedup_engine import normalize_title, normalize_company, normalize_location
+from radar.stages.dedup import run_dedup_pass
+from radar.dedup_engine import normalize_title, normalize_company, normalize_location, _DEFAULT_DB_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -456,6 +457,14 @@ def run_fetch(constraints: dict, run_id: str) -> dict:
                 filter_summary["out_of_scope_count"],
                 100.0 * filter_summary.get("filter_rate", 0.0),
             )
+
+    # Phase 4: deduplication pass (cross-run seen-store + within-run fuzzy)
+    try:
+        deduped = run_dedup_pass(in_scope_opportunities, db_path=_DEFAULT_DB_PATH)
+        print(f"[DEDUP] {len(in_scope_opportunities)} raw -> {len(deduped)} unique opportunities")
+        in_scope_opportunities = deduped
+    except Exception as exc:
+        print(f"[DEDUP] WARNING: dedup pass failed ({exc}); returning raw results")
 
     # Determine run result
     if not blocked_sources:

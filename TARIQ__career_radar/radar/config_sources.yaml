@@ -62,3 +62,46 @@ tier_1_ats:
         company_name: "Jasper"
       - account_subdomain: "copy-ai"
         company_name: "Copy.ai"
+
+# ---------------------------------------------------------------------------
+# Tier 2 RSS / JSON API feeds (SRC-02) — Phase 3
+# ---------------------------------------------------------------------------
+tier_2_rss:
+  enabled: true
+
+  remotive:
+    enabled: true
+    feed_url: "https://remotive.com/remote-jobs/rss-feed"
+    # Last verified: 2026-06-15
+
+  weworkremotely:
+    enabled: true
+    feed_url: "https://weworkremotely.com/remote-job-rss-feed"
+    # Attribution required in reports (legal requirement)
+    # Last verified: 2026-06-15
+
+  remoteok:
+    enabled: true
+    api_url: "https://remoteok.com/remote-api-jobs"
+    # Uses JSON API (not RSS) for richer salary data
+    # Last verified: 2026-06-15
+
+# ---------------------------------------------------------------------------
+# Operator manual import (SRC-03) — Phase 3
+# ---------------------------------------------------------------------------
+manual_import:
+  enabled: true
+  import_file_path: "data/manual_imports.jsonl"
+  # Gitignored operator file. Append records before running the radar.
+  # Required fields per record: title, source_url
+  # Optional: company, location, salary_usd_low, salary_usd_high,
+  #           salary_per (annual|hour|project), role_category, notes
+
+# ---------------------------------------------------------------------------
+# Role-keyword filter (SRC-06) — Phase 3
+# ---------------------------------------------------------------------------
+role_filter:
+  enabled: true
+  # Exact substring match against role_keywords from data/profile_cache.json
+  # Disabled → all opportunities pass through (fail-open)
+  # Tuning: add/remove keywords in data/profile_cache.json role_keywords groups

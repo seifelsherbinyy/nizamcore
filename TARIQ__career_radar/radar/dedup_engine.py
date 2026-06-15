@@ -181,19 +181,25 @@ def is_fresh_repost(
 
 
 # ---------------------------------------------------------------------------
-# run_dedup_pass — Wave 2 stub (implemented in Plan 04-03)
+# run_dedup_pass — delegates to radar.stages.dedup (Plan 04-03 Wave 2 impl)
 # ---------------------------------------------------------------------------
 
 
 def run_dedup_pass(opportunities: list[dict], db_path: Path = _DEFAULT_DB_PATH) -> list[dict]:
     """Deduplicate a batch of opportunities using DedupeEngine + fuzzy matching.
 
-    NOTE: This is a stub — full implementation in Plan 04-03 (Wave 2).
+    Full implementation lives in radar.stages.dedup; this entry point preserves
+    the import contract for callers that import from dedup_engine directly.
+
+    Args:
+        opportunities: list of opportunity dicts with at least title/company/location
+        db_path:       Path to SQLite seen_roles.sqlite (defaults to _DEFAULT_DB_PATH)
+
+    Returns:
+        list[dict] — deduplicated opportunities, unique in order of first appearance
     """
-    raise NotImplementedError(
-        "run_dedup_pass() is implemented in Plan 04-03. "
-        "This stub exists so Phase-4 symbols can be imported together."
-    )
+    from radar.stages.dedup import run_dedup_pass as _run_dedup_pass_impl
+    return _run_dedup_pass_impl(opportunities, db_path=db_path)
 
 
 # ---------------------------------------------------------------------------

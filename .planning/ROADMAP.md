@@ -135,7 +135,12 @@ Plans:
 3. Scoring applies penalties (−5 to −20 points) for no-evidence, scam risk, unclear pay, severe skill mismatch, exploitative unpaid work
 4. Opportunities are ranked by final score, descending
 
-**Plans:** TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Wave 1 (TDD): 17 RED tests + fixture data + conftest augmentation (SCORE-01, SCORE-02)
+- [ ] 05-02-PLAN.md — Wave 2: ScoringEngine + 8 dimension functions + penalty logic in scoring_engine.py + scoring_config.py (SCORE-01, SCORE-02)
+- [ ] 05-03-PLAN.md — Wave 3: run_scoring_pass() orchestrator in stages/score.py + fetch.py pipeline wiring (SCORE-01)
 
 ---
 
@@ -287,7 +292,7 @@ Plans:
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 3/4 | Complete    | 2026-06-15 |
 | 4. Deduplication Engine | 3/3 | Complete   | 2026-06-15 |
-| 5. Scoring Engine | 0/? | Not started | — |
+| 5. Scoring Engine | 0/3 | Planned | — |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |
 | 7. Tagging & Profile Matching | 0/? | Not started | — |
 | 8. Telegram Report | 0/? | Not started | — |

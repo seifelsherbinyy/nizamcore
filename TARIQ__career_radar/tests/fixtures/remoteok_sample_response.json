@@ -1,0 +1,14 @@
+[
+  {"legal": "..."},
+  {
+    "id": "remote-jobs-12345",
+    "position": "ML Engineer",
+    "company": "TechCorp",
+    "url": "https://remoteok.com/remote-jobs/12345",
+    "location": "Remote",
+    "salary_min": 80000,
+    "salary_max": 120000,
+    "epoch": 1749859200,
+    "tags": ["python", "machine learning", "remote"]
+  }
+]

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Remotive Remote Jobs</title>
+    <link>https://remotive.com</link>
+    <item>
+      <title>Senior AI Operations Manager</title>
+      <link>https://remotive.com/remote-jobs/123456</link>
+      <company>Acme Corp</company>
+      <pubDate>Tue, 14 Jun 2026 10:00:00 GMT</pubDate>
+      <description>Lead AI operations at a fast-growing startup.</description>
+    </item>
+  </channel>
+</rss>

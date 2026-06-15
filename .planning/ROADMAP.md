@@ -14,7 +14,7 @@
 - [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
 - [x] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering (completed 2026-06-15)
 - [x] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee (completed 2026-06-15)
-- [ ] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties
+- [x] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties (completed 2026-06-15)
 - [ ] **Phase 6: Salary & Confidence Discipline** - Tag salaries with provenance + confidence, avoid fabrication, ranges only when unclear
 - [ ] **Phase 7: Tagging & Profile Matching** - Assign 8 action tags, compute local profile fit, flag scams/unpaid, no raw data egress
 - [ ] **Phase 8: Telegram Report** - Build short, action-oriented Telegram summary (best opp, salary, risk, next action)
@@ -135,7 +135,7 @@ Plans:
 3. Scoring applies penalties (−5 to −20 points) for no-evidence, scam risk, unclear pay, severe skill mismatch, exploitative unpaid work
 4. Opportunities are ranked by final score, descending
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [ ] 05-01-PLAN.md — Wave 1 (TDD): 17 RED tests + fixture data + conftest augmentation (SCORE-01, SCORE-02)
@@ -292,7 +292,7 @@ Plans:
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 3/4 | Complete    | 2026-06-15 |
 | 4. Deduplication Engine | 3/3 | Complete   | 2026-06-15 |
-| 5. Scoring Engine | 2/3 | In Progress|  |
+| 5. Scoring Engine | 3/3 | Complete   | 2026-06-15 |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |
 | 7. Tagging & Profile Matching | 0/? | Not started | — |
 | 8. Telegram Report | 0/? | Not started | — |

@@ -26,9 +26,9 @@
 
 ### Deduplication
 
-- [ ] **DEDUP-01**: Opportunities are normalized (title/company/location/URL canonicalization) into a dedup key
-- [ ] **DEDUP-02**: Exact + fuzzy matching (rapidfuzz) detects duplicates across sources within a run
-- [ ] **DEDUP-03**: Re-running the radar does not re-surface already-seen roles (seen-store consulted), with a freshness rule for genuine reposts
+- [x] **DEDUP-01**: Opportunities are normalized (title/company/location/URL canonicalization) into a dedup key
+- [x] **DEDUP-02**: Exact + fuzzy matching (rapidfuzz) detects duplicates across sources within a run
+- [x] **DEDUP-03**: Re-running the radar does not re-surface already-seen roles (seen-store consulted), with a freshness rule for genuine reposts
 
 ### Scoring, Salary & Tagging
 
@@ -111,9 +111,9 @@ Which phases cover which requirements. Populated during roadmap creation.
 | SRC-04 | Phase 2: Tier 1 ATS Sourcing | Complete |
 | SRC-05 | Phase 2: Tier 1 ATS Sourcing | Complete |
 | SRC-06 | Phase 3: Tier 2 RSS & Manual Sourcing | Complete |
-| DEDUP-01 | Phase 4: Deduplication Engine | Pending |
-| DEDUP-02 | Phase 4: Deduplication Engine | Pending |
-| DEDUP-03 | Phase 4: Deduplication Engine | Pending |
+| DEDUP-01 | Phase 4: Deduplication Engine | Complete |
+| DEDUP-02 | Phase 4: Deduplication Engine | Complete |
+| DEDUP-03 | Phase 4: Deduplication Engine | Complete |
 | SCORE-01 | Phase 5: Scoring Engine | Pending |
 | SCORE-02 | Phase 5: Scoring Engine | Pending |
 | SCORE-03 | Phase 7: Tagging & Profile Matching | Pending |

@@ -270,3 +270,182 @@ def test_zero_results_graceful(fake_requests_get, monkeypatch):
     assert "blocked_sources" in result
     assert "fetch_summary" in result
     # Run must complete without raising
+
+
+# ===========================================================================
+# Phase 3 — TDD Wave 0: RSS sources (SRC-02), Manual import (SRC-03),
+# Role-keyword filter (SRC-06)
+# All tests FAIL (RED) until Wave 1/2 implementation exists.
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# SRC-02: RSS feed tests
+# ---------------------------------------------------------------------------
+
+def test_remotive_rss_mocked(mock_remotive_rss, fake_rss_bytes_get, monkeypatch):
+    """SRC-02: RemotiveSource fetches Remotive RSS; parses 1 item; source_type=rss_feed."""
+    RemotiveSource = _require_module("radar.sources.rss_source", "RemotiveSource")
+
+    monkeypatch.setattr(
+        requests, "get",
+        fake_rss_bytes_get(mock_remotive_rss),
+    )
+    src = RemotiveSource({"feed_url": "https://remotive.com/remote-jobs/rss-feed", "enabled": True})
+    result = src.fetch({})
+
+    assert result.source_name == "remotive"
+    assert len(result.opportunities) == 1
+    assert result.opportunities[0].title == "Senior AI Operations Manager"
+    assert result.opportunities[0].source_type == "rss_feed"
+    assert result.opportunities[0].company == "Acme Corp"
+    assert result.errors == []
+
+
+def test_weworkremotely_rss_mocked(mock_weworkremotely_rss, fake_rss_bytes_get, monkeypatch):
+    """SRC-02: WeWorkRemotelySource fetches RSS; company falls back to 'Unknown' (no <company> tag)."""
+    WeWorkRemotelySource = _require_module("radar.sources.rss_source", "WeWorkRemotelySource")
+
+    monkeypatch.setattr(
+        requests, "get",
+        fake_rss_bytes_get(mock_weworkremotely_rss),
+    )
+    src = WeWorkRemotelySource({"feed_url": "https://weworkremotely.com/remote-job-rss-feed", "enabled": True})
+    result = src.fetch({})
+
+    assert result.source_name == "weworkremotely"
+    assert len(result.opportunities) == 1
+    assert result.opportunities[0].company == "Unknown"
+    assert result.opportunities[0].source_type == "rss_feed"
+    assert result.errors == []
+
+
+def test_remoteok_mocked(mock_remoteok_response, fake_requests_get, monkeypatch):
+    """SRC-02: RemoteOKSource fetches JSON API; salary_min/max parsed; skips legal notice object."""
+    RemoteOKSource = _require_module("radar.sources.rss_source", "RemoteOKSource")
+
+    # RemoteOK returns JSON (not XML bytes); use the existing fake_requests_get factory
+    monkeypatch.setattr(
+        requests, "get",
+        fake_requests_get(200, mock_remoteok_response),
+    )
+    src = RemoteOKSource({"api_url": "https://remoteok.com/remote-api-jobs", "enabled": True})
+    result = src.fetch({})
+
+    assert result.source_name == "remoteok"
+    assert len(result.opportunities) >= 1
+    opp = result.opportunities[0]
+    assert opp.salary_usd_low == 80000
+    assert opp.salary_usd_high == 120000
+    # source_type may be "rss_feed" or "api" — either acceptable for RemoteOK
+    assert opp.source_type in ("rss_feed", "api")
+    assert result.errors == []
+
+
+def test_rss_malformed_xml_graceful(fixtures_dir, fake_rss_bytes_get, monkeypatch):
+    """SRC-02: RemotiveSource on malformed XML returns 0 opps + error; no exception raised."""
+    RemotiveSource = _require_module("radar.sources.rss_source", "RemotiveSource")
+
+    malformed_bytes = (fixtures_dir / "malformed_rss.xml").read_bytes()
+    monkeypatch.setattr(
+        requests, "get",
+        fake_rss_bytes_get(malformed_bytes),
+    )
+    src = RemotiveSource({"feed_url": "https://remotive.com/remote-jobs/rss-feed", "enabled": True})
+    result = src.fetch({})
+
+    assert len(result.opportunities) == 0
+    assert len(result.errors) > 0
+    # Verify error message hints at XML/parse issue
+    assert any("xml" in e.lower() or "parse" in e.lower() or "error" in e.lower() for e in result.errors)
+
+
+# ---------------------------------------------------------------------------
+# SRC-03: Manual import tests
+# ---------------------------------------------------------------------------
+
+def test_manual_import_valid_jsonl(manual_import_fixture):
+    """SRC-03: ManualImportSource reads 2-record JSONL; hourly salary converted to annual."""
+    ManualImportSource = _require_module("radar.sources.manual_import_source", "ManualImportSource")
+
+    src = ManualImportSource({"import_file_path": str(manual_import_fixture), "enabled": True})
+    result = src.fetch({})
+
+    assert result.source_name == "manual"
+    assert len(result.opportunities) == 2
+    assert result.opportunities[0].title == "AI Evaluator"
+    # Hourly $30 * 40hrs * 52wks = $62,400
+    assert result.opportunities[0].salary_usd_low == pytest.approx(62400)
+    assert result.opportunities[1].title == "Data Annotator"
+    assert result.errors == []
+
+
+def test_manual_import_file_not_found(tmp_path):
+    """SRC-03: Missing import file -> 0 opps, 1+ errors, no exception raised."""
+    ManualImportSource = _require_module("radar.sources.manual_import_source", "ManualImportSource")
+
+    missing_path = tmp_path / "does_not_exist.jsonl"
+    src = ManualImportSource({"import_file_path": str(missing_path), "enabled": True})
+    result = src.fetch({})
+
+    assert result.source_name == "manual"
+    assert len(result.opportunities) == 0
+    assert len(result.errors) > 0
+    # No exception propagated — result is a SourceResult
+    assert hasattr(result, "source_name")
+
+
+def test_manual_import_malformed_json(tmp_path):
+    """SRC-03: Malformed JSONL line is rejected with error; valid line still parsed."""
+    ManualImportSource = _require_module("radar.sources.manual_import_source", "ManualImportSource")
+
+    import_file = tmp_path / "mixed.jsonl"
+    import_file.write_text(
+        '{"title": "AI Evaluator", "source_url": "https://outlier.ai/jobs/1"}\n'
+        'NOT VALID JSON {{{\n',
+        encoding="utf-8",
+    )
+    src = ManualImportSource({"import_file_path": str(import_file), "enabled": True})
+    result = src.fetch({})
+
+    assert len(result.opportunities) == 1
+    assert len(result.errors) == 1
+    assert any("json" in e.lower() or "invalid" in e.lower() for e in result.errors)
+
+
+# ---------------------------------------------------------------------------
+# SRC-06: Role-keyword filter tests
+# ---------------------------------------------------------------------------
+
+def test_role_filter_matches(synthetic_profile_seed):
+    """SRC-06: run_filter keeps in-scope opportunities that match profile keyword groups."""
+    run_filter = _require_module("radar.stages.filter", "run_filter")
+
+    opps = [
+        {"title": "Senior AI Operations Manager", "source": "remotive", "source_url": "https://remotive.com/1"},
+        {"title": "ML Engineer", "source": "greenhouse", "source_url": "https://boards.greenhouse.io/1"},
+    ]
+    result = run_filter(opps, profile_seed=synthetic_profile_seed)
+
+    assert "in_scope" in result
+    assert "out_of_scope" in result
+    assert "filter_summary" in result
+    assert len(result["in_scope"]) == 2
+    assert len(result["out_of_scope"]) == 0
+    # Each in-scope opp should have matched_role_group set
+    for opp in result["in_scope"]:
+        assert "matched_role_group" in opp
+
+
+def test_role_filter_rejects(synthetic_profile_seed):
+    """SRC-06: run_filter drops opportunities whose titles match no profile keyword group."""
+    run_filter = _require_module("radar.stages.filter", "run_filter")
+
+    opps = [
+        {"title": "Marketing Manager", "source": "lever", "source_url": "https://jobs.acme.lever.co/1"},
+        {"title": "Sales Representative", "source": "workable", "source_url": "https://acme.workable.com/1"},
+    ]
+    result = run_filter(opps, profile_seed=synthetic_profile_seed)
+
+    assert len(result["in_scope"]) == 0
+    assert len(result["out_of_scope"]) == 2
+    assert result["filter_summary"]["in_scope_count"] == 0

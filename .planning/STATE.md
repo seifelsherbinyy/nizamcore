@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Completed 02-tier-1-ats-sourcing/02-02-PLAN.md (Wave 1a: BaseSource+GreenhouseSource+LeverSource; 4 tests GREEN; SRC-01/05)"
-last_updated: "2026-06-15T07:32:45.126Z"
+stopped_at: "Completed 02-tier-1-ats-sourcing/02-03-PLAN.md (Wave 1b: AshbySource+WorkableSource; 6 connector tests GREEN; SRC-01/04/05)"
+last_updated: "2026-06-15T07:36:41.495Z"
 progress:
   total_phases: 13
   completed_phases: 1
   total_plans: 10
-  completed_plans: 8
-  percent: 80
+  completed_plans: 9
+  percent: 90
 ---
 
 ---
@@ -61,9 +61,9 @@ progress:
 **Phase:** 1 / 13 (Foundation Data Model — in execution)  
 **Plan:** 01-01 complete; Plan 01-02 next  
 **Status:** Ready to plan
-**Progress:** [████████░░] 80%
+**Progress:** [█████████░] 90%
 
-**Stopped At:** Completed 02-tier-1-ats-sourcing/02-02-PLAN.md (Wave 1a: BaseSource+GreenhouseSource+LeverSource; 4 tests GREEN; SRC-01/05)
+**Stopped At:** Completed 02-tier-1-ats-sourcing/02-03-PLAN.md (Wave 1b: AshbySource+WorkableSource; 6 connector tests GREEN; SRC-01/04/05)
 
 **Work Completed:**
 - Analyzed 30 v1 requirements
@@ -135,6 +135,7 @@ progress:
 | Phase 01-foundation-data-model P06 | 2min | 2 tasks | 4 files |
 | Phase 02-tier-1-ats-sourcing P01 | 149s | 3 tasks | 6 files |
 | Phase 02-tier-1-ats-sourcing P02 | 191s | 2 tasks | 6 files |
+| Phase 02-tier-1-ats-sourcing P03 | 91s | 2 tasks | 2 files |
 
 ### Known Risks & Mitigations
 

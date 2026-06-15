@@ -273,7 +273,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
-| 2. Tier 1 ATS Sourcing | 4/4 | Complete   | 2026-06-15 |
+| 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 0/? | Not started | — |
 | 4. Deduplication Engine | 0/? | Not started | — |
 | 5. Scoring Engine | 0/? | Not started | — |

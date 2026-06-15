@@ -8,8 +8,14 @@ Wave 1 additions (Phase 2, Plan 02-01):
   - fixtures_dir: path to tests/fixtures/
   - mock_*_response: load recorded ATS JSON fixtures
   - fake_requests_get: factory for injecting fake HTTP (no network)
+
+Wave 4 additions (Phase 4, Plan 04-01):
+  - dedup_opp_pairs: loads dedup_test_data.jsonl, returns all records
+  - dedup_fresh_record: returns a seen_roles-like row with first_seen 45 days ago
+  - cross_source_batch: 4-item list with cross-source duplicate pairs
 """
 from __future__ import annotations
+import datetime
 import json
 import sys
 import unittest.mock
@@ -257,3 +263,83 @@ def synthetic_profile_seed() -> dict:
             "remote_only": True,
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 additions — deduplication fixtures (DEDUP-01, DEDUP-02, DEDUP-03)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def dedup_opp_pairs(fixtures_dir: Path) -> list:
+    """Load all records from dedup_test_data.jsonl and return as list[dict].
+
+    Records come in pairs: same underlying role, different title wording.
+    Includes cross-source pairs and records with >30-day access_date gaps.
+    """
+    jsonl_path = fixtures_dir / "dedup_test_data.jsonl"
+    records = []
+    for line in jsonl_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line:
+            records.append(json.loads(line))
+    return records
+
+
+@pytest.fixture
+def dedup_fresh_record() -> dict:
+    """Return a dict mimicking a SQLite seen_roles row with first_seen 45 days ago.
+
+    Used in freshness rule tests (DEDUP-03): a role first seen >=30 days ago
+    should be treated as a fresh repost — return it as if new.
+    """
+    now = datetime.datetime.utcnow()
+    first_seen = now - datetime.timedelta(days=45)
+    return {
+        "first_seen_date": first_seen.isoformat() + "Z",
+        "last_seen_date": now.isoformat() + "Z",
+        "hit_count": 1,
+    }
+
+
+@pytest.fixture
+def cross_source_batch() -> list:
+    """Return a hardcoded list of 4 opportunities for cross-source duplicate tests.
+
+    Layout:
+      [0] "AI Ops Manager"    at "Acme Corp"   from "greenhouse"   — duplicate pair A
+      [1] "Finance Manager"   at "Acme Corp"   from "greenhouse"   — distinct role
+      [2] "AI Ops Manager"    at "Acme Corp"   from "remotive"     — duplicate pair A (cross-source)
+      [3] "Data Annotator"    at "Beta Inc"    from "weworkremotely" — distinct role
+
+    Pair A (opps[0] and opps[2]) should be detected as cross-source duplicates.
+    """
+    return [
+        {
+            "title": "AI Ops Manager",
+            "company": "Acme Corp",
+            "location": "Remote",
+            "source": "greenhouse",
+            "access_date": "2026-06-15T10:00:00Z",
+        },
+        {
+            "title": "Finance Manager",
+            "company": "Acme Corp",
+            "location": "Remote",
+            "source": "greenhouse",
+            "access_date": "2026-06-15T10:00:00Z",
+        },
+        {
+            "title": "AI Ops Manager",
+            "company": "Acme Corp",
+            "location": "Remote",
+            "source": "remotive",
+            "access_date": "2026-06-15T10:00:00Z",
+        },
+        {
+            "title": "Data Annotator",
+            "company": "Beta Inc",
+            "location": "Remote",
+            "source": "weworkremotely",
+            "access_date": "2026-06-15T10:00:00Z",
+        },
+    ]

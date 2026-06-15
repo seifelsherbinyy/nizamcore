@@ -1,0 +1,64 @@
+# Phase 2 seed config — public ATS board identifiers only.
+# Add/remove boards as needed. board_token/site/board_name are public (not secrets).
+
+tier_1_ats:
+  greenhouse:
+    enabled: true
+    boards:
+      - board_token: "anthropic"
+        company_name: "Anthropic"
+      - board_token: "openai"
+        company_name: "OpenAI"
+      - board_token: "scale-ai"
+        company_name: "Scale AI"
+      - board_token: "deepmind"
+        company_name: "DeepMind"
+      - board_token: "huggingface"
+        company_name: "Hugging Face"
+      - board_token: "weightsandbiases"
+        company_name: "Weights & Biases"
+
+  lever:
+    enabled: true
+    boards:
+      - site: "airtable"
+        company_name: "Airtable"
+      - site: "notion"
+        company_name: "Notion"
+      - site: "retool"
+        company_name: "Retool"
+      - site: "linear"
+        company_name: "Linear"
+      - site: "figma"
+        company_name: "Figma"
+      - site: "loom"
+        company_name: "Loom"
+
+  ashby:
+    enabled: true
+    boards:
+      - board_name: "modal"
+        company_name: "Modal"
+        include_compensation: true
+      - board_name: "replicate"
+        company_name: "Replicate"
+        include_compensation: true
+      - board_name: "together-ai"
+        company_name: "Together AI"
+        include_compensation: true
+      - board_name: "mistral-ai"
+        company_name: "Mistral AI"
+        include_compensation: true
+      - board_name: "runway"
+        company_name: "Runway"
+        include_compensation: true
+
+  workable:
+    enabled: true
+    boards:
+      - account_subdomain: "deepl"
+        company_name: "DeepL"
+      - account_subdomain: "jasper"
+        company_name: "Jasper"
+      - account_subdomain: "copy-ai"
+        company_name: "Copy.ai"

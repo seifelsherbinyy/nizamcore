@@ -113,7 +113,7 @@ Plans:
 3. Re-running the radar against the same sources does not re-surface already-seen roles; seen-store is consulted before including in results
 4. Freshness rule allows genuine reposts (same role posted >30 days after first seen) to surface as new
 
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] 04-01-PLAN.md — Wave 1: TDD RED scaffold (6 failing tests, dedup_test_data.jsonl, Phase-4 conftest fixtures)
@@ -286,7 +286,7 @@ Plans:
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 3/4 | Complete    | 2026-06-15 |
-| 4. Deduplication Engine | 1/3 | In Progress|  |
+| 4. Deduplication Engine | 2/3 | In Progress|  |
 | 5. Scoring Engine | 0/? | Not started | — |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |
 | 7. Tagging & Profile Matching | 0/? | Not started | — |

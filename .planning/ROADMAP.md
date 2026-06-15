@@ -90,7 +90,7 @@ Plans:
 3. All fetched opportunities are filtered to remote-USD AI/data/AI-ops/coordination roles matching Seif's role keyword groups
 4. Combined sources (Tier 1 + Tier 2) yield ≥5 distinct opportunities in a test run
 
-**Plans:** 1/4 plans executed
+**Plans:** 3/4 plans executed
 
 Plans:
 - [ ] 03-01-PLAN.md — Wave 1: TDD scaffold (9 failing tests, 5 fixture files, conftest Phase-3 augmentation)
@@ -280,7 +280,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
 | 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
-| 3. Tier 2 RSS & Manual Sourcing | 1/4 | In Progress|  |
+| 3. Tier 2 RSS & Manual Sourcing | 3/4 | In Progress|  |
 | 4. Deduplication Engine | 0/? | Not started | — |
 | 5. Scoring Engine | 0/? | Not started | — |
 | 6. Salary & Confidence Discipline | 0/? | Not started | — |

@@ -219,14 +219,18 @@ class SerpApiSource(BaseFlightSource):
         # Google Flights returns the full round-trip duration in total_duration
         # For one-way constraints we split roughly 50/50 — actual per-leg data
         # is in the flights array when available
-        outbound_flights = [f for f in flights if not f.get("is_return", False)]
-        return_flights = [f for f in flights if f.get("is_return", False)]
+        # SerpApi Google Flights: `flights` contains only OUTBOUND segments for round-trip
+        # queries. There is no `is_return` flag on segments. Return leg data is not available
+        # per-result — infer return routing by reversing outbound airport sequence.
+        outbound_flights = flights  # all segments are outbound in SerpApi round-trip results
 
-        outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else total_duration_min // 2
-        return_dur = sum(f.get("duration", 0) for f in return_flights) if return_flights else total_duration_min // 2
+        outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else 0
+        outbound_hours = round(outbound_dur / 60, 2) if outbound_dur else round(total_duration_min / 60, 2)
 
-        outbound_hours = round(outbound_dur / 60, 2)
-        return_hours = round(return_dur / 60, 2)
+        # Estimate return duration: total_duration - outbound_duration (includes layover on outbound).
+        # Falls back to outbound_hours as a symmetric proxy when total is unavailable.
+        estimated_return_min = max(0, total_duration_min - outbound_dur) if total_duration_min > outbound_dur else outbound_dur
+        return_hours = round(estimated_return_min / 60, 2)
 
         # Extract carrier from first outbound flight segment
         first_seg = outbound_flights[0] if outbound_flights else flights[0]
@@ -234,9 +238,8 @@ class SerpApiSource(BaseFlightSource):
         # Map airline name to IATA code where possible
         carrier_iata = self._name_to_iata(carrier_name) or carrier_name[:2].upper()
 
-        # Build routing strings
-        outbound_routing = self._build_routing(outbound_flights or flights[:len(flights)//2 or 1])
-        return_routing = self._build_routing(return_flights or flights[len(flights)//2:])
+        # Build outbound routing from actual segments
+        outbound_routing = self._build_routing(outbound_flights)
 
         # Fallback routing from departure/arrival airport codes
         if not outbound_routing and flights:
@@ -244,8 +247,11 @@ class SerpApiSource(BaseFlightSource):
             arr = flights[0].get("arrival_airport", {}).get("id", "")
             outbound_routing = f"{dep}-{arr}" if dep and arr else ""
 
+        # Infer return routing by reversing outbound airports (best-estimate for SerpApi source)
+        return_routing = "-".join(reversed(outbound_routing.split("-"))) if outbound_routing else ""
+
         return FlightOffer(
-            origin=dep_date and flights[0].get("departure_airport", {}).get("id", "CAI") or "CAI",
+            origin=flights[0].get("departure_airport", {}).get("id", "CAI") if flights else "CAI",
             destination=flights[-1].get("arrival_airport", {}).get("id", "???") if flights else "???",
             cabin=cabin,
             carrier=carrier_iata,
@@ -254,7 +260,7 @@ class SerpApiSource(BaseFlightSource):
             outbound_duration_hours=outbound_hours,
             return_duration_hours=return_hours,
             outbound_stops=max(0, len(outbound_flights) - 1) if outbound_flights else 0,
-            return_stops=max(0, len(return_flights) - 1) if return_flights else 0,
+            return_stops=max(0, len(outbound_flights) - 1) if outbound_flights else 0,  # symmetric estimate
             outbound_routing=outbound_routing,
             return_routing=return_routing,
             price_usd=float(price),
@@ -286,13 +292,32 @@ class SerpApiSource(BaseFlightSource):
             "british airways": "BA",
             "lufthansa": "LH",
             "delta": "DL",
+            "delta air lines": "DL",
             "turkish airlines": "TK",
             "united": "UA",
             "united airlines": "UA",
             "american airlines": "AA",
             "klm": "KL",
+            "klm royal dutch airlines": "KL",
             "etihad": "EY",
             "etihad airways": "EY",
+            "ita airways": "AZ",
+            "ita": "AZ",
+            "swiss": "LX",
+            "swiss international air lines": "LX",
+            "royal air maroc": "AT",
+            "royal jordanian": "RJ",
+            "middle east airlines": "ME",
+            "saudia": "SV",
+            "air arabia": "G9",
+            "flydubai": "FZ",
+            "wizz air": "W6",
+            "tap air portugal": "TP",
+            "iberia": "IB",
+            "finnair": "AY",
+            "brussels airlines": "SN",
+            "austrian": "OS",
+            "austrian airlines": "OS",
         }
         return _MAP.get(name.lower().strip())
 

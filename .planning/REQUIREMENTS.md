@@ -18,11 +18,11 @@
 ### Sourcing
 
 - [x] **SRC-01**: System fetches opportunities from Tier 1 public ATS APIs (Greenhouse, Lever, Ashby, Workable) with no scraping
-- [ ] **SRC-02**: System fetches opportunities from Tier 2 public RSS/feeds (Remotive, We Work Remotely, RemoteOK) using stdlib parsing
-- [ ] **SRC-03**: Operator can manually import opportunities (e.g., from Outlier/DataAnnotation/Turing/Toloka) via a structured JSONL/paste path
+- [x] **SRC-02**: System fetches opportunities from Tier 2 public RSS/feeds (Remotive, We Work Remotely, RemoteOK) using stdlib parsing
+- [x] **SRC-03**: Operator can manually import opportunities (e.g., from Outlier/DataAnnotation/Turing/Toloka) via a structured JSONL/paste path
 - [x] **SRC-04**: Each fetched opportunity is normalized into the DATA-01 schema with source link, source type, and access date recorded
 - [x] **SRC-05**: A blocked/failed source is logged (errors/blocked-sources list) and the run degrades gracefully instead of aborting
-- [ ] **SRC-06**: Sourcing targets remote-USD AI/data/AI-ops/coordination + analyst roles matched to Seif's role keyword groups
+- [x] **SRC-06**: Sourcing targets remote-USD AI/data/AI-ops/coordination + analyst roles matched to Seif's role keyword groups
 
 ### Deduplication
 
@@ -106,11 +106,11 @@ Which phases cover which requirements. Populated during roadmap creation.
 | DATA-04 | Phase 1: Foundation & Data Model | Complete |
 | DATA-05 | Phase 1: Foundation & Data Model | Complete |
 | SRC-01 | Phase 2: Tier 1 ATS Sourcing | Complete |
-| SRC-02 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
-| SRC-03 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
+| SRC-02 | Phase 3: Tier 2 RSS & Manual Sourcing | Complete |
+| SRC-03 | Phase 3: Tier 2 RSS & Manual Sourcing | Complete |
 | SRC-04 | Phase 2: Tier 1 ATS Sourcing | Complete |
 | SRC-05 | Phase 2: Tier 1 ATS Sourcing | Complete |
-| SRC-06 | Phase 3: Tier 2 RSS & Manual Sourcing | Pending |
+| SRC-06 | Phase 3: Tier 2 RSS & Manual Sourcing | Complete |
 | DEDUP-01 | Phase 4: Deduplication Engine | Pending |
 | DEDUP-02 | Phase 4: Deduplication Engine | Pending |
 | DEDUP-03 | Phase 4: Deduplication Engine | Pending |

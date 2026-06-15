@@ -11,7 +11,7 @@
 
 - [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration
  (completed 2026-06-14)
-- [ ] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling
+- [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
 - [ ] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering
 - [ ] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee
 - [ ] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties
@@ -67,7 +67,7 @@ Plans:
 3. API errors (connection failures, rate limits, missing endpoints) are logged to blocked-sources list and do not abort the run
 4. A run with zero sources returning results degrades gracefully (reports zero opportunities, marks sources as blocked, continues to next phase)
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 - [ ] 02-01-PLAN.md — Wave 1: TDD scaffold (11 failing tests, fixtures, fake-HTTP conftest)
@@ -273,7 +273,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
-| 2. Tier 1 ATS Sourcing | 3/4 | In Progress|  |
+| 2. Tier 1 ATS Sourcing | 4/4 | Complete   | 2026-06-15 |
 | 3. Tier 2 RSS & Manual Sourcing | 0/? | Not started | — |
 | 4. Deduplication Engine | 0/? | Not started | — |
 | 5. Scoring Engine | 0/? | Not started | — |

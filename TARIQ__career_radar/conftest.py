@@ -173,3 +173,87 @@ def fake_requests_get():
         return fake_get
 
     return make_fake_get
+
+
+# ---------------------------------------------------------------------------
+# Phase 3 additions — RSS/JSONL fixture loaders (SRC-02, SRC-03, SRC-06)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def mock_remotive_rss(fixtures_dir: Path) -> bytes:
+    """Return raw bytes of recorded Remotive RSS feed."""
+    return (fixtures_dir / "remotive_sample_rss.xml").read_bytes()
+
+
+@pytest.fixture
+def mock_weworkremotely_rss(fixtures_dir: Path) -> bytes:
+    """Return raw bytes of recorded We Work Remotely RSS feed."""
+    return (fixtures_dir / "weworkremotely_sample_rss.xml").read_bytes()
+
+
+@pytest.fixture
+def mock_remoteok_response(fixtures_dir: Path) -> list:
+    """Return parsed JSON list from recorded RemoteOK API response."""
+    return json.loads((fixtures_dir / "remoteok_sample_response.json").read_text())
+
+
+@pytest.fixture
+def manual_import_fixture(tmp_path: Path) -> Path:
+    """Create a temporary manual_imports.jsonl for ManualImportSource tests."""
+    import_file = tmp_path / "manual_imports.jsonl"
+    import_file.write_text(
+        '{"title": "AI Evaluator", "company": "Outlier AI", "location": "Remote",'
+        ' "salary_usd_low": 30, "salary_usd_high": 60, "salary_per": "hour",'
+        ' "source_url": "https://app.outlier.ai/jobs/1"}\n'
+        '{"title": "Data Annotator", "company": "DataAnnotation.tech",'
+        ' "location": "Remote", "source_url": "https://app.datannotation.tech/work"}\n',
+        encoding="utf-8",
+    )
+    return import_file
+
+
+@pytest.fixture
+def fake_rss_bytes_get():
+    """Factory for mocking requests.get to return raw RSS/JSON bytes.
+
+    Usage:
+        monkeypatch.setattr(requests, "get", fake_rss_bytes_get(xml_bytes))
+    """
+    def make_fake_rss_get(content_bytes: bytes, status_code: int = 200, raise_exc=None):
+        def fake_get(*args, **kwargs):
+            if raise_exc is not None:
+                raise raise_exc
+            resp = unittest.mock.MagicMock()
+            resp.status_code = status_code
+            resp.content = content_bytes
+            if status_code < 400:
+                resp.raise_for_status.side_effect = None
+            else:
+                resp.raise_for_status.side_effect = requests.exceptions.HTTPError(
+                    f"{status_code}"
+                )
+            return resp
+        return fake_get
+    return make_fake_rss_get
+
+
+@pytest.fixture
+def synthetic_profile_seed() -> dict:
+    """Synthetic profile seed with role_keywords as group-dict (SRC-06 tests).
+
+    Structure mirrors data/profile_cache.json but contains NO real personal data.
+    role_keywords is dict[group_name, list[keyword]] — exact substring match.
+    """
+    return {
+        "role_keywords": {
+            "AI_OPERATIONS": ["ai operations", "ai ops", "ml ops", "llm ops"],
+            "DATA_SCIENCE": ["data science", "data scientist", "ml engineer", "machine learning"],
+            "COORDINATION": ["program manager", "project coordinator", "operations manager"],
+            "LLM_EVALUATION": ["ai evaluator", "data annotator", "content reviewer"],
+        },
+        "target_roles": ["AI Ops Manager", "ML Engineering Manager", "Data Scientist"],
+        "constraints": {
+            "min_salary_usd": 80000,
+            "remote_only": True,
+        },
+    }

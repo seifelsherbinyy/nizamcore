@@ -18,6 +18,13 @@ Wave 4 additions (Phase 4, Plan 04-03):
   - _isolate_dedup_db (autouse, session-scoped): redirects _DEFAULT_DB_PATH to a
     temporary session directory so that tests never write to the production
     seen_roles.sqlite and cross-test dedup contamination is eliminated.
+
+Phase 5 additions (Plan 05-01):
+  - scoring_profile: synthetic profile dict for scoring tests (SCORE-01, SCORE-02)
+  - now_fixture: fixed datetime for deterministic freshness testing
+  - scored_opportunity: fully populated opportunity dict for normal scoring tests
+  - scam_opportunity: opportunity dict with scam keywords in title/description
+  - unpaid_opportunity: opportunity dict with salary_usd_high=0 and unpaid keywords
 """
 from __future__ import annotations
 import datetime
@@ -400,3 +407,141 @@ def cross_source_batch() -> list:
             "access_date": "2026-06-15T10:00:00Z",
         },
     ]
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 additions — scoring fixtures (SCORE-01, SCORE-02)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def scoring_profile() -> dict:
+    """Return a synthetic profile dict for scoring tests.
+
+    Contains role_keywords as a group-dict, target_roles, constraints, and
+    avoid_flags (used by severe_skill_mismatch penalty in SCORE-02).
+    Never contains real personal data.
+    """
+    return {
+        "role_keywords": {
+            "AI_OPERATIONS": ["ai operations", "ai ops", "operations", "ml ops", "llm ops"],
+            "DATA_SCIENCE": ["data science", "data scientist", "ml engineer", "machine learning"],
+        },
+        "target_roles": ["AI Ops Manager", "ML Engineering Manager"],
+        "constraints": {
+            "min_salary_usd": 60000,
+            "remote_only": True,
+        },
+        "avoid_flags": ["SALES", "RECRUITING"],
+    }
+
+
+@pytest.fixture
+def now_fixture() -> datetime.datetime:
+    """Return a fixed UTC datetime for deterministic freshness testing.
+
+    Named now_fixture (not now) to avoid shadowing any pytest plugin fixture
+    that may use the bare name 'now'.
+    """
+    return datetime.datetime(2026, 6, 15, 12, 0, 0, tzinfo=datetime.timezone.utc)
+
+
+@pytest.fixture
+def scored_opportunity() -> dict:
+    """Return a fully populated opportunity dict for normal scoring tests.
+
+    All required DATA-01 fields present. salary and visa fields populated
+    to allow non-trivial scoring without triggering penalty conditions.
+    """
+    return {
+        "opportunity_id": str(uuid.uuid4()),
+        "title": "AI Operations Manager",
+        "company": "Acme Corp",
+        "location": "Remote",
+        "remote_status": "fully_remote",
+        "source": "greenhouse",
+        "source_type": "ats",
+        "access_date": "2026-06-15T10:00:00Z",
+        "observed_at": "2026-06-15T10:00:00Z",
+        "salary_usd_high": 120000,
+        "salary_usd_low": 90000,
+        "salary_confidence": "HIGH",
+        "salary_evidence_type": "employer_posted",
+        "visa_feasibility": "visa_sponsored_likely",
+        "role_category": "AI_OPERATIONS",
+        "description": "ai operations and stakeholder management",
+        "fit_score": 0,
+        "growth_score": 0,
+        "confidence": "LOW",
+        "tags": [],
+        "lane": "Remote USD",
+        "data_quality": "confirmed",
+        "run_id": "test-run-001",
+    }
+
+
+@pytest.fixture
+def scam_opportunity() -> dict:
+    """Return an opportunity dict with scam keywords in title and description.
+
+    Triggers scam_risk penalty (SCORE-02). salary_usd_high is None so it also
+    can be augmented with salary_usd_high=0 to trigger unpaid penalty in
+    cumulative-penalty tests.
+    """
+    return {
+        "opportunity_id": str(uuid.uuid4()),
+        "title": "Quick Cash - No Experience Required - Make Money Fast",
+        "company": "Easy Money Inc",
+        "location": "Remote",
+        "remote_status": "fully_remote",
+        "source": "manual",
+        "source_type": "manual",
+        "access_date": "2026-06-15T10:00:00Z",
+        "observed_at": "2026-06-15T10:00:00Z",
+        "salary_usd_high": None,
+        "salary_usd_low": None,
+        "salary_confidence": "LOW",
+        "salary_evidence_type": "not_disclosed",
+        "visa_feasibility": "visa_sponsored_unclear",
+        "role_category": None,
+        "description": "guaranteed usd income work from home 100%",
+        "fit_score": 0,
+        "growth_score": 0,
+        "confidence": "LOW",
+        "tags": [],
+        "lane": "Remote USD",
+        "data_quality": "partial",
+        "run_id": "test-run-001",
+    }
+
+
+@pytest.fixture
+def unpaid_opportunity() -> dict:
+    """Return an opportunity dict with salary_usd_high=0 and unpaid keywords.
+
+    Triggers exploitative_unpaid penalty (SCORE-02).
+    """
+    return {
+        "opportunity_id": str(uuid.uuid4()),
+        "title": "AI Research Assistant (Unpaid Trial)",
+        "company": "Research Lab",
+        "location": "Remote",
+        "remote_status": "fully_remote",
+        "source": "manual",
+        "source_type": "manual",
+        "access_date": "2026-06-15T10:00:00Z",
+        "observed_at": "2026-06-15T10:00:00Z",
+        "salary_usd_high": 0,
+        "salary_usd_low": 0,
+        "salary_confidence": "LOW",
+        "salary_evidence_type": "not_disclosed",
+        "visa_feasibility": "visa_not_sponsored",
+        "role_category": None,
+        "description": "unpaid trial no salary volunteer",
+        "fit_score": 0,
+        "growth_score": 0,
+        "confidence": "LOW",
+        "tags": [],
+        "lane": "Remote USD",
+        "data_quality": "partial",
+        "run_id": "test-run-001",
+    }

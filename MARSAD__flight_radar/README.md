@@ -145,6 +145,64 @@ python -m radar.main run-all
 python -m radar.main schedule
 ```
 
+## Historical Price Seed Research
+
+Cold-start period lasts ~7 days (fewer than 7 observations → LOW confidence →
+BUY_SIGNAL gated). Importing historical price data as `observation_type: historical_seed`
+observations accelerates confidence from LOW to MEDIUM/HIGH from day one.
+
+### Available Sources (CAI → USA, Business / Premium Economy)
+
+| Source | Historical Depth | Access Method | Coverage | Integration |
+|---|---|---|---|---|
+| **Google Flights price history** | ~60–90 days (browser UI) | Playwright XHR interception of `/travel/search` responses | Good coverage for major US airports | Parse fare calendar JSON from XHR; import as `historical_seed` with `source: "google_flights"` |
+| **Hopper historical data** | ~12 months (mobile app internal) | No public API — requires APK reverse-engineering or app scraping | Limited public access | Not recommended; methodology benchmark only |
+| **Kayak price history** | ~12 months (Kayak Explore / price graph) | Playwright: load kayak.com price trend page, intercept `trends` API call | Moderate coverage | XHR response returns 30-day rolling averages; import as `historical_seed` |
+| **Google Flights Fare Calendar** | Current + 3 months forward | SerpAPI `engine=google_flights_explore` or Playwright | Best for forward-looking seeds | Returns lowest price per calendar day per destination — map to `historical_seed` at `data_quality: estimated` |
+| **Momondo price history** | ~6 months (price graph) | Playwright: price graph XHR | Similar to Kayak | Parse JSON from network tab intercept |
+
+### Honest Assessment
+
+- **Google Flights Fare Calendar via SerpAPI** is the cleanest seed source. Use `engine=google_flights`
+  with a range of departure dates (SerpAPI returns lowest fare per date). Flag as
+  `observation_type: historical_seed` and `data_quality: estimated`.
+- **Kayak/Momondo historical graphs** are browser-only. They work for manual seeding but are
+  fragile for automation — use as one-time bootstrap only.
+- **Hopper**: no programmatic access. Their published research (e.g., "Hopper Cloud" papers)
+  validates the 7-observation confidence floor used by MARSAD — their own models require
+  30–60 days before directional forecasts stabilise.
+
+### Seeding Procedure
+
+```python
+# Import a historical price data point from any external source:
+from radar.schema_store import append_observation
+
+append_observation(
+    origin="CAI",
+    destination="JFK",
+    carrier="EK",
+    cabin="BUSINESS",
+    price_usd=3200.0,
+    outbound_date="2027-03-15",
+    return_date="2027-03-26",
+    outbound_duration_hours=14.5,
+    return_duration_hours=15.0,
+    outbound_stops=1,
+    return_stops=1,
+    outbound_routing="CAI-DXB-JFK",
+    return_routing="JFK-DXB-CAI",
+    source="serpapi",                    # or "kayak_manual", "google_flights"
+    observation_type="historical_seed",  # distinguishes from live monitoring
+    data_quality="estimated",            # historical data is not confirmed live price
+)
+```
+
+Once 7+ `historical_seed` observations are in a series, the forecast tier upgrades
+from SMA to EWM and BUY_SIGNAL eligibility unlocks from day one of live monitoring.
+
+---
+
 ## SWAPPABLE_DEFAULT REGISTRY
 
 | Component | Current Default | Swap To | Swap Instructions |

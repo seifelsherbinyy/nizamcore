@@ -50,7 +50,8 @@ MARSAD__flight_radar/
 │   ├── sources/
 │   │   ├── __init__.py
 │   │   ├── base.py            (abstract source interface + shared rate-limit logic)
-│   │   ├── amadeus_source.py  (PRIMARY — Amadeus for Developers API)
+│   │   ├── serpapi_source.py  (PRIMARY — SerpApi Google Flights API)
+│   │   ├── amadeus_source.py  (DISABLED — Amadeus portal shut down July 2025)
 │   │   ├── ita_matrix_source.py  (OPTIONAL — requires ToS review before enabling)
 │   │   ├── kiwi_source.py     (secondary aggregator)
 │   │   └── google_flights_source.py  (validation-only, rate-limited)
@@ -109,7 +110,15 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Active default: SerpApi Google Flights API** (`DATA_SOURCE=serpapi` in .env)
+
+Register at serpapi.com — free tier gives 250 searches/month (sufficient for testing;
+paid tier at $25/month for 1,000 searches covers full daily monitoring with headroom).
+Set `SERPAPI_PRIORITY_ONLY=true` to stay within the free tier during development.
+
+Amadeus for Developers (`DATA_SOURCE=amadeus`) is implemented but **disabled** — the
+Amadeus self-service developer portal was shut down in July 2025. Pre-existing credentials
+may still work; new registrations are blocked.
 
 ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 - Google's ToS prohibits automated access without prior written permission
@@ -123,7 +132,7 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (register free at serpapi.com)
 pip install -r requirements.txt
 
 # Run baseline collection (Stage 1 — first time only)
@@ -150,7 +159,7 @@ python -m radar.main schedule
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Primary source | SerpApi (Google Flights) | ITA Matrix (ToS risk) | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
 | Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |

@@ -35,6 +35,7 @@ class ITAMatrixSource(BaseFlightSource):
     name = "ita_matrix"
 
     def __init__(self) -> None:
+        super().__init__()
         if not ITA_MATRIX_ENABLED:
             logger.warning(
                 "ITAMatrixSource is disabled. Set ITA_MATRIX_ENABLED=true in .env "

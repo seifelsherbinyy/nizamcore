@@ -3,15 +3,17 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
-  discover   — Stage 1: baseline collection (run once on init)
-  monitor    — Stage 2: daily delta
-  alert      — Stage 3: price drop signal detection
-  forecast   — Stage 4: trend model update
-  run-all    — Run all four stages in sequence
-  schedule   — Start APScheduler daemon (06:00 UTC daily)
-  dashboard  — Live executive dashboard at http://localhost:7329
-  status     — Print current store summary
-  validate   — Validate credentials and configuration
+  discover       — Stage 1: baseline collection (run once on init)
+  monitor        — Stage 2: daily delta
+  alert          — Stage 3: price drop signal detection
+  forecast       — Stage 4: trend model update
+  run-all        — Run all four stages in sequence
+  seed           — Import historical seed observations from CSV or JSON
+  seed-template  — Write an empty seed CSV template
+  schedule       — Start APScheduler daemon (06:00 UTC daily)
+  dashboard      — Live executive dashboard at http://localhost:7329
+  status         — Print current store summary
+  validate       — Validate credentials and configuration
 
 Usage:
   cd MARSAD__flight_radar
@@ -125,6 +127,28 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.seed_historical import run_seed
+    stats = run_seed(file_path=args.file, dry_run=args.dry_run)
+    if "error" in stats:
+        print(f"\nSEED ERROR: {stats['error']}")
+        return 1
+    print(
+        f"\nSEED: {stats['records_imported']} imported, "
+        f"{stats['records_skipped']} skipped"
+        f"{' [DRY RUN]' if stats['dry_run'] else ''}"
+    )
+    return 0
+
+
+def cmd_seed_template(args: argparse.Namespace) -> int:
+    from radar.seed_historical import generate_seed_template
+    out = generate_seed_template(output_path=args.output)
+    print(f"\nSeed template written to: {out}")
+    print("Fill in the rows and run: python -m radar.main seed --file <path>")
+    return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     missing = validate_credentials()
     if missing:
@@ -186,6 +210,17 @@ def main() -> int:
     # status
     p_status = subparsers.add_parser("status", help="Print current store summary")
     p_status.set_defaults(func=cmd_status)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Import historical seed observations from CSV or JSON")
+    p_seed.add_argument("--file", required=True, help="Path to seed CSV or JSON file")
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate records without writing to store")
+    p_seed.set_defaults(func=cmd_seed)
+
+    # seed-template
+    p_tmpl = subparsers.add_parser("seed-template", help="Write an empty seed CSV template")
+    p_tmpl.add_argument("--output", default="data/seed_template.csv", help="Output path (default: data/seed_template.csv)")
+    p_tmpl.set_defaults(func=cmd_seed_template)
 
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")

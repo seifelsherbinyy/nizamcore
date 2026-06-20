@@ -49,13 +49,25 @@ progress:
 
 **Milestone:** v1.1 / In Progress  
 **Phase:** 16 (Message Generation & Variation)  
-**Plan:** 16-01 (Core Message Generator) — COMPLETE  
-**Status:** Ready to plan Phase 16-02 (Tests) or proceed to Phase 17
-**Progress:** [████████░░] 73% (8/11 plans complete: Phase 14 (5) + Phase 15 (2) + Phase 16 (1))
+**Plan:** 16-02 (Testing & Integration) — COMPLETE  
+**Status:** Phase 16 complete; ready for Phase 17 (Delivery & Response Tracking)
+**Progress:** [█████████░] 82% (9/11 plans complete: Phase 14 (5) + Phase 15 (2) + Phase 16 (2))
 
-**Stopped At:** Phase 16-01 completed; core message generation engine built with persona tone injection, repetition tracking, intent processing, and privacy-gated audit trail. Public API exposed. Ready for Wave 2 testing.
+**Stopped At:** Phase 16 complete; comprehensive test suite (81 tests, all passing) validates message generation with phrase-level repetition detection, tone consistency (MSG-04), and error handling. README documented with Phase 17 integration example. Ready for Phase 17 delivery.
 
 **Work Completed:**
+- **Phase 16-02 Completion:**
+  - Created comprehensive test suite: 81 total tests across 5 modules (all passing, 100% pass rate)
+  - Implemented MockClaude fixture: Anthropic API simulator with persona-specific responses, no real API calls
+  - Created sample persona indices: Valid test indices for AMMAR, HIKMAH, TARIQ, MUNAWARA, MAL (all schema-validated)
+  - test_repetition_tracker.py (19 tests): Last-5 message retrieval, phrase extraction, exact phrase matching, false positive prevention, ledger persistence
+  - test_intent_processor.py (24 tests): Topic extraction, context summary building, celebration detection, activity aggregation, full context building
+  - test_generator.py (20 tests): Intent rephrasing with tone, deduplication with retries, actionability validation, error handling (API error/timeout/rate limit), message length enforcement
+  - test_tone_consistency.py (18 tests): Tone consistency across 5 consecutive generations per persona (AMMAR/HIKMAH/TARIQ), no cross-persona tone bleed, tone persistence across different intents
+  - Updated HIKMAH__knowledge_index/README.md: Added 500+ line Phase 16 section with API docs, persona tones, repetition strategy, integration example for Phase 17
+  - All 6 tasks completed and committed atomically (6 commits: conftest + 4 test modules + test fixes + README)
+  - Phase 16 wave 2 testing complete; all MSG-01-04 requirements validated via test suite
+  - Satisfies requirements MSG-01 (rephrasing with tone), MSG-02 (last-5 tracking), MSG-03 (actionability), MSG-04 (tone consistency)
 - **Phase 16-01 Completion:**
   - Implemented all 6 core modules: persona_tones.py, generator.py, repetition_tracker.py, intent_processor.py, message_ledger.py, __init__.py
   - Created system prompts for all 11 personas with distinct tones (AMMAR: terse, HIKMAH: deep/warm, TARIQ: strategic, etc.)
@@ -64,8 +76,7 @@ progress:
   - Implemented MessageLedger with privacy enforcement (context_tags whitelist validation)
   - Integrated Claude API 3.5 Sonnet for message generation with system prompt injection, error handling, exponential backoff
   - All 6 tasks completed and committed atomically (6 commits total)
-  - Phase 16 message generation engine now ready for Wave 2 testing and Phase 17 consumption
-  - Satisfies requirements MSG-01, MSG-02, MSG-03, MSG-04
+  - Phase 16 message generation engine built and ready for testing; satisfies requirements MSG-01, MSG-02, MSG-03, MSG-04
 - **Phase 15-02 Completion:**
   - Externalized refresh configuration to YAML (config.yaml) with all operator-editable parameters
   - Implemented RefreshConfig dataclass and load_refresh_config() with validation and runtime overrides

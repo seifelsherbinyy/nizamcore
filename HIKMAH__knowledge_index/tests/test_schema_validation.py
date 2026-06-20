@@ -68,7 +68,7 @@ class TestValidateIndexSchema:
     def test_rejects_invalid_version_format(self):
         """Test 3: validate_index_schema rejects invalid version format."""
         index = get_valid_sample_index()
-        index["version"] = "2.0"  # Only 1.x is valid
+        index["version"] = "v1.0"  # Invalid: must be semantic without 'v' prefix
         valid, error = validate_index_schema(index)
         assert valid is False
         assert isinstance(error, str)

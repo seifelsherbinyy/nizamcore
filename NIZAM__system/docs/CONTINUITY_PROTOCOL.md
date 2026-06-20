@@ -36,7 +36,6 @@
 | What battles were fought / won / lost | BATTLE_LEDGER.jsonl |
 | Financial trajectory | FINANCE_LEDGER.jsonl (strict_local) |
 | Body trajectory | BODY_LEDGER.jsonl (strict_local) |
-| Family support history | FAMILY_LEDGER.jsonl (strict_local) |
 | Identity / values | SOUL.md |
 | Architecture / commandments | NIZAM_TEMPLE.json |
 | Folder inventory + privacy | NIZAM_MASTER_REGISTER.json |
@@ -84,6 +83,90 @@ Things that may change:
 - The agent itself.
 
 The boundary between "must survive" and "may change" is the durable contract POP makes with future-self.
+
+## Knowledge Index Schema Evolution (HIKMAH__knowledge_index)
+
+The persona knowledge index evolves over time as new features are added. All schema changes follow the MAKHZAN snapshot pattern to preserve rollback capability and maintain a complete audit trail.
+
+### Versioning Strategy
+
+Schema versions use semantic versioning (MAJOR.MINOR):
+- **v1.x (backward-compatible)**: New optional fields may be added without breaking existing indices. Clients can safely ignore unknown fields. Examples: v1.0 → v1.1 (added optional `engagement_patterns` array).
+- **v2.0+ (breaking changes)**: Field removals, type changes, or structural reorganization. Requires migration guide and explicit user consent. Examples: v2.0 removes `context_snapshots` field.
+
+All indices within a persona set must be at the same version (enforced by `validate_schema_versions()`).
+
+### Snapshot Pattern
+
+Before any schema version bump:
+
+1. **Call snapshot_indices_to_makhzan(indices_dir, old_version, new_version, change_description)**
+   - Creates directory: `MAKHZAN__archive/{ISO_TIMESTAMP}/HIKMAH__knowledge_index/indices/`
+   - Copies all 11 persona indices to snapshot location (preserving original content exactly)
+   - Creates `MANIFEST.json` with change metadata, versions, timestamp, recovery notes
+
+2. **Example MANIFEST.json**
+   ```json
+   {
+     "trigger": "schema_version_increment",
+     "from_version": "1.0",
+     "to_version": "1.1",
+     "change": "Added engagement_patterns array to track persona engagement trends",
+     "snapshot_at": "2026-06-20T15:30:45.123456Z",
+     "indices_backed_up": 11,
+     "operator": "auto_system",
+     "recovery_note": "If rollback needed, restore indices from this snapshot and revert schema_version field"
+   }
+   ```
+
+### Atomic Updates
+
+Schema version increments are atomic:
+
+1. **Validate**: `validate_schema_versions(indices_dir)` confirms all indices currently at old_version
+2. **Snapshot**: Create MAKHZAN snapshot (preserves prior state before any changes)
+3. **Update**: For each of 11 persona indices:
+   - Update `version` field to new_version
+   - Update `last_updated` field to current UTC timestamp
+   - Validate updated index using `validate_index_schema()`
+   - Write updated file atomically
+4. **Verify**: All indices pass `validate_schema_versions()` with new_version
+
+If any step fails, entire operation rolls back (snapshot is still preserved for debugging).
+
+### Rollback Procedure
+
+If a version bump causes issues:
+
+1. Identify snapshot directory in `MAKHZAN__archive/` matching the failed upgrade
+2. Restore all 11 persona indices from snapshot:
+   ```
+   cp MAKHZAN__archive/{failed_timestamp}/HIKMAH__knowledge_index/indices/*.json \
+      HIKMAH__knowledge_index/indices/
+   ```
+3. Verify rollback: `validate_schema_versions(Path("HIKMAH__knowledge_index/indices"))` should confirm old_version
+4. Investigate failure before attempting upgrade again
+
+### Future Schema Changes
+
+**v1.1 (backward-compatible change)**
+- Add optional `engagement_patterns` array to track persona engagement trends
+- New field: `engagement_patterns: [{"date": "2026-06-20", "format": "text", "response_rate": 0.85}]`
+- Existing indices without this field remain valid (field is optional)
+- No migration needed; new indices will include field on creation
+
+**v2.0 (breaking change - future)**
+- Remove `context_snapshots` field (high-cardinality data that bloats storage)
+- Restructure `activity_history` to use numeric event_type codes instead of strings
+- Requires explicit migration: snapshot old indices, transform structure, validate new schema
+- Users must opt-in to upgrade; downgrade support via MAKHZAN snapshot restore
+
+### Integration Points
+
+- **Function**: `increment_schema_version()` in `HIKMAH__knowledge_index/index/versioning.py` — call this before any schema changes
+- **Validation**: `validate_schema_versions()` — check version consistency before operations
+- **Recovery**: All MAKHZAN snapshots in `MAKHZAN__archive/` — immutable records for audit and rollback
+- **Ledger**: Each snapshot creation is logged to `PERSONA_KNOWLEDGE_INDEX.jsonl` ledger (Phase 15 integration)
 
 ## Failure modes for continuity
 

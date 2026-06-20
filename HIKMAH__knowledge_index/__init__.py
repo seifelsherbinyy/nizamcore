@@ -29,16 +29,31 @@ Refresh (Phase 15):
     - RefreshAuditLogger: Audit trail logger for refresh operations
     - load_refresh_config(): Load configuration from YAML
 
+Message Generation (Phase 16):
+    from HIKMAH__knowledge_index import generate_message, generate_and_dedupe, RepetitionTracker, MessageLedger
+    - generate_message(persona, intent, index, client): Generate message via Claude
+    - generate_and_dedupe(persona, intent, index, client, tracker, ledger): Generate with repetition checking
+    - RepetitionTracker: Track last 5 messages per persona
+    - MessageLedger: JSONL audit trail with privacy enforcement
+
 Integration (Phases 16-20):
-    from HIKMAH__knowledge_index import refresh_persona_index
+    from HIKMAH__knowledge_index import refresh_persona_index, generate_and_dedupe
     - Call refresh_persona_index() before message generation to get fresh index
     - Falls back to cached index if Drive unavailable
+    - Pass index to generate_and_dedupe() for message generation
 
 Usage:
-    from HIKMAH__knowledge_index import refresh_persona_index, load_refresh_config
+    from HIKMAH__knowledge_index import refresh_persona_index, load_refresh_config, generate_and_dedupe, RepetitionTracker, MessageLedger
+    from anthropic import Anthropic
+    from pathlib import Path
 
     # Load configuration
     config = load_refresh_config()
+
+    # Initialize message generation components
+    client = Anthropic(api_key="sk-ant-...")
+    tracker = RepetitionTracker(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+    ledger = MessageLedger(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
 
     # Refresh index before message generation
     success, index, reason = refresh_persona_index(
@@ -49,11 +64,27 @@ Usage:
     )
 
     if success:
-        # Use fresh index for message generation
-        topics = index.get("topics", [])
+        # Generate message with fresh index
+        message, success, reason = generate_and_dedupe(
+            persona="AMMAR",
+            intent="You have open work",
+            index=index,
+            client=client,
+            tracker=tracker,
+            ledger=ledger
+        )
     else:
         # Gracefully degrade to cached index
-        print(f"Using cached index (reason: {reason})")
+        from HIKMAH__knowledge_index import load_cached_index
+        index = load_cached_index(Path("HIKMAH__knowledge_index/indices/AMMAR_index.json"))
+        message, success, reason = generate_and_dedupe(
+            persona="AMMAR",
+            intent="You have open work",
+            index=index,
+            client=client,
+            tracker=tracker,
+            ledger=ledger
+        )
 """
 
 __version__ = "1.0"
@@ -80,6 +111,14 @@ from HIKMAH__knowledge_index.refresh.config_loader import (
 )
 from HIKMAH__knowledge_index.refresh.ledger_writer import RefreshAuditLogger
 
+# Phase 16 imports (message generation)
+from HIKMAH__knowledge_index.message_generation import (
+    generate_message,
+    generate_and_dedupe,
+    RepetitionTracker,
+    MessageLedger,
+)
+
 __all__ = [
     # Phase 14: Initialization
     'initialize_persona_index',
@@ -94,4 +133,9 @@ __all__ = [
     'RefreshConfig',
     'load_refresh_config',
     'RefreshAuditLogger',
+    # Phase 16: Message Generation
+    'generate_message',
+    'generate_and_dedupe',
+    'RepetitionTracker',
+    'MessageLedger',
 ]

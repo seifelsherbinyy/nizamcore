@@ -8,6 +8,19 @@ A new strategic-intelligence module inside the existing NIZAM system that turns 
 
 Every run produces **evidence-backed, scored opportunities** (each with source link, access date, source type, and honest confidence) delivered to Telegram + Drive — never fabricated salaries, never leaked personal data, never silently dropped findings.
 
+## Current Milestone: v1.1 — Persona Knowledge Index & Adaptive Messaging
+
+**Goal:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action on open topics, celebrating closed topics — with adaptive messaging that evolves when engagement drops.
+
+**Target features:**
+- Each persona has optimized knowledge index (JSON schema tracking topics, status, context)
+- Knowledge index refreshes from Google Drive + conversation logs
+- Twice-daily Telegram nudges (09:00 & 18:00 Cairo)
+- Message generation: rephrase intent + new data + persona tone
+- Response tracking (1-hour window for engagement)
+- Adaptation logic (format changes if response rate <80%)
+- Integration seams to MUNAWARA (actions), MAL (finance), TARIQ (strategy)
+
 ## Requirements
 
 ### Validated
@@ -87,4 +100,4 @@ Every run produces **evidence-backed, scored opportunities** (each with source l
 | Connect findings to MAL / TARIQ / MUNAWARA | Keeps it strategic intelligence, not generic job alerts | — Pending |
 
 ---
-*Last updated: 2026-06-14 after initialization*
+*Last updated: 2026-06-20 after v1.1 milestone started*

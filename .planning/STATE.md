@@ -28,23 +28,25 @@ progress:
   percent: 100
 ---
 
-# STATE: TARIQ Career Radar v1
+# STATE: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
 
-**Last Updated:** 2026-06-14T20:11:05Z  
-**Current Milestone:** Phase 1 execution — Plan 01-01 complete (Wave 0 TDD scaffold)
+**Last Updated:** 2026-06-20T00:00:00Z  
+**Current Milestone:** v1.1 — Defining requirements (roadmap creation in progress)
 
 ---
 
 ## Project Reference
 
-**Project Name:** TARIQ Career Radar v1  
-**Core Value:** Every run produces evidence-backed, scored opportunities (each with source link, access date, source type, honest confidence) delivered to Telegram + Drive — never fabricated salaries, never leaked personal data, never silently dropped findings.
+**Project Name:** NIZAM Multi-Persona System (v1.0 TARIQ Career Radar + v1.1 Adaptive Messaging)
+**Core Value:** Each persona delivers fresh, contextual, actionable nudges — refreshing user knowledge, motivating action on open topics, celebrating closed topics — with adaptive messaging that evolves when engagement drops.
 
-**Scope:**  
-- Full-depth remote-USD opportunity-radar pipeline  
-- On-demand trigger only (no unattended cron in v1)  
-- Additive module on existing NIZAM rails  
-- 13 phases, 30 requirements, 100% coverage
+**Current Milestone v1.1 Scope:**
+- Knowledge index per persona (optimized JSON schema)
+- Twice-daily Telegram messaging (09:00 & 18:00 Cairo)
+- Adaptive messaging (format changes if <80% response rate)
+- Response tracking (1-hour window for engagement)
+- Integration to MUNAWARA, MAL, TARIQ
+- 7 phases (14–20), 25 requirements, 100% coverage
 
 **Key Constraints (Non-Negotiables):**
 - No fabricated salaries; provenance + confidence or omit
@@ -58,12 +60,13 @@ progress:
 
 ## Current Position
 
-**Phase:** 1 / 13 (Foundation Data Model — in execution)  
-**Plan:** 01-01 complete; Plan 01-02 next  
-**Status:** Ready to plan
-**Progress:** [██████████] 100%
+**Milestone:** v1.1 / Not started (defining requirements)
+**Phase:** 14–20 (not yet structured)
+**Plan:** — (pending roadmap)
+**Status:** Roadmap creation in progress
+**Progress:** [░░░░░░░░░░] 0%
 
-**Stopped At:** Completed 05-scoring-engine/05-03-PLAN.md (run_scoring_pass orchestrator + fetch.py wiring; all 18 scoring tests GREEN; 54 total tests GREEN)
+**Stopped At:** Milestone v1.1 started 2026-06-20; requirements defined; roadmap generation queued
 
 **Work Completed:**
 - Analyzed 30 v1 requirements

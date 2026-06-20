@@ -13,7 +13,7 @@
 
 - [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓, 14-05: comprehensive test suite ✓)
 - [x] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources (15-01: refresh pipeline ✓, 15-02: configuration & integration ✓)
-- [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone (16-01: core infrastructure ◐, 16-02: test suite + integration ◐)
+- [x] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone (16-01: core infrastructure ◐, 16-02: test suite + integration ◐) (completed 2026-06-20)
 - [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
 - [ ] **Phase 18: Adaptation & Format Evolution** - Track weekly response rates, adapt format if <80%, cycle through variations, log rationale
 - [ ] **Phase 19: Cross-Pillar Integration** - Wire messages to MUNAWARA (actions), MAL (finance), TARIQ (strategy), ledger append
@@ -97,7 +97,7 @@
 3. Generated message is actionable: nudges open topic, motivates action, or celebrates completion (not generic or passive)
 4. Persona tone is consistent (e.g., AMMAR is builder-focused, HIKMAH is philosophical, TARIQ is strategic) across 5 consecutive test message generations
 
-**Plans:** 2/2 plans planned
+**Plans:** 2/2 plans complete
 - [ ] 16-01: Core Infrastructure & Generator (Wave 1, 6 tasks, PLANNED)
   - Persona system prompts for all 11 personas (AMMAR, HIKMAH, TARIQ, MUNAWARA, MAL, BADAN, NAQD, SHURA, TAFRIGH, MARSAD, NIZAM)
   - RepetitionTracker: Last-5 message tracking with phrase-level deduplication (3-grams)
@@ -194,7 +194,7 @@
 |-------|----------------|--------|-----------|
 | 14. Knowledge Index Schema & Storage | 5/5 | Complete    | 2026-06-20 |
 | 15. Data Refresh & Synchronization | 2/2 | Complete    | 2026-06-20 |
-| 16. Message Generation & Variation | 2/2 | Complete    | 2026-06-21 |
+| 16. Message Generation & Variation | 2/2 | Complete    | 2026-06-20 |
 | 17. Delivery & Response Tracking | 0/? | Not started | — |
 | 18. Adaptation & Format Evolution | 0/? | Not started | — |
 | 19. Cross-Pillar Integration | 0/? | Not started | — |

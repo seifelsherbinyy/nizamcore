@@ -1,0 +1,20 @@
+data_refresh:
+  # Google Drive folder paths (operator can change without code edit)
+  conversation_logs_folder: "YAWMIYAT/sessions"
+  activity_snapshots_folder: "YAWMIYAT/daily_snapshots"
+
+  # Credential location (environment-specific, operator sets)
+  credentials_path: "NIZAM-secrets.json"
+
+  # Refresh behavior tuning
+  max_files_per_refresh: 100
+  timeout_seconds: 30
+  enable_partial_refresh: false
+
+  # Audit logging
+  audit_ledger_path: "HIKMAH__knowledge_index/REFRESH_AUDIT_LEDGER.jsonl"
+
+  # Retry policy (optional, default to no retry in Phase 15)
+  retry_on_transient_error: false
+  max_retries: 0
+  backoff_base: 2

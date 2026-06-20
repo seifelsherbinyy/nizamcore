@@ -30,8 +30,8 @@ VALID_PERSONAS = [
 # Constants: Context tags whitelist (prevents PII leakage)
 CONTEXT_TAGS_WHITELIST = {"technical", "health", "financial", "strategic", "personal"}
 
-# Constants: Valid version pattern (semantic versioning 1.x)
-VALID_VERSION_PATTERN = r"^1\.[0-9]+$"
+# Constants: Valid version pattern (semantic versioning MAJOR.MINOR, e.g., 1.0, 1.1, 2.0)
+VALID_VERSION_PATTERN = r"^[1-9][0-9]*\.[0-9]+$"
 
 # Constants: Valid topic statuses
 VALID_TOPIC_STATUS = ["active", "paused", "completed"]
@@ -170,10 +170,10 @@ def validate_index_schema(data: dict) -> tuple[bool, Optional[str]]:
         if field not in data:
             return (False, f"Missing required field: {field}")
 
-    # Validate version format (must be 1.x)
+    # Validate version format (semantic versioning: MAJOR.MINOR, e.g., 1.0, 1.1, 2.0)
     version = data.get("version", "")
     if not re.match(VALID_VERSION_PATTERN, version):
-        return (False, f"Invalid version format: {version} (must be 1.x)")
+        return (False, f"Invalid version format: {version} (must be semantic versioning like 1.0, 1.1, 2.0)")
 
     # Validate persona is registered
     persona = data.get("persona")

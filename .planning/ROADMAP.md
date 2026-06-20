@@ -176,7 +176,7 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 14. Knowledge Index Schema & Storage | 5/5 | Complete    | 2026-06-20 |
-| 15. Data Refresh & Synchronization | 2/2 planned | Planning    | — |
+| 15. Data Refresh & Synchronization | 2/2 planned | Complete    | 2026-06-20 |
 | 16. Message Generation & Variation | 0/? | Not started | — |
 | 17. Delivery & Response Tracking | 0/? | Not started | — |
 | 18. Adaptation & Format Evolution | 0/? | Not started | — |

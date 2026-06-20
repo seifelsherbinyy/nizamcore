@@ -1,284 +1,142 @@
-# ROADMAP: TARIQ Career Radar v1
+# ROADMAP: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
 
-**Project:** TARIQ Career Radar  
-**Scope:** Full-depth remote-USD opportunity-radar pipeline, on-demand trigger, additive module on NIZAM rails  
-**Granularity:** FINE (13 phases, derived from data-dependency chain)  
-**Last Updated:** 2026-06-15
+**Project:** NIZAM Multi-Persona System v1.1  
+**Scope:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action, celebrating completion — with adaptive messaging when engagement drops  
+**Granularity:** FINE (7 phases, derived from message lifecycle and integration boundaries)  
+**Last Updated:** 2026-06-20
 
 ---
 
 ## Phases
 
-- [x] **Phase 1: Foundation & Data Model** - Establish opportunity schema, profile seed, seen-role store, module layout, and ledger registration
- (completed 2026-06-14)
-- [x] **Phase 2: Tier 1 ATS Sourcing** - Fetch from no-auth Greenhouse/Lever/Ashby/Workable APIs with error graceful handling (completed 2026-06-15)
-- [x] **Phase 3: Tier 2 RSS & Manual Sourcing** - Add RSS feeds + operator manual import with role keyword filtering (completed 2026-06-15)
-- [x] **Phase 4: Deduplication Engine** - Normalize opportunities, fuzzy dedup, persistent seen-store, rerun-no-dup guarantee (completed 2026-06-15)
-- [x] **Phase 5: Scoring Engine** - Implement deterministic 0–100 weighted scoring (fit 25, salary 20, growth 15, visa 10, company 10, referral 10, freshness 5, side-income 5) + penalties (completed 2026-06-15)
-- [ ] **Phase 6: Salary & Confidence Discipline** - Tag salaries with provenance + confidence, avoid fabrication, ranges only when unclear
-- [ ] **Phase 7: Tagging & Profile Matching** - Assign 8 action tags, compute local profile fit, flag scams/unpaid, no raw data egress
-- [ ] **Phase 8: Telegram Report** - Build short, action-oriented Telegram summary (best opp, salary, risk, next action)
-- [ ] **Phase 9: Drive Evidence Report & Ledger** - Full Drive report (date, run ID, sources, counts, scores, confidence, gaps, next actions, links), ledger append, NAQD risk note
-- [ ] **Phase 10: Delivery Continuity (Retry & Safety)** - Guarantee no silent drops; retry Telegram/Drive or print full unsaved output, mark run incomplete on failure
-- [ ] **Phase 11: On-Demand Trigger & NIZAM Wiring** - Operator-invoked run via relay/router/TARIQ, cron seam ready (inactive), full pipeline end-to-end
-- [ ] **Phase 12: Strategic Routing (MAL/TARIQ/MUNAWARA)** - Route findings to income/strategy/weekly-actions pillars, cross-pillar integration
-- [ ] **Phase 13: Validation & Safety Sign-Off** - Test run on small real subset; confirm extraction correct, salary not fabricated, dedup works, no leaks, rerun no-dup
+- [ ] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support
+- [ ] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources
+- [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone
+- [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
+- [ ] **Phase 18: Adaptation & Format Evolution** - Track weekly response rates, adapt format if <80%, cycle through variations, log rationale
+- [ ] **Phase 19: Cross-Pillar Integration** - Wire messages to MUNAWARA (actions), MAL (finance), TARIQ (strategy), ledger append
+- [ ] **Phase 20: Privacy & Safety Validation** - No raw personal data in index/messages, sensitive topics flagged, confidence gates, full test validation
 
 ---
 
 ## Phase Details
 
-### Phase 1: Foundation & Data Model
-**Goal:** Establish the opportunity schema, profile seed, seen-role store, module layout, and ledger registration so all downstream work has a solid data foundation.
+### Phase 14: Knowledge Index Schema & Storage
+**Goal:** Define and initialize an optimized JSON knowledge index schema that tracks user knowledge state, activity history, and context per persona, stored locally with versioning support.
 
-**Depends on:** Nothing (first phase)
+**Depends on:** Nothing (first phase of v1.1)
 
-**Requirements:** DATA-01, DATA-02, DATA-03, DATA-04, DATA-05
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. Opportunity record schema is documented (title, company, location, remote_status, salary_low/high, role_link, source, source_type, access_date, fit_score, growth_score, confidence, tags, next_action, profile_gap, run_id, observed_at, lane)
-2. Profile seed file exists locally (role keyword groups + target-role taxonomy from Seif's profile), marked as strict_local, never exported
-3. Seen-role store (SQLite or JSONL) is initialized and survives across runs with clear schema
-4. Module folder structure follows NIZAM conventions (mirroring MARSAD placement)
-5. Career Radar ledger is registered in NIZAM/TEMPLE/known-ledgers with privacy path-rules added to PRIVACY_CLASSIFICATION
-
-**Plans:** 6/6 plans complete
-
-Plans:
-- [ ] 01-01-PLAN.md — Wave 0: Test scaffold (12 failing tests across all DATA-01..05 requirements)
-- [ ] 01-02-PLAN.md — Wave 1: JSON Schema definition for opportunity record (DATA-01)
-- [ ] 01-03-PLAN.md — Wave 1: Module folder layout + NIZAM registration (DATA-04)
-- [ ] 01-04-PLAN.md — Wave 2: Profile seed file, strict_local_maximum (DATA-02)
-- [ ] 01-05-PLAN.md — Wave 2: SQLite dedup engine + normalization (DATA-03)
-- [ ] 01-06-PLAN.md — Wave 3: Ledger registration ceremony in 3 live NIZAM files (DATA-05)
-
----
-
-### Phase 2: Tier 1 ATS Sourcing
-**Goal:** Establish reliable API-based sourcing from no-auth public ATS endpoints (Greenhouse, Lever, Ashby, Workable) with graceful error handling.
-
-**Depends on:** Phase 1 (schema, module layout)
-
-**Requirements:** SRC-01, SRC-04, SRC-05
+**Requirements:** INDEX-01, INDEX-02, INDEX-03, INDEX-04
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. All four ATS connectors (Greenhouse, Lever, Ashby, Workable) fetch job postings without authentication
-2. Each fetched opportunity is normalized into the DATA-01 schema with source link, source type, and access date recorded
-3. API errors (connection failures, rate limits, missing endpoints) are logged to blocked-sources list and do not abort the run
-4. A run with zero sources returning results degrades gracefully (reports zero opportunities, marks sources as blocked, continues to next phase)
-
-**Plans:** 4/4 plans complete
-
-Plans:
-- [ ] 02-01-PLAN.md — Wave 1: TDD scaffold (11 failing tests, fixtures, fake-HTTP conftest)
-- [ ] 02-02-PLAN.md — Wave 2: BaseSource interface + GreenhouseSource + LeverSource + seed config
-- [ ] 02-03-PLAN.md — Wave 2: AshbySource + WorkableSource connectors
-- [ ] 02-04-PLAN.md — Wave 3: run_fetch orchestrator + normalization + blocked-sources manifest
-
----
-
-### Phase 3: Tier 2 RSS & Manual Sourcing
-**Goal:** Add Tier 2 RSS feeds and operator manual import path, with target-role filtering for remote-USD AI/data/AI-ops/coordination roles.
-
-**Depends on:** Phase 1 (schema, profile seed for keyword filtering), Phase 2 (normalization precedent)
-
-**Requirements:** SRC-02, SRC-03, SRC-06
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. RSS feeds (Remotive, We Work Remotely, RemoteOK) are parsed using stdlib `xml.etree.ElementTree` into normalized records
-2. Operator can manually import opportunities via structured JSONL/paste input (Outlier, DataAnnotation, Turing, Toloka, Braintrust, Contra, Wellfound)
-3. All fetched opportunities are filtered to remote-USD AI/data/AI-ops/coordination roles matching Seif's role keyword groups
-4. Combined sources (Tier 1 + Tier 2) yield ≥5 distinct opportunities in a test run
-
-**Plans:** 4/4 plans complete
-
-Plans:
-- [ ] 03-01-PLAN.md — Wave 1: TDD scaffold (9 failing tests, 5 fixture files, conftest Phase-3 augmentation)
-- [ ] 03-02-PLAN.md — Wave 2: RSS connectors (RemotiveSource, WeWorkRemotelySource, RemoteOKSource) in rss_source.py
-- [ ] 03-03-PLAN.md — Wave 2: ManualImportSource + RoleKeywordFilter (manual_import_source.py + filter.py)
-- [ ] 03-04-PLAN.md — Wave 3: Wire Tier 2 sources + filter into run_fetch; config_sources.yaml additions; .gitignore
-
----
-
-### Phase 4: Deduplication Engine
-**Goal:** Normalize opportunities into canonical form, apply fuzzy matching, and maintain a persistent seen-role store so reruns do not surface already-seen roles.
-
-**Depends on:** Phase 1 (schema, seen-store definition), Phases 2–3 (sourcing provides candidate records)
-
-**Requirements:** DEDUP-01, DEDUP-02, DEDUP-03
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. Opportunities are normalized (title/company/location/URL canonicalization) into a deterministic dedup key
-2. Fuzzy matching with `rapidfuzz` (token_sort_ratio ≥0.88) detects duplicates within a single run (test with 2+ sources reporting the same role)
-3. Re-running the radar against the same sources does not re-surface already-seen roles; seen-store is consulted before including in results
-4. Freshness rule allows genuine reposts (same role posted >30 days after first seen) to surface as new
-
-**Plans:** 3/3 plans complete
-
-Plans:
-- [ ] 04-01-PLAN.md — Wave 1: TDD RED scaffold (6 failing tests, dedup_test_data.jsonl, Phase-4 conftest fixtures)
-- [ ] 04-02-PLAN.md — Wave 2: fuzzy_match_opportunities() + is_fresh_repost() in dedup_engine.py
-- [ ] 04-03-PLAN.md — Wave 3: run_dedup_pass() orchestrator + fetch.py wiring
-
----
-
-### Phase 5: Scoring Engine
-**Goal:** Implement a deterministic 0–100 weighted scoring formula with penalty logic so opportunities are ranked by strategic value.
-
-**Depends on:** Phase 1 (schema includes score fields), Phase 4 (only deduplicated opportunities are scored)
-
-**Requirements:** SCORE-01, SCORE-02
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. Every opportunity receives a deterministic 0–100 score using weights: fit 25, salary upside 20, growth 15, visa/remote feasibility 10, company strength 10, referral/application leverage 10, freshness 5, side-income 5
-2. Same opportunity scored twice produces identical score (deterministic, no LLM injection)
-3. Scoring applies penalties (−5 to −20 points) for no-evidence, scam risk, unclear pay, severe skill mismatch, exploitative unpaid work
-4. Opportunities are ranked by final score, descending
-
-**Plans:** 3/3 plans complete
-
-Plans:
-- [ ] 05-01-PLAN.md — Wave 1 (TDD): 17 RED tests + fixture data + conftest augmentation (SCORE-01, SCORE-02)
-- [ ] 05-02-PLAN.md — Wave 2: ScoringEngine + 8 dimension functions + penalty logic in scoring_engine.py + scoring_config.py (SCORE-01, SCORE-02)
-- [ ] 05-03-PLAN.md — Wave 3: run_scoring_pass() orchestrator in stages/score.py + fetch.py pipeline wiring (SCORE-01)
-
----
-
-### Phase 6: Salary & Confidence Discipline
-**Goal:** Tag every salary claim with provenance and confidence level; avoid fabrication by using ranges and source evidence only.
-
-**Depends on:** Phase 1 (schema includes salary_low/high, confidence, tags), Phase 5 (scoring includes salary-upside component that depends on confidence)
-
-**Requirements:** SALARY-01, SALARY-02
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. Every salary claim is tagged with provenance (employer-posted / estimated / recruiter-stated / guide-based / community-reported)
-2. Confidence level (high/medium/low) is recorded; when evidence is unclear, confidence is marked low and no exact number is invented (ranges only, with methodology documented)
-3. Low-confidence salaries are flagged in reports and scoring (salary upside component downweighted)
-4. No test opportunity has a "fabricated" exact salary without a clear source link
+1. Knowledge index JSON schema is documented with fields: topics (array of objects with name, status, timestamps, context), completions (closed topics), activity_history (user actions), stalled_work (tracking blockers), context_snapshots (current state)
+2. Index is initialized per persona and stored locally in strict_local directory (not egressed to Telegram/Drive)
+3. Index schema supports versioning and evolution (e.g., new topic types added in future personas without breaking existing indices)
+4. Empty test run with a persona creates a valid, readable index file with correct structure
 
 **Plans:** TBD
 
 ---
 
-### Phase 7: Tagging & Profile Matching
-**Goal:** Assign action labels to each opportunity and compute local profile fit without exposing raw personal data.
+### Phase 15: Data Refresh & Synchronization
+**Goal:** Refresh knowledge index from Google Drive conversation logs and activity data on each message generation, with graceful fallback to cached index if refresh fails.
 
-**Depends on:** Phase 1 (profile seed definition), Phases 5–6 (scoring and salary provide input for tags)
+**Depends on:** Phase 14 (index schema and storage initialized)
 
-**Requirements:** TAG-01, TAG-02
+**Requirements:** REFRESH-01, REFRESH-02, REFRESH-03
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. Each opportunity is tagged with one or more of: APPLY NOW / REFERRAL FIRST / WATCHLIST / PROFILE GAP / LOW CONFIDENCE / SIDE INCOME / RELOCATION BET / USD CASHFLOW
-2. Scam-prone or exploitative-unpaid platforms are flagged with a caution tag and brief reasoning (no raw data)
-3. Profile fit is computed locally against the profile seed (no raw profile data leaves the machine)
-4. Tag assignment is deterministic based on score + salary + fit + confidence (same opportunity tagged the same way every run)
+1. Refresh reads conversation logs and activity snapshots from Google Drive (correct folder, correct file types)
+2. New activity from Drive is merged into the local index without overwriting stalled/completed tracking
+3. If Drive is unavailable (network error, auth failure, missing file), system falls back to cached index and logs the degradation (audit entry with timestamp)
+4. Every refresh logs data sources read, timestamps, and success/failure status (audit trail persists locally)
 
 **Plans:** TBD
 
 ---
 
-### Phase 8: Telegram Report
-**Goal:** Build a short, action-oriented Telegram summary suitable for daily delivery.
+### Phase 16: Message Generation & Variation
+**Goal:** Generate fresh, actionable messages per intent by rephrasing intent, pulling updated index data, applying persona tone, and avoiding repetition from last 5 messages.
 
-**Depends on:** Phases 5–7 (scoring, salary, tags provide content), Phase 1 (privacy rules)
+**Depends on:** Phase 14 (index available), Phase 15 (fresh data loaded)
 
-**Requirements:** RPT-01
+**Requirements:** MSG-01, MSG-02, MSG-03, MSG-04
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. Telegram report includes: best opportunity + salary insight + main risk/gap + one recommended action
-2. Report is concise and action-oriented (≤500 chars target, link-driven, no rambling)
-3. Report contains no raw personal-profile data or sensitive matching details (scores/tags only)
-4. Report is readable and actionable for Seif in a single glance (text rendering test passed)
+1. Message generator rephrases the user intent (e.g., "You have open work on AI optimization" → "Your AI workflow could be faster — ready to tackle that?"), adds current context from index, applies persona character
+2. System tracks last 5 messages per persona and detects exact phrase repeats (avoids sending identical phrasing twice in a row)
+3. Generated message is actionable: nudges open topic, motivates action, or celebrates completion (not generic or passive)
+4. Persona tone is consistent (e.g., AMMAR is builder-focused, HIKMAH is philosophical, TARIQ is strategic) across 5 consecutive test message generations
 
 **Plans:** TBD
 
 ---
 
-### Phase 9: Drive Evidence Report & Ledger
-**Goal:** Build a full evidence report for Drive and append a ledger record so the run is documented and discoverable.
+### Phase 17: Delivery & Response Tracking
+**Goal:** Deliver twice-daily scheduled Telegram nudges with unique message IDs and capture user responses within a 1-hour engagement window.
 
-**Depends on:** Phases 5–8 (all upstream data ready), Phase 1 (ledger definition, Drive folder rules)
+**Depends on:** Phase 16 (message generated), Phase 14 (index available)
 
-**Requirements:** RPT-02, RPT-03, DELIV-01, DELIV-02
+**Requirements:** DELIVERY-01, DELIVERY-02, DELIVERY-03, DELIVERY-04, DELIVERY-05
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. Full Drive evidence report includes: date, run ID, sources searched, new/duplicate counts, top roles (by score), salary evidence + confidence breakdown, fit/growth scores, feasibility notes, company strength indicators, profile gaps, application route per role, next actions, evidence links, errors/blocked sources, Telegram summary, ledger IDs/paths
-2. Drive report is saved to correct NIZAM Drive folder (Records/{lane}/...) with metadata
-3. NAQD red-team note briefly explains attractive-but-risky top roles (1–2 paras, reasoning only)
-4. Ledger record is appended with run ID, sources searched, counts, file paths, timestamp
+1. Messages are delivered twice daily (09:00 & 18:00 Cairo via Hermes cron) to Telegram using existing relay infrastructure
+2. Each message receives a unique message_id, sent_at timestamp, and delivered_at timestamp; metadata stored in index
+3. System monitors Telegram for user responses in 1-hour window after delivery (polls relay for incoming messages matching message_id)
+4. Response received within 1-hour window is recorded with response_content and response_time; marked as "successful engagement"
+5. Response tracking test validates: sent message recorded, monitor waits 1 hour, simulated response detected and logged
 
 **Plans:** TBD
 
 ---
 
-### Phase 10: Delivery Continuity (Retry & Safety)
-**Goal:** Guarantee that findings are never silently dropped; implement retry logic for Telegram + Drive, or print full unsaved output and mark run incomplete.
+### Phase 18: Adaptation & Format Evolution
+**Goal:** Track weekly response rates per persona and adapt message format when engagement drops below 80%, cycling through format variations.
 
-**Depends on:** Phases 8–9 (Telegram + Drive reports to deliver), Phase 1 (privacy/egress rules)
+**Depends on:** Phase 17 (response data available)
 
-**Requirements:** DELIV-03
+**Requirements:** ADAPT-01, ADAPT-02, ADAPT-03, ADAPT-04
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. On Telegram send failure, the system retries (exponential backoff, ≤3 attempts)
-2. On Drive write failure, the system retries (exponential backoff, ≤3 attempts)
-3. If both retries fail, the full unsaved output (Telegram + Drive report) is printed to console/log with clear "UNSAVED" marking
-4. Run is marked incomplete (ledger flag or status field), never silently succeeds if delivery partially failed
+1. System calculates weekly response rate per persona: (responses_in_1hour / messages_sent) for past 7 days (e.g., 14/20 = 70%)
+2. If response rate <80% for a persona, system automatically selects next format from rotation (e.g., [standard, short, emoji, direct_question, story] → next unuse format)
+3. Format change is logged with rationale (e.g., "TARIQ response rate 65% < 80%, switching from 'standard' to 'short' format")
+4. System never repeats same format twice consecutively; validates format rotation across 10 consecutive message generations under low-engagement scenario
 
 **Plans:** TBD
 
 ---
 
-### Phase 11: On-Demand Trigger & NIZAM Wiring
-**Goal:** Wire the full pipeline into NIZAM's relay/router/TARIQ system so the operator can invoke a run on-demand with output review before delivery.
+### Phase 19: Cross-Pillar Integration
+**Goal:** Wire knowledge-index messages to downstream pillars (MUNAWARA for actions, MAL for finance, TARIQ for strategy) so nudges feed broader intelligence system.
 
-**Depends on:** All upstream phases (pipeline complete)
+**Depends on:** Phase 16 (messages generated), Phase 14 (index available), Phase 18 (adaptation logic)
 
-**Requirements:** RUN-01, RUN-02
+**Requirements:** INTEGRATION-01, INTEGRATION-02, INTEGRATION-03, INTEGRATION-04
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. Operator can invoke `/tariq-career-radar-run` command (or equivalent) via NIZAM relay
-2. Full fetch→dedup→enrich→score→tag→report→deliver→ledger pipeline executes end-to-end for the Remote USD lane
-3. A clean seam exists in code to add unattended Hermes-cron daily slots later (built but inactive, marked TODO)
-4. Run output is reviewable before final delivery (checkpoint/pause point available, though v1 executes end-to-end)
+1. Messages referencing action items (MUNAWARA topic) trigger optional action-item creation in weekly task list (signal available, opt-in by user in Telegram reply)
+2. Messages referencing financial goals (MAL topic) can pull latest financial snapshot and reflect updated context (e.g., "Your monthly target: $X, currently at $Y")
+3. Messages referencing strategic goals (TARIQ topic) can pull latest position/progress and adapt nudge tone (e.g., celebrating progress vs. nudging stalled work)
+4. Ledger append includes message_id, persona, content, pillar_signals_sent (array of [MUNAWARA, MAL, TARIQ] if triggered), response_status
+5. Integration test: mock messages for each pillar, verify ledger record includes correct pillar_signals_sent
 
 **Plans:** TBD
 
 ---
 
-### Phase 12: Strategic Routing (MAL/TARIQ/MUNAWARA)
-**Goal:** Route findings to downstream pillars (income, strategy, weekly actions) so the radar feeds the broader NIZAM intelligence system.
+### Phase 20: Privacy & Safety Validation
+**Goal:** Validate that knowledge index contains no raw personal data, Telegram messages expose only safe context tags, sensitive topics are flagged with confidence gates, and full test run passes privacy audit.
 
-**Depends on:** Phase 11 (run output available), Phase 1 (routing rules defined)
+**Depends on:** All upstream phases (complete system ready for validation)
 
-**Requirements:** ROUTE-01
-
-**Success Criteria** (what must be TRUE when phase completes):
-1. Income-relevant opportunities (high salary, stable, USD cashflow) are signaled to MAL (income pillar)
-2. Long-term strategy insights (growth, positioning, skill-building) are routed to TARIQ (strategy persona)
-3. Weekly action items (apply now, referral prep, profile gap work) are routed to MUNAWARA (weekly-actions pillar)
-4. Cross-pillar integration is tested (at least one opportunity successfully routed to each pillar in test run)
-
-**Plans:** TBD
-
----
-
-### Phase 13: Validation & Safety Sign-Off
-**Goal:** Run a small real source test to confirm extraction correctness, salary not fabricated, dedup works, privacy preserved, and rerun produces no duplicates — the brief's Step 9 test bar.
-
-**Depends on:** All upstream phases (complete pipeline)
-
-**Requirements:** VAL-01
+**Requirements:** PRIVACY-01, PRIVACY-02, PRIVACY-03
 
 **Success Criteria** (what must be TRUE when phase completes):
-1. Test run over a small real source subset (≥2 ATS APIs + ≥1 RSS feed + manual import) extracts opportunities correctly (field mapping verified against source)
-2. Salary confidence is not fabricated (every salary has a provenance tag, ranges used when unclear, no invented exact numbers)
-3. Duplicates are removed (2+ sources reporting same role → deduplicated, only 1 copy in results)
-4. Telegram report is readable and actionable; Drive report is complete and saved
-5. Ledger record is appended with correct paths and run ID
-6. Re-running against the same sources produces zero duplicate results (seen-store verified)
-7. No secrets, personal profile details, or sensitive matching data leak to public files or Telegram
-8. Operator sign-off obtained (written approval that pipeline is trustworthy for daily use)
+1. Knowledge index inspection confirms: topics use only derived/tagged context (e.g., "achievement_count: 5" not "user accomplishment: …"); no raw PII, addresses, or sensitive personal identifiers stored
+2. Telegram message review confirms: no raw personal data references, only safe context tags (e.g., "Your AI work" not "Seif's AI workflow"); sensitive topics (e.g., health, family) skipped if persona confidence <80%
+3. Privacy classification check: all local files tagged strict_local per SYNC_POLICY; no egress to public folders or unencrypted Drive locations
+4. Full test validation run: multiple personas generate 10+ messages across 2 days, all messages Telegram-readable, all indices remain local, no PII leakage to logs/console, auditor sign-off obtained
 
 **Plans:** TBD
 
@@ -288,18 +146,12 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Data Model | 6/6 | Complete    | 2026-06-14 |
-| 2. Tier 1 ATS Sourcing | 4/4 | Complete    | 2026-06-15 |
-| 3. Tier 2 RSS & Manual Sourcing | 3/4 | Complete    | 2026-06-15 |
-| 4. Deduplication Engine | 3/3 | Complete   | 2026-06-15 |
-| 5. Scoring Engine | 3/3 | Complete   | 2026-06-15 |
-| 6. Salary & Confidence Discipline | 0/? | Not started | — |
-| 7. Tagging & Profile Matching | 0/? | Not started | — |
-| 8. Telegram Report | 0/? | Not started | — |
-| 9. Drive Evidence Report & Ledger | 0/? | Not started | — |
-| 10. Delivery Continuity (Retry & Safety) | 0/? | Not started | — |
-| 11. On-Demand Trigger & NIZAM Wiring | 0/? | Not started | — |
-| 12. Strategic Routing (MAL/TARIQ/MUNAWARA) | 0/? | Not started | — |
-| 13. Validation & Safety Sign-Off | 0/? | Not started | — |
+| 14. Knowledge Index Schema & Storage | 0/? | Not started | — |
+| 15. Data Refresh & Synchronization | 0/? | Not started | — |
+| 16. Message Generation & Variation | 0/? | Not started | — |
+| 17. Delivery & Response Tracking | 0/? | Not started | — |
+| 18. Adaptation & Format Evolution | 0/? | Not started | — |
+| 19. Cross-Pillar Integration | 0/? | Not started | — |
+| 20. Privacy & Safety Validation | 0/? | Not started | — |
 
 ---

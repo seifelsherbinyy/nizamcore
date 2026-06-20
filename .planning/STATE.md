@@ -1,85 +1,80 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: planning
-stopped_at: Completed 05-scoring-engine/05-03-PLAN.md (run_scoring_pass orchestrator + fetch.py wiring; all 18 scoring tests GREEN; 54 total tests GREEN)
-last_updated: "2026-06-15T14:54:50.222Z"
+milestone: v1.1
+milestone_name: Persona Knowledge Index & Adaptive Messaging
+status: roadmap_complete
+stopped_at: Roadmap Phase 14-20 created; ready for Phase 14 planning
+last_updated: "2026-06-20T00:00:00Z"
 progress:
-  total_phases: 13
-  completed_phases: 5
-  total_plans: 20
-  completed_plans: 20
-  percent: 100
----
-
----
-gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: planning
-stopped_at: Completed 01-foundation-data-model/01-06-PLAN.md (CAREER_RADAR_LEDGER registration ceremony; DATA-05 GREEN; Phase 1 complete 13/13 tests)
-last_updated: "2026-06-14T20:36:53.280Z"
-progress:
-  total_phases: 13
-  completed_phases: 1
-  total_plans: 6
-  completed_plans: 6
-  percent: 100
+  total_phases: 7
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # STATE: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
 
 **Last Updated:** 2026-06-20T00:00:00Z  
-**Current Milestone:** v1.1 — Defining requirements (roadmap creation in progress)
+**Current Milestone:** v1.1 — Roadmap complete, ready for Phase 14 planning
 
 ---
 
 ## Project Reference
 
-**Project Name:** NIZAM Multi-Persona System (v1.0 TARIQ Career Radar + v1.1 Adaptive Messaging)
-**Core Value:** Each persona delivers fresh, contextual, actionable nudges — refreshing user knowledge, motivating action on open topics, celebrating closed topics — with adaptive messaging that evolves when engagement drops.
+**Project Name:** NIZAM Multi-Persona System — v1.1 Persona Knowledge Index & Adaptive Messaging  
+**Core Value:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action on open topics, celebrating closed topics — with adaptive messaging that evolves when engagement drops.
 
 **Current Milestone v1.1 Scope:**
-- Knowledge index per persona (optimized JSON schema)
-- Twice-daily Telegram messaging (09:00 & 18:00 Cairo)
-- Adaptive messaging (format changes if <80% response rate)
-- Response tracking (1-hour window for engagement)
-- Integration to MUNAWARA, MAL, TARIQ
+- Knowledge index per persona (optimized JSON schema, strict_local storage, versioning)
+- Twice-daily Telegram messaging (09:00 & 18:00 Cairo via Hermes cron)
+- Fresh message generation per intent (rephrase intent, pull index data, apply tone, avoid repetition)
+- Response tracking (1-hour window, message_id unique per send)
+- Adaptive messaging (format rotation if <80% response rate)
+- Integration to MUNAWARA (actions), MAL (finance), TARIQ (strategy) pillars
+- Privacy validation (no raw PII in index/messages, sensitive topics gated)
 - 7 phases (14–20), 25 requirements, 100% coverage
 
 **Key Constraints (Non-Negotiables):**
-- No fabricated salaries; provenance + confidence or omit
-- No raw personal-profile data in public files or Telegram
-- No auto-apply, auto-contact recruiters, form-filling, credential use without explicit per-action approval
-- Never silently drop findings; retry or print full unsaved output
-- Additive only; no deletion/move/overwrite of existing NIZAM files
-- Privacy enforced via existing SYNC_POLICY/HIMAYAH/PRIVACY_CLASSIFICATION
+- Knowledge index is strict_local (never egressed to Telegram/Drive)
+- Messages never include raw personal data; only safe context tags
+- Sensitive topics skipped if confidence <80%
+- Response tracking auditable (timestamps + response content logged)
+- Cross-pillar signals optional/logged (no silent automation)
+- All data refresh failures logged (audit trail for troubleshooting)
 
 ---
 
 ## Current Position
 
-**Milestone:** v1.1 / Not started (defining requirements)
-**Phase:** 14–20 (not yet structured)
-**Plan:** — (pending roadmap)
-**Status:** Roadmap creation in progress
+**Milestone:** v1.1 / Roadmap complete  
+**Phase:** 14 (ready for planning)  
+**Plan:** — (pending `/gsd:plan-phase 14`)  
+**Status:** Roadmap CREATED; awaiting Phase 14 planning  
 **Progress:** [░░░░░░░░░░] 0%
 
-**Stopped At:** Milestone v1.1 started 2026-06-20; requirements defined; roadmap generation queued
+**Stopped At:** Roadmap Phase 14-20 complete; 25/25 requirements mapped (100% coverage); awaiting Phase 14 planning initiation
 
 **Work Completed:**
-- Analyzed 30 v1 requirements
-- Derived 13 phases from strict data-dependency chain
-- Mapped 100% of requirements to phases (no orphans)
-- Documented success criteria (2–5 observable behaviors per phase)
-- Honored all non-negotiables as cross-cutting constraints
-- **[01-01]** Wave 0 TDD scaffold: 13 tests collectible + failing RED across 6 test files (DATA-01..05); conftest.py fixtures; TARIQ package roots; .gitignore data exclusions
+- Extracted 25 v1.1 requirements from REQUIREMENTS_v1.1.md
+- Derived 7 natural phases from message lifecycle + integration boundaries
+  - Phase 14: Index schema + storage (foundation)
+  - Phase 15: Data refresh + sync (input)
+  - Phase 16: Message generation (core logic)
+  - Phase 17: Delivery + response tracking (execution)
+  - Phase 18: Adaptation + format evolution (feedback loop)
+  - Phase 19: Cross-pillar integration (downstream wiring)
+  - Phase 20: Privacy + safety validation (gate)
+- Mapped 100% of requirements (25/25) to phases
+- Documented 2–5 observable success criteria per phase
+- Applied granularity: FINE (7 phases, natural boundaries honored)
 
-**Phase 1 Execution Decisions:**
-- try/except ImportError + _require_module() pattern for collectible-but-failing TDD tests (direct top-level imports cause collection errors, not test failures)
-- parents[2] from test files in TARIQ__career_radar/tests/ resolves to repo root (not parents[3] as plan interface specified)
-- test_profile_not_in_egress uses pytest.skip when profile_cache.json absent — correct TDD approach
+**Roadmap Quality:**
+- Requirement coverage: 25/25 (100%) ✓
+- Phases derived from message lifecycle: Yes ✓
+- Each phase has 2–5 observable success criteria: Yes ✓
+- Dependencies explicitly stated per phase: Yes ✓
+- Non-negotiables encoded as phase constraints: Yes ✓
 
 ---
 
@@ -87,34 +82,63 @@ progress:
 
 | Phase | Goal | Requirements | Success Criteria |
 |-------|------|--------------|------------------|
-| 1 | Foundation & Data Model | DATA-01..05 | Schema defined, profile seed local, seen-store initialized, module layout NIZAM-compliant, ledger registered |
-| 2 | Tier 1 ATS Sourcing | SRC-01, SRC-04, SRC-05 | Greenhouse/Lever/Ashby/Workable APIs fetch, normalize, error graceful |
-| 3 | Tier 2 RSS & Manual Sourcing | SRC-02, SRC-03, SRC-06 | RSS parsed, manual import works, role-keyword filtering, ≥5 sources combined |
-| 4 | Deduplication Engine | DEDUP-01..03 | Normalize + fuzzy match ≥0.88, persistent seen-store, rerun no-dup, freshness rule |
-| 5 | Scoring Engine | SCORE-01, SCORE-02 | Deterministic 0–100 weighted score, penalties applied, same data → same score |
-| 6 | Salary & Confidence Discipline | SALARY-01, SALARY-02 | Salary tagged with provenance + confidence, ranges only when unclear, no fabrication |
-| 7 | Tagging & Profile Matching | TAG-01, TAG-02 | 8 action tags, caution flags for scams, local profile fit, no raw egress |
-| 8 | Telegram Report | RPT-01 | Short action-oriented summary, best opp + salary + risk + action, no raw profile |
-| 9 | Drive Evidence Report & Ledger | RPT-02, RPT-03, DELIV-01, DELIV-02 | Full Drive report + NAQD note, ledger appended, metadata correct |
-| 10 | Delivery Continuity (Retry & Safety) | DELIV-03 | Telegram/Drive retry logic, full unsaved output on failure, run marked incomplete |
-| 11 | On-Demand Trigger & NIZAM Wiring | RUN-01, RUN-02 | `/tariq-career-radar-run` invocable, full pipeline end-to-end, cron seam ready |
-| 12 | Strategic Routing (MAL/TARIQ/MUNAWARA) | ROUTE-01 | Income → MAL, strategy → TARIQ, actions → MUNAWARA, integration tested |
-| 13 | Validation & Safety Sign-Off | VAL-01 | Test run confirms extraction/salary/dedup/privacy/rerun-no-dup, operator sign-off |
+| 14 | Knowledge Index Schema & Storage | INDEX-01, INDEX-02, INDEX-03, INDEX-04 | Schema defined, local storage (strict_local), versioning supported, valid test index created |
+| 15 | Data Refresh & Synchronization | REFRESH-01, REFRESH-02, REFRESH-03 | Drive logs read, merge into index, graceful fallback on failure, audit trail logged |
+| 16 | Message Generation & Variation | MSG-01, MSG-02, MSG-03, MSG-04 | Fresh message rephrases intent, avoids repetition (last 5), actionable nudge, persona tone consistent |
+| 17 | Delivery & Response Tracking | DELIVERY-01, DELIVERY-02, DELIVERY-03, DELIVERY-04, DELIVERY-05 | Twice-daily Telegram delivery, message_id unique, 1-hour response window captured, metadata stored |
+| 18 | Adaptation & Format Evolution | ADAPT-01, ADAPT-02, ADAPT-03, ADAPT-04 | Response rate weekly calc, <80% triggers format change, rotation logged, no consecutive repeats |
+| 19 | Cross-Pillar Integration | INTEGRATION-01, INTEGRATION-02, INTEGRATION-03, INTEGRATION-04 | Messages signal MUNAWARA/MAL/TARIQ, ledger includes pillar_signals_sent, integration tested |
+| 20 | Privacy & Safety Validation | PRIVACY-01, PRIVACY-02, PRIVACY-03 | Index has no raw PII, messages safe context tags only, sensitive topics gated, test validation signed off |
+
+---
+
+## Phase Dependencies
+
+```
+Phase 14: Knowledge Index Schema & Storage
+  ↓
+Phase 15: Data Refresh & Synchronization
+  ↓
+Phase 16: Message Generation & Variation
+  ↓
+Phase 17: Delivery & Response Tracking
+  ↓
+Phase 18: Adaptation & Format Evolution
+  ↓
+Phase 19: Cross-Pillar Integration
+  ↓
+Phase 20: Privacy & Safety Validation
+```
+
+**Sequential order enforced:** Each phase builds on the previous (no parallelization at phase level).
 
 ---
 
 ## Performance Metrics
 
 **Roadmap Quality:**
-- Requirement coverage: 30/30 (100%) ✓
-- Phases derived from data-dependency chain: Yes ✓
+- Requirement coverage: 25/25 (100%) ✓
+- Phases derived from message lifecycle: Yes ✓
 - Each phase has 2–5 observable success criteria: Yes ✓
-- Non-negotiables encoded as constraints, not phases: Yes ✓
+- Dependencies clearly sequenced: Yes ✓
 
 **Granularity Applied:**
 - Config granularity: FINE
-- Total phases: 13 (focused, smaller phases per data boundary)
-- Phase interdependencies: Linear + some parallel (Phases 2–3 depend on Phase 1; Phases 5–7 depend on Phases 2–4)
+- Total phases: 7 (focused, lifecycle-driven phases)
+- Phase interdependencies: Linear (strict order)
+
+**Requirement Mapping by Phase:**
+
+| Phase | Requirement IDs | Count |
+|-------|-----------------|-------|
+| 14 | INDEX-01, INDEX-02, INDEX-03, INDEX-04 | 4 |
+| 15 | REFRESH-01, REFRESH-02, REFRESH-03 | 3 |
+| 16 | MSG-01, MSG-02, MSG-03, MSG-04 | 4 |
+| 17 | DELIVERY-01, DELIVERY-02, DELIVERY-03, DELIVERY-04, DELIVERY-05 | 5 |
+| 18 | ADAPT-01, ADAPT-02, ADAPT-03, ADAPT-04 | 4 |
+| 19 | INTEGRATION-01, INTEGRATION-02, INTEGRATION-03, INTEGRATION-04 | 4 |
+| 20 | PRIVACY-01, PRIVACY-02, PRIVACY-03 | 3 |
+| **TOTAL** | — | **25** |
 
 ---
 
@@ -124,96 +148,55 @@ progress:
 
 | Decision | Rationale | Status |
 |----------|-----------|--------|
-| Build as additive module on existing NIZAM rails | Telegram/Drive/ledger/privacy/persona infra already live | Locked |
-| Mirror MARSAD radar pattern (pluggable sources + connector-gating) | Proven in-repo precedent | Locked |
-| v1 = full-depth pipeline on Remote USD lane only | Fastest payoff, lowest risk | Locked |
-| On-demand trigger before unattended cron | Live data + privacy warrant human review | Locked |
-| Connect findings to MAL/TARIQ/MUNAWARA | Strategic intelligence, not generic alerts | Locked |
-| Validation as final phase + explicit gate | Safety bar before automation | Locked |
-| Phase 01-foundation-data-model P01 | 5 | 2 tasks | 11 files |
-| Phase 01-foundation-data-model P02 | 5 | 2 tasks | 2 files |
-| Phase 01 P03 | 6 | 2 tasks | 1 files |
-| Phase 01-foundation-data-model P05 | 8 | 1 tasks | 1 files |
-| Phase 01-foundation-data-model P04 | 4min | 1 tasks | 2 files |
-| Phase 01-foundation-data-model P06 | 2min | 2 tasks | 4 files |
-| Phase 02-tier-1-ats-sourcing P01 | 149s | 3 tasks | 6 files |
-| Phase 02-tier-1-ats-sourcing P02 | 191s | 2 tasks | 6 files |
-| Phase 02-tier-1-ats-sourcing P03 | 91s | 2 tasks | 2 files |
-| Phase 02-tier-1-ats-sourcing P04 | 383s | 1 tasks | 3 files |
-| Phase 03-tier-2-rss-manual-sourcing P01 | 162 | 3 tasks | 7 files |
-| Phase 03-tier-2-rss-manual-sourcing P03 | 90 | 2 tasks | 2 files |
-| Phase 03-tier-2-rss-manual-sourcing P02 | 2 | 1 tasks | 1 files |
-| Phase 04-deduplication-engine P01 | 154s | 2 tasks | 3 files |
-| Phase 04-deduplication-engine P02 | 145s | 2 tasks | 1 files |
-| Phase 04-deduplication-engine P03 | 278s | 2 tasks | 4 files |
-| Phase 05-scoring-engine P01 | 13min | 3 tasks | 3 files |
-| Phase 05-scoring-engine P02 | 12min | 2 tasks | 2 files |
-| Phase 05-scoring-engine P03 | 86s | 2 tasks | 2 files |
+| Knowledge index stored strict_local only | Privacy/egress enforcement; never exposed to Telegram/Drive | Locked |
+| Twice-daily Telegram (09:00 & 18:00 Cairo) via Hermes cron | Reuses existing relay + scheduled delivery infrastructure | Locked |
+| Response tracking 1-hour window | Engagement metric for adaptation logic; trade-off between feedback latency and user disruption | Locked |
+| Adaptive format rotation if <80% response | Avoid fatigue; test 5+ format variations | Locked |
+| Cross-pillar signals logged but optional | User opt-in via Telegram reply; no silent automation | Locked |
+| Validation as final phase + sign-off gate | Privacy + safety bar before integration into daily workflow | Locked |
 
 ### Known Risks & Mitigations
 
 | Risk | Mitigation | Phase |
 |------|-----------|-------|
-| Fabricated / over-confident salary | Provenance tag + confidence discipline, ranges only | Phases 6, 13 |
-| ToS / scraping violations | API-first (Tier 1 + Tier 2), least-privilege, no aggressive scraping | Phases 2–3 |
-| Dedup failures (repeat roles) | Normalized seen-store + fuzzy match + freshness rule | Phase 4 |
-| Privacy leakage of raw profile | Profile strict_local, matching local, scores-only egress | Phases 1, 7, 13 |
-| Scam / exploitative AI-eval platforms | Platform tier system, unpaid-screening, caution tags | Phase 7 |
-| Over-automation before trust | All-or-nothing completion, ≥10 validation runs, explicit sign-off | Phases 10, 13 |
-| LLM scoring inconsistency | Deterministic base scoring, LLM as explainer-only | Phase 5 |
+| Raw PII accidentally included in index | Schema review + audit trail, no raw data fields in template | Phases 14, 20 |
+| Telegram message leaks sensitive context | Message generation linter: flagged topics skipped if confidence <80% | Phases 16, 20 |
+| Drive refresh failures cause silent index staleness | Graceful fallback + audit log; operator can trigger manual refresh | Phase 15 |
+| Response tracking race condition (message delivered but response monitor not active) | Message_id tracked before delivery; monitor starts immediately after send | Phase 17 |
+| Format adaptation feedback loop instability (rapid oscillation) | Log format changes + require ≥2 days data before next rotation | Phase 18 |
+| Cross-pillar integration over-automation | All signals logged; user must opt-in via Telegram reply | Phase 19 |
 
-### Research Flags from Briefing
+### Research Flags from v1.1 Briefing
 
 Phases likely needing deeper research during planning:
 
-- **Phase 2–3 (Sourcing):** Confirm Tier 2 API availability (Remotive/We Work Remotely/RemoteOK); fallback plan if endpoints change
-- **Phase 9 (Drive Reports):** Verify existing `google_adapter` `.docx` write path supports full evidence-report shape
-- **Phase 6 (Salary):** Operationalize confidence heuristics (high/medium/low decision rules); weight calibration on 10–20 real roles
+- **Phase 15 (Data Refresh):** Confirm Google Drive conversation logs path + format; define "activity snapshot" schema to extract from logs
+- **Phase 17 (Response Tracking):** Map Telegram relay response polling API; confirm message_id matching logic against live relay
+- **Phase 19 (Integration):** Coordinate with MUNAWARA/MAL/TARIQ owners; confirm pillar signal schemas and trigger conditions
 
 Phases with standard patterns (can skip deep research):
 
-- **Phase 4 (Dedup), Phase 1 (Ledger), Phase 8 (Telegram), Phase 1 (Privacy)** — MARSAD/NIZAM precedents established; RapidFuzz documented
-
-### Data Dependencies (Strict Order)
-
-```
-Phase 1: Foundation (schema, store, layout)
-  ↓
-Phases 2–3: Sourcing (fetch opportunities)
-  ↓
-Phase 4: Dedup (normalize, detect duplicates)
-  ↓
-Phases 5–7: Enrich (score, salary, tags, profile fit)
-  ↓
-Phases 8–10: Report & Deliver (Telegram, Drive, ledger, continuity)
-  ↓
-Phase 11: Trigger (operator entry point)
-  ↓
-Phase 12: Routing (downstream integration)
-  ↓
-Phase 13: Validation (test bar + sign-off)
-```
-
-**Parallel Opportunities:**
-- Phases 2 & 3 can be planned/built in parallel (both depend on Phase 1 only)
-- Phases 5, 6, 7 can be planned in parallel (all depend on Phase 4 only)
-- Phases 8, 9, 10 can be planned in parallel (all depend on Phases 5–7)
+- **Phase 14 (Index Schema):** Follow existing NIZAM persona config patterns (e.g., personas/AMMAR.json structure)
+- **Phase 16 (Message Generation):** Use existing persona routers + intent system for tone/rephrasing
+- **Phase 20 (Validation):** Leverage existing HIMAYAH/SYNC_POLICY privacy gates
 
 ---
 
 ## Session Continuity
 
-**Handoff to Planning:**
+**Handoff to Phase 14 Planning:**
 - Roadmap is locked and written to `.planning/ROADMAP.md`
-- Requirements are mapped to phases in `.planning/REQUIREMENTS.md` (traceability section updated below)
-- Next action: `/gsd:plan-phase 1` to decompose Phase 1 into executable plans
+- Requirements are mapped to phases in `.planning/REQUIREMENTS_v1.1.md` (traceability section locked)
+- Next action: `/gsd:plan-phase 14` to decompose Phase 14 into executable plans
+- Phase 14 acceptance criteria: Knowledge index JSON schema finalized, storage initialized locally, versioning support confirmed
 
 **Context for Next Session:**
-- This roadmap is the baseline; revisions via `/gsd:revise-roadmap` if feedback warrants
-- Each `/gsd:plan-phase N` will inherit this STATE.md and update the "Current Position" as it progresses
-- Validation (Phase 13) is the final gate before any unattended cron; explicit operator sign-off required
+- This roadmap is the baseline for v1.1; revisions via `/gsd:revise-roadmap` if feedback warrants
+- Each `/gsd:plan-phase N` (14–20) will inherit this STATE.md and update "Current Position" progressively
+- Phases are strictly sequential; Phase N+1 cannot start until Phase N plans are approved
+- Phase 20 validation is the final gate before daily Telegram deployment
 
 ---
 
-*Roadmap created: 2026-06-14*  
-*Ready for Phase 1 planning*
+*Roadmap created: 2026-06-20*  
+*Ready for Phase 14 planning*

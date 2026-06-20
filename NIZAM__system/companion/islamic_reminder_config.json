@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "agent": "Khaldun",
+  "mode_bundle": "NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/",
+  "note": "Loop B uses Khaldun Islamic Cosmic Wisdom Mode. Outbound Telegram requires NIZAM_KHALDUN_OUTBOUND_APPROVED=1.",
+  "source_preferences": ["approved_reminders", "spiritual_reminder_mapping"],
+  "tone": "egyptian_arabic_gentle",
+  "constraints": ["no_fatwa", "no_shame", "privacy_safe_summaries_only"]
+}

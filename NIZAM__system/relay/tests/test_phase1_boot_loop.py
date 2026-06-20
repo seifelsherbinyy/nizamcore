@@ -24,6 +24,7 @@ os.environ.setdefault("NIZAM_TELEGRAM_ALLOWED_IDS", "111222333")
 
 from NIZAM__system.governor import ledger_writer  # noqa: E402
 from NIZAM__system.relay import auth, coordinator, dedup, sukoon_gate, webhook  # noqa: E402
+from NIZAM__system.relay.persona_runtime import PersonaRuntime  # noqa: E402
 
 
 def _telegram_update(text: str, update_id: int = 1,
@@ -226,13 +227,49 @@ class B410_StrictLocalLeakTestBlocked(unittest.TestCase):
         )
         self.assertTrue(blocked, reason)
 
-    def test_classifier_blocks_ahel_to_telegram(self) -> None:
+    def test_classifier_blocks_maximum_to_telegram(self) -> None:
         from NIZAM__system.governor.classifier import is_egress_blocked
         blocked, reason = is_egress_blocked(
-            "AHEL__family_network/family_tree/dad.md",
+            "HAJR__quarantine/maximum/record.md",
             "telegram_operator",
         )
         self.assertTrue(blocked, reason)
+
+
+class B411_RealAminRuntime(unittest.TestCase):
+    def test_feature_flag_uses_injected_local_runtime(self) -> None:
+        class Provider:
+            name = "test-local"
+            model = "amin-test"
+            local_only = True
+
+            def invoke(self, request):
+                return {
+                    "reply": "non-stub local reply",
+                    "input_tokens": 2,
+                    "output_tokens": 3,
+                    "cost_usd": 0,
+                }
+
+        old = os.environ.get("NIZAM_REAL_PERSONA_RUNTIME")
+        os.environ["NIZAM_REAL_PERSONA_RUNTIME"] = "1"
+        try:
+            text = "Keep this exact capture."
+            d = coordinator.process(
+                _telegram_update(text, update_id=999_020),
+                user_id=111222333,
+                runtime=PersonaRuntime(Provider()),
+            )
+        finally:
+            if old is None:
+                os.environ.pop("NIZAM_REAL_PERSONA_RUNTIME", None)
+            else:
+                os.environ["NIZAM_REAL_PERSONA_RUNTIME"] = old
+        self.assertEqual(d["reply"], "non-stub local reply")
+        self.assertEqual(d["artifact_a"]["capture"], text)
+        self.assertEqual(d["runtime"]["status"], "ok")
+        self.assertEqual(d["ingress"]["route"], "Amin")
+        self.assertEqual(d["ingress"]["schema_version"], "1.0")
 
 
 if __name__ == "__main__":

@@ -28,7 +28,7 @@ CLEAN_BATCH = [
 
 LEAKY_BATCH = CLEAN_BATCH + [
     "SHURA__brainstormer/sessions/2026-05-28.md",
-    "AHEL__family_network/records/dad.md",
+    "HAJR__quarantine/maximum/record.md",
 ]
 
 
@@ -43,7 +43,7 @@ class PreCommitHookTests(unittest.TestCase):
         self.assertFalse(ok)
         rel_paths = {d.rel_path for d in blocked}
         self.assertIn("SHURA__brainstormer/sessions/2026-05-28.md", rel_paths)
-        self.assertIn("AHEL__family_network/records/dad.md", rel_paths)
+        self.assertIn("HAJR__quarantine/maximum/record.md", rel_paths)
 
     def test_blocked_decisions_carry_reason(self) -> None:
         _, blocked = pre_commit_check(LEAKY_BATCH)

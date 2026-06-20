@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/council_motion.schema.json",
+  "title": "CouncilMotion",
+  "description": "A motion submitted to the NIZAM companion council for deliberation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "motion_id",
+    "trace_id",
+    "title",
+    "question",
+    "protocol",
+    "urgency",
+    "proposed_by",
+    "created_at"
+  ],
+  "properties": {
+    "motion_id": { "type": "string", "format": "uuid" },
+    "trace_id": { "type": "string", "format": "uuid" },
+    "title": { "type": "string", "maxLength": 240 },
+    "question": { "type": "string", "maxLength": 2000 },
+    "protocol": {
+      "type": "string",
+      "enum": [
+        "majority",
+        "supermajority",
+        "weighted",
+        "unanimity",
+        "judge_synthesis",
+        "veto",
+        "defer"
+      ]
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["routine", "normal", "elevated", "crisis"]
+    },
+    "proposed_by": { "type": "string" },
+    "created_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "context_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/evidence_ref" }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "kind", "source", "summary"],
+      "properties": {
+        "ref_id": { "type": "string" },
+        "kind": { "type": "string" },
+        "source": { "type": "string" },
+        "summary": { "type": "string", "maxLength": 240 },
+        "hash_excerpt": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

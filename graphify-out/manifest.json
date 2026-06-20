@@ -1,0 +1,1917 @@
+{
+  "D:\\NIZAM\\AHEL__family_network\\_index.json": {
+    "mtime": 1779999523.7911308,
+    "ast_hash": "fd3588f8a34b919c7290bbd0617d4d9a",
+    "semantic_hash": "fd3588f8a34b919c7290bbd0617d4d9a"
+  },
+  "D:\\NIZAM\\BADAN__body_health_system\\_index.json": {
+    "mtime": 1779999523.7911308,
+    "ast_hash": "7e6ded2eeed326e10b1300cb17c6b99d",
+    "semantic_hash": "7e6ded2eeed326e10b1300cb17c6b99d"
+  },
+  "D:\\NIZAM\\BASIRA__future_visualization\\_index.json": {
+    "mtime": 1779999523.7911308,
+    "ast_hash": "815da63789ac9fddcb2f45c26332943f",
+    "semantic_hash": "815da63789ac9fddcb2f45c26332943f"
+  },
+  "D:\\NIZAM\\HAJR__quarantine\\_index.json": {
+    "mtime": 1779999523.7921524,
+    "ast_hash": "c07110e4bd12ee82acd2324b1873b932",
+    "semantic_hash": "c07110e4bd12ee82acd2324b1873b932"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\_index.json": {
+    "mtime": 1779999523.7921524,
+    "ast_hash": "741887c6ebeaf6ebea656081565b4044",
+    "semantic_hash": "741887c6ebeaf6ebea656081565b4044"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\fixtures\\dual_write_sample.json": {
+    "mtime": 1779550451.3725667,
+    "ast_hash": "a0e6a1263cbde47f1b376c56388976c1",
+    "semantic_hash": "a0e6a1263cbde47f1b376c56388976c1"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\nizam_drive_mirror.py": {
+    "mtime": 1779999523.8044815,
+    "ast_hash": "9ff43b4d1e3eb9fa040fa2020484cda3",
+    "semantic_hash": "9ff43b4d1e3eb9fa040fa2020484cda3"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\nizam_dual_write.py": {
+    "mtime": 1779550451.3746674,
+    "ast_hash": "b3a4668a56dd613ca83287cfef925661",
+    "semantic_hash": "b3a4668a56dd613ca83287cfef925661"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\nizam_governor_lib.py": {
+    "mtime": 1780000056.3973064,
+    "ast_hash": "63894c4525d1b0918e0640767beeea65",
+    "semantic_hash": "63894c4525d1b0918e0640767beeea65"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\notion_preflight.py": {
+    "mtime": 1779550451.375696,
+    "ast_hash": "795113bf20bb24a64bac45a2da5125d4",
+    "semantic_hash": "795113bf20bb24a64bac45a2da5125d4"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\scripts\\test_governor_lib.py": {
+    "mtime": 1779550451.3767152,
+    "ast_hash": "48a53ed1eab0e366c708e2abd92cb64d",
+    "semantic_hash": "48a53ed1eab0e366c708e2abd92cb64d"
+  },
+  "D:\\NIZAM\\HIKMAH__learnings\\_index.json": {
+    "mtime": 1779999523.793179,
+    "ast_hash": "c435a897041637460bb3c230f3ffd824",
+    "semantic_hash": "c435a897041637460bb3c230f3ffd824"
+  },
+  "D:\\NIZAM\\INTAJ__output_engine\\_index.json": {
+    "mtime": 1779999523.7942052,
+    "ast_hash": "73f2fd1f42fc2d24240ff958c64bfe21",
+    "semantic_hash": "73f2fd1f42fc2d24240ff958c64bfe21"
+  },
+  "D:\\NIZAM\\JADWAL__notion_dashboards\\_index.json": {
+    "mtime": 1779999523.7942052,
+    "ast_hash": "b068d12f6831681ddd4656d07cfa03b1",
+    "semantic_hash": "b068d12f6831681ddd4656d07cfa03b1"
+  },
+  "D:\\NIZAM\\MAKHZAN__archive\\_index.json": {
+    "mtime": 1779550451.3901212,
+    "ast_hash": "f26452609f93f8219ae03b9a00512ecb",
+    "semantic_hash": "f26452609f93f8219ae03b9a00512ecb"
+  },
+  "D:\\NIZAM\\MAL__financial_engine\\_index.json": {
+    "mtime": 1779999523.795229,
+    "ast_hash": "aadb2de95b7111ac7f19b2e482e2b0c8",
+    "semantic_hash": "aadb2de95b7111ac7f19b2e482e2b0c8"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\_index.json": {
+    "mtime": 1779999523.7962554,
+    "ast_hash": "570241795e5ae4328a68bf4739e5d16f",
+    "semantic_hash": "570241795e5ae4328a68bf4739e5d16f"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\conftest.py": {
+    "mtime": 1779550451.3963532,
+    "ast_hash": "3b5ad9da230496c785f0e7cfd27bda46",
+    "semantic_hash": "3b5ad9da230496c785f0e7cfd27bda46"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\data\\flight_prices.json": {
+    "mtime": 1779550451.3973806,
+    "ast_hash": "48f4e068973517a95d0e67e3233394d8",
+    "semantic_hash": "48f4e068973517a95d0e67e3233394d8"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\__init__.py": {
+    "mtime": 1779550451.3973806,
+    "ast_hash": "a7a349780c76ace9dc5266f18edab067",
+    "semantic_hash": "a7a349780c76ace9dc5266f18edab067"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\config.py": {
+    "mtime": 1779550451.3984122,
+    "ast_hash": "76b2402b82f9476c2460cd998e913815",
+    "semantic_hash": "76b2402b82f9476c2460cd998e913815"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\constraints.py": {
+    "mtime": 1779550451.3994443,
+    "ast_hash": "307a575213793ac25358e78919d3bae7",
+    "semantic_hash": "307a575213793ac25358e78919d3bae7"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\dashboard.py": {
+    "mtime": 1779550451.4004874,
+    "ast_hash": "993be8bab881aa1a1909aa628d273035",
+    "semantic_hash": "993be8bab881aa1a1909aa628d273035"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\fetcher.py": {
+    "mtime": 1779550451.4004874,
+    "ast_hash": "e3d87a274d1acf970d5e906cf0c9c83f",
+    "semantic_hash": "e3d87a274d1acf970d5e906cf0c9c83f"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\main.py": {
+    "mtime": 1779550451.4015377,
+    "ast_hash": "96a355e8a1cb6d9aa28da7fd5db71365",
+    "semantic_hash": "96a355e8a1cb6d9aa28da7fd5db71365"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\scheduler.py": {
+    "mtime": 1779550451.4015377,
+    "ast_hash": "dbf8a72bb14aefe0e5950ef6c9771c83",
+    "semantic_hash": "dbf8a72bb14aefe0e5950ef6c9771c83"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\schema_store.py": {
+    "mtime": 1779550451.4025717,
+    "ast_hash": "176562565208ba47f8de306f5821aff4",
+    "semantic_hash": "176562565208ba47f8de306f5821aff4"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\__init__.py": {
+    "mtime": 1779550451.4025717,
+    "ast_hash": "4e4ef6cacbeac859a1df23b1d9cf4570",
+    "semantic_hash": "4e4ef6cacbeac859a1df23b1d9cf4570"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\amadeus_source.py": {
+    "mtime": 1779550451.4046266,
+    "ast_hash": "8f5d9b7caca977c27f6bbf2d82e7157d",
+    "semantic_hash": "8f5d9b7caca977c27f6bbf2d82e7157d"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\base.py": {
+    "mtime": 1779550451.4046266,
+    "ast_hash": "5888b44373cafe8ad691b42694975dd1",
+    "semantic_hash": "5888b44373cafe8ad691b42694975dd1"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\generic_base.py": {
+    "mtime": 1780001646.9710934,
+    "ast_hash": "5cef9c12be3513a882e3006fcb39f6a0",
+    "semantic_hash": "5cef9c12be3513a882e3006fcb39f6a0"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\google_flights_source.py": {
+    "mtime": 1779550451.4056685,
+    "ast_hash": "2e7ff9c10c5c1f3dfe86766c5757a44e",
+    "semantic_hash": "2e7ff9c10c5c1f3dfe86766c5757a44e"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\ita_matrix_source.py": {
+    "mtime": 1779550451.4056685,
+    "ast_hash": "4dd576e0b8313ec6224e3f6af9f2e49a",
+    "semantic_hash": "4dd576e0b8313ec6224e3f6af9f2e49a"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\kiwi_source.py": {
+    "mtime": 1779550451.406706,
+    "ast_hash": "c7fc399ae9e18d42f18d344edf8d0588",
+    "semantic_hash": "c7fc399ae9e18d42f18d344edf8d0588"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\sources\\serpapi_source.py": {
+    "mtime": 1779550451.4077375,
+    "ast_hash": "d337ea67122e83ea0af2fda1dce5477a",
+    "semantic_hash": "d337ea67122e83ea0af2fda1dce5477a"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\stages\\__init__.py": {
+    "mtime": 1779550451.4077375,
+    "ast_hash": "a7e09488102b770861301cc8f228b916",
+    "semantic_hash": "a7e09488102b770861301cc8f228b916"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\stages\\alert.py": {
+    "mtime": 1779550451.4087653,
+    "ast_hash": "1ce5743182a66fe63f04ca6695ebcc5d",
+    "semantic_hash": "1ce5743182a66fe63f04ca6695ebcc5d"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\stages\\discover.py": {
+    "mtime": 1779550451.4092717,
+    "ast_hash": "ca3446ccffddc9dee8a9c0f150e86f41",
+    "semantic_hash": "ca3446ccffddc9dee8a9c0f150e86f41"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\stages\\forecast.py": {
+    "mtime": 1779550451.409773,
+    "ast_hash": "9d378acda9a942c3e20e47fbc983897d",
+    "semantic_hash": "9d378acda9a942c3e20e47fbc983897d"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\radar\\stages\\monitor.py": {
+    "mtime": 1779550451.4102733,
+    "ast_hash": "021459c4623d7fdafec9f9ed0760cd5a",
+    "semantic_hash": "021459c4623d7fdafec9f9ed0760cd5a"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\__init__.py": {
+    "mtime": 1779550451.411808,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\test_alert.py": {
+    "mtime": 1779550451.411808,
+    "ast_hash": "6c49b1924796f3440ac30e89af37c5ff",
+    "semantic_hash": "6c49b1924796f3440ac30e89af37c5ff"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\test_constraints.py": {
+    "mtime": 1779550451.4128382,
+    "ast_hash": "36cfb976c0c6710d487b6e9814cc3b84",
+    "semantic_hash": "36cfb976c0c6710d487b6e9814cc3b84"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\test_forecast.py": {
+    "mtime": 1779550451.4138665,
+    "ast_hash": "5d9a9c6b8f8e7a661627d3500eed1dcb",
+    "semantic_hash": "5d9a9c6b8f8e7a661627d3500eed1dcb"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\test_generic_base.py": {
+    "mtime": 1780001660.4735706,
+    "ast_hash": "619b36514ff5ffe240101af94f4289c6",
+    "semantic_hash": "619b36514ff5ffe240101af94f4289c6"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\tests\\test_schema_store.py": {
+    "mtime": 1779550451.4138665,
+    "ast_hash": "19c403d2fdfc3417b093d98e6627c7b0",
+    "semantic_hash": "19c403d2fdfc3417b093d98e6627c7b0"
+  },
+  "D:\\NIZAM\\MUNAWARA__tactical_strategy\\_index.json": {
+    "mtime": 1779999523.7962554,
+    "ast_hash": "4205bfdca112d0f96330946f5f7182dc",
+    "semantic_hash": "4205bfdca112d0f96330946f5f7182dc"
+  },
+  "D:\\NIZAM\\NAQD__brain_griller\\_index.json": {
+    "mtime": 1779999523.7972858,
+    "ast_hash": "4bf768f211405bf3d56ff0777efe766d",
+    "semantic_hash": "4bf768f211405bf3d56ff0777efe766d"
+  },
+  "D:\\NIZAM\\NIZAM_MASTER_REGISTER.json": {
+    "mtime": 1779999523.8218207,
+    "ast_hash": "1b9cf3fdbfa6f729c81db9b7f088efcd",
+    "semantic_hash": "1b9cf3fdbfa6f729c81db9b7f088efcd"
+  },
+  "D:\\NIZAM\\NIZAM_TEMPLE.json": {
+    "mtime": 1779999793.4845715,
+    "ast_hash": "890d299f618b1d56c991557d2be15dea",
+    "semantic_hash": "890d299f618b1d56c991557d2be15dea"
+  },
+  "D:\\NIZAM\\NIZAM__system\\AGENT_MAPPING.json": {
+    "mtime": 1779999523.7972858,
+    "ast_hash": "44652cb7ffe42cff24aacd7e723bb2fe",
+    "semantic_hash": "44652cb7ffe42cff24aacd7e723bb2fe"
+  },
+  "D:\\NIZAM\\NIZAM__system\\PROTOCOLS_INDEX.json": {
+    "mtime": 1779999322.6394713,
+    "ast_hash": "b163a315849e551195762fd2971ac27a",
+    "semantic_hash": "b163a315849e551195762fd2971ac27a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\SCHEMA_INDEX.json": {
+    "mtime": 1779999322.6405022,
+    "ast_hash": "c2369fe1078cb4151488570992d27d3a",
+    "semantic_hash": "c2369fe1078cb4151488570992d27d3a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\WORKFLOWS_INDEX.json": {
+    "mtime": 1779999322.6405022,
+    "ast_hash": "0fec5c8197b4178caef097ada3fef3a7",
+    "semantic_hash": "0fec5c8197b4178caef097ada3fef3a7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\_index.json": {
+    "mtime": 1779999523.7983108,
+    "ast_hash": "77848f541ec8461df1de9a9018074b26",
+    "semantic_hash": "77848f541ec8461df1de9a9018074b26"
+  },
+  "D:\\NIZAM\\NIZAM__system\\agent_personas.json": {
+    "mtime": 1780151774.5556307,
+    "ast_hash": "3ed73e32dd65def1f0cd4d32b1a22118",
+    "semantic_hash": "3ed73e32dd65def1f0cd4d32b1a22118"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\fixtures\\extraction_dry_run.py": {
+    "mtime": 1780028420.922073,
+    "ast_hash": "18a338a428b3772dc232fb4580df5e2a",
+    "semantic_hash": "18a338a428b3772dc232fb4580df5e2a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\fixtures\\intent_priority_test.py": {
+    "mtime": 1780190077.0305781,
+    "ast_hash": "2cb5c35e650ffd8beea89db008d10a25",
+    "semantic_hash": "2cb5c35e650ffd8beea89db008d10a25"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\fixtures\\router_dry_run.py": {
+    "mtime": 1780190016.3771162,
+    "ast_hash": "ef9400329c5f570c386e430814bb94c4",
+    "semantic_hash": "ef9400329c5f570c386e430814bb94c4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\nizam_router.py": {
+    "mtime": 1780190077.0295453,
+    "ast_hash": "ce4cbea4118353853e4ae8da195c2d03",
+    "semantic_hash": "ce4cbea4118353853e4ae8da195c2d03"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\__init__.py": {
+    "mtime": 1780001738.1772008,
+    "ast_hash": "46aafb54a8f1f81c367a6edd085736f3",
+    "semantic_hash": "46aafb54a8f1f81c367a6edd085736f3"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\classifier.py": {
+    "mtime": 1780027034.84979,
+    "ast_hash": "a81a858067e956e0a027ed552572843e",
+    "semantic_hash": "a81a858067e956e0a027ed552572843e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\cost_ceiling.py": {
+    "mtime": 1779999947.334279,
+    "ast_hash": "f34a4d2d72bfb770217a9eecda800597",
+    "semantic_hash": "f34a4d2d72bfb770217a9eecda800597"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\kill_switch.py": {
+    "mtime": 1779999955.1002288,
+    "ast_hash": "a291dff16ffa0ced97cbf85ef2d0d454",
+    "semantic_hash": "a291dff16ffa0ced97cbf85ef2d0d454"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\ledger_writer.py": {
+    "mtime": 1780001731.0194626,
+    "ast_hash": "4e17c08d5e35262bea0c361eb1597257",
+    "semantic_hash": "4e17c08d5e35262bea0c361eb1597257"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\scripts\\install_pre_commit_hook.py": {
+    "mtime": 1780000177.208024,
+    "ast_hash": "c00c6abad9e62e2085cfe0d983ae205b",
+    "semantic_hash": "c00c6abad9e62e2085cfe0d983ae205b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\scripts\\pre_commit_check.py": {
+    "mtime": 1780000162.255303,
+    "ast_hash": "5cc43ac95b77f5da99493ad9cf5863d2",
+    "semantic_hash": "5cc43ac95b77f5da99493ad9cf5863d2"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\strategy_sth.py": {
+    "mtime": 1780001722.020744,
+    "ast_hash": "c523e26e0f644e875277737fae23cb8a",
+    "semantic_hash": "c523e26e0f644e875277737fae23cb8a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\strict_local_maximum.py": {
+    "mtime": 1780000005.9939618,
+    "ast_hash": "5d4973348b4b3264e3132e747e7fffe5",
+    "semantic_hash": "5d4973348b4b3264e3132e747e7fffe5"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\sync_arbiter.py": {
+    "mtime": 1780000912.5891,
+    "ast_hash": "c6a469aed7587ed8d368b721054b99ad",
+    "semantic_hash": "c6a469aed7587ed8d368b721054b99ad"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\tests\\__init__.py": {
+    "mtime": 1780000115.164256,
+    "ast_hash": "1b66232a2bbb59a0fff312a742538604",
+    "semantic_hash": "1b66232a2bbb59a0fff312a742538604"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\tests\\test_agent_message_schema.py": {
+    "mtime": 1780001264.781525,
+    "ast_hash": "53bb99930ecfe9abff140a689ef15c87",
+    "semantic_hash": "53bb99930ecfe9abff140a689ef15c87"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\tests\\test_classifier_fixture.py": {
+    "mtime": 1780000111.6274054,
+    "ast_hash": "f6a7d5854c59834e61d41e8b5223476b",
+    "semantic_hash": "f6a7d5854c59834e61d41e8b5223476b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\tests\\test_pre_commit_hook.py": {
+    "mtime": 1780000202.4489744,
+    "ast_hash": "19a6b58cec30d01e34e0d918250e2bfa",
+    "semantic_hash": "19a6b58cec30d01e34e0d918250e2bfa"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\tests\\test_strategy_sth.py": {
+    "mtime": 1780001765.8023865,
+    "ast_hash": "6ea256095f71cd948279f657df8b7af6",
+    "semantic_hash": "6ea256095f71cd948279f657df8b7af6"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\trace.py": {
+    "mtime": 1780001217.0537004,
+    "ast_hash": "0420a3ab637b6632946ded19d73479f3",
+    "semantic_hash": "0420a3ab637b6632946ded19d73479f3"
+  },
+  "D:\\NIZAM\\NIZAM__system\\governor\\utils.py": {
+    "mtime": 1780000031.6104102,
+    "ast_hash": "7556bdd9e9d2aa57e1e72183bcab057d",
+    "semantic_hash": "7556bdd9e9d2aa57e1e72183bcab057d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\nizam-budgets.json": {
+    "mtime": 1780151219.7443178,
+    "ast_hash": "d8f568271cc2ad8035682a3c4051ec9c",
+    "semantic_hash": "d8f568271cc2ad8035682a3c4051ec9c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\nizam-egress-greenlist.json": {
+    "mtime": 1780152693.963177,
+    "ast_hash": "7f61452a255897c2834429fe196b534b",
+    "semantic_hash": "7f61452a255897c2834429fe196b534b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-plugins\\nizam-governor\\__init__.py": {
+    "mtime": 1780190029.7139664,
+    "ast_hash": "b3f0a369a8a6408d0b66d02b695ef17f",
+    "semantic_hash": "b3f0a369a8a6408d0b66d02b695ef17f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\T1_receipt.json": {
+    "mtime": 1780002029.7907677,
+    "ast_hash": "bfba2a917c3a14b58cbd5e580322023e",
+    "semantic_hash": "bfba2a917c3a14b58cbd5e580322023e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000002.sth.json": {
+    "mtime": 1780001770.3464437,
+    "ast_hash": "f7a4f1e8ffae53d282cfb66507014277",
+    "semantic_hash": "f7a4f1e8ffae53d282cfb66507014277"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000003.sth.json": {
+    "mtime": 1780001865.1287694,
+    "ast_hash": "ecd22b4eb4fb09ff93e517fa78d8c3c0",
+    "semantic_hash": "ecd22b4eb4fb09ff93e517fa78d8c3c0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000004.sth.json": {
+    "mtime": 1780002029.7458484,
+    "ast_hash": "7dab4ae95456f917d47fbf80fdaf3093",
+    "semantic_hash": "7dab4ae95456f917d47fbf80fdaf3093"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000005.sth.json": {
+    "mtime": 1780027117.1476996,
+    "ast_hash": "72d108ef69fa188cd4d16ac591794a5d",
+    "semantic_hash": "72d108ef69fa188cd4d16ac591794a5d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000006.sth.json": {
+    "mtime": 1780028455.0558395,
+    "ast_hash": "85da1e31c3ddaea8e19f64b0ce020115",
+    "semantic_hash": "85da1e31c3ddaea8e19f64b0ce020115"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000007.sth.json": {
+    "mtime": 1780048991.8790379,
+    "ast_hash": "d115e75ca72d84cb3681c00f6d49f1dc",
+    "semantic_hash": "d115e75ca72d84cb3681c00f6d49f1dc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000008.sth.json": {
+    "mtime": 1780049046.4761832,
+    "ast_hash": "7899922a1bc251924c489a593c1952bf",
+    "semantic_hash": "7899922a1bc251924c489a593c1952bf"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.00000009.sth.json": {
+    "mtime": 1781365612.4274154,
+    "ast_hash": "addfc790d020507353079b3d48af4689",
+    "semantic_hash": "addfc790d020507353079b3d48af4689"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\sth\\STRATEGY_LEDGER.sth.json": {
+    "mtime": 1781365612.4263964,
+    "ast_hash": "addfc790d020507353079b3d48af4689",
+    "semantic_hash": "addfc790d020507353079b3d48af4689"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\AHEL.json": {
+    "mtime": 1780000487.790007,
+    "ast_hash": "a9f6f6a13b2ef8f8b3e00ce45748d98e",
+    "semantic_hash": "a9f6f6a13b2ef8f8b3e00ce45748d98e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\AMMAR.json": {
+    "mtime": 1780000270.687883,
+    "ast_hash": "e1f427ba74cf20a03bb937acae68622d",
+    "semantic_hash": "e1f427ba74cf20a03bb937acae68622d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\BADAN.json": {
+    "mtime": 1780000409.6158195,
+    "ast_hash": "6c4e22d48b9f79f22ac6f220acacb4b1",
+    "semantic_hash": "6c4e22d48b9f79f22ac6f220acacb4b1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\HIKMAH.json": {
+    "mtime": 1780000409.6168432,
+    "ast_hash": "210ab48aa6fbd7970528ee8c2e3c4f4b",
+    "semantic_hash": "210ab48aa6fbd7970528ee8c2e3c4f4b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\MAL.json": {
+    "mtime": 1780000499.4575744,
+    "ast_hash": "c873316984b049bc32d7bc5ef00f41fd",
+    "semantic_hash": "c873316984b049bc32d7bc5ef00f41fd"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\MARSAD.json": {
+    "mtime": 1780000409.6168432,
+    "ast_hash": "81a84e9925ce4fef030760e6fc83b67f",
+    "semantic_hash": "81a84e9925ce4fef030760e6fc83b67f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\MUNAWARA.json": {
+    "mtime": 1780000409.6158195,
+    "ast_hash": "1115c9e86f2ebf19209c9e1f4767a697",
+    "semantic_hash": "1115c9e86f2ebf19209c9e1f4767a697"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\NAQD.json": {
+    "mtime": 1780000409.6137712,
+    "ast_hash": "4d9f515eec55a62ad8f56ac46781f63b",
+    "semantic_hash": "4d9f515eec55a62ad8f56ac46781f63b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\NIZAM.json": {
+    "mtime": 1780048833.5909874,
+    "ast_hash": "9b7d2dad7d0ec40b50ff8b141a282358",
+    "semantic_hash": "9b7d2dad7d0ec40b50ff8b141a282358"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\SHURA.json": {
+    "mtime": 1780000409.6137712,
+    "ast_hash": "76368fcbe68ae69a7cd8b6b266fe4ac9",
+    "semantic_hash": "76368fcbe68ae69a7cd8b6b266fe4ac9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\TAFRIGH.json": {
+    "mtime": 1780000409.6127439,
+    "ast_hash": "60310d6d12ca9ca789548561605ba54a",
+    "semantic_hash": "60310d6d12ca9ca789548561605ba54a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\personas\\TARIQ.json": {
+    "mtime": 1780000409.6147974,
+    "ast_hash": "d3d57615cb27a8d697cc95595fd08306",
+    "semantic_hash": "d3d57615cb27a8d697cc95595fd08306"
+  },
+  "D:\\NIZAM\\NIZAM__system\\pillar_registry.json": {
+    "mtime": 1779999602.7146246,
+    "ast_hash": "c323cb0315a4661c482579381de8f4b9",
+    "semantic_hash": "c323cb0315a4661c482579381de8f4b9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\policies\\CONNECTORS.json": {
+    "mtime": 1779999523.8126364,
+    "ast_hash": "389450ba0f3a8242d633fe5182d75831",
+    "semantic_hash": "389450ba0f3a8242d633fe5182d75831"
+  },
+  "D:\\NIZAM\\NIZAM__system\\policies\\DUAL_WRITE_GOVERNOR.json": {
+    "mtime": 1779550451.4416816,
+    "ast_hash": "6018280039a3c15948aa9a7ad680140f",
+    "semantic_hash": "6018280039a3c15948aa9a7ad680140f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\policies\\PRIVACY_CLASSIFICATION.json": {
+    "mtime": 1780027041.30281,
+    "ast_hash": "6b329209b578e963daa0dfcbe6503fa9",
+    "semantic_hash": "6b329209b578e963daa0dfcbe6503fa9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\policies\\SYNC_POLICY.json": {
+    "mtime": 1779999523.8310378,
+    "ast_hash": "bad6e92a4f8d73eb6a767d92c60f54c1",
+    "semantic_hash": "bad6e92a4f8d73eb6a767d92c60f54c1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\policies\\TOOL_ACCESS_MATRIX.json": {
+    "mtime": 1780000561.436224,
+    "ast_hash": "9714b4be72064f133ea279b6c446c7d4",
+    "semantic_hash": "9714b4be72064f133ea279b6c446c7d4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\__init__.py": {
+    "mtime": 1780000784.8591928,
+    "ast_hash": "196232d03c22caa71d57664f7da5a960",
+    "semantic_hash": "196232d03c22caa71d57664f7da5a960"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\auth.py": {
+    "mtime": 1780000805.2949278,
+    "ast_hash": "ea72a6c7e5f04d7ae1c9aa4146bafe0d",
+    "semantic_hash": "ea72a6c7e5f04d7ae1c9aa4146bafe0d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\coordinator.py": {
+    "mtime": 1780190017.6295192,
+    "ast_hash": "61dfd606254eda7edcbd107f11bb063e",
+    "semantic_hash": "61dfd606254eda7edcbd107f11bb063e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\dedup.py": {
+    "mtime": 1780000817.8880408,
+    "ast_hash": "9deaf26ed034d0c86c3f60d7c18c6ba9",
+    "semantic_hash": "9deaf26ed034d0c86c3f60d7c18c6ba9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\poller.py": {
+    "mtime": 1780028354.5937467,
+    "ast_hash": "599944ccc963602dc9240aca42831f38",
+    "semantic_hash": "599944ccc963602dc9240aca42831f38"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\sukoon_gate.py": {
+    "mtime": 1780000832.8770962,
+    "ast_hash": "d5359be4c0761fa526c7e91490752bd0",
+    "semantic_hash": "d5359be4c0761fa526c7e91490752bd0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\tests\\__init__.py": {
+    "mtime": 1780000964.2611098,
+    "ast_hash": "3f29534e68d290caad3b35b6ebdea8ac",
+    "semantic_hash": "3f29534e68d290caad3b35b6ebdea8ac"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\tests\\test_phase1_boot_loop.py": {
+    "mtime": 1780001010.4185038,
+    "ast_hash": "37f5cb80ca71f0837858b899c604ab7d",
+    "semantic_hash": "37f5cb80ca71f0837858b899c604ab7d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\tests\\test_poller.py": {
+    "mtime": 1780028370.5901349,
+    "ast_hash": "3ec4b214d8e3dfee6a7ef3d177ea01b2",
+    "semantic_hash": "3ec4b214d8e3dfee6a7ef3d177ea01b2"
+  },
+  "D:\\NIZAM\\NIZAM__system\\relay\\webhook.py": {
+    "mtime": 1780000956.7851946,
+    "ast_hash": "430a380572bdaf853dfd4a493e489c48",
+    "semantic_hash": "430a380572bdaf853dfd4a493e489c48"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\NIZAM_HERMES_LIVE_PRODUCTION_v2.1_PLAN.json": {
+    "mtime": 1780143978.228232,
+    "ast_hash": "7259fa2ef5b4e868506ff9f66fff76dc",
+    "semantic_hash": "7259fa2ef5b4e868506ff9f66fff76dc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\owner_profile_ingest.py": {
+    "mtime": 1780187457.2395227,
+    "ast_hash": "3ba73b285f5ecb11675d03154424a82b",
+    "semantic_hash": "3ba73b285f5ecb11675d03154424a82b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\agent_message.schema.json": {
+    "mtime": 1780001093.285016,
+    "ast_hash": "4e6a5e8dc5e543d48871d1a55c071742",
+    "semantic_hash": "4e6a5e8dc5e543d48871d1a55c071742"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\battle_ledger.schema.json": {
+    "mtime": 1779550451.4508915,
+    "ast_hash": "014174b0853c49fd9cc185cceef3ddc9",
+    "semantic_hash": "014174b0853c49fd9cc185cceef3ddc9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\body_red_flag.schema.json": {
+    "mtime": 1779550451.4519155,
+    "ast_hash": "846c497081c0b13fb36404a5d31342f1",
+    "semantic_hash": "846c497081c0b13fb36404a5d31342f1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\body_signal.schema.json": {
+    "mtime": 1779550451.4529316,
+    "ast_hash": "b9216ee2c4f80d4fae9c853d8d536bba",
+    "semantic_hash": "b9216ee2c4f80d4fae9c853d8d536bba"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\body_weekly_review.schema.json": {
+    "mtime": 1779550451.4539504,
+    "ast_hash": "a194bb99edaf6bde8d962cfa331c99c9",
+    "semantic_hash": "a194bb99edaf6bde8d962cfa331c99c9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\conversational_session.schema.json": {
+    "mtime": 1779550451.4539504,
+    "ast_hash": "f5ef1b241d51b08e1bdd1c9d5745604a",
+    "semantic_hash": "f5ef1b241d51b08e1bdd1c9d5745604a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\decision_ledger.schema.json": {
+    "mtime": 1779550451.454975,
+    "ast_hash": "0edc18274b4228aa54d8a6a3a7b3e00a",
+    "semantic_hash": "0edc18274b4228aa54d8a6a3a7b3e00a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\event_ledger.schema.json": {
+    "mtime": 1779550451.454975,
+    "ast_hash": "823c736dc74764caa552ae4c7ebcc136",
+    "semantic_hash": "823c736dc74764caa552ae4c7ebcc136"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\family_person.schema.json": {
+    "mtime": 1779550451.4560068,
+    "ast_hash": "b812387cbc167be42d89ee77d7af3208",
+    "semantic_hash": "b812387cbc167be42d89ee77d7af3208"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\family_support_event.schema.json": {
+    "mtime": 1779550451.4570267,
+    "ast_hash": "e2b1d1fdeed858dc54d09c0ea808f6ab",
+    "semantic_hash": "e2b1d1fdeed858dc54d09c0ea808f6ab"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\finance_baseline.schema.json": {
+    "mtime": 1779550451.4580474,
+    "ast_hash": "038c58e8551b0f258ba3c26ad83ad725",
+    "semantic_hash": "038c58e8551b0f258ba3c26ad83ad725"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\finance_milestone.schema.json": {
+    "mtime": 1779550451.4580474,
+    "ast_hash": "fe34158ce6f8ee0950cf8b166f4e3cfb",
+    "semantic_hash": "fe34158ce6f8ee0950cf8b166f4e3cfb"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\finance_scenario.schema.json": {
+    "mtime": 1779550451.4590633,
+    "ast_hash": "3ce28aa75d6a7bced91dc9065dcc013e",
+    "semantic_hash": "3ce28aa75d6a7bced91dc9065dcc013e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\fixtures\\conversational_session.fixture.json": {
+    "mtime": 1779550451.4600759,
+    "ast_hash": "c3ae34ffc039201b2dee4dc612a5e49a",
+    "semantic_hash": "c3ae34ffc039201b2dee4dc612a5e49a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\flight_price_observation.schema.json": {
+    "mtime": 1779550451.461126,
+    "ast_hash": "768e74044ba86c972d62fd359bf9598a",
+    "semantic_hash": "768e74044ba86c972d62fd359bf9598a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\folder_index.schema.json": {
+    "mtime": 1779550451.461126,
+    "ast_hash": "5f92c8277ccde8935bd15d2353c5bade",
+    "semantic_hash": "5f92c8277ccde8935bd15d2353c5bade"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\governor_runtime_record.schema.json": {
+    "mtime": 1779550451.46215,
+    "ast_hash": "d33930e92b2e19651e5ce8e8a948350b",
+    "semantic_hash": "d33930e92b2e19651e5ce8e8a948350b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\learning_ledger.schema.json": {
+    "mtime": 1779550451.4631953,
+    "ast_hash": "ed1a54ae9e4d8fedf5de00fe34f2cd2f",
+    "semantic_hash": "ed1a54ae9e4d8fedf5de00fe34f2cd2f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\long_horizon_plan.schema.json": {
+    "mtime": 1779999322.6951575,
+    "ast_hash": "83b0639c779c944ce98cc11ae535a679",
+    "semantic_hash": "83b0639c779c944ce98cc11ae535a679"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\note_frontmatter.schema.json": {
+    "mtime": 1779999322.695658,
+    "ast_hash": "c9e76a2df52a1fd2b976199a8926e4d4",
+    "semantic_hash": "c9e76a2df52a1fd2b976199a8926e4d4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\overload_flag.schema.json": {
+    "mtime": 1779550451.4642277,
+    "ast_hash": "fa9cb06d4240f2a9268eca4605e99b5d",
+    "semantic_hash": "fa9cb06d4240f2a9268eca4605e99b5d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\persona.schema.json": {
+    "mtime": 1780000475.2831583,
+    "ast_hash": "0dc3ba5b557b5700d708500de74597f0",
+    "semantic_hash": "0dc3ba5b557b5700d708500de74597f0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\pfa_canonical_state.schema.json": {
+    "mtime": 1779550451.465245,
+    "ast_hash": "a4f30550630577b33f0090c07f72f624",
+    "semantic_hash": "a4f30550630577b33f0090c07f72f624"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\pfa_debt_event.schema.json": {
+    "mtime": 1779550451.466262,
+    "ast_hash": "c27d2c03108a7a6a5ebda956d4179019",
+    "semantic_hash": "c27d2c03108a7a6a5ebda956d4179019"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\pfa_learning.schema.json": {
+    "mtime": 1779550451.467276,
+    "ast_hash": "bc2bf744087832da2982dad8fa74719c",
+    "semantic_hash": "bc2bf744087832da2982dad8fa74719c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\pfa_payment_event.schema.json": {
+    "mtime": 1779550451.467276,
+    "ast_hash": "3a51a96fdeeefcdd48b94571f7ff264b",
+    "semantic_hash": "3a51a96fdeeefcdd48b94571f7ff264b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\strategy_pivot.schema.json": {
+    "mtime": 1779999322.697184,
+    "ast_hash": "edff92e4a2ab4da55bb6875ac3ea656a",
+    "semantic_hash": "edff92e4a2ab4da55bb6875ac3ea656a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\tactical_plan.schema.json": {
+    "mtime": 1779999322.697184,
+    "ast_hash": "ad74d82add6cc47c516905762c84716f",
+    "semantic_hash": "ad74d82add6cc47c516905762c84716f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\user_deep.schema.json": {
+    "mtime": 1780001386.3048644,
+    "ast_hash": "829057f60d84854cf0318ad18c9fbdb6",
+    "semantic_hash": "829057f60d84854cf0318ad18c9fbdb6"
+  },
+  "D:\\NIZAM\\NIZAM__system\\schemas\\user_profile.schema.json": {
+    "mtime": 1780001322.2488196,
+    "ast_hash": "8890aa85d76a7f2fd4be8ed8b5b1c706",
+    "semantic_hash": "8890aa85d76a7f2fd4be8ed8b5b1c706"
+  },
+  "D:\\NIZAM\\NUR__obsidian_vault\\_index.json": {
+    "mtime": 1779999523.7993383,
+    "ast_hash": "9b7d031689ef2088683f7dc8e15d4b1e",
+    "semantic_hash": "9b7d031689ef2088683f7dc8e15d4b1e"
+  },
+  "D:\\NIZAM\\QARAR__decisions\\_index.json": {
+    "mtime": 1779999523.7993383,
+    "ast_hash": "a46dcf48d579b46a9921a33389c1ea5f",
+    "semantic_hash": "a46dcf48d579b46a9921a33389c1ea5f"
+  },
+  "D:\\NIZAM\\SHURA__brainstormer\\_index.json": {
+    "mtime": 1779999523.8003707,
+    "ast_hash": "42fe29d8d300064cacc795eae4a01ebf",
+    "semantic_hash": "42fe29d8d300064cacc795eae4a01ebf"
+  },
+  "D:\\NIZAM\\SUKOON__recovery_first\\_index.json": {
+    "mtime": 1779999523.8003707,
+    "ast_hash": "98ce8f111fd89b821956a71df2a92303",
+    "semantic_hash": "98ce8f111fd89b821956a71df2a92303"
+  },
+  "D:\\NIZAM\\TAFRIGH__brain_dumper\\_index.json": {
+    "mtime": 1779999523.8013997,
+    "ast_hash": "461607e4f76fb154ff1798fc6730465c",
+    "semantic_hash": "461607e4f76fb154ff1798fc6730465c"
+  },
+  "D:\\NIZAM\\TARIQ__long_horizon_strategy\\_index.json": {
+    "mtime": 1779999523.8013997,
+    "ast_hash": "d7b82475a56c8ad0c1751cee679da152",
+    "semantic_hash": "d7b82475a56c8ad0c1751cee679da152"
+  },
+  "D:\\NIZAM\\YAWMIYAT__journaling\\_index.json": {
+    "mtime": 1779999523.803452,
+    "ast_hash": "cf0c11606cb8e2eb5c255368dc0d0a96",
+    "semantic_hash": "cf0c11606cb8e2eb5c255368dc0d0a96"
+  },
+  "D:\\NIZAM\\install-audit\\NIZAM_SETUP_STATE.json": {
+    "mtime": 1779551251.6897752,
+    "ast_hash": "20e8b21c1b5ec0a14acfa77d53567364",
+    "semantic_hash": "20e8b21c1b5ec0a14acfa77d53567364"
+  },
+  "D:\\NIZAM\\install-audit\\_deploy_heartbeat.sh": {
+    "mtime": 1780223587.9123702,
+    "ast_hash": "25a2146a923643b32b31249f72a44d54",
+    "semantic_hash": "25a2146a923643b32b31249f72a44d54"
+  },
+  "D:\\NIZAM\\install-audit\\_mod2_step1_2.sh": {
+    "mtime": 1780227108.1128774,
+    "ast_hash": "5ad8a2c985a47ebc09431a88adc55dfb",
+    "semantic_hash": "5ad8a2c985a47ebc09431a88adc55dfb"
+  },
+  "D:\\NIZAM\\install-audit\\_mod2_step3.sh": {
+    "mtime": 1780227164.8719742,
+    "ast_hash": "16b83ffc7ab4a1cd35e7470669d93dd6",
+    "semantic_hash": "16b83ffc7ab4a1cd35e7470669d93dd6"
+  },
+  "D:\\NIZAM\\install-audit\\_mod2_step4.sh": {
+    "mtime": 1780227192.0745776,
+    "ast_hash": "bda1ff54cd5c8954fd9f4a3913f39ea6",
+    "semantic_hash": "bda1ff54cd5c8954fd9f4a3913f39ea6"
+  },
+  "D:\\NIZAM\\install-audit\\_mod2_step6_7.sh": {
+    "mtime": 1780227254.7882016,
+    "ast_hash": "0c251dba52c1cbc4c5ebb6516d326c3f",
+    "semantic_hash": "0c251dba52c1cbc4c5ebb6516d326c3f"
+  },
+  "D:\\NIZAM\\install-audit\\_mod_invest.sh": {
+    "mtime": 1780223311.938243,
+    "ast_hash": "fa55e4d6b02a9ddc9e3525547efb99cf",
+    "semantic_hash": "fa55e4d6b02a9ddc9e3525547efb99cf"
+  },
+  "D:\\NIZAM\\install-audit\\_mod_step1_2.sh": {
+    "mtime": 1780223171.251736,
+    "ast_hash": "8dc9058da616b048a701973a1c732b1c",
+    "semantic_hash": "8dc9058da616b048a701973a1c732b1c"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_patch.py": {
+    "mtime": 1780228761.89399,
+    "ast_hash": "582570e891b6eb832a7805f676fc4c80",
+    "semantic_hash": "582570e891b6eb832a7805f676fc4c80"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_recon_a.sh": {
+    "mtime": 1780228405.2910569,
+    "ast_hash": "28324dfe2817b5339a530ac8fabcaf5a",
+    "semantic_hash": "28324dfe2817b5339a530ac8fabcaf5a"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_recon_b.sh": {
+    "mtime": 1780228451.8269272,
+    "ast_hash": "4888781d75d407350898afd949344dc8",
+    "semantic_hash": "4888781d75d407350898afd949344dc8"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_recon_c.sh": {
+    "mtime": 1780228517.1221452,
+    "ast_hash": "274ddf56df7c5b33c8e4d3bf99fe2bec",
+    "semantic_hash": "274ddf56df7c5b33c8e4d3bf99fe2bec"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_restart.sh": {
+    "mtime": 1780228813.135348,
+    "ast_hash": "826d72250ebb6180b95f678d59caa666",
+    "semantic_hash": "826d72250ebb6180b95f678d59caa666"
+  },
+  "D:\\NIZAM\\install-audit\\_p13_verify.sh": {
+    "mtime": 1780228875.9876494,
+    "ast_hash": "2c530df4e7c4bc6d38cbf4b6048253a5",
+    "semantic_hash": "2c530df4e7c4bc6d38cbf4b6048253a5"
+  },
+  "D:\\NIZAM\\install-audit\\_p5_recon.sh": {
+    "mtime": 1780229450.2894926,
+    "ast_hash": "956af6206be7eb6e7d3345cbf4bbe376",
+    "semantic_hash": "956af6206be7eb6e7d3345cbf4bbe376"
+  },
+  "D:\\NIZAM\\install-audit\\_p5_sessauth.sh": {
+    "mtime": 1780229501.2868989,
+    "ast_hash": "250e64c742f7b488dbf8129007ac5450",
+    "semantic_hash": "250e64c742f7b488dbf8129007ac5450"
+  },
+  "D:\\NIZAM\\install-audit\\_p5_step4.sh": {
+    "mtime": 1780229581.7132454,
+    "ast_hash": "4674098f52e1431210d1da9aef5a8296",
+    "semantic_hash": "4674098f52e1431210d1da9aef5a8296"
+  },
+  "D:\\NIZAM\\install-audit\\_patch2_remove_drivemirror.py": {
+    "mtime": 1780227224.461835,
+    "ast_hash": "1b28d8d5de27e6d5a8c98c0268d5d568",
+    "semantic_hash": "1b28d8d5de27e6d5a8c98c0268d5d568"
+  },
+  "D:\\NIZAM\\install-audit\\_patch_governor.py": {
+    "mtime": 1780223521.1410298,
+    "ast_hash": "1fb0cae9967c94fa294efdaa79d0386a",
+    "semantic_hash": "1fb0cae9967c94fa294efdaa79d0386a"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_resp_1.sh": {
+    "mtime": 1780227329.8142495,
+    "ast_hash": "4dc26c83ad2e91096a508786f2cb6a39",
+    "semantic_hash": "4dc26c83ad2e91096a508786f2cb6a39"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_resp_2.sh": {
+    "mtime": 1780227361.648969,
+    "ast_hash": "c72eb425629c87831adcdba0715c95cd",
+    "semantic_hash": "c72eb425629c87831adcdba0715c95cd"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_resp_3.sh": {
+    "mtime": 1780227411.022269,
+    "ast_hash": "b2a34187c146bc591179cc26a8100aa6",
+    "semantic_hash": "b2a34187c146bc591179cc26a8100aa6"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_resp_4.sh": {
+    "mtime": 1780227448.3964734,
+    "ast_hash": "2d9498b07b92252309c0b5bfd7acb8b3",
+    "semantic_hash": "2d9498b07b92252309c0b5bfd7acb8b3"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_tmp.sh": {
+    "mtime": 1780189729.1565194,
+    "ast_hash": "4cfa9aa1abb4afb25946e92fa75abffc",
+    "semantic_hash": "4cfa9aa1abb4afb25946e92fa75abffc"
+  },
+  "D:\\NIZAM\\install-audit\\_recon_tmp2.sh": {
+    "mtime": 1780189777.9250262,
+    "ast_hash": "ac186ac258efce326e2a70a9ce9c104f",
+    "semantic_hash": "ac186ac258efce326e2a70a9ce9c104f"
+  },
+  "D:\\NIZAM\\install-audit\\_step6.sh": {
+    "mtime": 1780223665.775919,
+    "ast_hash": "975fbecf7f6f0a722001ff5b4b8c1d28",
+    "semantic_hash": "975fbecf7f6f0a722001ff5b4b8c1d28"
+  },
+  "D:\\NIZAM\\install-audit\\_step7.sh": {
+    "mtime": 1780223749.2303522,
+    "ast_hash": "6d6a2f5ddd4f7e860b8e18f967f7df9c",
+    "semantic_hash": "6d6a2f5ddd4f7e860b8e18f967f7df9c"
+  },
+  "D:\\NIZAM\\install-audit\\_verify_mirror_1.sh": {
+    "mtime": 1780190029.3358586,
+    "ast_hash": "9d48c642d2f174d7b68fa1e6886fca76",
+    "semantic_hash": "9d48c642d2f174d7b68fa1e6886fca76"
+  },
+  "D:\\NIZAM\\install-audit\\_verify_mirror_2.sh": {
+    "mtime": 1780190063.867118,
+    "ast_hash": "44481731b10b2e4a719424d507235608",
+    "semantic_hash": "44481731b10b2e4a719424d507235608"
+  },
+  "D:\\NIZAM\\install-audit\\_verify_mirror_3.sh": {
+    "mtime": 1780190089.7549522,
+    "ast_hash": "d56bdf946a5984b0eaa0fcc9d76e316a",
+    "semantic_hash": "d56bdf946a5984b0eaa0fcc9d76e316a"
+  },
+  "D:\\NIZAM\\install-audit\\baseline_schema.json": {
+    "mtime": 1780228779.1495123,
+    "ast_hash": "6bb8051bca3a8f78aa8f55ef46790999",
+    "semantic_hash": "6bb8051bca3a8f78aa8f55ef46790999"
+  },
+  "D:\\NIZAM\\install-audit\\router-stage-1-deploy\\__init__.py": {
+    "mtime": 1780190029.7139664,
+    "ast_hash": "b3f0a369a8a6408d0b66d02b695ef17f",
+    "semantic_hash": "b3f0a369a8a6408d0b66d02b695ef17f"
+  },
+  "D:\\NIZAM\\install-audit\\router-stage-1-deploy\\nizam_router.py": {
+    "mtime": 1780190077.0295453,
+    "ast_hash": "ce4cbea4118353853e4ae8da195c2d03",
+    "semantic_hash": "ce4cbea4118353853e4ae8da195c2d03"
+  },
+  "D:\\NIZAM\\install-audit\\startup-receipt.json": {
+    "mtime": 1779551249.7921765,
+    "ast_hash": "a01f8eb0fbc92399dfe7e8de930d8b99",
+    "semantic_hash": "a01f8eb0fbc92399dfe7e8de930d8b99"
+  },
+  "D:\\NIZAM\\install-audit\\vps_router_smoke_import.py": {
+    "mtime": 1781365945.4723728,
+    "ast_hash": "a2d2e391d1efd2404d8d3dcf25a63a4f",
+    "semantic_hash": "a2d2e391d1efd2404d8d3dcf25a63a4f"
+  },
+  "D:\\NIZAM\\scripts\\append_persona_runtime.py": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "76151fe7dce82e2b90875a6021da6aae",
+    "semantic_hash": "76151fe7dce82e2b90875a6021da6aae"
+  },
+  "D:\\NIZAM\\scripts\\gap_pop_to_nizam_apply.py": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "d5285fdf8ca7d2c1a3e700473d7c4736",
+    "semantic_hash": "d5285fdf8ca7d2c1a3e700473d7c4736"
+  },
+  "D:\\NIZAM\\scripts\\init_ledgers.py": {
+    "mtime": 1780142595.818713,
+    "ast_hash": "0342c8ed3bc28ac860e79184988b6ebe",
+    "semantic_hash": "0342c8ed3bc28ac860e79184988b6ebe"
+  },
+  "D:\\NIZAM\\scripts\\makhzan_snapshot.py": {
+    "mtime": 1780142595.7097108,
+    "ast_hash": "e54cba35b3f4283bf8fe28a56c2921cd",
+    "semantic_hash": "e54cba35b3f4283bf8fe28a56c2921cd"
+  },
+  "D:\\NIZAM\\scripts\\setup-nizamcore.ps1": {
+    "mtime": 1779550824.614566,
+    "ast_hash": "e273928e1ea8e2809723c0890f31e639",
+    "semantic_hash": "e273928e1ea8e2809723c0890f31e639"
+  },
+  "D:\\NIZAM\\scripts\\tariq_rename_apply.py": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "222e76bf2f41c1a92c43d4f27853a644",
+    "semantic_hash": "222e76bf2f41c1a92c43d4f27853a644"
+  },
+  "D:\\NIZAM\\scripts\\test_mirror_trailing_flush.py": {
+    "mtime": 1780190054.9874005,
+    "ast_hash": "2e1a976ce35dfb381bd6cbf63117c7dc",
+    "semantic_hash": "2e1a976ce35dfb381bd6cbf63117c7dc"
+  },
+  "D:\\NIZAM\\scripts\\validate_personas.py": {
+    "mtime": 1780142595.7097108,
+    "ast_hash": "66727bd53460c27653c7e01c8c8368e7",
+    "semantic_hash": "66727bd53460c27653c7e01c8c8368e7"
+  },
+  "D:\\NIZAM\\scripts\\verify-nizamcore.ps1": {
+    "mtime": 1780142595.7097108,
+    "ast_hash": "02e90ae75fc7fa2bcd66c59401956b61",
+    "semantic_hash": "02e90ae75fc7fa2bcd66c59401956b61"
+  },
+  "D:\\NIZAM\\tools\\nizam_startup.py": {
+    "mtime": 1779999523.8442783,
+    "ast_hash": "718cea933ce03d8c0d655688123db544",
+    "semantic_hash": "718cea933ce03d8c0d655688123db544"
+  },
+  "D:\\NIZAM\\tools\\t1_pre_egress_integration_test.py": {
+    "mtime": 1780001856.6260018,
+    "ast_hash": "adacc538cd045c643fdb428c7d707677",
+    "semantic_hash": "adacc538cd045c643fdb428c7d707677"
+  },
+  "D:\\NIZAM\\.github\\workflows\\marsad_monitor.yml": {
+    "mtime": 1779550451.3529742,
+    "ast_hash": "9c6653becfd922d470f7503fc3e98921",
+    "semantic_hash": "9c6653becfd922d470f7503fc3e98921"
+  },
+  "D:\\NIZAM\\AGENTS.md": {
+    "mtime": 1780142595.7097108,
+    "ast_hash": "f74b8ad8cb795028d41a95f4dd46dbaa",
+    "semantic_hash": "f74b8ad8cb795028d41a95f4dd46dbaa"
+  },
+  "D:\\NIZAM\\AHEL__family_network\\README.md": {
+    "mtime": 1779550451.354015,
+    "ast_hash": "e4931fd1c48061d68efa9e78e70a2261",
+    "semantic_hash": "e4931fd1c48061d68efa9e78e70a2261"
+  },
+  "D:\\NIZAM\\BADAN__body_health_system\\README.md": {
+    "mtime": 1779550451.3560863,
+    "ast_hash": "6ecad3cafeac904579d5b4f2e92ab3b9",
+    "semantic_hash": "6ecad3cafeac904579d5b4f2e92ab3b9"
+  },
+  "D:\\NIZAM\\BASIRA__future_visualization\\README.md": {
+    "mtime": 1779550451.360219,
+    "ast_hash": "5433146594884f6c2f535df81bb0b478",
+    "semantic_hash": "5433146594884f6c2f535df81bb0b478"
+  },
+  "D:\\NIZAM\\CHANGELOG.md": {
+    "mtime": 1779550451.3622878,
+    "ast_hash": "0c6e0a6dea47ae3e82767bc02f0751f9",
+    "semantic_hash": "0c6e0a6dea47ae3e82767bc02f0751f9"
+  },
+  "D:\\NIZAM\\CRITICAL_FACTS.md": {
+    "mtime": 1779999523.8310378,
+    "ast_hash": "f6dfc4c5c2fa419cd26aaa2525fe0e1e",
+    "semantic_hash": "f6dfc4c5c2fa419cd26aaa2525fe0e1e"
+  },
+  "D:\\NIZAM\\HAJR__quarantine\\README.md": {
+    "mtime": 1779550451.3633156,
+    "ast_hash": "baec08b53fa01f133e74af577044833d",
+    "semantic_hash": "baec08b53fa01f133e74af577044833d"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\README.md": {
+    "mtime": 1779550451.3694954,
+    "ast_hash": "c3cb1f77ba36b83dcc33d7f6d341cfda",
+    "semantic_hash": "c3cb1f77ba36b83dcc33d7f6d341cfda"
+  },
+  "D:\\NIZAM\\HIFZ__github_version_control\\requirements-governor.txt": {
+    "mtime": 1779550451.3705008,
+    "ast_hash": "987b52669f44fba3d711b0ffd7f02f36",
+    "semantic_hash": "987b52669f44fba3d711b0ffd7f02f36"
+  },
+  "D:\\NIZAM\\HIKMAH__learnings\\README.md": {
+    "mtime": 1779550451.3777268,
+    "ast_hash": "345c269d50f97532abfc8763729e473f",
+    "semantic_hash": "345c269d50f97532abfc8763729e473f"
+  },
+  "D:\\NIZAM\\INTAJ__output_engine\\README.md": {
+    "mtime": 1779550451.3797624,
+    "ast_hash": "cd5b0767f7c187462faf3b5b574fbca4",
+    "semantic_hash": "cd5b0767f7c187462faf3b5b574fbca4"
+  },
+  "D:\\NIZAM\\JADWAL__notion_dashboards\\README.md": {
+    "mtime": 1779550451.3818107,
+    "ast_hash": "41881124bded18c0c4c9dc69c1d64e2a",
+    "semantic_hash": "41881124bded18c0c4c9dc69c1d64e2a"
+  },
+  "D:\\NIZAM\\MAKHZAN__archive\\README.md": {
+    "mtime": 1779550451.389077,
+    "ast_hash": "4baf85239fd3e8c6296469169bae64a5",
+    "semantic_hash": "4baf85239fd3e8c6296469169bae64a5"
+  },
+  "D:\\NIZAM\\MAL__financial_engine\\README.md": {
+    "mtime": 1779550451.3901212,
+    "ast_hash": "00afcd9f3abf308018139c33e7082fd6",
+    "semantic_hash": "00afcd9f3abf308018139c33e7082fd6"
+  },
+  "D:\\NIZAM\\MAL__financial_engine\\pfa\\README.md": {
+    "mtime": 1779550451.3932302,
+    "ast_hash": "e7829692c705e063e30ad3ca54bf8765",
+    "semantic_hash": "e7829692c705e063e30ad3ca54bf8765"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\README.md": {
+    "mtime": 1779550451.3953185,
+    "ast_hash": "d58a6198beef2b1170fc75f016601425",
+    "semantic_hash": "d58a6198beef2b1170fc75f016601425"
+  },
+  "D:\\NIZAM\\MARSAD__flight_radar\\requirements.txt": {
+    "mtime": 1779550451.4107788,
+    "ast_hash": "22badc01eb284f5a37366a39a2914001",
+    "semantic_hash": "22badc01eb284f5a37366a39a2914001"
+  },
+  "D:\\NIZAM\\MUNAWARA__tactical_strategy\\README.md": {
+    "mtime": 1779999322.638447,
+    "ast_hash": "a0972938dfe74d0cbaa6413fa30ef031",
+    "semantic_hash": "a0972938dfe74d0cbaa6413fa30ef031"
+  },
+  "D:\\NIZAM\\NAQD__brain_griller\\README.md": {
+    "mtime": 1779550451.415931,
+    "ast_hash": "b21dc78b1fbc318e36964c297dc3cb83",
+    "semantic_hash": "b21dc78b1fbc318e36964c297dc3cb83"
+  },
+  "D:\\NIZAM\\NIZAMCORE_PATH.txt": {
+    "mtime": 1780144633.6925404,
+    "ast_hash": "cc8daf358eb8589ef754f9f320757816",
+    "semantic_hash": "cc8daf358eb8589ef754f9f320757816"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\agents.registry.yaml": {
+    "mtime": 1780049518.6974018,
+    "ast_hash": "524d179f99b84e310ee758d10920877b",
+    "semantic_hash": "524d179f99b84e310ee758d10920877b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\extraction.config.yaml": {
+    "mtime": 1779999697.296441,
+    "ast_hash": "2a3969dbd3ba51ee8ac4d1e3bf76065d",
+    "semantic_hash": "2a3969dbd3ba51ee8ac4d1e3bf76065d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\intent_exemplars.yaml": {
+    "mtime": 1780190011.4087398,
+    "ast_hash": "c5aab36c0d0aeba2056565a752d29990",
+    "semantic_hash": "c5aab36c0d0aeba2056565a752d29990"
+  },
+  "D:\\NIZAM\\NIZAM__system\\config\\router.config.yaml": {
+    "mtime": 1780190010.1030743,
+    "ast_hash": "a454224de91ff035144aa82c1d631828",
+    "semantic_hash": "a454224de91ff035144aa82c1d631828"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\AHEL_FAMILY_PRIVACY_RULES.md": {
+    "mtime": 1779550451.4200373,
+    "ast_hash": "cc3d354a2ebb1bb45a28c483aea25cec",
+    "semantic_hash": "cc3d354a2ebb1bb45a28c483aea25cec"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\BADAN_HEALTH_ADVISORY_NOTES.md": {
+    "mtime": 1779550451.4211102,
+    "ast_hash": "2be51d5bb7096ce16c980300e41abdba",
+    "semantic_hash": "2be51d5bb7096ce16c980300e41abdba"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\CONTINUITY_PROTOCOL.md": {
+    "mtime": 1779999523.80805,
+    "ast_hash": "a18e4bb4215439365465897e439ab188",
+    "semantic_hash": "a18e4bb4215439365465897e439ab188"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\CROSS_CLI_BUILD.md": {
+    "mtime": 1779550451.4221475,
+    "ast_hash": "495d818646003179f0e144dd720efa63",
+    "semantic_hash": "495d818646003179f0e144dd720efa63"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\DATA_MODEL.md": {
+    "mtime": 1779999322.6812816,
+    "ast_hash": "1a29032d8a71d2dd5537e2a6a5cfc688",
+    "semantic_hash": "1a29032d8a71d2dd5537e2a6a5cfc688"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\DUAL_WRITE_GOVERNOR.md": {
+    "mtime": 1779999523.8090513,
+    "ast_hash": "09591aa6fef462fe7ebaae0487503abe",
+    "semantic_hash": "09591aa6fef462fe7ebaae0487503abe"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\E2_GEPA_LOOP.md": {
+    "mtime": 1780001521.6367092,
+    "ast_hash": "91023bcfb62cd759056e58993e15579c",
+    "semantic_hash": "91023bcfb62cd759056e58993e15579c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\E2_HONCHO_SPIKE.md": {
+    "mtime": 1780001486.355149,
+    "ast_hash": "7b46b823c7a6973c1b00a4ce5c96e46c",
+    "semantic_hash": "7b46b823c7a6973c1b00a4ce5c96e46c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\E4_TIME_HORIZON_VIZ.md": {
+    "mtime": 1780001801.15879,
+    "ast_hash": "ffb2f486932543d85604d01c5b6f64e1",
+    "semantic_hash": "ffb2f486932543d85604d01c5b6f64e1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\EXTERNAL_PATTERNS_CITED.md": {
+    "mtime": 1779550451.4242055,
+    "ast_hash": "ed4c5d770b952296358be674da14543b",
+    "semantic_hash": "ed4c5d770b952296358be674da14543b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\GITHUB_PRIVACY.md": {
+    "mtime": 1779999523.8090513,
+    "ast_hash": "1f5e0e8fe081191fe6f58a046f23ac9d",
+    "semantic_hash": "1f5e0e8fe081191fe6f58a046f23ac9d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\MAL_FINANCIAL_LADDER.md": {
+    "mtime": 1779550451.425231,
+    "ast_hash": "698330c1abb03deed050e2b083ce725c",
+    "semantic_hash": "698330c1abb03deed050e2b083ce725c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\MEMORY_MODEL.md": {
+    "mtime": 1779999523.8095565,
+    "ast_hash": "bd04a665a031a76112cdcd4bb43f6f73",
+    "semantic_hash": "bd04a665a031a76112cdcd4bb43f6f73"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\MUNAWARA_TACTICAL_DOCTRINE.md": {
+    "mtime": 1779999322.6833284,
+    "ast_hash": "c631357817355c41d6a6b2a09c13b7e4",
+    "semantic_hash": "c631357817355c41d6a6b2a09c13b7e4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\NIZAMCORE_INTEGRATION.md": {
+    "mtime": 1779550451.4262516,
+    "ast_hash": "8ac5cb156e2072b2f7c410ef3806125a",
+    "semantic_hash": "8ac5cb156e2072b2f7c410ef3806125a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\NIZAM_CONVERSATIONAL_LAYER.md": {
+    "mtime": 1779999523.8105881,
+    "ast_hash": "9e1e126ae0440ea67c00d5f12869b43f",
+    "semantic_hash": "9e1e126ae0440ea67c00d5f12869b43f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\NIZAM_ORCHESTRATION_LAYER.md": {
+    "mtime": 1779999523.8105881,
+    "ast_hash": "6b12fdb22ac528cb076ef212bae8d4c4",
+    "semantic_hash": "6b12fdb22ac528cb076ef212bae8d4c4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\NOTION_PATHWAY.md": {
+    "mtime": 1779550451.4283047,
+    "ast_hash": "8fca2f30433722706debb390256b7716",
+    "semantic_hash": "8fca2f30433722706debb390256b7716"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\OBSIDIAN_PATHWAY.md": {
+    "mtime": 1779550451.429342,
+    "ast_hash": "fe47522a4ce36f9febd988785dc14381",
+    "semantic_hash": "fe47522a4ce36f9febd988785dc14381"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\PHASE_2_FOLDERS.md": {
+    "mtime": 1779999322.6843526,
+    "ast_hash": "82568bd159964641ca335c3799112fff",
+    "semantic_hash": "82568bd159964641ca335c3799112fff"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\PHASE_3_FOLDERS.md": {
+    "mtime": 1779550451.429342,
+    "ast_hash": "fc00f3f7aa861c7c1b54a5d73a33b6cd",
+    "semantic_hash": "fc00f3f7aa861c7c1b54a5d73a33b6cd"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\SCHEDULED_AGENTS.md": {
+    "mtime": 1779999322.6853788,
+    "ast_hash": "3fbe83210699248eacfa2be99307f136",
+    "semantic_hash": "3fbe83210699248eacfa2be99307f136"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\SKILL_DESIGN_PRINCIPLES.md": {
+    "mtime": 1779550451.430372,
+    "ast_hash": "a714dcb590fc0d6380600f01d6680c21",
+    "semantic_hash": "a714dcb590fc0d6380600f01d6680c21"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\TARIQ_LONG_WAR_DOCTRINE.md": {
+    "mtime": 1779999322.7615304,
+    "ast_hash": "60ba4552de650e472ccf8d987ecea7ef",
+    "semantic_hash": "60ba4552de650e472ccf8d987ecea7ef"
+  },
+  "D:\\NIZAM\\NIZAM__system\\docs\\diagrams\\README.md": {
+    "mtime": 1779550451.4314024,
+    "ast_hash": "179804a7968b1374e134c517eb213ab7",
+    "semantic_hash": "179804a7968b1374e134c517eb213ab7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\BASELINE_SHA256.txt": {
+    "mtime": 1780149269.4429736,
+    "ast_hash": "0124b5bc3a1d8c94fdbfac27e83f296f",
+    "semantic_hash": "0124b5bc3a1d8c94fdbfac27e83f296f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\CANONICAL_PATHS.md": {
+    "mtime": 1780170840.8166313,
+    "ast_hash": "3b5bd36cb215a4d2ca7f09d6a5e09874",
+    "semantic_hash": "3b5bd36cb215a4d2ca7f09d6a5e09874"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\DEPLOY_MANIFEST.md": {
+    "mtime": 1780148859.604466,
+    "ast_hash": "57a2657fdb78f4eee413085c549f8bed",
+    "semantic_hash": "57a2657fdb78f4eee413085c549f8bed"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\HIMAYAH_POSTURE.md": {
+    "mtime": 1780187566.186531,
+    "ast_hash": "071bacb2130c71c38ada256ca4c42b7b",
+    "semantic_hash": "071bacb2130c71c38ada256ca4c42b7b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-config\\config.vps-snapshot.yaml": {
+    "mtime": 1780148834.1403008,
+    "ast_hash": "174ca1983ed02290a494f1663ae2a81c",
+    "semantic_hash": "174ca1983ed02290a494f1663ae2a81c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\hermes-plugins\\nizam-governor\\plugin.yaml": {
+    "mtime": 1780190029.848848,
+    "ast_hash": "e74daa3b00d9e091690d0ff7401d571d",
+    "semantic_hash": "e74daa3b00d9e091690d0ff7401d571d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\ledgers\\README.md": {
+    "mtime": 1779999744.9434195,
+    "ast_hash": "2f6077ce6ac3176c40aa6d05288e643d",
+    "semantic_hash": "2f6077ce6ac3176c40aa6d05288e643d"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\_PROTOCOLS_INDEX.md": {
+    "mtime": 1780001284.089816,
+    "ast_hash": "0ba1a1d8424b61613a31ebb0c7fc7d56",
+    "semantic_hash": "0ba1a1d8424b61613a31ebb0c7fc7d56"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\agent_delegation_protocol.md": {
+    "mtime": 1780001137.162832,
+    "ast_hash": "8ca2d4c3d04b69b1606ec21a449a5deb",
+    "semantic_hash": "8ca2d4c3d04b69b1606ec21a449a5deb"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\annual_close.md": {
+    "mtime": 1779999322.688471,
+    "ast_hash": "932832634050a3f86e2043b5121aad59",
+    "semantic_hash": "932832634050a3f86e2043b5121aad59"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\anti_drift_weekly.md": {
+    "mtime": 1780001546.8948393,
+    "ast_hash": "a7b2e12e3559fad78a32ba86ad54d512",
+    "semantic_hash": "a7b2e12e3559fad78a32ba86ad54d512"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\conflict_resolution.md": {
+    "mtime": 1780001162.4395893,
+    "ast_hash": "a607574061f0fb7481bebcab0fb8fb15",
+    "semantic_hash": "a607574061f0fb7481bebcab0fb8fb15"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\crisis_sukoon_red.md": {
+    "mtime": 1779999322.6895018,
+    "ast_hash": "d5e08681c2d8da673b588ce78adf39b0",
+    "semantic_hash": "d5e08681c2d8da673b588ce78adf39b0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\daily_evening.md": {
+    "mtime": 1779550451.4468243,
+    "ast_hash": "17aa5d9d5002575845bd08a3cc8dc8bb",
+    "semantic_hash": "17aa5d9d5002575845bd08a3cc8dc8bb"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\daily_morning.md": {
+    "mtime": 1779550451.4468243,
+    "ast_hash": "149fc591af4db913e384be24942978a7",
+    "semantic_hash": "149fc591af4db913e384be24942978a7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\feedback_command.md": {
+    "mtime": 1780001447.8843794,
+    "ast_hash": "b7cc01a970477035153fd20f3498b6bc",
+    "semantic_hash": "b7cc01a970477035153fd20f3498b6bc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\monthly_close.md": {
+    "mtime": 1779999322.690529,
+    "ast_hash": "d3e5d8e0887e28975593e2596dad09c1",
+    "semantic_hash": "d3e5d8e0887e28975593e2596dad09c1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\onboarding_first_7_days.md": {
+    "mtime": 1779999322.690529,
+    "ast_hash": "28164e3c83242fe99e7887bf9e5c5c16",
+    "semantic_hash": "28164e3c83242fe99e7887bf9e5c5c16"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\operator_checkpoints.md": {
+    "mtime": 1780001190.236076,
+    "ast_hash": "925bce45133dbf275902c3c79c772c75",
+    "semantic_hash": "925bce45133dbf275902c3c79c772c75"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\quarterly_close.md": {
+    "mtime": 1779999322.6915598,
+    "ast_hash": "ccf73d343d3e2838824fd284c8caf42a",
+    "semantic_hash": "ccf73d343d3e2838824fd284c8caf42a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\war_room_quarterly.md": {
+    "mtime": 1780001607.307233,
+    "ast_hash": "9967c614662bff7053b9a07fb968a790",
+    "semantic_hash": "9967c614662bff7053b9a07fb968a790"
+  },
+  "D:\\NIZAM\\NIZAM__system\\protocols\\weekly_sunday.md": {
+    "mtime": 1779999322.6915598,
+    "ast_hash": "717397c744d6ca334926166677cb1f3b",
+    "semantic_hash": "717397c744d6ca334926166677cb1f3b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\NIZAM_HERMES_P8_GOLIVE_PLAN.md": {
+    "mtime": 1780168835.3626015,
+    "ast_hash": "63a8699248e384c638772563640acce4",
+    "semantic_hash": "63a8699248e384c638772563640acce4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\NIZAM_HERMES_v3_PLAN.md": {
+    "mtime": 1780149348.4802644,
+    "ast_hash": "baa86660c85da3c9b8f0e67e67189f97",
+    "semantic_hash": "baa86660c85da3c9b8f0e67e67189f97"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\ROUTER_ENHANCEMENT_INTENT_v1.md": {
+    "mtime": 1780190088.2993033,
+    "ast_hash": "32aa6940205a51acfc7e043c53e6dd04",
+    "semantic_hash": "32aa6940205a51acfc7e043c53e6dd04"
+  },
+  "D:\\NIZAM\\NIZAM__system\\runtime\\owner_profile.md": {
+    "mtime": 1780187633.1836045,
+    "ast_hash": "7b990384072be564887c7367d0ca89df",
+    "semantic_hash": "7b990384072be564887c7367d0ca89df"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\_SKILLS_INDEX.md": {
+    "mtime": 1779999322.7043855,
+    "ast_hash": "be7650a32d523c682be37fbe77c6db06",
+    "semantic_hash": "be7650a32d523c682be37fbe77c6db06"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\ahel-add-person.md": {
+    "mtime": 1779550451.4703476,
+    "ast_hash": "3d98a2e4d01ab9ef3788f4c723ca7598",
+    "semantic_hash": "3d98a2e4d01ab9ef3788f4c723ca7598"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\ahel-connection-cadence.md": {
+    "mtime": 1779550451.4713802,
+    "ast_hash": "fb46fd31611969b765b925eb8bb047bc",
+    "semantic_hash": "fb46fd31611969b765b925eb8bb047bc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\ahel-support-log.md": {
+    "mtime": 1779550451.4713802,
+    "ast_hash": "5ceccb697a62e7ffba865386122e3bf7",
+    "semantic_hash": "5ceccb697a62e7ffba865386122e3bf7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\badan-daily-signal.md": {
+    "mtime": 1779550451.4724047,
+    "ast_hash": "d531317acbdae2bda46324d048274ee0",
+    "semantic_hash": "d531317acbdae2bda46324d048274ee0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\badan-red-flag-check.md": {
+    "mtime": 1779550451.4734275,
+    "ast_hash": "906764ff7a0fce0e25736293d6781943",
+    "semantic_hash": "906764ff7a0fce0e25736293d6781943"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\badan-weekly-review.md": {
+    "mtime": 1779550451.4734275,
+    "ast_hash": "2de858fa41aaab94f966f4d1786d74f9",
+    "semantic_hash": "2de858fa41aaab94f966f4d1786d74f9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\mal-baseline.md": {
+    "mtime": 1779550451.4754858,
+    "ast_hash": "85a5e01b4c4a9984295e70ce7c01d434",
+    "semantic_hash": "85a5e01b4c4a9984295e70ce7c01d434"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\mal-decision-score.md": {
+    "mtime": 1779550451.4754858,
+    "ast_hash": "7fb135a909c9f6171a3bbec6433a0d9e",
+    "semantic_hash": "7fb135a909c9f6171a3bbec6433a0d9e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\mal-exchange-rate-check.md": {
+    "mtime": 1779550451.4765253,
+    "ast_hash": "9d264b6c3849703c0629fe3371d0eb89",
+    "semantic_hash": "9d264b6c3849703c0629fe3371d0eb89"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\mal-milestone-check.md": {
+    "mtime": 1779550451.4765253,
+    "ast_hash": "6cead36c6fa92c7cdd3d24ac2689ff0b",
+    "semantic_hash": "6cead36c6fa92c7cdd3d24ac2689ff0b"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\mal-scenario.md": {
+    "mtime": 1779550451.4775577,
+    "ast_hash": "2758cde970b2753be842f8c451e3ac80",
+    "semantic_hash": "2758cde970b2753be842f8c451e3ac80"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\marsad-alert.md": {
+    "mtime": 1779550451.4775577,
+    "ast_hash": "46a406cb9b9621636a6c80e585041105",
+    "semantic_hash": "46a406cb9b9621636a6c80e585041105"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\marsad-discover.md": {
+    "mtime": 1779550451.4785805,
+    "ast_hash": "5e5871ce5ab70f9e1859c5281ad00ee1",
+    "semantic_hash": "5e5871ce5ab70f9e1859c5281ad00ee1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\marsad-forecast.md": {
+    "mtime": 1779550451.4790854,
+    "ast_hash": "8ac5e4cc2933202d3b20751ba6dc8731",
+    "semantic_hash": "8ac5e4cc2933202d3b20751ba6dc8731"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\marsad-monitor.md": {
+    "mtime": 1779550451.4805896,
+    "ast_hash": "2309dda0f39da2172c090adb98b2c7dc",
+    "semantic_hash": "2309dda0f39da2172c090adb98b2c7dc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\munawara-pivot.md": {
+    "mtime": 1779999322.6992307,
+    "ast_hash": "44305018b196b4c346ed76edf08cb075",
+    "semantic_hash": "44305018b196b4c346ed76edf08cb075"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\munawara-quarter-plan.md": {
+    "mtime": 1779999322.700269,
+    "ast_hash": "82500f07cc2ee3aabce8671183611627",
+    "semantic_hash": "82500f07cc2ee3aabce8671183611627"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\munawara-weekly-battle.md": {
+    "mtime": 1779550451.483674,
+    "ast_hash": "46ee6f619f474412575248c5f4bede61",
+    "semantic_hash": "46ee6f619f474412575248c5f4bede61"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\naqd-challenge.md": {
+    "mtime": 1779550451.484705,
+    "ast_hash": "d469494a2685ecc0c9639b721dd766f5",
+    "semantic_hash": "d469494a2685ecc0c9639b721dd766f5"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\naqd-grill.md": {
+    "mtime": 1779550451.484705,
+    "ast_hash": "2b2410d95e093f4f55f6f2d19d7541ae",
+    "semantic_hash": "2b2410d95e093f4f55f6f2d19d7541ae"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\naqd-reconcile.md": {
+    "mtime": 1779550451.4857297,
+    "ast_hash": "41f211b85ae283ac4983a7a895c52b8e",
+    "semantic_hash": "41f211b85ae283ac4983a7a895c52b8e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-almanac.md": {
+    "mtime": 1779550451.486758,
+    "ast_hash": "422afa9d1d7212bc0764855c0315c908",
+    "semantic_hash": "422afa9d1d7212bc0764855c0315c908"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-assess.md": {
+    "mtime": 1779550451.4877858,
+    "ast_hash": "eed752767c3cc9470bf654e6123eb5eb",
+    "semantic_hash": "eed752767c3cc9470bf654e6123eb5eb"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-checkin.md": {
+    "mtime": 1779550451.4877858,
+    "ast_hash": "c4d409b4b6d50b32772bfb9bf4873c9c",
+    "semantic_hash": "c4d409b4b6d50b32772bfb9bf4873c9c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-consult.md": {
+    "mtime": 1779550451.4888065,
+    "ast_hash": "94dba93c550e47a9cee8840017ebbea0",
+    "semantic_hash": "94dba93c550e47a9cee8840017ebbea0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-counsel.md": {
+    "mtime": 1779550451.4898136,
+    "ast_hash": "2318ee4a4b50f314b97a72ecb1038226",
+    "semantic_hash": "2318ee4a4b50f314b97a72ecb1038226"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\nizam-governor.md": {
+    "mtime": 1779550451.4903119,
+    "ast_hash": "cae3b0c3d50af10f0ef15513bbfe50a1",
+    "semantic_hash": "cae3b0c3d50af10f0ef15513bbfe50a1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\pop-health.md": {
+    "mtime": 1779999322.7023299,
+    "ast_hash": "5c587e62e927db09b37485db5a3d98a6",
+    "semantic_hash": "5c587e62e927db09b37485db5a3d98a6"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\pop-recap.md": {
+    "mtime": 1779550451.4908192,
+    "ast_hash": "0b44b5dd71bb73fc648cd0d31c143057",
+    "semantic_hash": "0b44b5dd71bb73fc648cd0d31c143057"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\qarar-decide.md": {
+    "mtime": 1779550451.4918509,
+    "ast_hash": "f6d6b58f381b49c64d53e709829a281c",
+    "semantic_hash": "f6d6b58f381b49c64d53e709829a281c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\shura-brainstorm.md": {
+    "mtime": 1779550451.4928708,
+    "ast_hash": "77201f6d88ecfbbb14c6066388b7a6a6",
+    "semantic_hash": "77201f6d88ecfbbb14c6066388b7a6a6"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\shura-connect.md": {
+    "mtime": 1779550451.4928708,
+    "ast_hash": "b005e7125481a9773cd25e0337316bc7",
+    "semantic_hash": "b005e7125481a9773cd25e0337316bc7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\shura-emerge.md": {
+    "mtime": 1779550451.493888,
+    "ast_hash": "6eeedf3d2e84fd0936a2eaf7a176b572",
+    "semantic_hash": "6eeedf3d2e84fd0936a2eaf7a176b572"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\shura-graduate.md": {
+    "mtime": 1779550451.493888,
+    "ast_hash": "698def99723bcc49f87b79ac69d3b17c",
+    "semantic_hash": "698def99723bcc49f87b79ac69d3b17c"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\sukoon-check.md": {
+    "mtime": 1779550451.4949045,
+    "ast_hash": "8662d97d66558af692160d987a89d24f",
+    "semantic_hash": "8662d97d66558af692160d987a89d24f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\tafrigh-capture.md": {
+    "mtime": 1779550451.495922,
+    "ast_hash": "47db60177a32d476e8b2cc0c6a93b268",
+    "semantic_hash": "47db60177a32d476e8b2cc0c6a93b268"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\tafrigh-triage.md": {
+    "mtime": 1779550451.495922,
+    "ast_hash": "0a7959338055eb8e144dbe169216adc4",
+    "semantic_hash": "0a7959338055eb8e144dbe169216adc4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\tariq-annual-review.md": {
+    "mtime": 1779999322.70336,
+    "ast_hash": "981830781371e6d23a96193a30e460c7",
+    "semantic_hash": "981830781371e6d23a96193a30e460c7"
+  },
+  "D:\\NIZAM\\NIZAM__system\\skills\\tariq-vision.md": {
+    "mtime": 1779999322.7043855,
+    "ast_hash": "45e99c7b1c2d73c5f03bb9cd923e4ee9",
+    "semantic_hash": "45e99c7b1c2d73c5f03bb9cd923e4ee9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\10_year_vision.template.md": {
+    "mtime": 1779999322.7054036,
+    "ast_hash": "e5b289156b12fbd8a923c1a274e9ba69",
+    "semantic_hash": "e5b289156b12fbd8a923c1a274e9ba69"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\15_year_vision.template.md": {
+    "mtime": 1779999322.7054036,
+    "ast_hash": "600dc843b2390a26181355047e287728",
+    "semantic_hash": "600dc843b2390a26181355047e287728"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\20_year_vision.template.md": {
+    "mtime": 1779999322.706425,
+    "ast_hash": "c03a76ee86eb7dea0b2ff4d4f342bd89",
+    "semantic_hash": "c03a76ee86eb7dea0b2ff4d4f342bd89"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\adr_decision.template.md": {
+    "mtime": 1779550451.4979794,
+    "ast_hash": "81d64861b45703a4ffc64d4c565c05e2",
+    "semantic_hash": "81d64861b45703a4ffc64d4c565c05e2"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\annual_review.template.md": {
+    "mtime": 1779999322.706425,
+    "ast_hash": "1258cee2ec5ebaa0971fd3dbffd6016e",
+    "semantic_hash": "1258cee2ec5ebaa0971fd3dbffd6016e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\brain_dump.template.md": {
+    "mtime": 1779550451.499013,
+    "ast_hash": "710f6348724587b8777edc828521dd92",
+    "semantic_hash": "710f6348724587b8777edc828521dd92"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\brainstorm.template.md": {
+    "mtime": 1779550451.499013,
+    "ast_hash": "95f4cbd61931a8360403537995b86ce1",
+    "semantic_hash": "95f4cbd61931a8360403537995b86ce1"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\connection_cadence.template.md": {
+    "mtime": 1779550451.500036,
+    "ast_hash": "4bb0a0419f53e9c39de3f6420092c58f",
+    "semantic_hash": "4bb0a0419f53e9c39de3f6420092c58f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\conversational_session_mirror.template.md": {
+    "mtime": 1779550451.500036,
+    "ast_hash": "e0c73399232757d6c9f5d8bfd4b485b9",
+    "semantic_hash": "e0c73399232757d6c9f5d8bfd4b485b9"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\daily_signal.template.md": {
+    "mtime": 1779550451.5010936,
+    "ast_hash": "01a4f74ff47d3f5e405c355f6e60799f",
+    "semantic_hash": "01a4f74ff47d3f5e405c355f6e60799f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\decision_score.template.md": {
+    "mtime": 1779550451.5010936,
+    "ast_hash": "53ec8abef4e54db1aa35103176d65fe4",
+    "semantic_hash": "53ec8abef4e54db1aa35103176d65fe4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\finance_baseline.template.md": {
+    "mtime": 1779550451.5021272,
+    "ast_hash": "8df91abdd5f0d114ccd5d2758e3e2115",
+    "semantic_hash": "8df91abdd5f0d114ccd5d2758e3e2115"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\griller.template.md": {
+    "mtime": 1779550451.5031636,
+    "ast_hash": "959705a5a98452137c02b391b4d04a5f",
+    "semantic_hash": "959705a5a98452137c02b391b4d04a5f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\important_date.template.md": {
+    "mtime": 1779550451.5031636,
+    "ast_hash": "564d21ce934abee4c07792831860a009",
+    "semantic_hash": "564d21ce934abee4c07792831860a009"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\major_pivot.template.md": {
+    "mtime": 1779999322.708486,
+    "ast_hash": "006a43d5845b435e83cd56ca70a0f4bc",
+    "semantic_hash": "006a43d5845b435e83cd56ca70a0f4bc"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\monthly_review.template.md": {
+    "mtime": 1779550451.504198,
+    "ast_hash": "fa82a52d6de8d707db21336059552516",
+    "semantic_hash": "fa82a52d6de8d707db21336059552516"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\note_frontmatter.template.md": {
+    "mtime": 1779550451.504198,
+    "ast_hash": "f40473b06a047716adb1f249ec3c7636",
+    "semantic_hash": "f40473b06a047716adb1f249ec3c7636"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\nutrient_checklist.template.md": {
+    "mtime": 1779550451.505231,
+    "ast_hash": "2afdd7eca3685807e323d09da37d53f5",
+    "semantic_hash": "2afdd7eca3685807e323d09da37d53f5"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\opportunity_maneuver.template.md": {
+    "mtime": 1779550451.505231,
+    "ast_hash": "2c1c101528e07567bd9e5bf37b93e298",
+    "semantic_hash": "2c1c101528e07567bd9e5bf37b93e298"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\person_card.template.md": {
+    "mtime": 1779550451.5062613,
+    "ast_hash": "67a3abb69c3053838accfac942f683f8",
+    "semantic_hash": "67a3abb69c3053838accfac942f683f8"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\quarter_plan.template.md": {
+    "mtime": 1779550451.5062613,
+    "ast_hash": "7d6bb27e99c5a728f16a59a8153b606a",
+    "semantic_hash": "7d6bb27e99c5a728f16a59a8153b606a"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\recovery_check.template.md": {
+    "mtime": 1779550451.5072875,
+    "ast_hash": "d0ca37e5d9f6e18f1e417fd9c2a50705",
+    "semantic_hash": "d0ca37e5d9f6e18f1e417fd9c2a50705"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\red_flag_form.template.md": {
+    "mtime": 1779550451.5072875,
+    "ast_hash": "ce10f62ea5aaa3a988d88d0bcce0cecf",
+    "semantic_hash": "ce10f62ea5aaa3a988d88d0bcce0cecf"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\scenario_model.template.md": {
+    "mtime": 1779550451.5083144,
+    "ast_hash": "f1f0c51a40214bb0a388a93e7117a626",
+    "semantic_hash": "f1f0c51a40214bb0a388a93e7117a626"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\sleep_recovery.template.md": {
+    "mtime": 1779550451.5083144,
+    "ast_hash": "d125dcdc4ba279b0fc188ea82c3a335e",
+    "semantic_hash": "d125dcdc4ba279b0fc188ea82c3a335e"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\support_event.template.md": {
+    "mtime": 1779550451.5083144,
+    "ast_hash": "19861214a718ae699cc369a07b996dab",
+    "semantic_hash": "19861214a718ae699cc369a07b996dab"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\training_log.template.md": {
+    "mtime": 1779550451.509336,
+    "ast_hash": "3ce75834ddbde2fa4779b2b4bfb573c3",
+    "semantic_hash": "3ce75834ddbde2fa4779b2b4bfb573c3"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\weekly_battle.template.md": {
+    "mtime": 1779550451.509336,
+    "ast_hash": "ee224464a943786f1b753f4c514ef6d4",
+    "semantic_hash": "ee224464a943786f1b753f4c514ef6d4"
+  },
+  "D:\\NIZAM\\NIZAM__system\\templates\\weekly_review.template.md": {
+    "mtime": 1779550451.5103672,
+    "ast_hash": "afa156067cd2d8b253f62fb130bb3f90",
+    "semantic_hash": "afa156067cd2d8b253f62fb130bb3f90"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\_WORKFLOWS_INDEX.md": {
+    "mtime": 1779999322.7136235,
+    "ast_hash": "c27d594f0f1bfaf326bbf47b484a1f17",
+    "semantic_hash": "c27d594f0f1bfaf326bbf47b484a1f17"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\body_routine.md": {
+    "mtime": 1779550451.5114045,
+    "ast_hash": "0de38312fb9b8ec7ae30435c5ecfca50",
+    "semantic_hash": "0de38312fb9b8ec7ae30435c5ecfca50"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\contradiction_resolution.md": {
+    "mtime": 1779550451.5124352,
+    "ast_hash": "134c077b62920f5b7e44e44aa37e81e2",
+    "semantic_hash": "134c077b62920f5b7e44e44aa37e81e2"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\family_routine.md": {
+    "mtime": 1779550451.5124352,
+    "ast_hash": "af4bc2e5569251a51552725636944567",
+    "semantic_hash": "af4bc2e5569251a51552725636944567"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\finance_decision.md": {
+    "mtime": 1779999322.710546,
+    "ast_hash": "ad545c37dd6efbcf9f2be48318f04878",
+    "semantic_hash": "ad545c37dd6efbcf9f2be48318f04878"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\idea_to_decision.md": {
+    "mtime": 1779550451.5144856,
+    "ast_hash": "66d02767a18c6307f6f75d1b8bafcef5",
+    "semantic_hash": "66d02767a18c6307f6f75d1b8bafcef5"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\idea_to_project.md": {
+    "mtime": 1779999322.7115695,
+    "ast_hash": "f88c6c96c276527ea18f6090c62414d0",
+    "semantic_hash": "f88c6c96c276527ea18f6090c62414d0"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\strategy_rollup.md": {
+    "mtime": 1779999322.712596,
+    "ast_hash": "3d227543d5c6a621e1dd163fc0973b9f",
+    "semantic_hash": "3d227543d5c6a621e1dd163fc0973b9f"
+  },
+  "D:\\NIZAM\\NIZAM__system\\workflows\\weekly_synthesis.md": {
+    "mtime": 1779999322.712596,
+    "ast_hash": "9a494acef299a10ff832a2b25fb0f1d2",
+    "semantic_hash": "9a494acef299a10ff832a2b25fb0f1d2"
+  },
+  "D:\\NIZAM\\NUR__obsidian_vault\\README.md": {
+    "mtime": 1779550451.518617,
+    "ast_hash": "d21492906a84f612774ac0d101cca501",
+    "semantic_hash": "d21492906a84f612774ac0d101cca501"
+  },
+  "D:\\NIZAM\\QARAR__decisions\\README.md": {
+    "mtime": 1779550451.5216658,
+    "ast_hash": "ffc68c3e5e883105193d2cb0590de151",
+    "semantic_hash": "ffc68c3e5e883105193d2cb0590de151"
+  },
+  "D:\\NIZAM\\README.md": {
+    "mtime": 1780142595.7097108,
+    "ast_hash": "f2fd193c93443f8c695caeb05d3ce823",
+    "semantic_hash": "f2fd193c93443f8c695caeb05d3ce823"
+  },
+  "D:\\NIZAM\\SHURA__brainstormer\\README.md": {
+    "mtime": 1779550451.5237224,
+    "ast_hash": "701440470d64757151675ca18470761b",
+    "semantic_hash": "701440470d64757151675ca18470761b"
+  },
+  "D:\\NIZAM\\SUKOON__recovery_first\\README.md": {
+    "mtime": 1779550451.525813,
+    "ast_hash": "ee2674f072359e86167bb67c054d7580",
+    "semantic_hash": "ee2674f072359e86167bb67c054d7580"
+  },
+  "D:\\NIZAM\\TAFRIGH__brain_dumper\\README.md": {
+    "mtime": 1779550451.5268414,
+    "ast_hash": "fa3ffe4596c8283b36495bee47a4bf32",
+    "semantic_hash": "fa3ffe4596c8283b36495bee47a4bf32"
+  },
+  "D:\\NIZAM\\TAFRIGH__brain_dumper\\brain_dump_raw_transcript_1.md.txt": {
+    "mtime": 1780169110.0375843,
+    "ast_hash": "511390cee2794f6477cd042486f0b336",
+    "semantic_hash": "511390cee2794f6477cd042486f0b336"
+  },
+  "D:\\NIZAM\\TARIQ__long_horizon_strategy\\README.md": {
+    "mtime": 1779999322.737983,
+    "ast_hash": "990af317b9229dfa2db9d02b43cc53d7",
+    "semantic_hash": "990af317b9229dfa2db9d02b43cc53d7"
+  },
+  "D:\\NIZAM\\YAWMIYAT__journaling\\README.md": {
+    "mtime": 1779550451.5278723,
+    "ast_hash": "f2b04dcf771208acf1e1a6035fce9391",
+    "semantic_hash": "f2b04dcf771208acf1e1a6035fce9391"
+  },
+  "D:\\NIZAM\\docs\\architecture\\CUTOVER_CHECKLIST.md": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "28c066087a83dbb7af641c62442ddd51",
+    "semantic_hash": "28c066087a83dbb7af641c62442ddd51"
+  },
+  "D:\\NIZAM\\docs\\architecture\\ENV_SETUP.md": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "8876002425e09ac06f7882b836eb2c54",
+    "semantic_hash": "8876002425e09ac06f7882b836eb2c54"
+  },
+  "D:\\NIZAM\\docs\\architecture\\GO_LIVE_OPERATOR_RUNBOOK.md": {
+    "mtime": 1780142595.8550453,
+    "ast_hash": "129c2d92d578faed40065ffd592ba1a0",
+    "semantic_hash": "129c2d92d578faed40065ffd592ba1a0"
+  },
+  "D:\\NIZAM\\docs\\architecture\\Hermes Agent + NIZAM Architecture.md": {
+    "mtime": 1779538546.738965,
+    "ast_hash": "b9ca88a1dbc601baf24d66c106092d4c",
+    "semantic_hash": "b9ca88a1dbc601baf24d66c106092d4c"
+  },
+  "D:\\NIZAM\\docs\\architecture\\Hermes Agent + NIZAM Integration  Decision-Grade Architecture Report.md": {
+    "mtime": 1779538472.1467767,
+    "ast_hash": "51b415836f75affbb972cc96d93f92f7",
+    "semantic_hash": "51b415836f75affbb972cc96d93f92f7"
+  },
+  "D:\\NIZAM\\docs\\architecture\\compass_artifact_wf-831d8b12-346a-4ce5-8131-21c07ce83d23_text_markdown.md": {
+    "mtime": 1779549182.6049898,
+    "ast_hash": "e4db5d8e1b68ec94ad2eec79e558a116",
+    "semantic_hash": "e4db5d8e1b68ec94ad2eec79e558a116"
+  },
+  "D:\\NIZAM\\docs\\architecture\\deep-research-report (1).md": {
+    "mtime": 1779549200.321047,
+    "ast_hash": "47e6b9b0cd4a6b2b4e19a500b4a56a11",
+    "semantic_hash": "47e6b9b0cd4a6b2b4e19a500b4a56a11"
+  },
+  "D:\\NIZAM\\docs\\architecture\\deep-research-report (1)gpt latest.md": {
+    "mtime": 1779552456.3433437,
+    "ast_hash": "9d48e769bfa36623fb404903b2afafbe",
+    "semantic_hash": "9d48e769bfa36623fb404903b2afafbe"
+  },
+  "D:\\NIZAM\\index.md": {
+    "mtime": 1779999523.7875772,
+    "ast_hash": "9dc760001c89c88fe0bc64f4b3c00715",
+    "semantic_hash": "9dc760001c89c88fe0bc64f4b3c00715"
+  },
+  "D:\\NIZAM\\install-audit\\pip-freeze.txt": {
+    "mtime": 1779551251.623991,
+    "ast_hash": "038b1ab21bd11a215f71d201bfb078d2",
+    "semantic_hash": "038b1ab21bd11a215f71d201bfb078d2"
+  },
+  "D:\\NIZAM\\install-audit\\router-stage-1-deploy\\intent_exemplars.yaml": {
+    "mtime": 1780190011.4087398,
+    "ast_hash": "c5aab36c0d0aeba2056565a752d29990",
+    "semantic_hash": "c5aab36c0d0aeba2056565a752d29990"
+  },
+  "D:\\NIZAM\\install-audit\\router-stage-1-deploy\\plugin.yaml": {
+    "mtime": 1780190029.848848,
+    "ast_hash": "e74daa3b00d9e091690d0ff7401d571d",
+    "semantic_hash": "e74daa3b00d9e091690d0ff7401d571d"
+  },
+  "D:\\NIZAM\\install-audit\\router-stage-1-deploy\\router.config.yaml": {
+    "mtime": 1780190010.1030743,
+    "ast_hash": "a454224de91ff035144aa82c1d631828",
+    "semantic_hash": "a454224de91ff035144aa82c1d631828"
+  },
+  "D:\\NIZAM\\log.md": {
+    "mtime": 1779550451.5288985,
+    "ast_hash": "f313694d87658ebf9eb4feca90750b17",
+    "semantic_hash": "f313694d87658ebf9eb4feca90750b17"
+  },
+  "D:\\NIZAM\\scripts\\tariq_rename_plan.md": {
+    "mtime": 1780142595.8540444,
+    "ast_hash": "70d31f7fb78167f5a3b19a953d500848",
+    "semantic_hash": "70d31f7fb78167f5a3b19a953d500848"
+  },
+  "D:\\NIZAM\\tools\\README.md": {
+    "mtime": 1779999523.803452,
+    "ast_hash": "1dbd03c0cf97e0a1af8bd804fc89af8c",
+    "semantic_hash": "1dbd03c0cf97e0a1af8bd804fc89af8c"
+  },
+  "D:\\NIZAM\\docs\\architecture\\mermaid-diagram.png": {
+    "mtime": 1779538514.052374,
+    "ast_hash": "827a454975a434d0eaa8730a4dcb1cab",
+    "semantic_hash": "827a454975a434d0eaa8730a4dcb1cab"
+  }
+}

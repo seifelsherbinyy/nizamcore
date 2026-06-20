@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1.0-scaffold",
+  "status": "SPEC_ONLY_NOT_POPULATED",
+  "baseline_trigger_sessions": 10,
+  "synthesis": "NOT_IMPLEMENTED_THIS_PASS. First baseline is synthesized at N=10 sessions; diffs forward every +N sessions.",
+  "constraints": {
+    "qualitative_never_auto_scored": true,
+    "qualitative_source_of_truth": "user_authored_or_user_confirmed_text_only",
+    "enforcement_note": "Every dimension under QUALITATIVE MUST be stored verbatim as text the user wrote or explicitly confirmed. The system MUST NOT generate, infer, paraphrase into a score, or numerically rate these. OBSERVABLE dimensions may be auto-derived from ledgers; QUALITATIVE dimensions may not."
+  },
+  "OBSERVABLE": {
+    "_policy": "metric — MAY be auto-derived from the named ledgers",
+    "decision_speed":          {"source": "EVENT_LEDGER.jsonl (persona_route + decision events) + SESSIONS.jsonl", "cadence": "per-session",    "method": "metric"},
+    "task_turnover_rate":      {"source": "EVENT_LEDGER.jsonl + SESSIONS.jsonl",                                   "cadence": "per-session",    "method": "metric"},
+    "project_outcome":         {"source": "QARAR__decisions + EVENT_LEDGER.jsonl (outcome events)",                "cadence": "per-N-sessions", "method": "metric (success/fail)"},
+    "learning_rate":           {"source": "LEARNING_LEDGER.jsonl + HIKMAH__learnings",                             "cadence": "per-N-sessions", "method": "metric"},
+    "concept_grasp_speed":     {"source": "LEARNING_LEDGER.jsonl",                                                 "cadence": "per-N-sessions", "method": "metric"},
+    "persona_fit_by_workflow": {"source": "EVENT_LEDGER.jsonl (persona_route: chosen/basis/bucket/confidence)",    "cadence": "per-session",    "method": "metric"},
+    "stated_values":           {"source": "LEARNING_LEDGER.jsonl (user-stated text) + owner_profile.md",          "cadence": "per-N-sessions", "method": "metric (extracted from user-stated text, not inferred)"},
+    "stated_priorities":       {"source": "LEARNING_LEDGER.jsonl (user-stated text) + owner_profile.md",          "cadence": "per-N-sessions", "method": "metric (extracted from user-stated text, not inferred)"}
+  },
+  "QUALITATIVE": {
+    "_policy": "note — user-authored/confirmed TEXT ONLY; never auto-scored, never auto-generated",
+    "emotional_notes":          {"source": "user-authored (journal / confirmed)",                          "cadence": "per-session",    "method": "note"},
+    "mental_state_notes":       {"source": "user-authored",                                                "cadence": "per-session",    "method": "note"},
+    "health_notes":             {"source": "user-authored (objective BODY_LEDGER metrics may accompany, but the notes themselves are user text)", "cadence": "per-session", "method": "note"},
+    "personality_observations": {"source": "user-authored or user-confirmed",                              "cadence": "per-N-sessions", "method": "note"}
+  }
+}

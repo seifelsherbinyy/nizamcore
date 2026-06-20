@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "top_k": 5,
+  "minimum_mrr": 0.6,
+  "excluded_source_prefixes": ["install-audit/", "MAKHZAN__archive/", "graphify-out/", "hermes-venv/"],
+  "aliases": {
+    "himayah": ["privacy", "egress", "firewall", "classifier"],
+    "sukoon": ["recovery", "capacity", "downshift"],
+    "thabat": ["continuity", "ledger", "audit"],
+    "relay": ["telegram", "coordinator", "poller"],
+    "canonical": ["path", "repo root", "source of truth", "nizamcore", "temple", "sync policy"],
+    "connector": ["connectors", "registry", "drive", "notion", "telegram", "gmail", "llm"],
+    "egress": ["privacy classification", "classifier", "sync arbiter", "himayah"]
+  },
+  "generic_terms": [
+    "type",
+    "enum",
+    "properties",
+    "required",
+    "const",
+    "format",
+    "pattern",
+    "string",
+    "number",
+    "null",
+    "schema"
+  ],
+  "benchmarks": [
+    {
+      "id": "canonical_paths",
+      "question": "Which files define the canonical NIZAM repository path?",
+      "expected_sources": ["AGENTS.md", "NIZAM_TEMPLE.json", "NIZAM__system/policies/SYNC_POLICY.json"]
+    },
+    {
+      "id": "relay_stub",
+      "question": "What is the live relay stub path?",
+      "expected_sources": ["NIZAM__system/relay/coordinator.py", "NIZAM__system/relay/poller.py"]
+    },
+    {
+      "id": "egress_policy",
+      "question": "What policies govern AHEL Drive VPS and model egress?",
+      "expected_sources": ["NIZAM__system/policies/PRIVACY_CLASSIFICATION.json", "NIZAM__system/governor/classifier.py", "NIZAM__system/governor/sync_arbiter.py"]
+    },
+    {
+      "id": "connector_states",
+      "question": "Which connector states are unconfigured or disabled?",
+      "expected_sources": ["NIZAM__system/policies/CONNECTORS.json"]
+    },
+    {
+      "id": "release_gates",
+      "question": "What are the G4 and G5 privacy and runtime gates?",
+      "expected_sources": ["NIZAM__system/runtime/NIZAM_HERMES_P8_GOLIVE_PLAN.md", "NIZAM__system/runtime/NIZAM_HERMES_v3_PLAN.md"]
+    }
+  ]
+}

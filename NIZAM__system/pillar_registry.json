@@ -26,7 +26,6 @@
     {"symbol": "JADWAL",   "folder": "JADWAL__notion_dashboards",    "phase": 2, "kind": "module",         "meaning_ar": "schedule / table — Notion dashboards"},
     {"symbol": "HIFZ",     "folder": "HIFZ__github_version_control", "phase": 2, "kind": "module",         "meaning_ar": "preservation — version control"},
     {"symbol": "MARSAD",   "folder": "MARSAD__flight_radar",         "phase": 2, "kind": "module",         "meaning_ar": "watchtower / observation post — intel scout"},
-    {"symbol": "AHEL",     "folder": "AHEL__family_network",         "phase": 3, "kind": "module",         "meaning_ar": "family / kin — strict_local_maximum"},
     {"symbol": "BASIRA",   "folder": "BASIRA__future_visualization", "phase": 3, "kind": "module",         "meaning_ar": "insight / foresight"},
     {"symbol": "MAKHZAN",  "folder": "MAKHZAN__archive",             "phase": 0, "kind": "infrastructure", "meaning_ar": "store / warehouse — immutable rollback anchors"},
     {"symbol": "HAJR",     "folder": "HAJR__quarantine",             "phase": 0, "kind": "infrastructure", "meaning_ar": "isolation — quarantine for unsafe artifacts"}

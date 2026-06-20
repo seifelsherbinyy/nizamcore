@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "generated": "2026-06-14",
+  "edges": [
+    {"from": "L1_contracts", "to": "L2_context_refresh", "type": "depends"},
+    {"from": "L2_context_refresh", "to": "L3_routing_builder", "type": "depends"},
+    {"from": "L3_routing_builder", "to": "L4_himayah", "type": "depends"},
+    {"from": "L4_himayah", "to": "L5_loops", "type": "depends"},
+    {"from": "L5_loops", "to": "L6_ledger", "type": "depends"},
+    {"from": "L6_ledger", "to": "L7_scheduler", "type": "depends"},
+    {"from": "L7_scheduler", "to": "L8_runner", "type": "depends"},
+    {"from": "L2_context_refresh", "to": "K2_evidence", "type": "feeds"},
+    {"from": "K1_council_contracts", "to": "K2_evidence", "type": "depends"},
+    {"from": "K2_evidence", "to": "K3_protocols", "type": "depends"},
+    {"from": "K3_protocols", "to": "K4_deliberation", "type": "depends"},
+    {"from": "K4_deliberation", "to": "K5_triggers_view", "type": "depends"},
+    {"from": "K5_triggers_view", "to": "K6_council_ledger", "type": "depends"},
+    {"from": "K6_council_ledger", "to": "K7_bridge", "type": "depends"},
+    {"from": "L8_runner", "to": "P5_hermes", "type": "depends"},
+    {"from": "K7_bridge", "to": "P5_hermes", "type": "depends"}
+  ]
+}

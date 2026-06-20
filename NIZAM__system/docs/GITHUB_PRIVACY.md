@@ -21,8 +21,8 @@
 - `SUKOON__recovery_first/signals/**`, `overload_flags.jsonl`
 - `HAJR__quarantine/**`
 - `SOUL.md` (identity / values placeholder)
-- All `*_LEDGER.jsonl` files (EVENT, DECISION, LEARNING, STRATEGY, BATTLE, FINANCE, BODY, FAMILY)
-- All Phase 2/3 strict-local folder contents: `TARIQ/{10,15,20}_year/`, `MUNAWARA/{1,3,5}_year/` etc., `MAL/**`, `BADAN/**`, `AHEL/**`
+- All `*_LEDGER.jsonl` files (EVENT, DECISION, LEARNING, STRATEGY, BATTLE, FINANCE, BODY)
+- All Phase 2/3 strict-local folder contents: `TARIQ/{10,15,20}_year/`, `MUNAWARA/{1,3,5}_year/` etc., `MAL/**`, `BADAN/**`
 - `MAKHZAN__archive/**/{raw,triaged,sessions,signals}/**` (snapshots inherit privacy)
 - All secrets: `.env`, `*token*`, `*secret*`, `*credentials*`
 

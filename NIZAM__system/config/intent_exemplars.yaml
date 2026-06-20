@@ -47,6 +47,13 @@ weekly_synthesis:
   - "What did we learn this week?"
   - "Crystallize lessons from the last 7 EVENT_LEDGER entries."
 
+islamic_wisdom:
+  - "/hikmah"
+  - "/hikmah-wisdom"
+  - "Khaldun reflect on Qur'an and science"
+  - "Compare chakras to nafs symbolically"
+  - "Is Allah inside us?"
+
 intel_scout:
   - "Scan flight-radar for SUKOON-relevant news."
   - "/marsad-scan health policy"
@@ -58,10 +65,6 @@ biometric_log:
   - "/badan-log"
   - "/pulse recovery 60 hrv 45 strain 12"
 
-family_record:
-  - "Note about Dad's appointment Tuesday."
-  - "Family budget thought."
-  - "/ahel-note"
   # NOTE: strict_local_maximum — never routed through cloud models.
 
 decision_log:

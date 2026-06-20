@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "labels": {
+    "primary_religious": {
+      "description": "Qur'an text, authentic hadith collections, established Sunni principles",
+      "reliability_floor": 0.9
+    },
+    "classical_reference": {
+      "description": "Classical tafsir, fiqh references, recognized madhhab sources",
+      "reliability_floor": 0.75
+    },
+    "institutional_fatwa": {
+      "description": "Dar al-Ifta, Al-Azhar, recognized institutional guidance",
+      "reliability_floor": 0.7
+    },
+    "peer_reviewed_science": {
+      "description": "PubMed, Nature, NASA, ESA, university publications",
+      "reliability_floor": 0.85
+    },
+    "educational_science": {
+      "description": "Britannica, NOAA, USGS, educational institutions",
+      "reliability_floor": 0.7
+    },
+    "community_signal": {
+      "description": "Forums, social media — hypothesis only",
+      "reliability_floor": 0.2
+    },
+    "speculative": {
+      "description": "Unverified or weakly supported claims",
+      "reliability_floor": 0.1
+    },
+    "rejected": {
+      "description": "Aqidah-risk or demonstrably false",
+      "reliability_floor": 0.0
+    }
+  }
+}

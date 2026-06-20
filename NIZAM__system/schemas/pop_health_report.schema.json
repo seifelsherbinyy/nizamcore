@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POP_HEALTH report stub",
+  "type": "object",
+  "required": ["generated_at", "pulsation", "council", "research"],
+  "properties": {
+    "generated_at": { "type": "string" },
+    "pulsation": {
+      "type": "object",
+      "properties": {
+        "loop_a_interval_hours": { "type": "number" },
+        "loop_b_enabled": { "type": "boolean" },
+        "last_dry_run_ok": { "type": "boolean" }
+      }
+    },
+    "council": {
+      "type": "object",
+      "properties": {
+        "routine_debate_suppressed": { "type": "boolean" },
+        "operator_command": { "type": "string" }
+      }
+    },
+    "research": {
+      "type": "object",
+      "properties": {
+        "repos_assessed": { "type": "integer" },
+        "patterns_adopted": { "type": "integer" }
+      }
+    }
+  }
+}

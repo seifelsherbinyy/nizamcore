@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NIZAM Gap Analysis Report</title>
+  <style>
+    :root {
+      --ink: #152033;
+      --muted: #5d6878;
+      --paper: #f6f3ec;
+      --card: #ffffff;
+      --navy: #12263f;
+      --gold: #c58b2b;
+      --red: #b43b3b;
+      --amber: #a86712;
+      --green: #2d7354;
+      --line: #d9d4c9;
+    }
+    * { box-sizing: border-box; }
+    html { background: #d8d4cc; }
+    body {
+      margin: 0 auto;
+      max-width: 1120px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    header {
+      padding: 54px 64px 42px;
+      color: white;
+      background:
+        linear-gradient(130deg, rgba(18,38,63,.98), rgba(28,62,91,.93)),
+        radial-gradient(circle at 85% 15%, #c58b2b 0 2px, transparent 3px);
+      border-bottom: 7px solid var(--gold);
+    }
+    header .eyebrow {
+      color: #f2cf8f;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    h1 { margin: 10px 0 8px; font-size: 42px; line-height: 1.05; }
+    header p { max-width: 760px; margin: 0; color: #dce6ef; font-size: 17px; }
+    main { padding: 34px 64px 64px; }
+    h2 {
+      margin: 36px 0 14px;
+      color: var(--navy);
+      font-size: 25px;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 7px;
+    }
+    h3 { margin: 0 0 6px; font-size: 18px; color: var(--navy); }
+    p { margin: 7px 0 11px; }
+    .meta, .grid, .score-grid, .roadmap { display: grid; gap: 14px; }
+    .meta { grid-template-columns: repeat(4, 1fr); margin-top: 22px; }
+    .meta div, .card, .gap, .phase {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(20,30,45,.05);
+    }
+    .meta div { padding: 12px 14px; }
+    .meta strong { display: block; color: var(--navy); font-size: 19px; }
+    .meta span { color: var(--muted); font-size: 12px; }
+    .executive {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 22px;
+      align-items: center;
+      padding: 22px;
+      background: white;
+      border-left: 6px solid var(--red);
+      border-radius: 8px;
+    }
+    .readiness {
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--amber) 0 46%, #e8e2d7 46% 100%);
+      position: relative;
+    }
+    .readiness:after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: white;
+    }
+    .readiness div { position: relative; z-index: 1; text-align: center; }
+    .readiness b { display: block; font-size: 31px; color: var(--navy); }
+    .readiness span { font-size: 11px; text-transform: uppercase; color: var(--muted); }
+    .verdict {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 4px;
+      color: #fff;
+      background: var(--red);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .score-grid { grid-template-columns: repeat(4, 1fr); }
+    .card { padding: 15px; }
+    .card .score { font-size: 24px; font-weight: 700; color: var(--navy); }
+    .bar { height: 7px; background: #e5e0d6; border-radius: 9px; margin: 8px 0; overflow: hidden; }
+    .bar i { display: block; height: 100%; background: var(--gold); }
+    .small { font-size: 12px; color: var(--muted); }
+    .gap { padding: 19px 21px; margin: 13px 0; break-inside: avoid; }
+    .gap-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .tag {
+      flex: 0 0 auto;
+      color: white;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .p0 { background: var(--red); }
+    .p1 { background: var(--amber); }
+    .p2 { background: #536b84; }
+    .evidence {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #f4f1ea;
+      border-left: 3px solid #9aa5b2;
+      color: #3f4b59;
+      font-size: 13px;
+    }
+    code { font-family: Consolas, monospace; font-size: 12px; color: #24364b; }
+    ul { margin: 7px 0 8px 20px; padding: 0; }
+    li { margin: 4px 0; }
+    .roadmap { grid-template-columns: repeat(3, 1fr); }
+    .phase { padding: 17px; border-top: 5px solid var(--gold); break-inside: avoid; }
+    .phase b { color: var(--gold); font-size: 12px; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
+    th, td { border: 1px solid var(--line); text-align: left; padding: 9px 10px; vertical-align: top; }
+    th { color: white; background: var(--navy); }
+    tr:nth-child(even) td { background: #faf8f3; }
+    .note {
+      padding: 14px 16px;
+      border: 1px solid #d9c79f;
+      background: #fff8e8;
+      border-radius: 6px;
+    }
+    footer {
+      padding: 20px 64px;
+      color: #d5e0ea;
+      background: var(--navy);
+      font-size: 12px;
+    }
+    a { color: #245784; }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      html, body { background: white; max-width: none; }
+      body { font-size: 11px; }
+      header { padding: 28px 34px 24px; }
+      h1 { font-size: 31px; }
+      main { padding: 18px 34px 30px; }
+      h2 { margin-top: 24px; font-size: 20px; }
+      .meta div, .card, .gap, .phase { box-shadow: none; }
+      .gap { padding: 13px 15px; }
+      .page-break { break-before: page; }
+      footer { padding: 12px 34px; }
+    }
+    @media (max-width: 760px) {
+      header, main, footer { padding-left: 22px; padding-right: 22px; }
+      .meta, .score-grid, .roadmap { grid-template-columns: 1fr 1fr; }
+      .executive { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Graphify-assisted product assessment</div>
+    <h1>NIZAM Gap Analysis</h1>
+    <p>Product, architecture, operations, security, verification, and knowledge-graph readiness based on the local repository and its existing Graphify graph.</p>
+    <div class="meta">
+      <div><strong>3.3.0</strong><span>Declared platform version</span></div>
+      <div><strong>5,423</strong><span>Graph nodes</span></div>
+      <div><strong>11,777</strong><span>Graph edges</span></div>
+      <div><strong>2026-06-13</strong><span>Assessment date</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="executive">
+      <div class="readiness"><div><b>46/100</b><span>Indicative readiness</span></div></div>
+      <div>
+        <span class="verdict">Limited pilot only</span>
+        <h2 style="border:0;margin:10px 0 6px;padding:0">Executive Verdict</h2>
+        <p>NIZAM has a broad architecture, meaningful governance controls, and a healthy scoped test suite, but the product is not production-ready as a coherent end-to-end system. The largest blockers are a broken canonical repository path, a deterministic agent stub in the live relay path, unresolved and contradictory go-live/security contracts, and missing production validation.</p>
+        <p>The strongest near-term move is consolidation: establish one canonical tree, reconcile policy drift, wire one real end-to-end persona flow, and make the same verification command pass locally and in CI.</p>
+      </div>
+    </section>
+
+    <h2>Assessment Basis</h2>
+    <p>This is a gap analysis, not a compliance certification. Findings combine deterministic repository checks with Graphify topology. Confidence is highest where runtime output and source declarations agree.</p>
+    <div class="score-grid">
+      <div class="card"><h3>Core Product</h3><div class="score">2.0 / 5</div><div class="bar"><i style="width:40%"></i></div><div class="small">Transport and routing exist; response synthesis remains stubbed.</div></div>
+      <div class="card"><h3>Verification</h3><div class="score">3.0 / 5</div><div class="bar"><i style="width:60%"></i></div><div class="small">136 scoped tests pass; default repository collection fails.</div></div>
+      <div class="card"><h3>Operations</h3><div class="score">1.5 / 5</div><div class="bar"><i style="width:30%"></i></div><div class="small">Go-live gates and persistence lift remain on hold.</div></div>
+      <div class="card"><h3>Security</h3><div class="score">2.0 / 5</div><div class="bar"><i style="width:40%"></i></div><div class="small">Strong intent, but unresolved key rotation and policy conflicts remain.</div></div>
+      <div class="card"><h3>Integrations</h3><div class="score">1.5 / 5</div><div class="bar"><i style="width:30%"></i></div><div class="small">Several durable layers are declared unconfigured or incomplete.</div></div>
+      <div class="card"><h3>Reproducibility</h3><div class="score">2.0 / 5</div><div class="bar"><i style="width:40%"></i></div><div class="small">Dependency ranges are floating across all detected requirement sets.</div></div>
+      <div class="card"><h3>Documentation</h3><div class="score">2.5 / 5</div><div class="bar"><i style="width:50%"></i></div><div class="small">Rich documentation, with material state and contract drift.</div></div>
+      <div class="card"><h3>Knowledge Graph</h3><div class="score">2.0 / 5</div><div class="bar"><i style="width:40%"></i></div><div class="small">Broad coverage, but fragmented topology and weak query precision.</div></div>
+    </div>
+
+    <h2 class="page-break">Priority Gaps</h2>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>1. Canonical repository contract is broken</h3><p>The operator instructions require <code>D:\NIZAM\nizamcore</code>, while the actual source and pointer resolve to <code>D:\NIZAM</code>. The prescribed verification script halts before checking the product.</p></div><span class="tag p0">P0</span></div>
+      <ul>
+        <li><b>Impact:</b> automation, onboarding, deployment receipts, and agent instructions do not share one source of truth.</li>
+        <li><b>Closure:</b> choose the canonical tree, update the pointer and scripts atomically, then make the documented startup command executable.</li>
+        <li><b>Acceptance:</b> both canonical commands complete successfully from a clean shell without fallback logic.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> <code>scripts/verify-nizamcore.ps1</code> returned "Repo not found: D:\NIZAM\nizamcore"; the required interpreter path was absent; <code>NIZAMCORE_PATH.txt</code> contains <code>D:\NIZAM</code>.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>2. The end-user intelligence path is still a stub</h3><p>The relay can authenticate, deduplicate, route, govern, log, and reply, but the coordinator returns canned deterministic output instead of invoking a real persona/model runtime.</p></div><span class="tag p0">P0</span></div>
+      <ul>
+        <li><b>Impact:</b> the core product promise is not represented by the tested end-to-end path.</li>
+        <li><b>Closure:</b> wire one production-grade persona path behind the existing governor, with timeout, retry, cost, and failure envelopes.</li>
+        <li><b>Acceptance:</b> G5.1-G5.3 pass with non-stub replies, traceable model calls, ledger writes, and deterministic safety behavior.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> <code>NIZAM__system/relay/coordinator.py:47</code> defines <code>_agent_stub</code>; line 110 invokes it. <code>NIZAM__system/relay/poller.py:17</code> states that the coordinator is still a deterministic stub.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>3. Production go-live and security contracts are unresolved</h3><p>The v3 architecture is explicitly not built, G4/G5 are pending, relay persistence is not lifted, and key rotation remains open. In addition, the v3 narrative retires the AHEL cloud hard-block while the P8 G4 plan still requires it.</p></div><span class="tag p0">P0</span></div>
+      <ul>
+        <li><b>Impact:</b> there is no authoritative privacy behavior to validate, and no evidence that the deployed system survives reboot or meets end-to-end safety expectations.</li>
+        <li><b>Closure:</b> issue one signed architecture decision record for AHEL/VPS/Drive handling, rotate the exposed key, update tests and runbooks, then execute G4/G5.</li>
+        <li><b>Acceptance:</b> all G4 tests pass under one policy; all G5 flows pass; reboot recovery succeeds; key-rotation evidence is recorded without storing the secret.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> <code>NIZAM__system/hermes-config/DEPLOY_MANIFEST.md:32</code> says v3 is not built; the same manifest lists G4/G5, relay lift, and OpenRouter key rotation as incomplete. The P8 plan requires an AHEL hard-block while the v3 plan describes that model-egress hard-block as retired.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>4. Connector registry and runtime readiness are incomplete</h3><p>Drive, Notion, and the LLM runtime are declared unconfigured. Gmail has no adapter. Telegram is marked as having no adapter even though relay code exists, showing that the registry is stale as well as incomplete.</p></div><span class="tag p1">P1</span></div>
+      <ul>
+        <li><b>Impact:</b> fallback, replay, and dual-write behavior cannot be trusted as a product capability.</li>
+        <li><b>Closure:</b> replace free-text status with machine-verifiable health probes and reconcile Telegram state with the implemented relay.</li>
+        <li><b>Acceptance:</b> startup reports configured/reachable/degraded per connector, and integration tests prove retry, dead-letter, and replay behavior.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> <code>NIZAM__system/policies/CONNECTORS.json:88,101,126</code> mark Drive, Notion, and LLM runtime unconfigured; lines 110 and 118 mark Telegram and Gmail <code>TODO_no_adapter</code>.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>5. The default test command is not a reliable release gate</h3><p>Scoped live-code tests are healthy, but repository-wide pytest collection fails because archived snapshots contain duplicate module names.</p></div><span class="tag p1">P1</span></div>
+      <ul>
+        <li><b>Impact:</b> contributors and CI cannot use the obvious test command as a trustworthy green/red signal.</li>
+        <li><b>Closure:</b> add a root pytest configuration that excludes archives and generated environments, then add a CI workflow for startup, unit tests, and policy consistency.</li>
+        <li><b>Acceptance:</b> <code>python -m pytest -q</code> passes from the repository root in CI and locally.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> root pytest stopped with two import-file-mismatch collection errors under <code>MAKHZAN__archive</code>. Scoped execution over <code>NIZAM__system</code>, <code>MARSAD__flight_radar</code>, and <code>tools</code> passed 136 tests plus 14 subtests.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>6. Builds are not reproducible</h3><p>Every detected requirements file uses lower-bound ranges rather than exact versions or a lock file.</p></div><span class="tag p1">P1</span></div>
+      <ul>
+        <li><b>Impact:</b> deployments can change behavior without a source change, complicating rollback and security review.</li>
+        <li><b>Closure:</b> adopt a lock strategy, record Python version, and separate runtime from development dependencies.</li>
+        <li><b>Acceptance:</b> clean-environment installation produces the same resolved dependency set and passes startup plus tests.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> the startup receipt reports floating versions in all three detected requirement sets: governor, MARSAD, and the DCF skill.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>7. Documentation and configuration have material drift</h3><p>Several operational claims no longer match source state. This creates false blockers and weakens the value of otherwise extensive documentation.</p></div><span class="tag p1">P1</span></div>
+      <ul>
+        <li><b>Impact:</b> operators may perform unnecessary changes or validate against retired behavior.</li>
+        <li><b>Closure:</b> generate status sections from canonical JSON and add cross-file invariant tests.</li>
+        <li><b>Acceptance:</b> no contradictory values for canonical path, dead-letter registration, persona ownership, max turns, or privacy tier behavior.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> <code>CONNECTORS.json:45</code> says <code>DEAD_LETTER</code> is not declared, but <code>NIZAM_TEMPLE.json:195</code> already declares it. The deploy manifest also records <code>agent.max_turns: 7</code> as conflicting with v3.</div>
+    </article>
+
+    <article class="gap">
+      <div class="gap-head"><div><h3>8. The knowledge graph is broad but not yet decision-grade</h3><p>The graph captures the corpus, but its topology is fragmented and generic schema tokens dominate centrality. A broad gap query anchored on the word "What" and returned an unrelated template neighborhood.</p></div><span class="tag p2">P2</span></div>
+      <ul>
+        <li><b>Impact:</b> GraphRAG answers can be confidently irrelevant, especially for abstract product questions.</li>
+        <li><b>Closure:</b> normalize generic schema nodes, down-weight section boilerplate, add domain aliases, and create retrieval regression questions.</li>
+        <li><b>Acceptance:</b> a fixed benchmark of architecture and operations questions returns relevant source neighborhoods with cited locations.</li>
+      </ul>
+      <div class="evidence"><b>Evidence:</b> 5,423 nodes, 11,777 edges, 253 communities, and 1,908 nodes with degree 1 or less. Top "god nodes" include generic values such as <code>ref_null</code>, <code>ref_number</code>, and <code>ref_string</code>. The graph report records zero extraction tokens and visible encoding artifacts.</div>
+    </article>
+
+    <h2 class="page-break">30 / 60 / 90 Day Closure Plan</h2>
+    <div class="roadmap">
+      <section class="phase">
+        <b>Days 0-30</b>
+        <h3>Make truth singular</h3>
+        <ul>
+          <li>Resolve canonical path and verification commands.</li>
+          <li>Reconcile privacy, persona, dead-letter, and max-turn contracts.</li>
+          <li>Exclude archives from pytest and add root CI.</li>
+          <li>Rotate the open production key.</li>
+          <li>Lock dependencies.</li>
+        </ul>
+      </section>
+      <section class="phase">
+        <b>Days 31-60</b>
+        <h3>Prove one real product loop</h3>
+        <ul>
+          <li>Replace the relay agent stub for one persona flow.</li>
+          <li>Add connector health probes and dead-letter replay tests.</li>
+          <li>Run G4 in staging under the reconciled policy.</li>
+          <li>Add cost, latency, error, and audit dashboards.</li>
+        </ul>
+      </section>
+      <section class="phase">
+        <b>Days 61-90</b>
+        <h3>Earn pilot readiness</h3>
+        <ul>
+          <li>Run G5 end-to-end and measure p95 latency.</li>
+          <li>Lift relay persistence and verify reboot recovery.</li>
+          <li>Expand real persona paths and failure testing.</li>
+          <li>Rebuild Graphify and pass retrieval benchmarks.</li>
+        </ul>
+      </section>
+    </div>
+
+    <h2>Release Gates</h2>
+    <table>
+      <thead><tr><th>Gate</th><th>Required evidence</th><th>Current state</th></tr></thead>
+      <tbody>
+        <tr><td>Canonical build</td><td>Documented verify and startup commands pass from the canonical tree</td><td>Blocked by path mismatch</td></tr>
+        <tr><td>Unit and policy tests</td><td>Root pytest passes; cross-file invariants checked in CI</td><td>Scoped green, root collection red</td></tr>
+        <tr><td>Real product loop</td><td>No stub in selected production path; model/cost/audit traces present</td><td>Not met</td></tr>
+        <tr><td>Security</td><td>One privacy contract; key rotation complete; G4 green</td><td>Not met</td></tr>
+        <tr><td>Operations</td><td>G5 green, p95 measured, persistent service survives reboot</td><td>Not met</td></tr>
+        <tr><td>Reproducibility</td><td>Locked dependencies and clean install receipt</td><td>Not met</td></tr>
+        <tr><td>Graph quality</td><td>Retrieval benchmark passes with source locations</td><td>Not met</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Graphify Observations</h2>
+    <div class="note">
+      <p><b>Useful signal:</b> the graph correctly surfaces architecture reports, the go-live runbook, the data model, skills index, workflows index, and protocol index as major bridges. These are the right places to consolidate product truth.</p>
+      <p><b>Risk signal:</b> 35% of nodes have degree 1 or less, and generic schema references dominate centrality. The current graph should support navigation and evidence discovery, but not autonomous product conclusions without source verification.</p>
+    </div>
+
+    <h2>Method and Evidence</h2>
+    <ul>
+      <li>Existing Graphify artifacts: <code>graphify-out/graph.json</code>, <code>GRAPH_REPORT.md</code>, and <code>.graphify_analysis.json</code>.</li>
+      <li>Canonical verification attempt: <code>scripts/verify-nizamcore.ps1</code>.</li>
+      <li>Fallback local startup receipt: <code>.venv/Scripts/python.exe tools/nizam_startup.py</code>.</li>
+      <li>Repository-wide and scoped pytest runs.</li>
+      <li>Direct inspection of connector policy, relay coordinator, poller, deployment manifest, v3 plan, P8 plan, requirements, and Git state.</li>
+      <li>Graph built from commit <code>de2b3db9b0bff0c81fea8f4ef5c631f37a223892</code>; the worktree also contains uncommitted and untracked material, so graph coverage may lag current local state.</li>
+    </ul>
+    <p class="small">Readiness score is an engineering prioritization aid derived from the eight dimensions shown above. It is intentionally conservative and is not a statistical probability.</p>
+  </main>
+
+  <footer>
+    NIZAM Gap Analysis | Generated locally from repository evidence | 13 June 2026
+  </footer>
+</body>
+</html>

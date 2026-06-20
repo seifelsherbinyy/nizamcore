@@ -1,0 +1,20 @@
+version: "1.0.0"
+implemented_at: "2026-06-14"
+privacy_level: strict_local
+mode_bundle: NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/
+runtime_package: NIZAM__system/modes/khaldun/
+files_created:
+  - NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/mode_charter.md
+  - NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/aqidah_risk_policy.md
+  - NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/source_registry.json
+  - NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/KHALDUN_ISLAMIC_COSMIC_WISDOM_MODE.md
+  - NIZAM__system/modes/khaldun/classifier.py
+  - NIZAM__system/modes/khaldun/validator.py
+  - NIZAM__system/modes/khaldun/reminder_composer.py
+  - NIZAM__system/skills/hikmah-wisdom.md
+unresolved_questions:
+  - Operator approval for NIZAM_KHALDUN_OUTBOUND_APPROVED
+next_test_prompts:
+  - "/hikmah electromagnetic spectrum reflection"
+  - "Run pulsation loop b dry-run with islamic_reminder_config enabled"
+outbound_default: dry_run

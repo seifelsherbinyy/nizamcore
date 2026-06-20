@@ -1,0 +1,124 @@
+{
+  "version": "1.0.0",
+  "categories": {
+    "quran_text_and_translation": [
+      {
+        "id": "quran_com",
+        "name": "Quran.com",
+        "url": "https://quran.com",
+        "quality_label": "primary_religious",
+        "allowed_use": "Quote ayah text and established translations",
+        "forbidden_use": "Treat translation as definitive tafsir",
+        "citation_format": "Qur'an {surah}:{ayah} (Quran.com)"
+      },
+      {
+        "id": "tanzil",
+        "name": "Tanzil.net",
+        "url": "https://tanzil.net",
+        "quality_label": "primary_religious",
+        "allowed_use": "Verified Uthmani text",
+        "forbidden_use": "Interpretation",
+        "citation_format": "Qur'an {surah}:{ayah} (Tanzil)"
+      }
+    ],
+    "tafsir_and_language": [
+      {
+        "id": "tafsir_app",
+        "name": "Tafsir.app",
+        "url": "https://tafsir.app",
+        "quality_label": "classical_reference",
+        "allowed_use": "Classical tafsir summaries with attribution",
+        "forbidden_use": "Single-source definitive miracle tafsir",
+        "citation_format": "{mufassir} via Tafsir.app"
+      },
+      {
+        "id": "quranic_arabic_corpus",
+        "name": "Quranic Arabic Corpus",
+        "url": "https://corpus.quran.com",
+        "quality_label": "classical_reference",
+        "allowed_use": "Linguistic analysis (C-class)",
+        "forbidden_use": "Forced scientific mapping as definitive meaning",
+        "citation_format": "QAC lemma analysis"
+      }
+    ],
+    "hadith_verification": [
+      {
+        "id": "sunnah_com",
+        "name": "Sunnah.com",
+        "url": "https://sunnah.com",
+        "quality_label": "primary_religious",
+        "allowed_use": "Hadith text and grading lookup",
+        "forbidden_use": "Ruling without grading check",
+        "citation_format": "{collection} {number} (Sunnah.com, {grade})"
+      },
+      {
+        "id": "dorar",
+        "name": "Dorar.net",
+        "url": "https://dorar.net",
+        "quality_label": "classical_reference",
+        "allowed_use": "Hadith and fiqh cross-reference",
+        "forbidden_use": "Weak hadith as proof",
+        "citation_format": "Dorar ref {id}"
+      }
+    ],
+    "fiqh_and_fatwa_context": [
+      {
+        "id": "dar_al_ifta_misr",
+        "name": "Dar al-Ifta al-Misriyyah",
+        "url": "https://www.dar-alifta.org",
+        "quality_label": "institutional_fatwa",
+        "allowed_use": "Context for fiqh questions; escalation pointer",
+        "forbidden_use": "Khaldun issuing binding fatwa",
+        "citation_format": "Dar al-Ifta {ref}"
+      }
+    ],
+    "science_verification": [
+      {
+        "id": "nasa",
+        "name": "NASA",
+        "url": "https://www.nasa.gov",
+        "quality_label": "peer_reviewed_science",
+        "allowed_use": "B-class scientific facts",
+        "forbidden_use": "Automatic Qur'an miracle proof",
+        "citation_format": "NASA {page}"
+      },
+      {
+        "id": "pubmed",
+        "name": "PubMed",
+        "url": "https://pubmed.ncbi.nlm.nih.gov",
+        "quality_label": "peer_reviewed_science",
+        "allowed_use": "Peer-reviewed biomedical claims",
+        "forbidden_use": "Pop-science exaggeration",
+        "citation_format": "PMID:{id}"
+      }
+    ],
+    "idea_generators_not_proof": [
+      {
+        "id": "miracles_of_quran",
+        "name": "Miracles-of-Quran.com",
+        "quality_label": "speculative",
+        "allowed_use": "Hypothesis generation only",
+        "forbidden_use": "Proof source for miracles or tafsir",
+        "citation_format": "Community claim — verify independently"
+      },
+      {
+        "id": "islamic_awareness",
+        "name": "Islamic Awareness",
+        "quality_label": "community_signal",
+        "allowed_use": "Lead for further verification",
+        "forbidden_use": "Standalone evidence",
+        "citation_format": "Unverified community source"
+      }
+    ],
+    "critical_and_skeptical_sources": [
+      {
+        "id": "bucailleism_criticism",
+        "name": "Academic criticism of scientific miracle claims",
+        "quality_label": "peer_reviewed_science",
+        "allowed_use": "Skeptical check before miracle language",
+        "forbidden_use": "Dismiss Islam or Qur'an",
+        "citation_format": "Academic critique {ref}"
+      }
+    ]
+  }
+}

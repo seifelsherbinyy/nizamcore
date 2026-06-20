@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "top_k": 5,
+  "minimum_mrr": 0.6,
+  "fixtures": [
+    {
+      "claim_id": "c-recovery",
+      "claim": "Recovery trends require multiple observations before interpretation.",
+      "source_title": "BADAN doctrine",
+      "source_url": "local://BADAN",
+      "published_at": null,
+      "retrieved_at": "2026-06-13T00:00:00Z",
+      "reliability": "high",
+      "summary": "Use seven-day and twenty-eight-day windows.",
+      "implications": "Avoid single-day conclusions."
+    },
+    {
+      "claim_id": "c-context",
+      "claim": "Context packets must carry provenance, privacy class, and expiry.",
+      "source_title": "Companion contracts",
+      "source_url": "local://companion/contracts",
+      "published_at": null,
+      "retrieved_at": "2026-06-13T00:00:00Z",
+      "reliability": "high",
+      "summary": "Every prompt input is bounded and attributable.",
+      "implications": "Filter stale or over-ceiling items."
+    },
+    {
+      "claim_id": "c-proactive",
+      "claim": "Proactive messages require a concrete trigger and source references.",
+      "source_title": "Proactive policy",
+      "source_url": "local://companion/proactive",
+      "published_at": null,
+      "retrieved_at": "2026-06-13T00:00:00Z",
+      "reliability": "high",
+      "summary": "Quiet hours and cooldowns suppress delivery.",
+      "implications": "No send without evidence."
+    }
+  ],
+  "benchmarks": [
+    {
+      "id": "recovery_trend",
+      "query": "recovery trend window",
+      "expected_claim_ids": ["c-recovery"]
+    },
+    {
+      "id": "context_provenance",
+      "query": "context packet provenance expiry",
+      "expected_claim_ids": ["c-context"]
+    },
+    {
+      "id": "proactive_trigger",
+      "query": "proactive trigger source references",
+      "expected_claim_ids": ["c-proactive"]
+    }
+  ]
+}

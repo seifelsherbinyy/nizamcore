@@ -1,0 +1,322 @@
+{
+  "nodes": [
+    {
+      "id": "badan_import",
+      "label": "badan_import",
+      "type": "module"
+    },
+    {
+      "id": "calendar_tasks",
+      "label": "calendar_tasks",
+      "type": "module"
+    },
+    {
+      "id": "capture",
+      "label": "capture",
+      "type": "module"
+    },
+    {
+      "id": "context",
+      "label": "context",
+      "type": "module"
+    },
+    {
+      "id": "contracts",
+      "label": "contracts",
+      "type": "module"
+    },
+    {
+      "id": "council/contracts",
+      "label": "council/contracts",
+      "type": "module"
+    },
+    {
+      "id": "council/decision_protocols",
+      "label": "council/decision_protocols",
+      "type": "module"
+    },
+    {
+      "id": "council/deliberation",
+      "label": "council/deliberation",
+      "type": "module"
+    },
+    {
+      "id": "council/evidence",
+      "label": "council/evidence",
+      "type": "module"
+    },
+    {
+      "id": "council/ledger",
+      "label": "council/ledger",
+      "type": "module"
+    },
+    {
+      "id": "council/members",
+      "label": "council/members",
+      "type": "module"
+    },
+    {
+      "id": "council/stability",
+      "label": "council/stability",
+      "type": "module"
+    },
+    {
+      "id": "council/tests/test_council",
+      "label": "council/tests/test_council",
+      "type": "module"
+    },
+    {
+      "id": "council/triggers",
+      "label": "council/triggers",
+      "type": "module"
+    },
+    {
+      "id": "council/view_renderer",
+      "label": "council/view_renderer",
+      "type": "module"
+    },
+    {
+      "id": "gateway",
+      "label": "gateway",
+      "type": "module"
+    },
+    {
+      "id": "knowledge",
+      "label": "knowledge",
+      "type": "module"
+    },
+    {
+      "id": "knowledge_eval",
+      "label": "knowledge_eval",
+      "type": "module"
+    },
+    {
+      "id": "proactive",
+      "label": "proactive",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/collision",
+      "label": "pulsation/collision",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/context_refresh",
+      "label": "pulsation/context_refresh",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/himayah_egress",
+      "label": "pulsation/himayah_egress",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/ledger",
+      "label": "pulsation/ledger",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/loops",
+      "label": "pulsation/loops",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/message_builder",
+      "label": "pulsation/message_builder",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/routing",
+      "label": "pulsation/routing",
+      "type": "module"
+    },
+    {
+      "id": "pulsation/state",
+      "label": "pulsation/state",
+      "type": "module"
+    },
+    {
+      "id": "reminders",
+      "label": "reminders",
+      "type": "module"
+    },
+    {
+      "id": "scheduler",
+      "label": "scheduler",
+      "type": "module"
+    },
+    {
+      "id": "tests/test_companion",
+      "label": "tests/test_companion",
+      "type": "module"
+    },
+    {
+      "id": "tests/test_production_modules",
+      "label": "tests/test_production_modules",
+      "type": "module"
+    },
+    {
+      "id": "tests/test_pulsation",
+      "label": "tests/test_pulsation",
+      "type": "module"
+    },
+    {
+      "id": "tests/test_skills_registry",
+      "label": "tests/test_skills_registry",
+      "type": "module"
+    },
+    {
+      "id": "whoop_import",
+      "label": "whoop_import",
+      "type": "module"
+    }
+  ],
+  "edges": [
+    {
+      "source": "council/tests/test_council",
+      "target": "contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.decision_protocols",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.deliberation",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.evidence",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.ledger",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.stability",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.triggers",
+      "type": "import_from"
+    },
+    {
+      "source": "council/tests/test_council",
+      "target": "council.view_renderer",
+      "type": "import_from"
+    },
+    {
+      "source": "pulsation/message_builder",
+      "target": "pulsation.himayah_egress",
+      "type": "import_from"
+    },
+    {
+      "source": "scheduler",
+      "target": "pulsation",
+      "type": "import_from"
+    },
+    {
+      "source": "scheduler",
+      "target": "pulsation.himayah_egress",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "calendar_tasks",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "capture",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "context",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "gateway",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "knowledge",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "knowledge_eval",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "proactive",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "reminders",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_companion",
+      "target": "whoop_import",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_production_modules",
+      "target": "NIZAM__system.companion",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_production_modules",
+      "target": "contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_pulsation",
+      "target": "contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_pulsation",
+      "target": "proactive",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_pulsation",
+      "target": "contracts",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_pulsation",
+      "target": "pulsation",
+      "type": "import_from"
+    },
+    {
+      "source": "tests/test_pulsation",
+      "target": "pulsation.ledger",
+      "type": "import_from"
+    }
+  ],
+  "generator": "companion_graph_baseline"
+}

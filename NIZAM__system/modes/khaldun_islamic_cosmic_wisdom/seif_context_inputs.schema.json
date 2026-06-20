@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Seif context inputs for Khaldun",
+  "type": "object",
+  "properties": {
+    "journal_themes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Theme tags only — no raw journal body"
+    },
+    "witness_summary": {
+      "type": "object",
+      "properties": {
+        "session_type": { "type": "string" },
+        "capacity_level": { "type": "string" },
+        "theme": { "type": "string" }
+      }
+    },
+    "badan_whoop_summary": {
+      "type": "object",
+      "properties": {
+        "recovery_band": { "type": "string" },
+        "recovery_pct": { "type": "number" },
+        "hrv": { "type": "number" },
+        "strain": { "type": "number" }
+      }
+    },
+    "pulse_summary": {
+      "type": "object",
+      "properties": {
+        "capacity_band": { "type": "string" },
+        "recovery": { "type": "number" }
+      }
+    },
+    "open_loops_count": { "type": "integer" },
+    "active_decisions_count": { "type": "integer" },
+    "spiritual_intent": { "type": "string" },
+    "missing_data": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

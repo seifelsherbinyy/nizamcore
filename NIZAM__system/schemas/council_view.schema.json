@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/council_view.schema.json",
+  "title": "CouncilView",
+  "description": "Operator-facing rendered view of a council verdict.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "view_id",
+    "verdict_id",
+    "motion_title",
+    "format",
+    "body"
+  ],
+  "properties": {
+    "view_id": { "type": "string", "format": "uuid" },
+    "verdict_id": { "type": "string", "format": "uuid" },
+    "motion_title": { "type": "string", "maxLength": 240 },
+    "format": {
+      "type": "string",
+      "enum": ["markdown", "html", "telegram_compact"]
+    },
+    "body": { "type": "string" },
+    "vote_table": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": [
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "number" }
+        ]
+      }
+    },
+    "dissent_lines": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    }
+  }
+}

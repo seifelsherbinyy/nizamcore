@@ -65,7 +65,7 @@ def check_privacy_gate(
 ) -> tuple[bool, str]:
     """Return (allowed, reason)."""
     if classification == "strict_local_maximum" and not operator_confirmed:
-        return False, "AHEL strict_local_maximum requires operator_confirmed_externalize"
+        return False, "strict_local_maximum requires operator_confirmed_externalize"
     if classification == "strict_local" and not operator_confirmed:
         return False, "strict_local requires operator_confirmed_externalize"
     return True, "ok"

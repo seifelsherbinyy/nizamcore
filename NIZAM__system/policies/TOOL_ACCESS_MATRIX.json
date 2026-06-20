@@ -120,11 +120,14 @@
       "archetype": "WEEKLY_SYNTHESIST",
       "module": "HIKMAH",
       "read":  ["SOUL.md", "NIZAM__system/personas/HIKMAH.json",
+                "NIZAM__system/modes/khaldun_islamic_cosmic_wisdom/**",
+                "NIZAM__system/modes/khaldun/**",
                 "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",
                 "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl"],
-      "write": ["HIKMAH__weekly_synthesis/**"],
+      "write": ["HIKMAH__weekly_synthesis/**",
+                "NIZAM__system/relay/.state/khaldun-reminders-dryrun.jsonl"],
       "gated_by": ["HIMAYAH","THABAT"],
-      "note": "Read-only over EVENT_LEDGER; promotes patterns to LEARNING_LEDGER via Ammar."
+      "note": "Islamic Cosmic Wisdom Mode; outbound requires NIZAM_KHALDUN_OUTBOUND_APPROVED."
     },
     "hayat_badan": {
       "codename": "Hayat",
@@ -135,15 +138,6 @@
       "write": ["BADAN__body_health_system/**"],
       "gated_by": ["HIMAYAH","SUKOON","THABAT"],
       "note": "Advisory only. Red flags route to qualified professional."
-    },
-    "yusra_ahel": {
-      "codename": "Yusra",
-      "archetype": "FAMILY_STEWARD",
-      "module": "AHEL",
-      "read":  ["NIZAM__system/personas/AHEL.json"],
-      "write": ["AHEL__family_network/**"],
-      "gated_by": ["HIMAYAH","SUKOON","THABAT"],
-      "note": "strict_local_maximum. Separate keypair, LUKS volume, LOCAL model only. HARD-BLOCKED from VPS plaintext, GitHub, Notion, Drive-clear."
     },
     "sadiq_mal": {
       "codename": "Sadiq",

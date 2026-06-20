@@ -1,0 +1,14 @@
+{
+  "nodes": [
+    {"id": "vendor_repo_inventory", "label": "vendor_repo_inventory.json", "type": "artifact"},
+    {"id": "top_20_patterns", "label": "top_20_capability_patterns.md", "type": "artifact"},
+    {"id": "companion_pulsation", "label": "NIZAM__system/companion/pulsation", "type": "module"},
+    {"id": "companion_council", "label": "NIZAM__system/companion/council", "type": "module"}
+  ],
+  "edges": [
+    {"source": "vendor_repo_inventory", "target": "top_20_patterns", "type": "synthesizes"},
+    {"source": "top_20_patterns", "target": "companion_pulsation", "type": "feeds"},
+    {"source": "top_20_patterns", "target": "companion_council", "type": "feeds"}
+  ],
+  "generator": "research_sandbox_stub"
+}

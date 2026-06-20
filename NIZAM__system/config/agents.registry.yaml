@@ -179,21 +179,6 @@ agents:
     egress_class: strict_local
     gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
 
-  # ─── Family (strict_local_maximum) ───────────────────────────────
-  Yusra:
-    persona: NIZAM__system/personas/AHEL.json
-    module: AHEL
-    primary_model: local-llama-3b        # NEVER cloud per locked decision
-    reviewer_model: local-llama-3b
-    delegates_to: []
-    context_sources:
-      - NIZAM__system/personas/AHEL.json
-    writes_to_ledgers: [FAMILY_LEDGER]
-    feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
-    egress_class: strict_local_maximum   # hard-blocked from VPS+cloud
-    separate_keypair: true
-    gates: {pre: [SUKOON], pre_write: [HIMAYAH], post: [THABAT]}
-
   # ─── Governance (STEWARD) ────────────────────────────────────────
   Ammar:
     persona: NIZAM__system/personas/AMMAR.json
@@ -215,7 +200,6 @@ agents:
       - DECISION_LEDGER
       - FINANCE_LEDGER
       - BODY_LEDGER
-      - FAMILY_LEDGER
       - BATTLE_LEDGER
     feedback_ledger: NIZAM__system/ledgers/LEARNING_LEDGER.jsonl
     egress_class: deterministic_local_only

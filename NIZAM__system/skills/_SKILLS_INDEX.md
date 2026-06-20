@@ -63,15 +63,6 @@ Doctrine: [`NIZAM_CONVERSATIONAL_LAYER.md`](../docs/NIZAM_CONVERSATIONAL_LAYER.m
 |---|---|---|
 | [qarar-decide](qarar-decide.md) | `/qarar-decide <topic>` | ADR-style decision record |
 
-## Phase 3 — family network (3 skills, scaffolded + live)
-
-### AHEL (family — strictest privacy)
-| Skill | Trigger | Purpose |
-|---|---|---|
-| [ahel-add-person](ahel-add-person.md) | `/ahel-add-person` | Create or update a person card (strict_local_maximum) |
-| [ahel-support-log](ahel-support-log.md) | `/ahel-support-log <person_id>` | Log support promise/delivery; recovery_cost mandatory |
-| [ahel-connection-cadence](ahel-connection-cadence.md) | `/ahel-connection-cadence` | Surface ≤3 overdue people/week; SUKOON-aware |
-
 ## MARSAD — Flight Intelligence Module (additive module, all phases)
 
 | Skill | Module | Trigger | Purpose |
@@ -112,4 +103,3 @@ See [`NIZAM__system/workflows/_WORKFLOWS_INDEX.md`](../workflows/_WORKFLOWS_INDE
 - MUNAWARA → [`MUNAWARA_TACTICAL_DOCTRINE.md`](../docs/MUNAWARA_TACTICAL_DOCTRINE.md)
 - MAL → [`MAL_FINANCIAL_LADDER.md`](../docs/MAL_FINANCIAL_LADDER.md)
 - BADAN → [`BADAN_HEALTH_ADVISORY_NOTES.md`](../docs/BADAN_HEALTH_ADVISORY_NOTES.md)
-- AHEL (Phase 3) → [`AHEL_FAMILY_PRIVACY_RULES.md`](../docs/AHEL_FAMILY_PRIVACY_RULES.md)

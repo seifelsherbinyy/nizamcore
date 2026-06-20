@@ -1,0 +1,41 @@
+{
+  "month": "2026-06",
+  "spend_usd": 0.005,
+  "calls": [
+    {
+      "ts": "2026-06-13T20:49:00Z",
+      "provider": "fake-local",
+      "model": "fake-amin-1",
+      "agent": "Amin",
+      "usd": 0.001
+    },
+    {
+      "ts": "2026-06-13T20:51:54Z",
+      "provider": "fake-local",
+      "model": "fake-amin-1",
+      "agent": "Amin",
+      "usd": 0.001
+    },
+    {
+      "ts": "2026-06-13T20:52:12Z",
+      "provider": "fake-local",
+      "model": "fake-amin-1",
+      "agent": "Amin",
+      "usd": 0.001
+    },
+    {
+      "ts": "2026-06-13T21:08:43Z",
+      "provider": "fake-local",
+      "model": "fake-amin-1",
+      "agent": "Amin",
+      "usd": 0.001
+    },
+    {
+      "ts": "2026-06-13T21:13:44Z",
+      "provider": "fake-local",
+      "model": "fake-amin-1",
+      "agent": "Amin",
+      "usd": 0.001
+    }
+  ]
+}

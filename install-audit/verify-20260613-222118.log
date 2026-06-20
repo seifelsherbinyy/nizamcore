@@ -1,0 +1,11 @@
+﻿[2026-06-13 22:21:18] NIZAM verification started
+[2026-06-13 22:21:18] Git state: branch=cursor/router-stage-1-ir6-mirror-1 local=de2b3db9b0bff0c81fea8f4ef5c631f37a223892 remote check skipped
+[2026-06-13 22:21:19] Startup ready: version=3.3.0, gates_ok=True
+radar OK
+........................................................................ [ 88%]
+.........                                                                [100%]
+81 passed in 0.73s
+[2026-06-13 22:21:20] MARSAD pytest OK: 81 passed
+governor_lib OK
+[2026-06-13 22:21:20] Governor lib import OK
+[2026-06-13 22:21:20] Verification complete

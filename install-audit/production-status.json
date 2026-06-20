@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-06-14T14:14:15Z",
+  "capabilities": {
+    "production_model": {
+      "configured": true,
+      "provider": "openrouter",
+      "reply": "Copy. \"Production model smoke test.\" Captured. No further context needed at this time. Standing by.",
+      "status": "ok",
+      "model": "deepseek/deepseek-v4-flash",
+      "latency_ms": 1815,
+      "input_tokens": 137,
+      "output_tokens": 106,
+      "cost_usd": 0.0,
+      "fallback_reason": null
+    },
+    "oauth_connectors": {
+      "files_present": true,
+      "write_scopes_ok": true,
+      "live_probe": {
+        "ok": true,
+        "scopes": [
+          "https://www.googleapis.com/auth/calendar",
+          "https://www.googleapis.com/auth/gmail.compose",
+          "https://www.googleapis.com/auth/gmail.modify",
+          "https://www.googleapis.com/auth/tasks"
+        ],
+        "write_scopes_ok": true,
+        "calendar_count_sample": 1,
+        "tasks_count_sample": 0,
+        "gmail_count_sample": 1
+      }
+    },
+    "hostinger_deployment": {
+      "ok": true,
+      "details": [
+        "gateway=running",
+        "env=ok"
+      ],
+      "mode": "remote_ssh"
+    },
+    "remote_telemetry": {
+      "ok": true,
+      "mode": "local_jsonl",
+      "metrics": {
+        "turns": 210,
+        "p50_latency_ms": 0,
+        "p95_latency_ms": 1,
+        "error_rate": 0.0,
+        "cost_usd": 0.0
+      }
+    },
+    "scheduled_telegram": {
+      "sent": 0,
+      "evaluated": 1,
+      "accepted": 0,
+      "telegram_get_me": true
+    },
+    "personal_data_import": {
+      "digest": "a8fd43eb056ccfda6452174ed2afa87e8c8c51c85f2f2e54719a50755ab31746",
+      "observation_count": 3,
+      "output": "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpx5rk_0ok\\badan\\whoop-2026-06-14.jsonl",
+      "journal": {
+        "path": "C:\\Users\\PC\\AppData\\Local\\Temp\\tmpx5rk_0ok\\journal\\2026-06-13.json",
+        "date": "2026-06-13"
+      }
+    }
+  },
+  "live": {
+    "telegram": true,
+    "model": true,
+    "vps_gateway": true,
+    "telemetry": true,
+    "oauth": true
+  },
+  "production_ready": true
+}

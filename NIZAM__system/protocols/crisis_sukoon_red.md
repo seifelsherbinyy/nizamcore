@@ -25,7 +25,6 @@ When stressed, the instinct is to "push through" — write more plans, double ba
 - `/mal-baseline`, `/mal-decision-score` — financial decisions under stress are biased.
 - `/qarar-decide` — defer non-urgent decisions.
 - `/tariq-vision`, `/tariq-annual-review` — fantasy fuel.
-- `/ahel-connection-cadence` — drop to 1 person from `strong` status (uplifting), not 3.
 
 ## Conditional skills
 - `/naqd-reconcile` — only if contradiction is blocking active work. Otherwise defer.

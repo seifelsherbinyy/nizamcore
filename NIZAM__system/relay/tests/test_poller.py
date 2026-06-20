@@ -74,9 +74,9 @@ class TestPollerHandleUpdate(unittest.TestCase):
         self.assertEqual(args[2], "captured.")
 
     def test_blocked_sends_safe_notice_not_content(self):
-        env = {"reply": "SENSITIVE FAMILY CONTENT", "blocked": True,
-               "block_reason": "AHEL strict_local_maximum",
-               "target": "Yusra", "trace_id": "x"}
+        env = {"reply": "SENSITIVE CONTENT", "blocked": True,
+               "block_reason": "strict_local_maximum",
+               "target": "Ammar", "trace_id": "x"}
         with mock.patch.object(poller.dedup, "record", return_value=True), \
              mock.patch.object(poller.auth, "verify_user_id",
                                return_value=8001780136), \
@@ -84,7 +84,7 @@ class TestPollerHandleUpdate(unittest.TestCase):
              mock.patch.object(poller, "tg_send_message") as send:
             poller.handle_update(_update(), token="T")
         sent_text = send.call_args.args[2]
-        self.assertNotIn("SENSITIVE FAMILY CONTENT", sent_text)
+        self.assertNotIn("SENSITIVE CONTENT", sent_text)
         self.assertIn("HIMAYAH", sent_text)
 
     def test_send_failure_does_not_raise(self):

@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/pulsation_message.schema.json",
+  "title": "Pulsation outbound message",
+  "description": "Context-first proactive companion check-in or sourced Islamic reminder.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "message_type",
+    "agent_name",
+    "agent_role",
+    "generated_at",
+    "context_refresh",
+    "message",
+    "focus_trigger",
+    "requires_user_reply",
+    "council_required",
+    "council_motion_candidate",
+    "council_summary_hash"
+  ],
+  "properties": {
+    "message_type": {
+      "type": "string",
+      "enum": ["companion_checkin", "islamic_reminder"]
+    },
+    "agent_name": {
+      "type": "string"
+    },
+    "agent_role": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "context_refresh": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "refreshed_at",
+        "sources_checked",
+        "sources_found",
+        "missing_sources",
+        "latest_entry_timestamps",
+        "confidence",
+        "privacy_level",
+        "sukoon_capacity"
+      ],
+      "properties": {
+        "refreshed_at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "sources_checked": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "sources_found": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "missing_sources": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "latest_entry_timestamps": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "privacy_level": {
+          "type": "string",
+          "enum": ["public_safe", "private_ai_ok", "strict_local", "secret"]
+        },
+        "sukoon_capacity": {
+          "type": "string",
+          "enum": ["green", "yellow", "red", "unknown"]
+        }
+      }
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "focus_trigger": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requires_user_reply": {
+      "type": "boolean"
+    },
+    "council_required": {
+      "type": "boolean"
+    },
+    "council_motion_candidate": {
+      "type": ["string", "null"]
+    },
+    "council_summary_hash": {
+      "type": ["string", "null"]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Khaldun claim classification",
+  "type": "object",
+  "required": ["primary_label", "confidence", "explanation"],
+  "properties": {
+    "primary_label": {
+      "type": "string",
+      "enum": [
+        "A_shari_established",
+        "B_scientifically_supported",
+        "C_linguistic_or_tafsir_possibility",
+        "D_philosophical_reflection",
+        "E_sunni_tasawwuf_tazkiyah",
+        "F_symbolic_comparative",
+        "G_speculative_unverified",
+        "H_reject_aqidah_risk"
+      ]
+    },
+    "secondary_labels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "A_shari_established",
+          "B_scientifically_supported",
+          "C_linguistic_or_tafsir_possibility",
+          "D_philosophical_reflection",
+          "E_sunni_tasawwuf_tazkiyah",
+          "F_symbolic_comparative",
+          "G_speculative_unverified",
+          "H_reject_aqidah_risk"
+        ]
+      }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "explanation": { "type": "string" },
+    "allowed_language": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requires_scholar_escalation": { "type": "boolean", "default": false }
+  }
+}

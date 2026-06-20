@@ -1,0 +1,8 @@
+{
+  "_note": "P2 soft-warn budgets (USD/month). These are WARNING thresholds, never hard caps. Warns fire at 70/85/95% of each. Per-provider and per-model. Deploys to ~/.hermes/nizam/budgets.json. Tune freely; greenlight required before any hard limit is ever introduced.",
+  "providers": {
+    "openrouter": 30.0,
+    "anthropic": 20.0
+  },
+  "models": {}
+}

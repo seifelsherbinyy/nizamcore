@@ -145,7 +145,6 @@ CRISIS_KEYWORDS = {
     "crisis", "emergency", "panic", "overload red",
     "i can't breathe", "can't breathe", "suicidal",
 }
-AHEL_MARKERS = re.compile(r"(?i)(#ahel\b|\[ahel\]|#family\b|\[family\])")
 KIN_TERMS = re.compile(
     r"(?i)\b(sister|brother|mother|father|mom|dad|wife|husband|son|daughter)\b"
 )
@@ -220,9 +219,7 @@ def _detector_biometric(text: str) -> tuple[str | None, str | None, float, str]:
 
 
 def _detector_occasion_tactical(text: str) -> tuple[str | None, str | None, float, str]:
-    """IR-3 + IR-7 (kin + planning → Khalid unless AHEL)."""
-    if AHEL_MARKERS.search(text):
-        return None, None, 0.0, ""
+    """IR-3 + IR-7 (occasion or kin planning routes to Khalid)."""
     if OCCASION_TERMS.search(text) and PLANNING_TERMS.search(text):
         return "Khalid", "tactical_plan", 0.90, "IR-3:occasion_tactical"
     if KIN_TERMS.search(text) and PLANNING_TERMS.search(text):

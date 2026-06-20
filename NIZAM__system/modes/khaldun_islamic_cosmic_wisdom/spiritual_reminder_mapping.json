@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "mappings": [
+    {
+      "signal": "anxiety",
+      "triggers": ["anxiety", "worried", "overthinking", "قلق"],
+      "islamic_meaning": "تفويض ومراقبة — الله على كل شيء قدير",
+      "action": "دقيقة ذكر + خطوة واحدة صغيرة",
+      "dua_hint": "اللهم إني أعوذ بك من الهم والحزن"
+    },
+    {
+      "signal": "low_energy",
+      "triggers": ["low_recovery", "red_band", "yellow_band", "LOW", "TINY-MODE"],
+      "islamic_meaning": "رحمة بالنفس — العمل الصالح يُقبل قليلاً في وقت الضعف",
+      "action": "أصغر عمل صالح ممكن (وضوء، آية، صدقة صغيرة)",
+      "dua_hint": "اللهم اشفني وعافني"
+    },
+    {
+      "signal": "productivity_drift",
+      "triggers": ["open_loops", "scattered", "drift"],
+      "islamic_meaning": "الأمانة والإخلاص — خُذ حق واحد فقط",
+      "action": "اختر loop واحد وأغلقه أو جدوله",
+      "dua_hint": "اللهم أعني على ذكرك وشكرك"
+    },
+    {
+      "signal": "overthinking",
+      "triggers": ["overthinking", "rumination", "loops"],
+      "islamic_meaning": "القلب يرتاح بالذكر والفعل الواحد",
+      "action": "ذكر 33 مرة ثم فعل واحد محدد",
+      "dua_hint": "لا إله إلا أنت سبحانك إني كنت من الظالمين"
+    }
+  ],
+  "forbidden_tone": ["shame", "guilt_tripping", "iman_score", "performance_spirituality"]
+}

@@ -56,14 +56,26 @@ API = "https://api.telegram.org"
 BLOCKED_NOTICE = "⛔ Blocked by HIMAYAH (privacy tier). Nothing was stored."
 
 
+class GatewayPollingConflict(RuntimeError):
+    """Raised when Hermes gateway (or another client) already owns getUpdates."""
+
+
 # ─── Telegram transport (monkeypatched in tests) ─────────────────
 def _post(url: str, payload: dict, timeout: float) -> dict:
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url, data=data, headers={"Content-Type": "application/json"}
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        if exc.code == 409:
+            raise GatewayPollingConflict(
+                "Telegram getUpdates conflict: another process (likely Hermes gateway) "
+                "is already polling this bot token"
+            ) from exc
+        raise
 
 
 def tg_get_updates(token: str, offset: int, timeout: int) -> list[dict]:
@@ -77,9 +89,19 @@ def tg_get_updates(token: str, offset: int, timeout: int) -> list[dict]:
     return resp.get("result", [])
 
 
-def tg_send_message(token: str, chat_id: int, text: str) -> dict:
+def tg_send_message(
+    token: str,
+    chat_id: int,
+    text: str,
+    *,
+    parse_mode: str | None = None,
+) -> dict:
     url = f"{API}/bot{token}/sendMessage"
-    resp = _post(url, {"chat_id": chat_id, "text": text}, 30)
+    payload: dict[str, object] = {"chat_id": chat_id, "text": text}
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+        payload["disable_web_page_preview"] = True
+    resp = _post(url, payload, 30)
     if not resp.get("ok"):
         raise RuntimeError(f"sendMessage not ok: {resp}")
     return resp
@@ -107,7 +129,8 @@ def handle_update(update: dict, token: str | None, send: bool = True) -> dict | 
             reply = BLOCKED_NOTICE if env.get("blocked") else (
                 env.get("reply") or "(no reply)")
             try:
-                tg_send_message(token, chat_id, reply)
+                parse_mode = "HTML" if "<" in reply and ">" in reply else None
+                tg_send_message(token, chat_id, reply, parse_mode=parse_mode)
             except Exception as exc:      # noqa: BLE001 — never crash the loop
                 print(f"hermes: send failed: {exc}", file=sys.stderr)
     return env
@@ -196,6 +219,10 @@ def run_dry(text: str = "/shura-brainstorm dry-run probe") -> int:
 # ─── CLI ─────────────────────────────────────────────────────────
 def main(argv: list[str] | None = None) -> int:
     import argparse
+
+    from NIZAM__system.relay import env_loader
+
+    env_loader.load_all()
 
     p = argparse.ArgumentParser(description="NIZAM HERMES long-poll runner")
     p.add_argument("--dry-run", action="store_true",

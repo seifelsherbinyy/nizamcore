@@ -28,6 +28,10 @@ from NIZAM__system.governor.classifier import (  # noqa: E402
     is_egress_blocked,
 )
 from NIZAM__system.relay import sukoon_gate  # noqa: E402
+from NIZAM__system.relay import persona_runtime  # noqa: E402
+from NIZAM__system.relay import runtime_events  # noqa: E402
+from NIZAM__system.companion import capture  # noqa: E402
+from NIZAM__system.companion import gateway  # noqa: E402
 
 
 def _route(input_text: str) -> tuple[str, str, float]:
@@ -76,7 +80,11 @@ def _now_iso() -> str:
     return _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def process(update: dict, user_id: int) -> dict:
+def process(
+    update: dict,
+    user_id: int,
+    runtime: persona_runtime.PersonaRuntime | None = None,
+) -> dict:
     """Main coordinator entry. Returns a decision envelope.
 
     Envelope schema:
@@ -94,6 +102,18 @@ def process(update: dict, user_id: int) -> dict:
     trace_id = str(uuid.uuid4())
     message = update.get("message", {})
     text = (message.get("text") or message.get("caption") or "").strip()
+    capture.persist(
+        trace_id=trace_id,
+        message_id=str(message.get("message_id") or update.get("update_id") or trace_id),
+        channel="telegram",
+        text=text,
+    )
+    runtime_events.persist_inbound(
+        trace_id=trace_id,
+        update_id=update.get("update_id"),
+        user_id=user_id,
+        text=text,
+    )
 
     # B4.4 SUKOON pre-gate
     sukoon = sukoon_gate.pre_gate(text)
@@ -105,14 +125,11 @@ def process(update: dict, user_id: int) -> dict:
         kind = "CRISIS"
     elif sukoon["mode"] == "supportive_reflection" and target == "Hazim":
         target = "Salman"  # downshift NAQD -> SHURA per persona rule
-
-    # B4.5 agent stub
-    agent_out = _agent_stub(target, text, trace_id)
+    ingress = gateway.envelope_from_update(update, route=target)
 
     # B4.6 HIMAYAH egress check. The destination of the reply is
     # Telegram (operator-only, encrypted). All persistence happens on
-    # the laptop disk pre-cutover. Both are permitted for strict_local
-    # but NOT for strict_local_maximum (AHEL).
+    # the laptop disk pre-cutover. Both are permitted for strict_local.
     blocked, reason = False, None
     cls = classify(_pretend_capture_path(target))
     egress_blocked, why = is_egress_blocked(_pretend_capture_path(target),
@@ -120,6 +137,22 @@ def process(update: dict, user_id: int) -> dict:
     if egress_blocked:
         blocked = True
         reason = why
+
+    runtime_result = None
+    if not blocked and not str(target).startswith("protocol:") and persona_runtime.enabled():
+        runtime = runtime or persona_runtime.build_default_runtime()
+        if runtime is not None:
+            runtime_result = runtime.run(
+                persona_runtime.PersonaRuntimeRequest(
+                    target=target,
+                    input_text=text,
+                    trace_id=trace_id,
+                )
+            )
+
+    agent_out = _agent_stub(target, text, trace_id)
+    if runtime_result is not None and runtime_result.status == "ok":
+        agent_out["reply"] = runtime_result.reply
 
     # B4.7 ledger append (Ammar)
     ledger_row_id = None
@@ -137,6 +170,9 @@ def process(update: dict, user_id: int) -> dict:
                 "input_chars": len(text),
                 "artifact_a_present": agent_out["artifact_a"] is not None,
                 "artifact_b_present": agent_out["artifact_b"] is not None,
+                "runtime": runtime_result.to_dict() if runtime_result else {
+                    "status": "stub"
+                },
                 "note": "phase-1 boot loop turn",
             },
             actor="Ammar",
@@ -146,18 +182,50 @@ def process(update: dict, user_id: int) -> dict:
         )
         ledger_row_id = row["row_id"]
 
-    return {
+    result = {
         "trace_id": trace_id,
         "kind": kind,
         "target": target,
         "sukoon": sukoon,
+        "ingress": {
+            "schema_version": ingress.schema_version,
+            "message_id": ingress.message_id,
+            "actor_hash": ingress.actor_hash,
+            "route": ingress.route,
+            "timestamp": ingress.timestamp,
+            "channel": ingress.channel,
+            "consent_state": ingress.consent_state,
+        },
         "reply": agent_out["reply"],
         "ledger_row_id": ledger_row_id,
         "blocked": blocked,
         "block_reason": reason,
         "artifact_a": agent_out["artifact_a"],
         "artifact_b": agent_out["artifact_b"],
+        "runtime": runtime_result.to_dict() if runtime_result else {
+            "status": "stub"
+        },
     }
+    runtime_meta = result["runtime"]
+    runtime_events.append_event({
+        "event": "turn_completed",
+        "trace_id": trace_id,
+        "target": target,
+        "kind": kind,
+        "blocked": blocked,
+        "outcome": "blocked" if blocked else "ok",
+        "latency_ms": int(runtime_meta.get("latency_ms", 0)),
+        "cost_usd": float(runtime_meta.get("cost_usd", 0.0)),
+        "runtime_status": runtime_meta["status"],
+        "error_class": runtime_meta.get("fallback_reason"),
+    })
+    try:
+        from NIZAM__system.relay import telemetry
+
+        telemetry.export_remote()
+    except Exception:
+        pass
+    return result
 
 
 def _pretend_capture_path(target: str) -> str:
@@ -171,7 +239,6 @@ def _pretend_capture_path(target: str) -> str:
         "Khaldun": "HIKMAH__weekly_synthesis/weekly/2026-W22.md",
         "Tahir": "MARSAD__flight_radar/briefs/2026-05-28.md",
         "Hayat": "BADAN__body_health_system/daily_signals/2026-05-28.md",
-        "Yusra": "AHEL__family_network/family_tree/note.md",
         "Sadiq": "MAL__financial_engine/baseline/note.md",
         "protocol:crisis_sukoon_red": "NIZAM__system/protocols/crisis_sukoon_red.md",
     }.get(target, "TAFRIGH__brain_dumper/raw/fallback.md")

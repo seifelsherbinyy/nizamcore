@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "name": "science_verification",
+  "steps": [
+    {"id": "capture", "action": "Record scientific claim verbatim"},
+    {"id": "source_tier", "action": "Classify source as peer_reviewed | educational | pop_science | outdated"},
+    {"id": "consensus_check", "action": "Summarize scientific consensus and uncertainty"},
+    {"id": "competing_explanations", "action": "Note alternatives if material"},
+    {"id": "skeptical_check", "action": "For miracle-adjacent claims, require critical source review"}
+  ],
+  "fact_types": ["fact", "theory", "hypothesis", "outdated_claim", "pop_science_exaggeration"],
+  "outputs": ["scientific_consensus_summary", "uncertainty_level", "competing_explanations", "source_quality"]
+}

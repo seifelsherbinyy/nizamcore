@@ -1,0 +1,26 @@
+[
+  {
+    "source_id": "quran-2-286",
+    "source_type": "quran",
+    "reference": "Q2:286",
+    "text": "Allah does not burden a soul beyond that it can bear.",
+    "authenticity": "mutawatir",
+    "approved": true
+  },
+  {
+    "source_id": "hadith-tirmidhi-2516",
+    "source_type": "hadith",
+    "reference": "Tirmidhi 2516",
+    "text": "Take advantage of five before five.",
+    "authenticity": "hasan",
+    "approved": true
+  },
+  {
+    "source_id": "disputed-sample",
+    "source_type": "hadith",
+    "reference": "Unverified chain",
+    "text": "Disputed wording for negative tests only.",
+    "authenticity": "disputed",
+    "approved": true
+  }
+]

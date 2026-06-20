@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://nizam.local/schemas/user_deep.schema.json",
   "title": "USER_DEEP — strict_local operator model",
-  "description": "The strict_local layer of operator self-knowledge. Lives next to AHEL on the encrypted volume. Only Coordinator, Ammar, and the named pillar's agents may read it; never crosses VPS plaintext or any GitHub remote. Backed by a Honcho-pattern peer model post-spike (E2.6).",
+  "description": "The strict_local layer of operator self-knowledge. Only Coordinator, Ammar, and the named pillar's agents may read it; never crosses VPS plaintext or any GitHub remote. Backed by a Honcho-pattern peer model post-spike (E2.6).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,7 +17,7 @@
     "privacy_class": {
       "type": "string",
       "const": "strict_local",
-      "description": "Hard-pinned. user_deep is strict_local. Items inside that are strict_local_maximum move to a separate AHEL document."
+      "description": "Hard-pinned. user_deep is strict_local. Maximum-sensitivity items must be stored in a separately classified local record."
     },
     "consent": {
       "type": "object",

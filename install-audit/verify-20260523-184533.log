@@ -1,0 +1,8 @@
+﻿NIZAM verify started 2026-05-23T15:45:33Z
+Local=5d17b45d27a7af3b28798d9baf50bbd5e978ce6d
+Remote=5d17b45d27a7af3b28798d9baf50bbd5e978ce6d
+radar OK
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 0.62s
+governor_lib OK

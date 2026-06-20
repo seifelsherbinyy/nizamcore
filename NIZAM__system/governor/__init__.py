@@ -6,7 +6,6 @@ Components:
     cost_ceiling          — $50 soft / $300 hard / panic stop
     kill_switch           — NIZAM_KILL_ALL=1 panic stop
     sync_arbiter          — VPS-authoritative cross-plane arbitration
-    strict_local_maximum  — AHEL gate (separate keypair + LUKS + local model)
     utils                 — generic helpers (refactored from
                             HIFZ__github_version_control/scripts/
                             nizam_governor_lib.py per B1.1)
@@ -19,7 +18,6 @@ from . import (  # noqa: F401
     kill_switch,
     ledger_writer,
     strategy_sth,
-    strict_local_maximum,
     sync_arbiter,
     trace,
     utils,
@@ -31,7 +29,6 @@ __all__ = [
     "kill_switch",
     "ledger_writer",
     "strategy_sth",
-    "strict_local_maximum",
     "sync_arbiter",
     "trace",
     "utils",

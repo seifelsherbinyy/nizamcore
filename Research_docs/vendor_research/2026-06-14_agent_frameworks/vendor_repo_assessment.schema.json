@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/vendor_repo_assessment.schema.json",
+  "title": "NIZAM vendor repo assessment row",
+  "type": "object",
+  "required": [
+    "repo_name",
+    "url",
+    "stars",
+    "license",
+    "useful_patterns",
+    "risks",
+    "score",
+    "decision_label"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "repo_name": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "stars": { "type": "integer", "minimum": 0 },
+    "forks": { "type": "integer", "minimum": 0 },
+    "license": { "type": "string" },
+    "release_date": { "type": ["string", "null"] },
+    "latest_commit": { "type": ["string", "null"] },
+    "main_language": { "type": ["string", "null"] },
+    "dependency_manager": { "type": ["string", "null"] },
+    "security_policy": { "type": "boolean" },
+    "useful_patterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "score": {
+      "type": "object",
+      "required": ["total", "max"],
+      "properties": {
+        "total": { "type": "number" },
+        "max": { "type": "number" },
+        "dimensions": { "type": "object" }
+      }
+    },
+    "decision_label": {
+      "type": "string",
+      "enum": [
+        "adopt_dependency",
+        "adapt_pattern",
+        "read_only_reference",
+        "reject_for_now"
+      ]
+    },
+    "integration_position": { "type": "string" },
+    "nizam_module_mapping": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

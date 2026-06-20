@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+GOV="$HOME/.hermes/plugins/nizam-governor/__init__.py"
+echo "########## 2b. ENCLOSING FUNCTION + TRIGGER for line 433 ##########"
+echo "--- lines 396-436 ---"
+awk 'NR>=396 && NR<=436{printf "%d: %s\n", NR, $0}' "$GOV"
+echo "--- which def encloses 433 (nearest 'def' above) ---"
+awk 'NR<=433 && /^def |^async def |^    def /{last=NR": "$0} END{print last}' "$GOV"
+echo "--- is that function a registered hook? show register() hook bindings ---"
+awk 'NR>=977 && NR<=996{printf "%d: %s\n", NR, $0}' "$GOV"
+echo "########## DONE_2B ##########"

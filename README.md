@@ -35,7 +35,6 @@ A fourth foundation module — **SUKOON** (سكون — "calm") — tracks recov
 | `MUNAWARA__tactical_strategy/` | 2 | 1/3/5-yr → quarters → weeks → battles |
 | `MAL__financial_engine/` | 2 | personal-finance milestone ladder + exchange-rate verification |
 | `BADAN__body_health_system/` | 2 | advisory health-signal tracking (not diagnostic) |
-| `AHEL__family_network/` | 3 | family map (strictest privacy) |
 
 Each folder uses dual naming `ARABIC_SYMBOL__technical_function` so humans and machines both understand it.
 
@@ -57,7 +56,7 @@ This repo is **public** for the framework and scaffolding. Personal contents are
 
 **Public (in this repo):** schemas, templates, skills, policies, docs, READMEs, master registries, the architecture.
 
-**Strict-local (never committed):** `raw/`, `triaged/`, `sessions/`, `signals/`, `YAWMIYAT__journaling/sessions/`, `mirrors/`, `weekly/`, `overload_flags.jsonl`, `HAJR/`, `SOUL.md`, all Phase 2/3 ledgers, future `MAL/`, `BADAN/`, `AHEL/` contents, and any `.env` / token / secret files.
+**Strict-local (never committed):** `raw/`, `triaged/`, `sessions/`, `signals/`, `YAWMIYAT__journaling/sessions/`, `mirrors/`, `weekly/`, `overload_flags.jsonl`, `HAJR/`, `SOUL.md`, all Phase 2/3 ledgers, future `MAL/` and `BADAN/` contents, and any `.env` / token / secret files.
 
 The framework is openly shareable; the personal life data inside it is not. Treat this repo as a **structural manifest** of how the system works, not a journal.
 

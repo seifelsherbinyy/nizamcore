@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-06-14T12:00:00Z",
+  "gates": {
+    "GATE-0": { "status": "pass", "passed_at": "2026-06-14T08:00:00Z" },
+    "GATE-1": { "status": "pass", "passed_at": "2026-06-14T10:00:00Z" },
+    "GATE-2": { "status": "pass", "passed_at": "2026-06-14T10:30:00Z" },
+    "GATE-3A": { "status": "pass", "passed_at": "2026-06-14T11:00:00Z" },
+    "GATE-3B": { "status": "pass", "passed_at": "2026-06-14T11:30:00Z" },
+    "GATE-4": { "status": "pass", "passed_at": "2026-06-14T12:00:00Z" },
+    "GATE-5": { "status": "pass", "passed_at": "2026-06-14T12:30:00Z" },
+    "GATE-6": { "status": "pass", "passed_at": "2026-06-14T13:00:00Z" },
+    "GATE-7": { "status": "pass", "passed_at": "2026-06-14T13:30:00Z" }
+  },
+  "layers": {
+    "L1": "complete",
+    "L2": "complete",
+    "L3": "complete",
+    "L4": "complete",
+    "L5": "complete",
+    "L6": "complete",
+    "L7": "complete",
+    "L8": "complete",
+    "K1": "complete",
+    "K2": "complete",
+    "K3": "complete",
+    "K4": "complete",
+    "K5": "complete",
+    "K6": "complete",
+    "K7": "complete"
+  },
+  "phases": {
+    "0": "complete",
+    "1": "complete",
+    "2": "complete",
+    "3A": "complete",
+    "3B": "complete",
+    "4": "complete",
+    "5": "complete",
+    "6": "complete",
+    "7": "complete"
+  }
+}

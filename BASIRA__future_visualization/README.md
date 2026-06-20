@@ -11,7 +11,7 @@ Visualization requires *data accumulation*. With Phase 1 (cognitive modules) and
 ## Planned scope (when Phase 3 fully activates)
 - **Graph view**: connections between modules, ideas, decisions, learnings.
 - **Timeline view**: chronological narrative of TAFRIGH → SHURA → NAQD → QARAR → HIKMAH flow.
-- **Dashboard view**: SUKOON trend, MAL milestone, MUNAWARA battle outcomes, AHEL cadence.
+- **Dashboard view**: SUKOON trend, MAL milestone, MUNAWARA battle outcomes, and BADAN trends.
 - **Agentic visualization**: scheduled agents (see `NIZAM__system/docs/SCHEDULED_AGENTS.md`) auto-generate weekly visual recaps.
 
 ## Tooling candidates

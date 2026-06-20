@@ -19,7 +19,7 @@ Protocols are **chained skill sequences** for routine cadences. Each protocol is
 
 | Protocol | Cadence | Budget | Skills chained |
 |---|---|---|---|
-| [monthly_close](monthly_close.md) | 1st of month | ~60 min | `/mal-exchange-rate-check` → `/mal-milestone-check` → monthly review → BADAN monthly trend → `/ahel-connection-cadence` |
+| [monthly_close](monthly_close.md) | 1st of month | ~50 min | `/mal-exchange-rate-check` → `/mal-milestone-check` → monthly review → BADAN monthly trend |
 | [quarterly_close](quarterly_close.md) | End of quarter | ~2 hr | `/munawara-quarter-plan` → cross-domain `/shura-brainstorm` → TARIQ pillar check |
 | [annual_close](annual_close.md) | Late December | ~4–6 hr | `/tariq-annual-review` → `/shura-emerge` 365d → HIKMAH crystallization → 10/15/20-yr refresh |
 

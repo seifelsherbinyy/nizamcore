@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-06-14T14:12:36Z",
+  "deployment": "production_ready",
+  "google_connectors": {
+    "oauth_live": true,
+    "write_scopes_ok": true,
+    "write_smoke_vps": true,
+    "capabilities": {
+      "calendar": ["create_event", "update_event", "delete_event", "read_calendar"],
+      "tasks": ["create_task", "update_task", "complete_task", "delete_task", "read_tasks"],
+      "gmail": ["send_message", "trash_message", "untrash_message", "read_gmail"]
+    }
+  },
+  "vps": {
+    "host": "nizam@31.97.154.5",
+    "wiring_pass": true,
+    "pulsation_crontab": true,
+    "hermes_pulses_removed": true
+  },
+  "gates": {
+    "audit_vps_wiring": true,
+    "production_ready": true,
+    "go_live_completion": true
+  }
+}

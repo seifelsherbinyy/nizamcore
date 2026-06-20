@@ -33,11 +33,10 @@ The defaults below mirror the persona contracts and `agents.registry.yaml`. They
 | Tahir (MARSAD) | Tariq | Strategic context |
 | Tahir (MARSAD) | Salman | Inform brainstorm |
 | Hayat (BADAN) | Salman, Hazim, Coordinator | Biometric annotation |
-| Yusra (AHEL) | Coordinator only | Strict-local-maximum sandbox; no outward edges |
 | Sadiq (MAL) | Tariq, Khalid | Financial constraint propagation |
 | Ammar (STEWARD) | Any | Governance / kill / cost |
 
-**Disallowed by default:** Yusra (AHEL) → any external agent. Any agent → Yusra except Coordinator. Any agent → Ammar except as a `gate_decisions` event (Ammar is a gate, not a delegate).
+**Disallowed by default:** Any agent → Ammar except as a `gate_decisions` event (Ammar is a gate, not a delegate).
 
 ## When `needs_operator_confirm` flips on
 

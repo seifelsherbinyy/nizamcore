@@ -30,9 +30,6 @@
 | `body_signal` | `body_signal` | `BADAN/daily_signals/` | `/badan-daily-signal` | strict_local |
 | `body_review` | `body_weekly_review` | `BADAN/weekly_reviews/` | `/badan-weekly-review` | strict_local |
 | (red flag) | `body_red_flag` | `BADAN/red_flags/` | `/badan-red-flag-check` | strict_local |
-| `family_person` | `family_person` | `AHEL/family_tree/` | `/ahel-add-person` | strict_local_maximum |
-| `family_support` | `family_support_event` | `AHEL/support_ledger/` | `/ahel-support-log` | strict_local_maximum |
-| (cadence check) | `note_frontmatter` | `AHEL/connection_cadence/` | `/ahel-connection-cadence` | strict_local_maximum |
 | (event row) | `event_ledger` | `EVENT_LEDGER.jsonl` | (every skill appends) | review_before_commit |
 
 ## Universal frontmatter contract
@@ -98,7 +95,7 @@ Each schema file is committable. Major schema changes:
 
 | Level | Meaning | Where it lives |
 |---|---|---|
-| `strict_local_maximum` | Never leaves disk; never syncs anywhere | AHEL/** |
+| `strict_local_maximum` | Never leaves disk; never syncs anywhere | Explicitly classified maximum-sensitivity records |
 | `strict_local` | Never commits; on-disk only | TAFRIGH/raw, triaged, SHURA/sessions, NAQD/sessions, SUKOON/signals, MAL/**, BADAN/**, TARIQ content, MUNAWARA content, all P2/P3 ledgers, SOUL.md |
 | `review_before_commit` | Committable only after manual review | ledgers (EVENT/DECISION/LEARNING), log.md |
 | `private_github` | Default-committable in private repo | schemas, templates, skills, protocols, workflows, docs, personas, manifests |

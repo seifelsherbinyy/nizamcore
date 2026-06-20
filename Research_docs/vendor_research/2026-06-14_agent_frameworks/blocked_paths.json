@@ -1,0 +1,20 @@
+{
+  "purpose": "Paths that must never enter research clones, graphify scans, or external egress",
+  "generated": "2026-06-14",
+  "blocked_globs": [
+    ".env",
+    "**/.env",
+    "**/oauth-token.json",
+    "**/oauth-client.json",
+    "**/NIZAM-secrets.json",
+    "YAWMIYAT__journaling/**",
+    "BADAN__body_health_system/daily_signals/**",
+    "SUKOON__recovery_first/**",
+    "NIZAM__system/ledgers/*.jsonl",
+    "TAFRIGH__brain_dumper/raw/**",
+    "SOUL.md",
+    "user_deep.md",
+    "HAJR__quarantine/**"
+  ],
+  "cross_ref": "NIZAM__system/policies/PRIVACY_CLASSIFICATION.json"
+}

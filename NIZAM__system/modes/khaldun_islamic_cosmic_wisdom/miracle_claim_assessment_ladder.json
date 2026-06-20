@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "grades": {
+    "strong_sign": {
+      "requires": ["text_stability", "meaning_stability", "scientific_stability", "non_forced_interpretation"],
+      "allowed_output": "C_linguistic_or_tafsir_possibility with high caution"
+    },
+    "moderate_reflection": {
+      "requires": ["text_stability", "scientific_consensus"],
+      "allowed_output": "Reflection on creation; not miracle proof"
+    },
+    "weak_speculative": {
+      "requires": [],
+      "allowed_output": "G_speculative_unverified only"
+    },
+    "rejected": {
+      "triggers": ["forced_reading", "outdated_science", "text_instability", "aqidah_risk"],
+      "allowed_output": "H_reject_aqidah_risk or compassionate correction"
+    }
+  },
+  "dimensions": {
+    "text_stability": "Qur'anic text unchanged and reference valid",
+    "meaning_stability": "Classical tafsir does not contradict forced reading",
+    "scientific_stability": "Claim matches current consensus",
+    "non_forced_interpretation": "Reading not dependent on single obscure lemma"
+  }
+}

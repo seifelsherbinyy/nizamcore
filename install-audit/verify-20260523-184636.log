@@ -1,0 +1,11 @@
+﻿[2026-05-23 18:46:36] NIZAM verification started
+[2026-05-23 18:46:36] Git parity OK: 5d17b45d27a7af3b28798d9baf50bbd5e978ce6d
+[2026-05-23 18:46:39] Startup ready: version=3.3.0, gates_ok=True
+radar OK
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 0.64s
+[2026-05-23 18:46:40] MARSAD pytest OK: 77 passed
+governor_lib OK
+[2026-05-23 18:46:40] Governor lib import OK
+[2026-05-23 18:46:41] Verification complete

@@ -28,12 +28,6 @@ Workflows are **scenario-driven skill chains**. Unlike protocols (cadence-driven
 |---|---|---|
 | [body_routine](body_routine.md) | Daily / weekly body tracking + red-flag handling | `/badan-daily-signal` → `/badan-weekly-review` → `/badan-red-flag-check` (if symptom matched) |
 
-## Family
-
-| Workflow | Trigger scenario | Skills chained |
-|---|---|---|
-| [family_routine](family_routine.md) | Family network maintenance, strict-local | `/ahel-add-person` → `/ahel-connection-cadence` (weekly) → `/ahel-support-log` (as-needed) |
-
 ## Synthesis
 
 | Workflow | Trigger scenario | Skills chained |
@@ -54,7 +48,6 @@ See [`protocols/_PROTOCOLS_INDEX.md`](../protocols/_PROTOCOLS_INDEX.md).
 
 ## Workflows that span phases
 - `idea_to_project` references INTAJ (Phase 2 shell-only). Until INTAJ skills are live, fragments accumulate in `SHURA/sessions/` with `phase_2_target` frontmatter.
-- `family_routine` is AHEL-bound (Phase 3 live).
 - `strategy_rollup` requires TARIQ + MUNAWARA (both Phase 2 live).
 
 ## When to write a new workflow

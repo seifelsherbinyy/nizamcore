@@ -37,7 +37,7 @@ CRISIS_KEYWORDS = {"crisis", "emergency", "panic", "overload red",
                    "i can't breathe", "can't breathe", "suicidal"}
 
 HIMAYAH_HITS = ("[strict_local_maximum→github]", "leak strict_local",
-                "publish ahel")
+             "publish maximum-private data")
 
 SUKOON_HITS = ("overload yellow", "rest gate", "downshift")
 

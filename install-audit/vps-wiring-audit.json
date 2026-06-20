@@ -1,0 +1,111 @@
+{
+  "generated_at": "2026-06-14T14:17:50Z",
+  "vps": "nizam@31.97.154.5",
+  "remote_root": "/home/nizam/nizamcore",
+  "remote_hermes": "/home/nizam/.hermes",
+  "raw": {
+    "filesystem": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "OK:/home/nizam/nizamcore/NIZAM__system/companion\nOK:/home/nizam/nizamcore/NIZAM__system/relay\nOK:/home/nizam/nizamcore/NIZAM__system/connectors\nOK:/home/nizam/nizamcore/tools/deploy_nizam_vps.py\nOK:/home/nizam/nizamcore/tools/verify_google_connectors.py\nOK:/home/nizam/.hermes/plugins/nizam-governor/__init__.py\nOK:/home/nizam/.hermes/scripts/nizam-scheduled-pulse.py\nOK:/home/nizam/.hermes/connectors/oauth-token.json\nOK:/home/nizam/nizamcore/NIZAM__system/relay/.env",
+      "stderr": ""
+    },
+    "hermes_gateway_cron": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "96848 /home/nizam/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main gateway run --replace\n✓ Gateway is running — cron jobs will fire automatically\n  PID: 96848\n\n  1 active job(s)\n  Next run: 2026-06-15T18:10:13.236817+03:00",
+      "stderr": ""
+    },
+    "hermes_env_keys": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "NIZAM_TIMEZONE\nOPENROUTER_API_KEY\nTELEGRAM_ALLOWED_USERS\nTELEGRAM_BOT_TOKEN\nTELEGRAM_HOME_CHANNEL",
+      "stderr": ""
+    },
+    "relay_env_keys": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "GOOGLE_OAUTH_CLIENT_SECRETS\nGOOGLE_OAUTH_TOKEN\nNIZAM_LIVE_CONNECTORS_APPROVED\nNIZAM_LIVE_MODEL_APPROVED\nNIZAM_TELEGRAM_ALLOWED_IDS\nRELAY_MODE\nTELEGRAM_BOT_TOKEN",
+      "stderr": ""
+    },
+    "live_connectors_approved": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "approved",
+      "stderr": ""
+    },
+    "oauth_probe": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "{\"ok\": true, \"scopes\": [\"https://www.googleapis.com/auth/calendar\", \"https://www.googleapis.com/auth/gmail.compose\", \"https://www.googleapis.com/auth/gmail.modify\", \"https://www.googleapis.com/auth/tasks\"], \"write_scopes_ok\": true, \"calendar_count_sample\": 1, \"tasks_count_sample\": 0, \"gmail_count_sample\": 1}",
+      "stderr": ""
+    },
+    "oauth_probe_parsed": {
+      "payload": {
+        "ok": true,
+        "scopes": [
+          "https://www.googleapis.com/auth/calendar",
+          "https://www.googleapis.com/auth/gmail.compose",
+          "https://www.googleapis.com/auth/gmail.modify",
+          "https://www.googleapis.com/auth/tasks"
+        ],
+        "write_scopes_ok": true,
+        "calendar_count_sample": 1,
+        "tasks_count_sample": 0,
+        "gmail_count_sample": 1
+      }
+    },
+    "oauth_write_smoke": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "}",
+      "stderr": ""
+    },
+    "production_status": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "{\n  \"production_ready\": true,\n  \"live\": {\n    \"telegram\": true,\n    \"model\": true,\n    \"vps_gateway\": true,\n    \"telemetry\": true,\n    \"oauth\": true\n  }\n}",
+      "stderr": ""
+    },
+    "governor_nizam_root": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "NIZAM_ROOT = os.path.join(HOME, \"nizamcore\")",
+      "stderr": ""
+    },
+    "user_crontab": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "*/15 * * * * cd /home/nizam/nizamcore && PYTHONPATH=/home/nizam/nizamcore /home/nizam/.hermes/hermes-agent/venv/bin/python tools/run_pulsation_loops.py >> /home/nizam/.hermes/nizam-scheduler.log 2>&1",
+      "stderr": ""
+    },
+    "pulse_script": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "4",
+      "stderr": ""
+    },
+    "hermes_config_plugins": {
+      "ok": true,
+      "exit_code": 0,
+      "stdout": "plugins:\n  enabled:\n  - nizam-governor\n  disabled: []",
+      "stderr": ""
+    }
+  },
+  "wiring_pass": true,
+  "checks": {
+    "filesystem": true,
+    "hermes_gateway": true,
+    "hermes_cron_jobs": true,
+    "governor_plugin_path": true,
+    "hermes_env": true,
+    "relay_env": true,
+    "live_connectors_approved": true,
+    "oauth_live": true,
+    "oauth_write_smoke": true,
+    "production_ready": true,
+    "pulsation_crontab": true,
+    "pulse_script": true
+  },
+  "failures": []
+}

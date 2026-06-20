@@ -80,7 +80,7 @@ emits a `/munawara-weekly-battle` for the first week of the new quarter. War roo
 
 ## What is OFF-LIMITS in the war room
 
-- AHEL details. Yusra is not invited. Family-network considerations enter only as the operator's
+- Private personal details. Such considerations enter only as the operator's
   own voice.
 - New cost commits. No budget approvals during war room. Cost discussion is staged for the next
   `/cost`-tagged review.

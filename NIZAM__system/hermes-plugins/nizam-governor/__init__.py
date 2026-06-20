@@ -2,10 +2,8 @@
 NIZAM Governor — hermes plugin (Phase 1).
 
 Wires NIZAM governance over the single hermes agent:
-  HIMAYAH  - egress GOVERNANCE (v3): AHEL/family is ordinary context (block RETIRED, v3.1) but is
-             encrypted at rest (Fernet) and is written to the VPS ledger ONLY — never mirrored to
-             Drive (absence in the cloud, not just encryption). Per-tool egress audit + greenlist.
-             The model-call egress itself is ZDR-constrained (provider data_collection=deny).
+  HIMAYAH  - egress governance with per-tool audit, greenlist enforcement,
+             secret scrubbing, and ZDR-constrained model calls.
   SUKOON   - recovery-first downshift injected when overload flags are hot (>=2 red in 7d).
   Cost+Ledger - per-turn cost estimate -> NIZAM-COSTS.jsonl; events -> EVENT_LEDGER.jsonl.
   Persona modes - /shura (Salman brainstorm), /naqd (Hazim red-team) framing injection.
@@ -43,10 +41,9 @@ MODE_FILE = os.path.join(STATE_DIR, "mode")
 # --- P1 capture-first dual-write ---
 LEARNING_LEDGER = os.path.join(LEDGER_DIR, "LEARNING_LEDGER.jsonl")
 DEAD_LETTER = os.path.join(LEDGER_DIR, "DEAD_LETTER.jsonl")
-STRICT_LOCAL_CAPTURE = os.path.join(NIZAM_ROOT, "AHEL__family_network", "strict_local_capture.jsonl")
 SEEN_INDEX = os.path.join(STATE_DIR, "seen_keys")
 MIRROR_STATE = os.path.join(STATE_DIR, "last_mirror")
-MIRROR_DIR = os.path.join(STATE_DIR, "mirror")  # staging dir for AHEL-filtered ledger copies mirrored to Drive
+MIRROR_DIR = os.path.join(STATE_DIR, "mirror")
 RCLONE = "/home/nizam/.local/bin/rclone"            # absolute: works under cron/systemd (no PATH/HOME reliance)
 RCLONE_CONF = "/home/nizam/.config/rclone/rclone.conf"
 DRIVE_REMOTE = "drive-crypt:"          # encrypt-before-upload; Drive stores ciphertext
@@ -68,7 +65,7 @@ DEFAULT_BUDGETS = {"providers": {"openrouter": 30.0, "anthropic": 20.0}, "models
 AGENT_PERSONAS = os.path.join(STATE_DIR, "agent_personas.json")  # canonical persona map (= ~/.hermes/nizam/)
 LAST_PERSONA = os.path.join(STATE_DIR, "last_persona")
 QUIET_FLAG = os.path.join(STATE_DIR, "quiet")
-MODE_TO_CODENAME = {"shura": "Salman", "naqd": "Hazim"}
+MODE_TO_CODENAME = {"shura": "Salman", "naqd": "Hazim", "hikmah": "Khaldun"}
 DEFAULT_PERSONA = "Amin"                # no active command -> capture (near-silent)
 _PERSONA_CACHE = {"mtime": 0.0, "data": None}
 
@@ -103,8 +100,6 @@ PRICING = {
     "claude-sonnet-4-6": (0.003, 0.015),
 }
 
-# AHEL markers — v3.1: family content is ORDINARY context (no block); marker drives at-rest encryption.
-AHEL_MARKERS = re.compile(r"(?i)(#ahel\b|\[ahel\]|#family\b|\[family\])")
 
 # Secret-scrubber: at-rest write-path redaction (auto-detect + explicit markers).
 ATREST_KEY = os.path.join(STATE_DIR, "atrest.key")
@@ -267,13 +262,8 @@ def _mark_seen(key):
         pass
 
 
-def _filter_ahel(src_path, dst_path):
-    """Copy src->dst dropping EVERY row with ahel truthy. INVARIANT: no ahel:true row is ever mirrored,
-    in ANY ledger (absence on Drive, not just encryption). Defense-in-depth: the structured check drops
-    valid dicts with ahel truthy; a text-level backstop drops even MALFORMED lines that carry an ahel:true
-    marker (so corrupted rows can't leak). The backstop is safe — genuine ahel:true is unescaped JSON,
-    whereas an ahel string inside a captured message is escaped (\\"ahel\\") and won't match.
-    Returns kept-row count, or -1 if the source is missing/unreadable."""
+def _copy_ledger(src_path, dst_path):
+    """Copy non-empty JSONL rows into encrypted mirror staging."""
     try:
         if not os.path.exists(src_path):
             return -1
@@ -284,42 +274,28 @@ def _filter_ahel(src_path, dst_path):
                 ls = line.strip()
                 if not ls:
                     continue
-                drop = ('"ahel": true' in ls) or ('"ahel":true' in ls)   # text backstop (catches corrupted lines)
-                if not drop:
-                    try:
-                        r = json.loads(ls)
-                        if isinstance(r, dict) and r.get("ahel"):
-                            drop = True
-                    except Exception:
-                        pass   # unparseable & no ahel marker -> safe to keep
-                if drop:
-                    continue   # AHEL -> VPS-only, never mirrored
-                dst.write(ls + "\n"); kept += 1
+                dst.write(ls + "\n")
+                kept += 1
         return kept
     except Exception:
         return -1
 
 
 def _build_mirror_set():
-    """Stage AHEL-filtered copies of every OPERATIONAL ledger for the Drive mirror. The AHEL
-    strict_local_capture file is NEVER staged — enforced by the `never` set AND the per-row ahel
-    filter above. Returns {basename: kept_rows}."""
+    """Stage operational ledgers for the encrypted Drive mirror."""
     ledgers = [LEARNING_LEDGER, EVENTS, EGRESS_AUDIT, COSTS, BODY_LEDGER]
-    never = {STRICT_LOCAL_CAPTURE}            # AHEL strict_local capture: never leaves the VPS
     _ensure(MIRROR_DIR)
     counts = {}
     for src in ledgers:
-        if src in never:                      # belt-and-suspenders: AHEL file can never be in the set
-            continue
         base = os.path.basename(src)
-        kept = _filter_ahel(src, os.path.join(MIRROR_DIR, base))
+        kept = _copy_ledger(src, os.path.join(MIRROR_DIR, base))
         if kept >= 0:
             counts[base] = kept
     return counts
 
 
 def _mirror_execute():
-    """Run one encrypted Drive mirror cycle (AHEL-filtered staging + rclone)."""
+    """Run one encrypted Drive mirror cycle."""
     now = time.time()
     _ensure(STATE_DIR)
     with open(MIRROR_STATE, "w") as f:
@@ -331,8 +307,8 @@ def _mirror_execute():
         [RCLONE, "--config", RCLONE_CONF, "copy", MIRROR_DIR, DRIVE_REMOTE + DRIVE_LEDGER_DIR],
         timeout=180, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
-    _event("drive_mirror", files=sorted(counts.keys()), rows=counts, ahel_excluded=True)
-    _egress_audit("google_drive", "drive_mirror", files=len(counts), ahel_excluded=True)
+    _event("drive_mirror", files=sorted(counts.keys()), rows=counts)
+    _egress_audit("google_drive", "drive_mirror", files=len(counts))
 
 
 def _mirror_trailing_flush():
@@ -433,12 +409,11 @@ def _encrypt_atrest(text):
         return None
 
 
-def _capture(text, session, platform, ahel=False, msg_id=None):
+def _capture(text, session, platform, msg_id=None):
     """Capture-first durability: persist every inbound BEFORE the LLM.
-    Secrets scrubbed (auto + #secret/[[redact]]); AHEL text encrypted at rest on VPS.
-    Dual-write: ordinary rows -> VPS LEARNING_LEDGER + async encrypted Drive mirror;
-    AHEL (ahel:true / strict_local_maximum) -> LEARNING_LEDGER on the VPS ONLY, never mirrored to Drive.
-    Idempotent; failures -> DEAD_LETTER."""
+    Secrets are scrubbed before persistence. Rows are written to the VPS
+    learning ledger and mirrored asynchronously through encrypted Drive.
+    Idempotent failures enter DEAD_LETTER."""
     if not text:
         return
     try:
@@ -447,25 +422,15 @@ def _capture(text, session, platform, ahel=False, msg_id=None):
             return
         scrubbed, redactions = _scrub(text)
         row = {"ts": _utc(), "source": platform or "telegram", "session": session,
-               "dedupe_key": key, "ahel": bool(ahel)}
+               "dedupe_key": key, "text": scrubbed}
         if redactions:
             row["redacted"] = redactions
-        if ahel:
-            enc = _encrypt_atrest(scrubbed)
-            if enc:
-                row["text_enc"] = enc
-                row["enc"] = "fernet"
-            else:
-                row["text"] = scrubbed
-                row["enc"] = "unavailable"
-        else:
-            row["text"] = scrubbed
         _append(LEARNING_LEDGER, row)
         _mark_seen(key)
-        _event("capture_first", dedupe_key=key, ahel=bool(ahel), chars=len(text), redactions=len(redactions))
+        _event("capture_first", dedupe_key=key, chars=len(text), redactions=len(redactions))
         if redactions:
             _event("secret_scrubbed", count=len(redactions), kinds=redactions)
-        _mirror_ledgers_async()   # mirrors ALL operational ledgers, AHEL-filtered (AHEL stays VPS-only)
+        _mirror_ledgers_async()
     except Exception as e:
         _append(DEAD_LETTER, {"ts": _utc(), "stage": "capture_first",
                               "error": str(e)[:200], "session": session})
@@ -820,21 +785,19 @@ def _pre_dispatch(event=None, **kwargs):
                           or getattr(src, "key", "") or getattr(src, "user_id", "") or "")
         if not session and isinstance(event, dict):
             session = str(event.get("session_id") or event.get("chat_id") or "")
-        ahel = bool(text and AHEL_MARKERS.search(text))
         # Hard kill switch — FULL halt FIRST: no capture, no LLM, nothing persists. (checked before capture)
         if os.path.exists(KILL_FLAG) or os.environ.get("NIZAM_KILL_ALL") == "1":
             _event("dispatch_skip", reason="NIZAM_KILL_ALL")
             return {"action": "skip", "reason": "NIZAM_KILL_ALL"}
-        # CAPTURE-FIRST: persist every inbound (secrets scrubbed; AHEL encrypted at rest) BEFORE the LLM.
+        # CAPTURE-FIRST: persist every inbound, secret-scrubbed, BEFORE the LLM.
         if text:
-            _capture(text, session, "telegram", ahel=ahel, msg_id=msg_id)
+            _capture(text, session, "telegram", msg_id=msg_id)
             route = _resolve_route(text)
             _set_active_codename(route.get("target"))
             if route.get("sukoon_overlay"):
                 _event("route_sukoon_overlay", target=route.get("target"),
                        steps=route.get("resolver_steps"), ir6="tone_only")
         # Pause — buffer non-command messages; slash-commands (e.g. /resume) still run.
-        # (AHEL hard-block RETIRED per v3.1: family content is ordinary, allowed context.)
         if os.path.exists(PAUSE_FLAG) and text and not text.lstrip().startswith("/"):
             return {"action": "skip", "reason": "paused"}
         # SECRET-SCRUB UPSTREAM: if the inbound carries secrets, REWRITE so NO downstream sink
@@ -864,6 +827,22 @@ def _pre_llm(user_message="", model="", platform="", session_id="", **kwargs):
         if p:
             parts.append("[Active persona: %s — %s / %s] %s" % (
                 code, p.get("module", ""), p.get("function", ""), p.get("contract", "")))
+            if _read_mode() == "hikmah":
+                charter = os.path.join(
+                    os.path.dirname(__file__),
+                    "..",
+                    "..",
+                    "modes",
+                    "khaldun_islamic_cosmic_wisdom",
+                    "mode_charter.md",
+                )
+                try:
+                    with open(os.path.normpath(charter), encoding="utf-8") as cf:
+                        parts.append("[Khaldun mode charter]\n" + cf.read()[:2500])
+                except Exception:
+                    parts.append(
+                        "[Khaldun mode] Sunni boundaries; Egyptian Arabic; no fatwa; classify claims."
+                    )
             voice = (personas.get("cross_cutting") or {}).get("voice")
             if voice:
                 parts.append("[Voice] " + voice)
@@ -879,7 +858,7 @@ def _pre_llm(user_message="", model="", platform="", session_id="", **kwargs):
             parts.append("[Capacity: %s — daily-ask budget %s] Objective biometrics only; never infer a "
                          "subjective inner state; never claim to feel." % (band, budget))
         parts.append(
-            "[HIMAYAH] strict_local and family/AHEL content never leaves the device or a non-ZDR lane. "
+            "[HIMAYAH] strict_local content uses only approved encrypted or ZDR lanes. "
             "Cloud calls are ZDR-constrained (provider data_collection=deny)."
         )
         if parts:
@@ -1031,6 +1010,14 @@ def _cmd_naqd(raw_args):
     return "Red-team mode (Hazim) on. Send the plan or claim; I'll find the failure modes. /shura to switch."
 
 
+def _cmd_hikmah(raw_args):
+    _set_mode("hikmah")
+    return (
+        "Islamic Cosmic Wisdom mode (Khaldun) on. Egyptian Arabic; classify claims A–H; "
+        "no fatwa. /shura or /naqd to switch; /dump to capture."
+    )
+
+
 def _cmd_quiet(raw_args):
     if os.path.exists(QUIET_FLAG):
         try:
@@ -1079,6 +1066,7 @@ def register(ctx):
     ctx.register_command("kill", _cmd_kill, "Hard kill switch — halt all processing")
     ctx.register_command("shura", _cmd_shura, "Brainstorm mode (Salman)")
     ctx.register_command("naqd", _cmd_naqd, "Red-team mode (Hazim)")
+    ctx.register_command("hikmah", _cmd_hikmah, "Islamic Cosmic Wisdom mode (Khaldun)")
     ctx.register_command("quiet", _cmd_quiet, "Toggle persona self-introductions")
     ctx.register_command("greenlight", _cmd_greenlight, "List/approve outbound egress integrations")
     ctx.register_command("muhasaba", _cmd_muhasaba, "Baseline-vs-now: soul mutations + flow over time")

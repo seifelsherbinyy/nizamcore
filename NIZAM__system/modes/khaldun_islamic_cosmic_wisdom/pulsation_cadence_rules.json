@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "timezone": "Africa/Cairo",
+  "loop_a_companion_checkin_hours": 3,
+  "loop_b_islamic_reminder_hours": 2,
+  "quiet_hours": {
+    "start": "22:30",
+    "end": "07:00"
+  },
+  "collision_rules": {
+    "when_both_due": "companion_checkin_wins",
+    "defer_loop_b_minutes": 30
+  },
+  "low_capacity_downshift": {
+    "trigger_capacity": ["yellow", "red"],
+    "reminder_style": "tiny_mode"
+  },
+  "max_proactive_sends_per_day": 10,
+  "max_islamic_reminders_per_day": 6,
+  "cooldown_minutes": 30,
+  "min_relevance": 0.7
+}

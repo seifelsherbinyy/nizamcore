@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://nizam.local/schemas/user_profile.schema.json",
   "title": "USER_PROFILE — operator surface model",
-  "description": "What every agent is allowed to read about the operator without an AHEL gate. The 'public face' inside the system. Loaded by the coordinator before any LLM call. Mirroring updates feed this through /feedback + GEPA; structural overhauls require an operator approval ledger row. Privacy class: review_before_commit.",
+  "description": "What every agent is allowed to read about the operator. The 'public face' inside the system. Loaded by the coordinator before any LLM call. Mirroring updates feed this through /feedback + GEPA; structural overhauls require an operator approval ledger row. Privacy class: review_before_commit.",
   "type": "object",
   "additionalProperties": false,
   "required": [

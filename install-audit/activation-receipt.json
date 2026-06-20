@@ -1,0 +1,51 @@
+{
+  "generated_at": "2026-06-13T21:13:12Z",
+  "operator_approved": true,
+  "activation_vars": {
+    "NIZAM_LIVE_MODEL_APPROVED": "1",
+    "NIZAM_LIVE_CONNECTORS_APPROVED": "1",
+    "NIZAM_DEPLOYMENT_APPROVED": "1",
+    "NIZAM_REMOTE_TELEMETRY_APPROVED": "1"
+  },
+  "relay_mode": "live",
+  "real_persona_runtime": "1",
+  "env_status": {
+    "root_env": 12,
+    "relay_env": 25,
+    "telegram_ready": true,
+    "model_ready": true
+  },
+  "checks": {
+    "relay_dry_run": {
+      "exit_code": 0,
+      "passed": true
+    },
+    "pilot_readiness": {
+      "local_decision": "GO",
+      "decision": "GO",
+      "local_blockers": [],
+      "blockers": []
+    },
+    "telegram_get_me": {
+      "ok": true,
+      "username": "nizam_relay_sherbiny_bot"
+    },
+    "telegram_poll_once": {
+      "processed": 0,
+      "skipped": "hermes_gateway_owns_getUpdates",
+      "passed": true
+    },
+    "model_smoke": {
+      "reply": "Understood. Live model smoke test captured. All systems nominal. Ready for your command, NIZAM.",
+      "status": "ok",
+      "provider": "openrouter",
+      "model": "deepseek/deepseek-v4-flash",
+      "latency_ms": 7312,
+      "input_tokens": 36,
+      "output_tokens": 86,
+      "cost_usd": 0.0,
+      "fallback_reason": null
+    }
+  },
+  "live_ready": true
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nizam/pulsation/receipt.schema.json",
+  "title": "Pulsation dry-run receipt",
+  "type": "object",
+  "required": ["run_at", "dry_run", "loop_evaluated"],
+  "properties": {
+    "run_at": { "type": "string" },
+    "dry_run": { "type": "boolean" },
+    "loop_evaluated": { "enum": ["a", "b", "all"] },
+    "evaluation": { "type": "object" },
+    "message": { "type": "object" },
+    "send": { "type": "object" },
+    "send_status": { "type": "string" },
+    "skipped_reason": { "type": "string" },
+    "council": { "type": "object" }
+  }
+}

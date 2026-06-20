@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Context refresh before Khaldun send",
+  "type": "object",
+  "required": ["refreshed_at", "sources_checked", "sources_found", "missing_sources", "confidence"],
+  "properties": {
+    "refreshed_at": { "type": "string", "format": "date-time" },
+    "sources_checked": { "type": "array", "items": { "type": "string" } },
+    "sources_found": { "type": "array", "items": { "type": "string" } },
+    "missing_sources": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "privacy_level": { "enum": ["public_safe", "private_ai_ok", "strict_local", "secret"] },
+    "sukoon_capacity": { "enum": ["green", "yellow", "red", "unknown"] },
+    "honest_missing_statement_required": { "type": "boolean", "default": true }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-06-14T14:16:34Z",
+  "steps": [
+    {
+      "label": "verify_nizamcore",
+      "command": "powershell -NoProfile -File D:\\NIZAM\\scripts\\verify-nizamcore.ps1",
+      "exit_code": 0,
+      "passed": true,
+      "stdout_tail": "[2026-06-14 17:14:09] NIZAM verification started\n[2026-06-14 17:14:10] Git state: branch=cursor/router-stage-1-ir6-mirror-1 local=de2b3db9b0bff0c81fea8f4ef5c631f37a223892 remote_main=071e54c2d4cfcf7258471e4abb845542df113e8f parity=False\n[2026-06-14 17:14:13] Startup ready: version=3.3.0, gates_ok=True\n[2026-06-14 17:14:15] MARSAD pytest OK: 81 passed\n[2026-06-14 17:14:15] Governor lib import OK\n[2026-06-14 17:14:15] Verification complete\n",
+      "stderr_tail": ""
+    },
+    {
+      "label": "production_status",
+      "command": "D:\\NIZAM\\.venv\\Scripts\\python.exe D:\\NIZAM\\tools\\nizam_production_status.py",
+      "exit_code": 0,
+      "passed": true,
+      "stdout_tail": "_model\": {\n      \"configured\": true,\n      \"provider\": \"openrouter\",\n      \"reply\": \"Copy. \\\"Production model smoke test.\\\" Captured. No further context needed at this time. Standing by.\",\n      \"status\": \"ok\",\n      \"model\": \"deepseek/deepseek-v4-flash\",\n      \"latency_ms\": 1815,\n      \"input_tokens\": 137,\n      \"output_tokens\": 106,\n      \"cost_usd\": 0.0,\n      \"fallback_reason\": null\n    },\n    \"oauth_connectors\": {\n      \"files_present\": true,\n      \"write_scopes_ok\": true,\n      \"live_probe\": {\n        \"ok\": true,\n        \"scopes\": [\n          \"https://www.googleapis.com/auth/calendar\",\n          \"https://www.googleapis.com/auth/gmail.compose\",\n          \"https://www.googleapis.com/auth/gmail.modify\",\n          \"https://www.googleapis.com/auth/tasks\"\n        ],\n        \"write_scopes_ok\": true,\n        \"calendar_count_sample\": 1,\n        \"tasks_count_sample\": 0,\n        \"gmail_count_sample\": 1\n      }\n    },\n    \"hostinger_deployment\": {\n      \"ok\": true,\n      \"details\": [\n        \"gateway=running\",\n        \"env=ok\"\n      ],\n      \"mode\": \"remote_ssh\"\n    },\n    \"remote_telemetry\": {\n      \"ok\": true,\n      \"mode\": \"local_jsonl\",\n      \"metrics\": {\n        \"turns\": 210,\n        \"p50_latency_ms\": 0,\n        \"p95_latency_ms\": 1,\n        \"error_rate\": 0.0,\n        \"cost_usd\": 0.0\n      }\n    },\n    \"scheduled_telegram\": {\n      \"sent\": 0,\n      \"evaluated\": 1,\n      \"accepted\": 0,\n      \"telegram_get_me\": true\n    },\n    \"personal_data_import\": {\n      \"digest\": \"a8fd43eb056ccfda6452174ed2afa87e8c8c51c85f2f2e54719a50755ab31746\",\n      \"observation_count\": 3,\n      \"output\": \"C:\\\\Users\\\\PC\\\\AppData\\\\Local\\\\Temp\\\\tmpx5rk_0ok\\\\badan\\\\whoop-2026-06-14.jsonl\",\n      \"journal\": {\n        \"path\": \"C:\\\\Users\\\\PC\\\\AppData\\\\Local\\\\Temp\\\\tmpx5rk_0ok\\\\journal\\\\2026-06-13.json\",\n        \"date\": \"2026-06-13\"\n      }\n    }\n  },\n  \"live\": {\n    \"telegram\": true,\n    \"model\": true,\n    \"vps_gateway\": true,\n    \"telemetry\": true,\n    \"oauth\": true\n  },\n  \"production_ready\": true\n}\n",
+      "stderr_tail": ""
+    },
+    {
+      "label": "audit_vps_wiring",
+      "command": "D:\\NIZAM\\.venv\\Scripts\\python.exe D:\\NIZAM\\tools\\audit_vps_wiring.py",
+      "exit_code": 1,
+      "passed": false,
+      "stdout_tail": "",
+      "stderr_tail": "           ^^^^^^^^\n  File \"D:\\NIZAM\\tools\\audit_vps_wiring.py\", line 37, in run_ssh\n    proc = subprocess.run(\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\subprocess.py\", line 550, in run\n    stdout, stderr = process.communicate(input, timeout=timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\subprocess.py\", line 1209, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\PC\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\subprocess.py\", line 1630, in _communicate\n    raise TimeoutExpired(self.args, orig_timeout)\nsubprocess.TimeoutExpired: Command '['ssh', '-o', 'BatchMode=yes', 'nizam@31.97.154.5', \"grep -q '^NIZAM_LIVE_CONNECTORS_APPROVED=1' /home/nizam/nizamcore/NIZAM__system/relay/.env && echo approved || echo missing\"]' timed out after 90 seconds\n"
+    },
+    {
+      "label": "stress_test",
+      "command": "D:\\NIZAM\\.venv\\Scripts\\python.exe D:\\NIZAM\\tools\\stress_test_production.py",
+      "exit_code": 0,
+      "passed": true,
+      "stdout_tail": "{\n  \"stress_pass\": true,\n  \"failures\": [],\n  \"live\": {\n    \"telegram\": true,\n    \"model\": true,\n    \"vps_gateway\": true,\n    \"telemetry\": true,\n    \"oauth\": true\n  }\n}\n",
+      "stderr_tail": "\nFull report: D:\\NIZAM\\install-audit\\stress-test-report.json\n"
+    },
+    {
+      "label": "persona_matrix_telegram",
+      "command": "D:\\NIZAM\\.venv\\Scripts\\python.exe D:\\NIZAM\\tools\\persona_blurb_matrix.py --telegram-from-report",
+      "exit_code": 0,
+      "passed": true,
+      "stdout_tail": "{\n  \"ok\": true,\n  \"messages_sent\": 1,\n  \"chat_id\": 8001780136\n}\n",
+      "stderr_tail": ""
+    }
+  ],
+  "production_status": {
+    "production_ready": true,
+    "oauth": true
+  },
+  "vps_wiring": {
+    "wiring_pass": true,
+    "oauth_live": true,
+    "oauth_write_smoke": true,
+    "gateway_running": true,
+    "failures": []
+  },
+  "completion_ready": false
+}

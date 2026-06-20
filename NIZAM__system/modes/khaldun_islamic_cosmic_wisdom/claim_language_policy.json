@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "rules": {
+    "A_shari_established": {
+      "allowed_phrases_ar": ["يدل عليه", "ثبت في", "جاء في"],
+      "forbidden_phrases_ar": ["ربما يكون حكم", "أفتي"],
+      "allowed_phrases_en": ["established in Qur'an or Sunnah", "scholarly consensus on principle"]
+    },
+    "B_scientifically_supported": {
+      "allowed_phrases_ar": ["يدعمه العلم الحالي", "consensus علمي"],
+      "forbidden_phrases_ar": ["يثبت معجزة قرآنية", "دليل قطعي على التفسير"],
+      "allowed_phrases_en": ["supported by current scientific consensus"]
+    },
+    "C_linguistic_or_tafsir_possibility": {
+      "allowed_phrases_ar": ["احتمال لغوي", "يحتمل في التفسير", "قال بعض المفسرين"],
+      "forbidden_phrases_ar": ["معنى التفسير الوحيد", "ثبت scientifically"]
+    },
+    "D_philosophical_reflection": {
+      "allowed_phrases_ar": ["تأمل", "reflection", "من منظور فلسفي"],
+      "forbidden_phrases_ar": ["عقيدة", "يجب أن تؤمن"]
+    },
+    "E_sunni_tasawwuf_tazkiyah": {
+      "allowed_phrases_ar": ["تزكية", "محاسبة", "مراقبة", "إحسان"],
+      "forbidden_phrases_ar": ["وصل", "حلول", "اتحاد"]
+    },
+    "F_symbolic_comparative": {
+      "required_phrases_ar": ["تشابه رمزي", "مقارنة تاريخية"],
+      "forbidden_phrases_ar": ["عقيدة إسلامية", "الإسلام يقول كالأهرام"]
+    },
+    "G_speculative_unverified": {
+      "required_phrases_ar": ["احتمال", "تأمل", "فرضية"],
+      "forbidden_phrases_ar": ["ثبت", "يقين", "دليل قاطع"]
+    },
+    "H_reject_aqidah_risk": {
+      "required_tone": "compassionate_correction",
+      "template_ar": "هذا التعبير فيه خطر على العقيدة؛ الصواب أن..."
+    }
+  },
+  "global_forbidden": {
+    "fatwa_patterns": ["fatwa", "haram", "wajib", "fard", "you must", "it is obligatory"],
+    "shame_patterns": ["فاشل", "مذنب", "لا إيمان", "performance score", "spiritual grade"],
+    "miracle_without_ladder": ["معجزة علمية مثبتة", "scientific miracle proven", "Qur'an predicted exactly"]
+  }
+}

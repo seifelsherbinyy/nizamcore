@@ -1,0 +1,59 @@
+jobs: ['nizam-morning-pulse:created', 'nizam-afternoon-pulse:created', 'nizam-evening-pulse:created']
+trigger: nizam-morning-pulse:triggered:e4a79a5166c0
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Scheduled Jobs                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  089029fa32f4 [active]
+    Name:      hair-status-check
+    Schedule:  every 7200m
+    Repeat:    ∞
+    Next run:  2026-06-15T18:10:13.236817+03:00
+    Deliver:   origin
+    Last run:  2026-06-10T18:10:13.236817+03:00  ok
+
+  e4a79a5166c0 [active]
+    Name:      nizam-morning-pulse
+    Schedule:  0 9 * * *
+    Repeat:    ∞
+    Next run:  2026-06-14T17:17:59.124003+03:00
+    Deliver:   telegram
+    Script:    nizam-scheduled-pulse.py
+    Mode:      no-agent (script stdout delivered directly)
+
+  c5aacdafc5cb [active]
+    Name:      nizam-afternoon-pulse
+    Schedule:  0 15 * * *
+    Repeat:    ∞
+    Next run:  2026-06-15T15:00:00+03:00
+    Deliver:   telegram
+    Script:    nizam-scheduled-pulse.py
+    Mode:      no-agent (script stdout delivered directly)
+
+  e4b641054190 [active]
+    Name:      nizam-evening-pulse
+    Schedule:  0 21 * * *
+    Repeat:    ∞
+    Next run:  2026-06-14T21:00:00+03:00
+    Deliver:   telegram
+    Script:    nizam-scheduled-pulse.py
+    Mode:      no-agent (script stdout delivered directly)
+
+  ⚠  Gateway is not running — jobs won't fire automatically.
+     Start it with: hermes gateway install
+                    sudo hermes gateway install --system  # Linux servers
+
+
+
+✗ Gateway is not running — cron jobs will NOT fire
+
+  To enable automatic execution:
+    hermes gateway install    # Install as a user service
+    sudo hermes gateway install --system  # Linux servers: boot-time system service
+    hermes gateway            # Or run in foreground
+
+  4 active job(s)
+  Next run: 2026-06-14T17:17:59.124003+03:00
+

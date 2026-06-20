@@ -1,6 +1,12 @@
 {
   "$schema_note": "Not validated by JSON Schema yet; treat as registry. Consumed by Steward (see AGENT_MAPPING.json#agents.Steward).",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "health_contract": {
+    "states": ["disabled", "blocked", "unconfigured", "configured", "reachable", "degraded"],
+    "default_probe_mode": "config_only",
+    "network_requires_approval": true,
+    "writes_require_approval": true
+  },
   "generated": "2026-05-21T00:00:00Z",
   "contract_doc": "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md",
   "purpose": "Single source of truth for every external durable layer the orchestration layer may touch. Steward uses this to enforce \u00a75 retry/fallback. Do NOT duplicate Notion/Drive specifics that already live in DUAL_WRITE_GOVERNOR.json \u2014 cross-link instead.",
@@ -14,7 +20,7 @@
     "max_attempts": 3,
     "backoff_seconds": [1, 4, 16],
     "applies_to": ["github", "drive", "notion"],
-    "on_final_failure": "Enqueue to dead_letter; alert; NEVER drop the payload (\u00a75).",
+    "on_final_failure": "Enqueue to dead_letter; alert; NEVER drop the payload (\u00a75). Replay requires explicit operator approval.",
     "source": "NIZAM__system/docs/NIZAM_ORCHESTRATION_LAYER.md \u00a75"
   },
   "fallback_chain": {
@@ -42,7 +48,9 @@
   "dead_letter": {
     "purpose": "Hold any payload that cannot be persisted after retries. Never silent drop.",
     "primary_jsonl": "NIZAM__system/ledgers/DEAD_LETTER.jsonl",
-    "primary_jsonl_status": "TODO \u2014 not yet declared in NIZAM_TEMPLE.json#ledgers (operator action: add with privacy=strict_local and gitignore it).",
+    "primary_jsonl_status": "declared in NIZAM_TEMPLE.json with privacy=strict_local and ignored by git",
+    "replay_mode": "manual_approval_required",
+    "automatic_replay": false,
     "stdout_fallback": "If even the JSONL cannot be written (e.g. read-only sandbox), Steward prints the full bundle to stdout."
   },
   "audit_log": {
@@ -75,7 +83,10 @@
       "raw_url_pattern": "https://raw.githubusercontent.com/seifelsherbinyy/nizamcore/main/{path}",
       "auth_env":     ["GITHUB_TOKEN (optional \u2014 higher rate limits)"],
       "auth_default": "git credential helper / SSH key on host",
-      "status":       "up",
+      "enabled":      false,
+      "status":       "disabled",
+      "probe":        {"kind": "git_remote", "network": false},
+      "approval_required": true,
       "owner":        "Steward",
       "rate_limit":   "5000 req/hr authenticated; 60 unauth"
     },
@@ -85,7 +96,10 @@
       "root_folder_id": "1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
       "root_folder_url":"https://drive.google.com/drive/folders/1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
       "auth_env":       ["GOOGLE_APPLICATION_CREDENTIALS (preferred)", "GOOGLE_OAUTH_CLIENT_SECRETS + GOOGLE_OAUTH_TOKEN (fallback)"],
-      "status":         "unconfigured",
+      "enabled":        false,
+      "status":         "disabled",
+      "probe":          {"kind": "env_any", "network": false},
+      "approval_required": true,
       "owner":          "Steward",
       "see_also":       "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#targets",
       "runtime_paths":  "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#drive_runtime_paths",
@@ -98,7 +112,10 @@
       "data_sources_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.data_sources",
       "required_properties_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.required_properties",
       "auth_env":  ["NOTION_TOKEN (CLI path)", "Cursor MCP (interactive path)"],
-      "status":    "unconfigured",
+      "enabled":   false,
+      "status":    "disabled",
+      "probe":     {"kind": "env_any", "network": false},
+      "approval_required": true,
       "owner":     "Steward",
       "share_policy": "Restricted to the owner; do not change sharing programmatically (\u00a73).",
       "pulse_rules_ref": "NIZAM__system/policies/DUAL_WRITE_GOVERNOR.json#notion.pulse_rules"
@@ -107,23 +124,105 @@
       "kind":     "intake_messaging",
       "role":     "Warden capture channel for ad-hoc operator notes.",
       "auth_env": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_ALLOWED_CHAT_IDS"],
-      "status":   "TODO_no_adapter",
+      "enabled":  false,
+      "status":   "disabled",
+      "probe":    {"kind": "env_all", "network": false},
+      "adapter":  "NIZAM__system.relay.poller",
+      "approval_required": true,
       "owner":    "Warden",
       "gap":      "No adapter exists in repo yet; tracked in AGENT_MAPPING.json#agents.Warden.gaps."
     },
+    "google_calendar": {
+      "kind": "calendar",
+      "role": "Read schedule context and execute individually approved event mutations.",
+      "auth_env": ["GOOGLE_OAUTH_CLIENT_SECRETS", "GOOGLE_OAUTH_TOKEN"],
+      "enabled": false,
+      "status": "disabled",
+      "probe": {"kind": "env_all", "network": false},
+      "adapter": "NIZAM__system.connectors.google_adapter",
+      "orchestration": "NIZAM__system.companion.calendar_tasks",
+      "capabilities": ["read", "propose_write", "execute_write"],
+      "write_capabilities": ["create_event", "update_event", "delete_event"],
+      "write_approval": "single_use_exact_operation",
+      "approval_required": true,
+      "owner": "Steward"
+    },
+    "google_tasks": {
+      "kind": "tasks",
+      "role": "Read task context and execute individually approved task mutations.",
+      "auth_env": ["GOOGLE_OAUTH_CLIENT_SECRETS", "GOOGLE_OAUTH_TOKEN"],
+      "enabled": false,
+      "status": "disabled",
+      "probe": {"kind": "env_all", "network": false},
+      "adapter": "NIZAM__system.connectors.google_adapter",
+      "orchestration": "NIZAM__system.companion.calendar_tasks",
+      "capabilities": ["read", "propose_write", "execute_write"],
+      "write_capabilities": ["create_task", "update_task", "complete_task", "delete_task"],
+      "write_approval": "single_use_exact_operation",
+      "approval_required": true,
+      "owner": "Steward"
+    },
+    "whoop_export": {
+      "kind": "local_import",
+      "role": "Normalize operator-provided WHOOP CSV or JSON exports.",
+      "auth_env": [],
+      "enabled": false,
+      "status": "disabled",
+      "probe": {"kind": "local_file", "network": false},
+      "adapter": "NIZAM__system.companion.whoop_import",
+      "capabilities": ["read_import"],
+      "approval_required": true,
+      "owner": "Pulse"
+    },
+    "research_fetch": {
+      "kind": "data_source_external",
+      "role": "Fetch approved research sources for local claim storage.",
+      "auth_env": [],
+      "enabled": false,
+      "status": "disabled",
+      "probe": {"kind": "config_only", "network": false},
+      "adapter": "NIZAM__system.companion.knowledge",
+      "capabilities": ["read"],
+      "approval_required": true,
+      "owner": "Almanac"
+    },
+    "telegram_proactive": {
+      "kind": "outbound_messaging",
+      "role": "Send policy-eligible proactive messages after explicit activation.",
+      "auth_env": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_ALLOWED_CHAT_IDS"],
+      "enabled": false,
+      "status": "disabled",
+      "probe": {"kind": "env_all", "network": false},
+      "adapter": "NIZAM__system.companion.proactive",
+      "capabilities": ["propose_write", "execute_write"],
+      "write_approval": "activation_and_policy",
+      "approval_required": true,
+      "owner": "Steward"
+    },
     "gmail": {
       "kind":     "intake_email",
-      "role":     "Warden capture channel for forwarded or labeled email.",
-      "auth_env": ["GMAIL_OAUTH_JSON_PATH", "GMAIL_LABEL_FILTER"],
-      "status":   "TODO_no_adapter",
-      "owner":    "Warden",
-      "gap":      "No adapter exists in repo yet; tracked in AGENT_MAPPING.json#agents.Warden.gaps."
+      "role":     "Warden capture channel for forwarded or labeled email; approved send/trash via google_adapter.",
+      "auth_env": ["GOOGLE_OAUTH_CLIENT_SECRETS", "GOOGLE_OAUTH_TOKEN", "GMAIL_LABEL_FILTER (optional)"],
+      "enabled":  false,
+      "status":   "disabled",
+      "probe":    {"kind": "env_all", "network": false},
+      "adapter":  "NIZAM__system.connectors.google_adapter",
+      "orchestration": "NIZAM__system.companion.calendar_tasks",
+      "capabilities": ["read", "propose_write", "execute_write"],
+      "write_capabilities": ["send_message", "trash_message", "untrash_message"],
+      "write_approval": "single_use_exact_operation",
+      "approval_required": true,
+      "owner":    "Warden"
     },
     "llm_runtime": {
       "kind":     "model_provider",
       "role":     "Backbone for Scribe / Witness / Counselor.",
       "auth_env": ["CLAUDE_API_KEY (preferred)", "OPENAI_API_KEY (alt)"],
-      "status":   "unconfigured",
+      "enabled":  false,
+      "status":   "disabled",
+      "probe":    {"kind": "env_any", "network": false},
+      "adapter":  "NIZAM__system.relay.persona_runtime",
+      "approval_required": true,
       "owner":    "Scribe, Witness",
       "note":     "Never log prompts/responses with secrets. Audit Log stores hashes (\u00a73)."
     },
@@ -131,7 +230,10 @@
       "kind":     "data_source_external",
       "role":     "Primary flight-price feed for MARSAD module (out-of-scope for the orchestration layer; listed here so secret-scan and env-var inventory are exhaustive).",
       "auth_env": ["SERPAPI_API_KEY"],
-      "status":   "module_owned",
+      "enabled":  false,
+      "status":   "disabled",
+      "probe":    {"kind": "env_all", "network": false},
+      "approval_required": true,
       "owner":    "MARSAD",
       "see_also": "MARSAD__flight_radar/requirements.txt"
     }
@@ -142,7 +244,6 @@
     "HIFZ__github_version_control/scripts/nizam_drive_mirror.py --dry-run (Drive layout sanity)"
   ],
   "open_questions_for_operator": [
-    "Add NIZAM__system/ledgers/DEAD_LETTER.jsonl entry to NIZAM_TEMPLE.json#ledgers (privacy=strict_local) and confirm gitignore covers it.",
     "Confirm Drive folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi privacy classification; SYNC_POLICY.json#surfaces does not yet enumerate a drive_nizam_pop surface beyond the governor doc.",
     "Confirm Telegram + Gmail intake adapter scaffolding is in scope before committing to TELEGRAM_BOT_TOKEN / GMAIL_OAUTH_JSON_PATH wiring."
   ],

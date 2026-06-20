@@ -71,7 +71,7 @@
       "dead_letter_target": "NIZAM__system/ledgers/DEAD_LETTER.jsonl (gitignored, to be created on first miss)",
       "gaps": [
         "Currently lives as a conceptual \u2018hat\u2019 in the conversational prompt, not as a standalone parser.",
-        "DEAD_LETTER.jsonl ledger path and schema not yet declared in NIZAM_TEMPLE.json#ledgers."
+        "DEAD_LETTER.jsonl replay remains manual and approval-gated."
       ]
     },
     "Pulse": {
@@ -282,7 +282,7 @@
   "open_questions_for_operator": [
     "Confirm or correct the agent\u2194module mapping above before any Python agent scaffolding starts.",
     "Reconcile Almanac cadence: contract says Friday, repo protocol is Sunday.",
-    "Add DEAD_LETTER.jsonl to NIZAM_TEMPLE.json#ledgers with privacy=strict_local and gitignore it.",
+    "Keep DEAD_LETTER.jsonl strict_local, gitignored, and manual-approval-only for replay.",
     "Confirm Drive folder 1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi privacy posture (DUAL_WRITE_GOVERNOR already binds it; SYNC_POLICY.json does not yet enumerate a drive_nizam_pop surface beyond the governor doc cross-link)."
   ],
   "see_also": [

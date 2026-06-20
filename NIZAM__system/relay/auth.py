@@ -79,7 +79,9 @@ def verify_user_id(update: dict) -> int:
 
     Returns the user_id on success. Raises UserNotWhitelisted otherwise.
     """
-    raw = os.environ.get(WHITELIST_ENV, "")
+    raw = os.environ.get(WHITELIST_ENV, "").strip()
+    if not raw:
+        raw = os.environ.get("TELEGRAM_ALLOWED_CHAT_IDS", "").strip()
     allowed = _parse_allowed_ids(raw)
     if not allowed:
         raise AuthError(
@@ -110,4 +112,7 @@ def _extract_user_id(update: dict) -> int | None:
 
 
 def whitelisted_ids() -> Iterable[int]:
-    return sorted(_parse_allowed_ids(os.environ.get(WHITELIST_ENV, "")))
+    raw = os.environ.get(WHITELIST_ENV, "").strip()
+    if not raw:
+        raw = os.environ.get("TELEGRAM_ALLOWED_CHAT_IDS", "").strip()
+    return sorted(_parse_allowed_ids(raw))

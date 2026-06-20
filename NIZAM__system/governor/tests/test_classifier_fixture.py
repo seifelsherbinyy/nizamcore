@@ -32,7 +32,7 @@ FIXTURE = [
     ("TAFRIGH__brain_dumper/raw/2026-05-28.md",           "strict_local"),
     ("SHURA__brainstormer/sessions/2026-05-28.md",        "strict_local"),
     ("NAQD__brain_griller/sessions/2026-05-28.md",        "strict_local"),
-    ("AHEL__family_network/records/dad.md",               "strict_local_maximum"),
+    ("HAJR__quarantine/maximum/record.md",                "strict_local_maximum"),
     ("BADAN__body_health_system/biometrics.jsonl",        "strict_local"),
     ("MAL__financial_engine/budget_2026.md",              "strict_local"),
     ("NIZAM__system/ledgers/EVENT_LEDGER.jsonl",          "review_before_commit"),
@@ -60,13 +60,13 @@ class ClassifierFixtureTests(unittest.TestCase):
             "TAFRIGH__brain_dumper/raw/2026-05-28.md", "github_private")
         self.assertTrue(blocked, f"should be blocked: {reason}")
 
-    def test_egress_matrix_blocks_ahel_everywhere_outbound(self) -> None:
+    def test_egress_matrix_blocks_maximum_everywhere_outbound(self) -> None:
         for tgt in ("github_private", "vps_plaintext", "drive_clear",
                     "notion_sanitized"):
             with self.subTest(target=tgt):
                 blocked, reason = classifier.is_egress_blocked(
-                    "AHEL__family_network/records/dad.md", tgt)
-                self.assertTrue(blocked, f"AHEL must be blocked from {tgt}: {reason}")
+                    "HAJR__quarantine/maximum/record.md", tgt)
+                self.assertTrue(blocked, f"maximum privacy must be blocked from {tgt}: {reason}")
 
     def test_egress_matrix_allows_private_github_to_github(self) -> None:
         blocked, _ = classifier.is_egress_blocked(
@@ -84,7 +84,7 @@ class ClassifierFixtureTests(unittest.TestCase):
         self.assertFalse(d.allowed, d.reason)
 
     def test_pre_commit_blocks_mixed_batch(self) -> None:
-        # 4 framework + 2 strict_local + 1 AHEL — 3 expected blocks
+        # 4 framework + 2 strict_local + 1 maximum-private path: 3 blocks
         batch = [
             "README.md",
             "NIZAM__system/policies/PRIVACY_CLASSIFICATION.json",
@@ -92,7 +92,7 @@ class ClassifierFixtureTests(unittest.TestCase):
             "NIZAM__system/templates/persona_v1.1_template.json",
             "SHURA__brainstormer/sessions/2026-05-28.md",
             "NAQD__brain_griller/sessions/2026-05-28.md",
-            "AHEL__family_network/records/dad.md",
+            "HAJR__quarantine/maximum/record.md",
         ]
         ok, blocked = pre_commit_check(batch)
         self.assertFalse(ok)

@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "name": "tafsir_verification",
+  "steps": [
+    {"id": "capture", "action": "Record ayah reference and claimed meaning"},
+    {"id": "text_stability", "action": "Confirm Uthmani text from primary source"},
+    {"id": "classical_tafsir", "action": "Check at least one reliable tafsir for deep claims"},
+    {"id": "linguistic_possibility", "action": "Separate root/lemma analysis from definitive meaning"},
+    {"id": "modern_reflection", "action": "Label scientific parallels as reflection, not definitive tafsir"}
+  ],
+  "outputs": ["relevant_ayahs", "tafsir_summary", "linguistic_notes", "degree_of_scriptural_support"]
+}

@@ -13,7 +13,7 @@ Rules (per locked Q4 + section_B locked decision):
      `mirror_sanitized` only).
   3. Drive (rclone-crypt) is the only off-laptop plane that holds
      clear-text framework material; encrypted blobs handle strict_local.
-  4. AHEL data is HARD-BLOCKED from VPS plaintext at all times.
+  4. `strict_local_maximum` data is HARD-BLOCKED from all external planes.
   5. Every cross-plane write goes through the egress firewall (classifier).
 
 This module produces ARBITRATION DECISIONS; actual transport (rsync, git,

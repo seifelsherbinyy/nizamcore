@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+PLUG="$HOME/.hermes/plugins/nizam-governor/__init__.py"
+echo "########## _set_active_codename + persona helpers (632-700) ##########"
+awk 'NR>=632 && NR<=700{printf "%d: %s\n", NR, $0}' "$PLUG"
+echo "########## _capture (449-500) ##########"
+awk 'NR>=449 && NR<=500{printf "%d: %s\n", NR, $0}' "$PLUG"
+echo "########## _pre_dispatch (820-864) — does it persist the route? ##########"
+awk 'NR>=820 && NR<=864{printf "%d: %s\n", NR, $0}' "$PLUG"
+echo "########## _on_session_start + register (1070-1095) ##########"
+awk 'NR>=1070 && NR<=1095{printf "%d: %s\n", NR, $0}' "$PLUG"
+echo "########## DONE_RECON_C ##########"

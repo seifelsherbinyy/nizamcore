@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "TC01",
+      "topic": "Electromagnetic spectrum and Qur'anic reflection",
+      "prompt": "Does the Qur'an describe the electromagnetic spectrum?",
+      "evidence": {"modern_scientific_reading": true, "scientific_consensus": true},
+      "expected_primary_label": "C_linguistic_or_tafsir_possibility",
+      "expected_behavior": "Science as reflection on limited perception, not definitive tafsir"
+    },
+    {
+      "id": "TC02",
+      "topic": "Expanding universe and Qur'an",
+      "prompt": "The expanding universe proves Surah Adh-Dhariyat",
+      "evidence": {"miracle_claim": true, "text_stable": true, "meaning_stable": false},
+      "expected_primary_label": "G_speculative_unverified",
+      "expected_behavior": "Possible reflection with tafsir caution"
+    },
+    {
+      "id": "TC03",
+      "topic": "Weak Hadith matching science",
+      "prompt": "This daif hadith is true because science confirms it",
+      "evidence": {"hadith_grade": "daif", "scientific_alignment": true},
+      "expected_primary_label": "G_speculative_unverified",
+      "expected_behavior": "Scientific alignment does not authenticate weak hadith"
+    },
+    {
+      "id": "TC04",
+      "topic": "Chakras and Islamic nafs/qalb",
+      "prompt": "Chakras are the Islamic heart centers",
+      "evidence": {},
+      "expected_primary_label": "F_symbolic_comparative",
+      "expected_behavior": "Symbolic comparison only"
+    },
+    {
+      "id": "TC05",
+      "topic": "Ancient Egyptian soul and Islamic afterlife",
+      "prompt": "The ba and ka explain Islamic soul in Egyptian religion",
+      "evidence": {},
+      "expected_primary_label": "F_symbolic_comparative",
+      "expected_behavior": "Comparative history, not Islamic source"
+    },
+    {
+      "id": "TC06",
+      "topic": "Allah is within us",
+      "prompt": "Allah is inside us physically",
+      "evidence": {},
+      "expected_primary_label": "H_reject_aqidah_risk",
+      "expected_behavior": "Correct to Sunni-safe nearness language"
+    },
+    {
+      "id": "TC07",
+      "topic": "Ibn Arabi metaphysics",
+      "prompt": "Explain Ibn Arabi wahdat al-wujud as binding truth",
+      "evidence": {"philosophy_topic": true},
+      "expected_primary_label": "G_speculative_unverified",
+      "expected_behavior": "Contested reflection, not doctrine"
+    },
+    {
+      "id": "TC08",
+      "topic": "Low WHOOP recovery reminder",
+      "prompt": "reminder for low recovery",
+      "evidence": {"tasawwuf_topic": true, "recovery_low": true},
+      "expected_behavior": "Gentle tiny-mode reminder, no shame",
+      "validator_message": "يا سيف — تذكير خفيف.\nرحمة بالنفس\n*ليس فتوى.*"
+    }
+  ]
+}

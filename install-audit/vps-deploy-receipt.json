@@ -1,0 +1,21 @@
+{
+  "deployed_at": "2026-06-14T14:18:03Z",
+  "remote_root": "/home/nizam/nizamcore",
+  "remote_hermes": "/home/nizam/.hermes",
+  "post_install": "OK",
+  "gateway": "",
+  "scheduled_setup_exit": 0,
+  "verify": {
+    "lines": [
+      "companion=ok",
+      "relay=ok",
+      "governor=ok",
+      "gateway=running",
+      "4 active job(s)",
+      "Next run: 2026-06-14T17:17:59.124003+03:00"
+    ],
+    "raw": "companion=ok\nrelay=ok\ngovernor=ok\ngateway=running\n  4 active job(s)\n  Next run: 2026-06-14T17:17:59.124003+03:00\n\n"
+  },
+  "local_head": "de2b3db",
+  "local_branch": "cursor/router-stage-1-ir6-mirror-1"
+}

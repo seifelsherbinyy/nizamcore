@@ -1,0 +1,685 @@
+{
+  "$schema": "https://nizam.local/schemas/planning-directive/v2.1.json",
+  "directive_id": "NIZAM_HERMES_LIVE_PRODUCTION_v2.1",
+  "version": "2.1.0",
+  "mode": "PLAN_ONLY",
+  "generated_at_os_tz": "UTC",
+  "generated_for_display_tz": "Africa/Cairo",
+  "operator": "Sherbiny",
+  "executor": "Claude Code (local IDE)",
+  "authority": "FULL — use provided secrets (OpenRouter, Anthropic, Telegram, GitHub PAT, Hostinger) on operator behalf to build, configure, push to live. Secret rotation DEFERRED to Phase I (post-live).",
+  "execution_status": "NOT STARTED — this is a plan only. Await operator '/gsd execute' to begin Phase PRE.",
+
+  "operating_constants": {
+    "model_default": "deepseek/deepseek-v4-flash (OpenRouter)",
+    "model_reasoning": "deepseek/deepseek-v4-pro (OpenRouter)",
+    "model_reviewer": "claude-sonnet-4-6 (DIRECT Anthropic)",
+    "tool_turn_cap_hard": 7,
+    "timezone_os_and_ledgers": "UTC",
+    "timezone_hermes_display": "Africa/Cairo",
+    "cron_digest": "20:00 Africa/Cairo",
+    "context_window_days": 90,
+    "memory_nudge_interval_sec": 120,
+    "personality": "professional",
+    "cost_soft_usd_month": 50,
+    "cost_hard_usd_month": 300,
+    "kill_switch_env": "NIZAM_KILL_ALL",
+    "max_parallel_delegates": 2,
+    "max_total_delegates_per_request": 3,
+    "google_workspace_phase1": "Drive-only; Gmail+Calendar deferred to Phase 1.5"
+  },
+
+  "preflight_findings_BLOCKING": {
+    "note": "Verified read-only on 2026-05-30 against actual disk. Three discrepancies invalidate the directive's path/state assumptions. These MUST be resolved (Phase PRE) before Phase A onward can run. Each remediation is structural/destructive and requires operator confirm.",
+    "F1_junction_dangling": {
+      "observed": "D:\\nizamcore is a Junction -> D:\\NIZAM\\nizamcore, but the TARGET D:\\NIZAM\\nizamcore DOES NOT EXIST. Junction is dangling.",
+      "reality": "All repo content (NIZAM__system\\..., .gitignore, AGENTS.md, SOUL.md, user.md) lives directly under D:\\NIZAM, not under D:\\NIZAM\\nizamcore.",
+      "directive_stop_condition_tripped": "TA1 stop_condition 'Junction broken or D:\\NIZAM\\nizamcore tree missing -> halt' is ALREADY TRIPPED.",
+      "impact": "Every directive path of form D:\\nizamcore\\NIZAM__system\\... resolves to nothing."
+    },
+    "F2_no_local_git_repo": {
+      "observed": "No .git at D:\\NIZAM (env reports 'Is a git repository: false'). No .git inside the dangling junction either.",
+      "directive_claim": "current_state_snapshot.github_commit=071e54c and a VPS deploy clone exist, implying a tracked repo.",
+      "impact": "Phase B (branch feat/hermes-phase1-wiring, commit, push, PR) CANNOT execute locally. There is nothing to branch from."
+    },
+    "F3_secrets_at_rest_in_working_dir": {
+      "observed": "D:\\NIZAM contains plaintext secret-bearing files at root: .env, NIZAM-secrets.json, nizam-prod-oauthclient.json, user_deep.md, SOUL.md.",
+      "impact": "If/when a git repo is initialized at D:\\NIZAM, these must be .gitignore-covered BEFORE first 'git add'. .gitignore exists but coverage unverified against these exact filenames. High leak risk on first commit."
+    }
+  },
+
+  "security_risk_register": {
+    "R1_leaked_key_to_live": {
+      "severity": "HIGH",
+      "statement": "v2.1 reverses v2.0 and ships the PREVIOUSLY-LEAKED OpenRouter key to live production, deferring rotation to Phase I (post-live).",
+      "exposure": "A leaked key is usable by anyone who saw it: cost burn against the operator account, and any request routed through it is attributable to the operator. The leaked key sits in production from G5 until Phase I completes.",
+      "recommendation": "Rotate BEFORE live (restore v2.0 TA3 ordering). Rotation is ~5 min and removes the entire exposure window.",
+      "decision_owner": "Operator (Sherbiny) — sole owner of the account; authority is granted. Risk is acknowledged and accepted by directive v2.1.",
+      "plan_default": "Honors v2.1 (defer to Phase I) but flags at gate G3 for explicit re-confirm."
+    },
+    "R2_secret_source": {
+      "severity": "MEDIUM",
+      "statement": "v2.0 assumed 1Password (op CLI). v2.1 says 'use provided secrets'. Plaintext .env / NIZAM-secrets.json present in working dir suggest secrets may be staged on disk.",
+      "rule_unchanged": "Never echo a secret value to chat, stdout, or any ledger row. Reference by item name / env key only. Stream secrets into ssh stdin; never write secret values into the PHASING_LEDGER."
+    }
+  },
+
+  "task_execution_protocol": {
+    "format": "precondition_check -> action -> postcondition_verify -> ledger_row",
+    "idempotency": "Each task checks if already done; mark 'already_satisfied' and skip.",
+    "on_precondition_fail": "Halt task, report missing prerequisite, do not attempt action.",
+    "on_action_fail": "Halt, post stdout+stderr+exit_code, no auto-retry on destructive actions.",
+    "on_postcondition_fail": "Treat as action_fail; do not mark complete.",
+    "reporting": "After each task: task_id, precondition_result, action_result, postcondition_result, ledger_row_written.",
+    "batching": "Phases PRE, A, B, C may batch internally; Phase D onward = one task at a time, operator ack at gates only.",
+    "secret_handling": "No secret value in any tool output, chat, or ledger. Ever."
+  },
+
+  "gates_require_operator_confirm": ["PRE", "G2", "G3", "G4", "G5", "relay_lift", "FINAL"],
+  "gate_request_format": "Single line: 'Awaiting /confirm <gate_id>. Blockers: [...]. Next phase: <label>, est <duration>.'",
+
+  "phases": [
+
+    {
+      "phase_id": "PRE",
+      "phase_label": "Remediate preflight blockers (NEW — required by F1/F2/F3)",
+      "duration_estimate": "20 min",
+      "mode": "local only",
+      "approval_gate": "PRE",
+      "operator_action_required": "Operator confirms canonical-path + git-bootstrap decisions, then '/confirm PRE'.",
+      "tasks": [
+        {
+          "task_id": "TPRE1",
+          "label": "Resolve canonical path discrepancy (F1)",
+          "precondition_check": "Get-Item D:\\nizamcore LinkType=Junction; Test-Path D:\\NIZAM\\NIZAM__system = True; Test-Path D:\\NIZAM\\nizamcore = False",
+          "decision_required": "Operator picks ONE: (a) repoint junction: 'rmdir D:\\nizamcore' (removes junction only, not content) then 'mklink /J D:\\nizamcore D:\\NIZAM' so D:\\nizamcore resolves to the real content; OR (b) adopt D:\\NIZAM as canonical and update NIZAMCORE_PATH.txt + all directive paths; OR (c) relocate content into D:\\NIZAM\\nizamcore.",
+          "recommended": "(a) repoint junction to D:\\NIZAM — least disruptive, preserves every D:\\nizamcore\\... path in the directive.",
+          "action": "Apply operator's choice. If (a): verify rmdir removes ONLY the junction reparse point (junction deletion never recurses into target; content at D:\\NIZAM untouched).",
+          "postcondition_verify": "Test-Path D:\\nizamcore\\NIZAM__system\\personas\\NAQD.json = True",
+          "ledger_row": {"phase": "PRE1_path_fixed", "decision": "<captured>", "canonical_resolves": true}
+        },
+        {
+          "task_id": "TPRE2",
+          "label": "Establish local git repo (F2)",
+          "precondition_check": "Test-Path <canonical>\\.git = False",
+          "decision_required": "Operator picks ONE: (a) clone existing GitHub repo (commit 071e54c) into a fresh path and re-point canonical at it; OR (b) 'git init' in place at canonical, 'git remote add origin <nizamcore url>', 'git fetch', 'git reset --soft origin/main' to attach existing history.",
+          "recommended": "(a) clone — guarantees the local tree matches origin and the VPS deploy clone; avoids divergent in-place init.",
+          "action": "Apply operator's choice using GitHub PAT (scoped to nizamcore). Do NOT echo PAT.",
+          "postcondition_verify": "git -C <canonical> rev-parse HEAD resolves; git -C <canonical> remote -v shows origin = nizamcore; git status runs clean or shows only expected untracked",
+          "ledger_row": {"phase": "PRE2_git_bootstrapped", "head_sha": "<captured>", "remote": "<captured>"}
+        },
+        {
+          "task_id": "TPRE3",
+          "label": "Pre-emptively gitignore at-rest secrets (F3) BEFORE any git add",
+          "precondition_check": "TPRE2 done; the at-rest files (.env, NIZAM-secrets.json, nizam-prod-oauthclient.json, user_deep.md, SOUL.md) are enumerated",
+          "action": "Ensure .gitignore covers: .env, *.env, NIZAM-secrets.json, *secrets*.json, *oauthclient*.json, user_deep.md, SOUL.md, *.jsonl, *.key, **/secrets/, **/.venv/, strict_local/, __pycache__/, *rclone-crypt*. git check-ignore -v each at-rest file.",
+          "postcondition_verify": "git check-ignore returns ignored for ALL listed at-rest secret files; git status does NOT list any of them as trackable",
+          "on_fail": "Halt — do not proceed to any commit phase until every at-rest secret is ignored",
+          "ledger_row": {"phase": "PRE3_atrest_secrets_ignored", "files_confirmed_ignored": "<count>"}
+        }
+      ],
+      "phase_exit_criteria": "Canonical path resolves to real content; local git repo attached to origin; all at-rest secrets git-ignored; '/confirm PRE' received."
+    },
+
+    {
+      "phase_id": "A",
+      "phase_label": "Pre-flight security + state verification",
+      "duration_estimate": "20 min",
+      "mode": "local + read-only VPS",
+      "approval_gate": "none — auto-proceed to B",
+      "depends_on": "PRE complete",
+      "tasks": [
+        {
+          "task_id": "TA1",
+          "label": "Verify canonical path junction integrity (post-PRE)",
+          "precondition_check": "Test-Path <canonical> AND Test-Path <canonical>\\NIZAM__system",
+          "action": "Get-Item <canonical> | Select LinkType,Target; git -C <canonical> rev-parse HEAD",
+          "postcondition_verify": "Junction (or canonical dir) resolves to real content; HEAD captured",
+          "on_fail": "Halt — return to TPRE1",
+          "ledger_row": {"phase": "A1_path_verify", "head_sha": "<captured>"}
+        },
+        {
+          "task_id": "TA2",
+          "label": "Reconcile SSH key name on disk",
+          "precondition_check": "Test-Path ~\\.ssh\\nizam_vps OR Test-Path ~\\.ssh\\nizam_hostinger_ed25519",
+          "action": "Get-ChildItem ~\\.ssh | Where Name -match 'nizam'; ssh-add -l | findstr nizam",
+          "postcondition_verify": "Exactly one of {nizam_vps, nizam_hostinger_ed25519} present with .pub sibling; ssh-agent has matching fingerprint",
+          "if_both_present": "Halt — duplicate keys, operator decides canonical",
+          "if_only_old_name": "Rename nizam_hostinger_ed25519 -> nizam_vps; reload ssh-agent",
+          "ledger_row": {"phase": "A2_ssh_key_reconcile", "canonical_key_path": "<captured>", "fingerprint": "<captured>"}
+        },
+        {
+          "task_id": "TA3",
+          "label": "Inventory OpenRouter key (rotation DEFERRED to Phase I per v2.1)",
+          "precondition_check": "OpenRouter key available via provided secret source (env key / NIZAM-secrets.json / 1Password)",
+          "action": "Verify CURRENT key returns 200 on GET https://openrouter.ai/api/v1/models (HTTP code only, no body, no key echo). Record that this is the previously-leaked key being carried to live per R1 risk acceptance.",
+          "postcondition_verify": "200 returned; risk_register R1 referenced in ledger row; NO key value logged",
+          "note": "v2.0 halted here to rotate first. v2.1 defers rotation to Phase I. R1 exposure window is open from now until TI1.",
+          "ledger_row": {"phase": "A3_openrouter_inventory", "key_functional": true, "rotation": "deferred_to_phase_I", "risk_accepted": "R1", "secret_value_logged": false}
+        },
+        {
+          "task_id": "TA4",
+          "label": "Verify all required secrets are available (no values revealed)",
+          "precondition_check": "Provided secret source accessible",
+          "required_items": [
+            "OpenRouter api_key (carried to live)",
+            "Anthropic Direct api_key",
+            "Telegram bot_token + allowed user_id 8001780136",
+            "Hostinger VPS root (one-time, already used at G1)",
+            "GitHub PAT (scoped to nizamcore)"
+          ],
+          "action": "For each, confirm presence by key name/label only. Never print value.",
+          "postcondition_verify": "5/5 present; none revealed this session",
+          "on_fail": "Halt; list missing items",
+          "ledger_row": {"phase": "A4_secrets_inventory", "items_present": 5, "items_missing": []}
+        },
+        {
+          "task_id": "TA5",
+          "label": "Scrub dead/residual keys from VPS ~/.hermes/.env",
+          "precondition_check": "ssh nizam@31.97.154.5 'test -f ~/.hermes/.env && echo present'",
+          "action": "ssh nizam@vps remove any HERMES_SPOTIFY_CLIENT_ID line and any stale OpenRouter remnant; chmod 600",
+          "postcondition_verify": "ssh nizam@vps 'grep -c HERMES_SPOTIFY_CLIENT_ID ~/.hermes/.env' = 0; file mode 600",
+          "ledger_row": {"phase": "A5_env_scrubbed", "removed_keys": ["HERMES_SPOTIFY_CLIENT_ID"]}
+        },
+        {
+          "task_id": "TA6",
+          "label": "Secure rclone-crypt recovery.json off synced paths",
+          "precondition_check": "Test-Path 'D:\\NIZAM\\NIZAM rclone-crypt recovery.json' (verify actual location)",
+          "action": "If present, move to encrypted store / password-manager attachment; remove from filesystem; verify .gitignore covers '*rclone-crypt*'",
+          "postcondition_verify": "File absent from original path; .gitignore pattern present",
+          "ledger_row": {"phase": "A6_recovery_secured", "original_path_clean": true}
+        }
+      ],
+      "phase_exit_criteria": "All TA tasks satisfied or 'already_satisfied'; no secret in chat scrollback."
+    },
+
+    {
+      "phase_id": "B",
+      "phase_label": "Laptop: branch + code fixes + commit (HIMAYAH pre-commit must pass)",
+      "duration_estimate": "30 min",
+      "mode": "laptop only, no VPS contact",
+      "approval_gate": "none — auto-proceed to C",
+      "depends_on": "PRE (git repo) + A",
+      "tasks": [
+        {
+          "task_id": "TB1",
+          "label": "Create feature branch",
+          "precondition_check": "git -C <canonical> status --porcelain empty (clean tree); HEAD attached to origin",
+          "action": "git -C <canonical> checkout -b feat/hermes-phase1-wiring",
+          "postcondition_verify": "current branch = feat/hermes-phase1-wiring",
+          "on_fail_dirty_tree": "Halt — operator stashes/commits prior work first"
+        },
+        {
+          "task_id": "TB2",
+          "label": "Fix stale provider doc in personas/NAQD.json",
+          "precondition_check": "grep -l 'openrouter' <canonical>\\NIZAM__system\\personas\\NAQD.json",
+          "action": "Edit NAQD.json: reviewer/Hazim routing provider 'openrouter' -> 'anthropic'. Surface diff before save.",
+          "postcondition_verify": "grep openrouter NAQD.json = 0 for reviewer fields; JSON parses valid",
+          "ledger_row": {"phase": "B2_naqd_provider_fixed", "diff_summary": "<captured>"}
+        },
+        {
+          "task_id": "TB3",
+          "label": "Register NIZAM-COSTS in ledger_writer.KNOWN_LEDGERS",
+          "precondition_check": "Test-Path <canonical>\\NIZAM__system\\governor\\ledger_writer.py",
+          "action": "Edit ledger_writer.py: append 'NIZAM-COSTS' to KNOWN_LEDGERS; surface diff if structure differs",
+          "postcondition_verify": "grep -c 'NIZAM-COSTS' >= 1; python -m py_compile ledger_writer.py succeeds",
+          "ledger_row": {"phase": "B3_costs_ledger_registered"}
+        },
+        {
+          "task_id": "TB4",
+          "label": "Author runtime/nizam_hermes_phase1_wiring.md",
+          "precondition_check": "Test-Path <canonical>\\NIZAM__system\\runtime",
+          "action": "Write wiring pack (snappy-cuddling-riddle.md content adapted) to runtime\\nizam_hermes_phase1_wiring.md",
+          "postcondition_verify": "file exists, >= 200 lines, valid markdown"
+        },
+        {
+          "task_id": "TB5",
+          "label": "Verify .gitignore covers all forbidden patterns (superset of TPRE3)",
+          "precondition_check": "Test-Path <canonical>\\.gitignore",
+          "required_patterns": ["*.env", "*.key", "**/secrets/", "**/.venv/", "strict_local/", "__pycache__/", "*.jsonl", "user_deep.md", "SOUL.md", "*rclone-crypt*", "NIZAM-secrets.json", "*oauthclient*.json"],
+          "action": "Append any missing under '# NIZAM_HERMES_LIVE_PRODUCTION_v2.1 additions'",
+          "postcondition_verify": "All patterns present; git check-ignore returns ignored for representative files"
+        },
+        {
+          "task_id": "TB6",
+          "label": "Stage commit — only non-secret files",
+          "precondition_check": "git status shows only NAQD.json, ledger_writer.py, wiring pack, .gitignore modified",
+          "action": "git add NIZAM__system/personas/NAQD.json NIZAM__system/governor/ledger_writer.py NIZAM__system/runtime/nizam_hermes_phase1_wiring.md .gitignore",
+          "postcondition_verify": "git diff --cached | grep -iE 'API_KEY|TOKEN|SECRET|PASSWORD|sk-or-v1|sk-ant-' = 0 matches",
+          "on_secret_found": "git reset; HALT; investigate; NEVER --no-verify the hook"
+        },
+        {
+          "task_id": "TB7",
+          "label": "Commit + push branch (no merge)",
+          "precondition_check": "TB6 postcondition passed",
+          "action": "git commit -m 'feat(hermes): phase 1 wiring — provider doc fix, costs ledger registered, runtime wiring pack [NIZAM_HERMES_LIVE_PRODUCTION_v2.1]'; git push origin feat/hermes-phase1-wiring",
+          "postcondition_verify": "git log origin/feat/hermes-phase1-wiring -1 shows commit; no auto-merge configured",
+          "ledger_row": {"phase": "B7_branch_pushed", "commit_sha": "<captured>", "branch": "feat/hermes-phase1-wiring"}
+        }
+      ],
+      "phase_exit_criteria": "Branch pushed, no secrets in diff, pre-commit hook passed clean."
+    },
+
+    {
+      "phase_id": "C",
+      "phase_label": "VPS: complete G2 (hermes doctor green)",
+      "duration_estimate": "30 min",
+      "mode": "VPS via SSH, key auth only",
+      "approval_gate": "G2",
+      "operator_action_required": "Operator reviews 'hermes doctor' output, types '/confirm G2'.",
+      "tasks": [
+        {
+          "task_id": "TC1",
+          "label": "SSH reachability + hermes version",
+          "precondition_check": "ssh -o BatchMode=yes nizam@31.97.154.5 'echo SSH_OK' = SSH_OK",
+          "action": "ssh nizam@vps 'hermes --version && which hermes'",
+          "postcondition_verify": "version >= 0.15.1",
+          "on_fail": "Halt — reinstall hermes / redo G1"
+        },
+        {
+          "task_id": "TC2",
+          "label": "Write secrets to ~/.hermes/.env (chmod 600)",
+          "precondition_check": "TC1 done",
+          "action": "Stream each secret from provided source into ssh stdin (op item get ... | ssh nizam@vps 'cat >> ~/.hermes/.env'); never print to local stdout; never stage in /tmp; chmod 600 after",
+          "postcondition_verify": "ssh nizam@vps 'grep -c \"^[A-Z_]*=\" ~/.hermes/.env' >= 5; mode 600",
+          "ledger_row": {"phase": "C2_secrets_loaded", "keys_loaded": ["OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "TELEGRAM_BOT_TOKEN", "NIZAM_TELEGRAM_ALLOWED_IDS", "GITHUB_PAT_READONLY"], "values_in_chat": false}
+        },
+        {
+          "task_id": "TC3",
+          "label": "Apply 9 hermes config gaps",
+          "precondition_check": "TC2 done",
+          "action": [
+            "hermes config set model.default deepseek/deepseek-v4-flash",
+            "hermes config set reasoning_model deepseek/deepseek-v4-pro",
+            "hermes config set reviewer_model claude-sonnet-4-6",
+            "hermes config set reviewer_provider anthropic",
+            "hermes config set agent.max_turns 7",
+            "hermes config set context_window_days 90",
+            "hermes config set timezone Africa/Cairo",
+            "hermes config set memory.nudge_interval_sec 120",
+            "hermes config set display.personality professional"
+          ],
+          "postcondition_verify": "hermes config show contains all 9 with correct values",
+          "ledger_row": {"phase": "C3_config_applied", "config_hash": "<sha256 of config show>"}
+        },
+        {
+          "task_id": "TC4",
+          "label": "Author Coordinator SOUL.md on VPS (strict_local, never committed)",
+          "precondition_check": "operator confirms SOUL substance ready OR minimal scaffold",
+          "action": "Write SOUL.md (Identity, Non-negotiables, Decisive battles, Values, Voice & posture, Lines I will not cross) to ~/.hermes/SOUL.md; chmod 600",
+          "postcondition_verify": "ssh nizam@vps 'wc -l ~/.hermes/SOUL.md' >= 20",
+          "privacy_class": "strict_local",
+          "ledger_row": {"phase": "C4_soul_authored", "lines": "<captured>", "committed": false}
+        },
+        {
+          "task_id": "TC5",
+          "label": "Stage user.md surface profile",
+          "precondition_check": "operator confirms user.md fields OR minimum set",
+          "minimum_fields": ["display_name", "primary_locale", "top_3_values_with_weights", "voice.preferred_pacing", "voice.tone_preferences"],
+          "action": "Write user.md to ~/.hermes/user.md; validate against schemas/user_profile.schema.json",
+          "postcondition_verify": "ssh nizam@vps 'hermes user-profile validate ~/.hermes/user.md' = 0",
+          "privacy_class": "review_before_commit"
+        },
+        {
+          "task_id": "TC6",
+          "label": "hermes doctor — all green (G2)",
+          "precondition_check": "TC2+TC3+TC4+TC5 done",
+          "action": "ssh nizam@vps 'hermes doctor'",
+          "postcondition_verify": "config OK, env keys present, model reachable, telegram bot reachable, profiles loaded, no red/yellow",
+          "on_fail": "Halt; surface failing check; do NOT proceed to G3",
+          "approval_gate": "G2"
+        }
+      ],
+      "phase_exit_criteria": "'/confirm G2' received."
+    },
+
+    {
+      "phase_id": "D",
+      "phase_label": "G3 — ZDR verification both lanes (+ R1 rotation re-confirm)",
+      "duration_estimate": "15 min",
+      "approval_gate": "G3",
+      "operator_action_required": "Operator reviews ZDR evidence + R1 risk note, types '/confirm G3'.",
+      "tasks": [
+        {
+          "task_id": "TD1",
+          "label": "Verify OpenRouter ZDR routing for DeepSeek",
+          "precondition_check": "/confirm G2 received",
+          "action": "GET openrouter.ai/api/v1/models/deepseek/deepseek-v4-flash (and -pro); check zdr.enforced=true; verify account-level ZDR",
+          "postcondition_verify": "ZDR true at model AND account level for both models",
+          "on_fail": "Halt — strict_local lane cannot use OpenRouter without ZDR",
+          "ledger_row": {"phase": "D1_zdr_openrouter", "flash_zdr": true, "pro_zdr": true, "account_zdr": "<captured>"}
+        },
+        {
+          "task_id": "TD2",
+          "label": "Verify Anthropic direct no-train + exact reviewer slug",
+          "precondition_check": "TD1 done",
+          "action": "Confirm Anthropic no-train default + account tier; GET api.anthropic.com/v1/models with x-api-key; capture exact slug",
+          "postcondition_verify": "no-train confirmed; slug 'claude-sonnet-4-6' or dated variant returned; if dated, hermes config set reviewer_model <actual-slug>",
+          "ledger_row": {"phase": "D2_zdr_anthropic", "no_train": true, "exact_slug": "<captured>", "egress_class": "ephemeral_zdr"}
+        },
+        {
+          "task_id": "TD3",
+          "label": "R1 re-confirm gate: leaked OpenRouter key carried to live",
+          "precondition_check": "TD1 done",
+          "action": "Re-present security_risk_register.R1 to operator: exposure window opens at G5, closes at Phase I. Operator explicitly accepts deferral OR elects to rotate now (pull rotation forward from Phase I).",
+          "postcondition_verify": "Operator decision recorded in ledger; if 'rotate now', execute TI1 early then continue",
+          "ledger_row": {"phase": "D3_R1_reconfirm", "decision": "<defer|rotate_now>", "secret_value_logged": false}
+        }
+      ],
+      "phase_exit_criteria": "Both lanes ZDR-verified; R1 decision recorded; '/confirm G3' received."
+    },
+
+    {
+      "phase_id": "E",
+      "phase_label": "Skills + routing + dual-lane skill construction",
+      "duration_estimate": "60 min",
+      "approval_gate": "none — auto-proceed to F",
+      "tasks": [
+        {
+          "task_id": "TE1",
+          "label": "Enable Phase-1 skills (minimal scope)",
+          "precondition_check": "/confirm G3 received",
+          "action": [
+            "hermes skill enable communication/telegram-gateway",
+            "hermes skill enable developer/filesystem",
+            "hermes skill enable productivity/github --read-only",
+            "DEFER productivity/google-workspace",
+            "hermes skill list --enabled"
+          ],
+          "postcondition_verify": "3 skills active; google-workspace NOT enabled",
+          "ledger_row": {"phase": "E1_skills_minimal", "enabled": ["telegram-gateway", "filesystem", "github-readonly"], "deferred": ["google-workspace"]}
+        },
+        {
+          "task_id": "TE2",
+          "label": "Reconcile 3 pre-wired configs field-by-field (no blind overwrite)",
+          "precondition_check": "Test-Path of agents.registry.yaml, intent_exemplars.yaml, router.config.yaml under <canonical>\\NIZAM__system\\config",
+          "action": "For each: diff current vs target (wiring pack 5-8); surface each divergence {field_path, current, proposed, rationale}; operator decides keep|overwrite|merge|abort PER FIELD; apply; append per-field decision to PHASING_LEDGER",
+          "postcondition_verify": "All 3 reconciled; no field touched without per-field operator token",
+          "no_blind_overwrite": true
+        },
+        {
+          "task_id": "TE3",
+          "label": "Sync reconciled configs laptop -> VPS",
+          "precondition_check": "TE2 complete",
+          "action": "scp the 3 config files to nizam@vps:~/.hermes/config/",
+          "postcondition_verify": "sha256sum matches on VPS and laptop for all 3"
+        },
+        {
+          "task_id": "TE4",
+          "label": "Build 5 locked NIZAM skills",
+          "precondition_check": "TE3 done",
+          "action": [
+            "dual-lane-shura.md (lock:true): prompt -> deepseek-v4-pro -> if decision_grade -> claude-sonnet-4-6 review -> return reviewed output + lane metadata",
+            "router-classifier.md: deepseek-v4-flash on every message vs intent_exemplars.yaml -> intent + confidence",
+            "nizam-cost-logger.md",
+            "nizam-egress-check.md (HIMAYAH hook)",
+            "nizam-sukoon-preflight.md (Yusra hook)",
+            "nizam-ledger-append.md (sole writer to EVENT_LEDGER + NIZAM-COSTS)"
+          ],
+          "postcondition_verify": "skills present under ~/.hermes/skills-nizam/, all lock:true, hermes skill list shows them"
+        },
+        {
+          "task_id": "TE5",
+          "label": "Register 6 commands",
+          "precondition_check": "TE4 done",
+          "action": "hermes command register for /dump /shura /naqd /cost /pause /kill (and /resume) with target skills + fallbacks",
+          "postcondition_verify": "hermes command list shows all"
+        }
+      ],
+      "phase_exit_criteria": "Skills + commands + dual-lane skill installed; configs reconciled per operator field decisions."
+    },
+
+    {
+      "phase_id": "F",
+      "phase_label": "G4 — HIMAYAH + SUKOON + AHEL gate leak tests",
+      "duration_estimate": "20 min",
+      "approval_gate": "G4",
+      "operator_action_required": "Operator reviews egress_refusals.jsonl rows, types '/confirm G4'.",
+      "tasks": [
+        {
+          "task_id": "TF1",
+          "label": "Deliberate strict_local leak attempt — HIMAYAH must block",
+          "action": "ssh nizam@vps 'hermes test inject --payload-tag strict_local --target openrouter --dry-run'",
+          "postcondition_verify": "Call refused; new HIMAYAH__egress_refusals.jsonl row reason='strict_local content'; no outbound HTTP fired",
+          "on_fail": "Halt — P0 privacy bug; debug egress hook before anything else"
+        },
+        {
+          "task_id": "TF2",
+          "label": "ZDR-down simulation — HIMAYAH must block",
+          "action": "Set provider.zdr_verified()=false via test flag; attempt strict_local-adjacent call; verify block; restore flag",
+          "postcondition_verify": "Refusal logged reason='ZDR unverified'"
+        },
+        {
+          "task_id": "TF3",
+          "label": "SUKOON downshift test",
+          "action": "Write 2 red flags into SUKOON__recovery_first/overload_flags.jsonl (7d window); send /naqd test; verify Supportive Reflection (single line, no failure-mode list); clear test flags",
+          "postcondition_verify": "Reply < 200 chars, no enumerated failure modes; ledger downshift_active=true"
+        },
+        {
+          "task_id": "TF4",
+          "label": "AHEL hard-block sanity",
+          "action": "Inject synthetic payload tagged ahel; verify HIMAYAH blocks unconditionally regardless of ZDR",
+          "postcondition_verify": "Refusal logged reason='ahel_hard_block'; no external lane reached"
+        }
+      ],
+      "phase_exit_criteria": "All 4 gate tests pass; '/confirm G4' received."
+    },
+
+    {
+      "phase_id": "G",
+      "phase_label": "G5 — End-to-end round-trips via Telegram (foreground)",
+      "duration_estimate": "30 min",
+      "approval_gate": "G5",
+      "operator_action_required": "Operator reviews 5 round-trips + cost ledger, types '/confirm G5'.",
+      "tasks": [
+        {
+          "task_id": "TG1",
+          "label": "Start hermes gateway FOREGROUND (not systemd yet)",
+          "precondition_check": "/confirm G4 received",
+          "action": "ssh nizam@vps 'hermes gateway start --foreground &'",
+          "postcondition_verify": "logs show 'listening' + bot getMe returns expected username"
+        },
+        {
+          "task_id": "TG2",
+          "label": "Round-trip 1: capture (no-slash /dump path)",
+          "action": "Operator sends 'random thought: verifying NIZAM capture path on 2026-05-30'",
+          "expected_path": "router-classifier -> amin_capture (conf>=0.62) -> TAFRIGH dump appended -> Telegram ack < 3s",
+          "postcondition_verify": "newest file in TAFRIGH__brain_dumper/dumps/ has today's date + verbatim text; EVENT_LEDGER + NIZAM-COSTS row lane=generator.fast model=deepseek-v4-flash"
+        },
+        {
+          "task_id": "TG3",
+          "label": "Round-trip 2: /shura (dual-lane)",
+          "action": "Operator sends '/shura should I prioritize the GCC contract or finishing NIZAM Phase 1 this weekend?'",
+          "expected_path": "deepseek-v4-pro -> decision_grade -> claude-sonnet-4-6 review -> Telegram reply",
+          "postcondition_verify": "NIZAM-COSTS gets 2 rows: generator.reasoning deepseek-v4-pro + reviewer claude-sonnet-4-6; p95 < 30s",
+          "truncation_watch": "If flow cut by tool_turn_cap=7, log it; only then consider bump to 10"
+        },
+        {
+          "task_id": "TG4",
+          "label": "Round-trip 3: /naqd (Claude solo)",
+          "action": "Operator sends '/naqd plan: defer the Aya conversation another 2 weeks'",
+          "expected_path": "claude-sonnet-4-6 solo, no DeepSeek pre-pass -> 3 failure modes, vault-cited",
+          "postcondition_verify": "NIZAM-COSTS: 1 reviewer row, no generator row this turn"
+        },
+        {
+          "task_id": "TG5",
+          "label": "Round-trip 4: /cost",
+          "action": "Operator sends '/cost'",
+          "expected_path": "Coordinator reads NIZAM-COSTS -> today + MTD per-pillar breakdown",
+          "postcondition_verify": "Coherent USD; pillar sum = total; trend vs ceilings shown"
+        },
+        {
+          "task_id": "TG6",
+          "label": "Round-trip 5: /pause + /resume",
+          "action": "'/pause' -> wait 5s -> '/shura test' (no response) -> '/resume' -> '/shura test' (responds)",
+          "postcondition_verify": "Paused window: no LLM call logged; resume: new ledger row"
+        }
+      ],
+      "phase_exit_criteria": "5 round-trips pass; >=5 new cost rows; p95 < 30s; '/confirm G5' received."
+    },
+
+    {
+      "phase_id": "H",
+      "phase_label": "Relay lift — live production (systemd)",
+      "duration_estimate": "20 min",
+      "approval_gate": "relay_lift then FINAL",
+      "operator_action_required": "Operator types '/confirm relay_lift' to start; manually merges PR for '/confirm FINAL'.",
+      "tasks": [
+        {
+          "task_id": "TH1",
+          "label": "Stop foreground gateway cleanly",
+          "precondition_check": "/confirm relay_lift received (separate from G5)",
+          "action": "ssh nizam@vps 'pkill -SIGTERM -f \"hermes gateway start\"; sleep 3'",
+          "postcondition_verify": "no hermes gateway process in ps aux"
+        },
+        {
+          "task_id": "TH2",
+          "label": "Install nizam-hermes.service systemd unit",
+          "action": "Write /etc/systemd/system/nizam-hermes.service (Type=simple, User=nizam, ExecStart=hermes gateway start, Restart=on-failure, RestartSec=10, EnvironmentFile=/home/nizam/.hermes/.env, WantedBy=multi-user.target); daemon-reload; enable --now",
+          "postcondition_verify": "systemctl is-active = active; is-enabled = enabled"
+        },
+        {
+          "task_id": "TH3",
+          "label": "Cron: daily cost digest 20:00 Africa/Cairo",
+          "action": "ssh nizam@vps 'hermes cron add --schedule \"0 20 * * *\" --tz Africa/Cairo --skill nizam-cost-digest --output telegram'",
+          "postcondition_verify": "hermes cron list shows entry"
+        },
+        {
+          "task_id": "TH4",
+          "label": "Production verification trip + reboot recovery",
+          "action": "Wait 5 min; operator sends /shura test (must match G5); 'sudo reboot'; wait 60s; operator sends /dump 'post-reboot health check'",
+          "postcondition_verify": "both respond; new NIZAM-COSTS rows; journal shows clean systemd restart"
+        },
+        {
+          "task_id": "TH5",
+          "label": "Open PR to main (no merge)",
+          "action": "gh pr create --base main --head feat/hermes-phase1-wiring --title 'feat(hermes): NIZAM Phase 1 wiring — live production' --body-file runtime/nizam_hermes_phase1_wiring.md",
+          "postcondition_verify": "PR URL returned; no auto-merge; CI green or N/A",
+          "do_not_merge": true,
+          "operator_action_required": "Operator reviews + merges = '/confirm FINAL'"
+        }
+      ],
+      "phase_exit_criteria": "Systemd running; cron scheduled; reboot recovery verified; PR open against main."
+    },
+
+    {
+      "phase_id": "I",
+      "phase_label": "POST-LIVE — rotate all secrets, revoke old, update vault (closes R1)",
+      "duration_estimate": "30 min",
+      "mode": "local + VPS",
+      "approval_gate": "none (post-FINAL housekeeping) — but report each rotation",
+      "depends_on": "FINAL (live + stable)",
+      "tasks": [
+        {
+          "task_id": "TI1",
+          "label": "Rotate OpenRouter key (closes R1 exposure window)",
+          "precondition_check": "live + stable; OpenRouter dashboard accessible",
+          "action": "Generate new key labeled 'NIZAM-VPS-PROD-2026-05-30'; stream into VPS ~/.hermes/.env replacing old; restart nizam-hermes; THEN revoke the previously-leaked key",
+          "postcondition_verify": "old key -> 401; new key -> 200; service active; one live round-trip succeeds on new key",
+          "ledger_row": {"phase": "I1_openrouter_rotated", "old_revoked": true, "new_label": "NIZAM-VPS-PROD-2026-05-30", "secret_value_logged": false}
+        },
+        {
+          "task_id": "TI2",
+          "label": "Rotate Anthropic direct key",
+          "action": "Generate new Anthropic key; replace in ~/.hermes/.env; restart; revoke old",
+          "postcondition_verify": "old -> 401; new -> 200; reviewer lane round-trip succeeds",
+          "ledger_row": {"phase": "I2_anthropic_rotated", "old_revoked": true, "secret_value_logged": false}
+        },
+        {
+          "task_id": "TI3",
+          "label": "Rotate Telegram bot token + GitHub PAT",
+          "action": "Telegram BotFather /revoke + new token; new GitHub PAT scoped to nizamcore read-only; replace both in ~/.hermes/.env (+ deploy key if applicable); restart; revoke old PAT",
+          "postcondition_verify": "bot getMe ok on new token; git fetch ok on new PAT; old PAT 401",
+          "ledger_row": {"phase": "I3_telegram_github_rotated", "old_revoked": true, "secret_value_logged": false}
+        },
+        {
+          "task_id": "TI4",
+          "label": "Update vault labels + purge any at-rest plaintext secrets",
+          "action": "Update 1Password/secret-store item labels to new keys; securely delete D:\\NIZAM\\.env and NIZAM-secrets.json plaintext if no longer needed, or confirm gitignored + access-restricted",
+          "postcondition_verify": "vault reflects current live keys; no stale leaked key anywhere; at-rest plaintext minimized + gitignored",
+          "ledger_row": {"phase": "I4_vault_reconciled", "stale_keys_purged": true}
+        }
+      ],
+      "phase_exit_criteria": "All live secrets rotated; every previously-exposed credential revoked; R1 closed."
+    }
+  ],
+
+  "stop_conditions": [
+    "Preflight F1/F2/F3 unresolved -> halt at Phase PRE (cannot run A/B against missing paths or no git repo)",
+    "Canonical path does not resolve to real content after TPRE1 -> halt",
+    "No git repo / origin after TPRE2 -> halt (Phase B impossible)",
+    "Any at-rest secret not gitignored at TPRE3/TB5/TB6 -> halt, never --no-verify",
+    "1Password / provided secret source inaccessible -> halt at TA4",
+    "Git working tree dirty at TB1 -> halt",
+    "Any pre-commit secret scan hit at TB6 -> halt",
+    "hermes doctor not green at TC6 -> halt at G2",
+    "ZDR unverifiable at TD1/TD2 -> halt at G3",
+    "Any per-field config divergence at TE2 without operator decision -> halt at that field",
+    "HIMAYAH fails to block leak at TF1 -> halt at G4 (P0 privacy bug)",
+    "Telegram round-trip p95 > 30s at G5 -> halt, investigate latency before relay lift",
+    "Operator silent > 24h after a gate request -> auto-pause + single Telegram nudge",
+    "NOTE: v2.0's 'leaked key not revoked -> halt' is INTENTIONALLY RELAXED in v2.1 (rotation deferred to Phase I). R1 risk is open G5->TI1."
+  ],
+
+  "non_goals_explicit": [
+    "do NOT execute anything from this plan — PLAN_ONLY until '/gsd execute'",
+    "do NOT enable Gmail or Calendar (Drive-only Phase 1)",
+    "do NOT install voice/TTS",
+    "do NOT wire pillars beyond Coordinator + Amin + Salman + Hazim + Ammar gate + Yusra gate",
+    "do NOT enable cron beyond 20:00 Africa/Cairo cost digest",
+    "do NOT merge PR to main without '/confirm FINAL'",
+    "do NOT push from VPS (read-only deploy key)",
+    "do NOT commit PHASING_LEDGER, NIZAM-COSTS, HIMAYAH__egress_refusals, SOUL.md, user_deep.md, NIZAM-secrets.json, *oauthclient*.json",
+    "do NOT raise tool_turn_cap above 7 unless TG3 truncation actually occurs",
+    "do NOT exec /confirm in any shell — chat-protocol token",
+    "do NOT touch C:\\doctorhealth (separate project)",
+    "do NOT generate/rotate SSH keys without operator approval"
+  ],
+
+  "deliverables_at_completion": {
+    "committed_via_pr": [
+      "NIZAM__system/personas/NAQD.json (provider doc fix)",
+      "NIZAM__system/governor/ledger_writer.py (NIZAM-COSTS registered)",
+      "NIZAM__system/config/agents.registry.yaml (after TE2)",
+      "NIZAM__system/config/intent_exemplars.yaml (after TE2)",
+      "NIZAM__system/config/router.config.yaml (after TE2)",
+      "NIZAM__system/runtime/nizam_hermes_phase1_wiring.md",
+      ".gitignore (updated patterns)"
+    ],
+    "local_only_never_committed": [
+      "PHASING_LEDGER.jsonl, NIZAM-COSTS.jsonl, HIMAYAH__egress_refusals.jsonl (*.jsonl policy)",
+      "VPS ~/.hermes/.env (600), ~/.hermes/SOUL.md (strict_local)",
+      "D:\\NIZAM\\.env, NIZAM-secrets.json, *oauthclient*.json, user_deep.md (at-rest secrets)"
+    ],
+    "vps_state": [
+      "hermes >= 0.15.1 as nizam-hermes.service (auto-restart, auto-start on reboot)",
+      "3 skills active (telegram-gateway, filesystem, github-readonly)",
+      "5-6 locked NIZAM skills (router, cost-logger, egress-check, sukoon-preflight, ledger-append, dual-lane-shura)",
+      "Coordinator + 4 persona-modes + 2 gates wired",
+      "1 cron (daily cost digest 20:00 Cairo)"
+    ],
+    "operator_interfaces": [
+      "Telegram bot live, whitelist user_id 8001780136",
+      "Commands: /dump /shura /naqd /cost /pause /resume /kill",
+      "Daily digest 20:00 Africa/Cairo"
+    ],
+    "production_status_target": "LIVE — gate-protected, cost-ceilinged; R1 closed after Phase I"
+  },
+
+  "communication_protocol": {
+    "per_task_reporting": "task_id + precondition_result + action_summary + postcondition_result + ledger_row_written",
+    "gate_request_format": "Single line: 'Awaiting /confirm <gate_id>. Blockers: [...]. Next phase: <label>, est <duration>.'",
+    "no_motivational_text": true,
+    "no_emoji": true,
+    "language": "en",
+    "secret_handling": "Never echo secret values to stdout, chat, or PHASING_LEDGER. Reference by item name only."
+  },
+
+  "immediate_next_action": {
+    "fire_on": "operator '/gsd execute'",
+    "first_phase": "PRE (remediate F1/F2/F3)",
+    "first_task": "TPRE1 — resolve canonical path discrepancy",
+    "blocked_by": "preflight_findings_BLOCKING — operator must choose canonical-path + git-bootstrap options at gate PRE",
+    "halt_at_gates": ["PRE", "G2", "G3", "G4", "G5", "relay_lift", "FINAL"]
+  }
+}

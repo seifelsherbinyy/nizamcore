@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nizam/skills_registry/registry.schema.json",
+  "title": "NIZAM Skills Registry",
+  "type": "object",
+  "required": ["schema_version", "skills"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "generated": { "type": "string", "format": "date-time" },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "path",
+          "command",
+          "privacy_ceiling",
+          "activation"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "command": { "type": ["string", "null"] },
+          "privacy_ceiling": {
+            "enum": ["public_safe", "private_ai_ok", "strict_local", "secret"]
+          },
+          "activation": {
+            "enum": ["on_demand", "pulsation", "council", "operator_command"]
+          },
+          "targets": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "schema_ref": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

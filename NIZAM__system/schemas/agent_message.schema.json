@@ -47,7 +47,7 @@
     },
     "from_agent": {
       "type": "string",
-      "description": "Codename: Operator, Ammar, Amin, Salman, Hazim, Tariq, Khalid, Khaldun, Tahir, Hayat, Yusra, Sadiq."
+      "description": "Codename: Operator, Ammar, Amin, Salman, Hazim, Tariq, Khalid, Khaldun, Tahir, Hayat, Sadiq."
     },
     "to_agent": {
       "type": "string",
@@ -98,7 +98,7 @@
         "operator_only",
         "framework_egress"
       ],
-      "description": "Tightest egress the envelope is permitted to traverse. AHEL must be no_egress or deterministic_local_only. Strict_local may be zdr_inference_only or operator_only."
+      "description": "Tightest egress the envelope is permitted to traverse. Strict_local may be zdr_inference_only or operator_only."
     },
     "payload": {
       "type": "object",

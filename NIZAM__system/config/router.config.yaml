@@ -32,9 +32,9 @@ intents:
   long_horizon:         { target: Tariq,  examples_ref: intent_exemplars.yaml#long_horizon }
   tactical_plan:        { target: Khalid, examples_ref: intent_exemplars.yaml#tactical_plan }
   weekly_synthesis:     { target: Khaldun, examples_ref: intent_exemplars.yaml#weekly_synthesis }
+  islamic_wisdom:       { target: Khaldun, examples_ref: intent_exemplars.yaml#islamic_wisdom }
   intel_scout:          { target: Tahir,  examples_ref: intent_exemplars.yaml#intel_scout }
   biometric_log:        { target: Hayat,  examples_ref: intent_exemplars.yaml#biometric_log }
-  family_record:        { target: Yusra,  examples_ref: intent_exemplars.yaml#family_record, egress_class: strict_local_maximum }
   decision_log:         { target: Sadiq,  examples_ref: intent_exemplars.yaml#decision_log }
   capture:              { target: Amin,   examples_ref: intent_exemplars.yaml#capture }
 
@@ -44,9 +44,11 @@ commands:
   "/pulse":   { target: Hayat,  kind: COMMAND }
   "/shura":   { target: Salman, kind: COMMAND }
   "/naqd":    { target: Hazim,  kind: COMMAND }
+  "/hikmah":  { target: Khaldun, kind: COMMAND }
   "/confirm": { control: relay_confirm }
   "/pause":   { control: relay_pause }
   "/cost":    { control: relay_cost_report }
+  "/council-review": { target: Ammar, kind: COMMAND, skill: council_review }
 
 # Crisis detection
 crisis_signals:

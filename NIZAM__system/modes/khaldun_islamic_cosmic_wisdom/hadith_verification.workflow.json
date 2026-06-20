@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "name": "hadith_verification",
+  "steps": [
+    {"id": "capture", "action": "Record exact hadith text and claimed source"},
+    {"id": "collection_check", "action": "Verify collection name and reference number"},
+    {"id": "grading_check", "action": "Look up grading in Sunnah.com or Dorar"},
+    {"id": "usage_gate", "action": "Determine usable_for: ruling | virtues | weak_mention_only | reject"},
+    {"id": "science_independence", "action": "If scientific_alignment present, state it does NOT authenticate weak hadith"}
+  ],
+  "grading_rules": {
+    "sahih": {"usable_for": ["ruling", "virtues", "aqidah_principle"]},
+    "hasan": {"usable_for": ["virtues", "general_reminder"]},
+    "daif": {"usable_for": ["weak_mention_only"], "note": "Cannot prove scientific claims"},
+    "mawdu": {"usable_for": [], "note": "Do not cite as prophetic"}
+  },
+  "outputs": ["hadith_text", "collection", "grading", "is_usable_as_evidence", "notes_on_weakness_if_any"]
+}

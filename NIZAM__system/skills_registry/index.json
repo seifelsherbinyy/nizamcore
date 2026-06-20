@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-06-14T12:00:00Z",
+  "skills": [
+    {
+      "id": "companion_checkin",
+      "name": "Companion Check-in",
+      "path": "NIZAM__system/skills/companion_checkin.skill.md",
+      "command": null,
+      "privacy_ceiling": "private_ai_ok",
+      "activation": "pulsation",
+      "targets": ["Salman", "Hayat", "Sadiq"],
+      "schema_ref": "NIZAM__system/schemas/pulsation_message.schema.json"
+    },
+    {
+      "id": "context_refresh_radar",
+      "name": "Context Refresh Radar",
+      "path": "NIZAM__system/skills/context_refresh_radar.skill.md",
+      "command": null,
+      "privacy_ceiling": "strict_local",
+      "activation": "pulsation",
+      "targets": ["companion/pulsation/context_refresh"],
+      "schema_ref": null
+    },
+    {
+      "id": "himayah_egress_guard",
+      "name": "HIMAYAH Egress Guard",
+      "path": "NIZAM__system/skills/himayah_egress_guard.skill.md",
+      "command": null,
+      "privacy_ceiling": "strict_local",
+      "activation": "pulsation",
+      "targets": ["Ammar"],
+      "schema_ref": null
+    },
+    {
+      "id": "council_review",
+      "name": "Council Review",
+      "path": "NIZAM__system/skills/council_review.skill.md",
+      "command": "/council-review",
+      "privacy_ceiling": "strict_local",
+      "activation": "operator_command",
+      "targets": ["council/deliberation"],
+      "schema_ref": "NIZAM__system/schemas/council_verdict.schema.json"
+    },
+    {
+      "id": "evidence_pack_builder",
+      "name": "Evidence Pack Builder",
+      "path": "NIZAM__system/skills/evidence_pack_builder.skill.md",
+      "command": null,
+      "privacy_ceiling": "strict_local",
+      "activation": "council",
+      "targets": ["council/evidence"],
+      "schema_ref": null
+    },
+    {
+      "id": "sukoon_recovery",
+      "name": "SUKOON Recovery",
+      "path": "NIZAM__system/skills/sukoon_recovery.skill.md",
+      "command": null,
+      "privacy_ceiling": "private_ai_ok",
+      "activation": "pulsation",
+      "targets": ["Yusra"],
+      "schema_ref": null
+    },
+    {
+      "id": "prompt_optimizer",
+      "name": "Prompt Optimizer",
+      "path": "NIZAM__system/skills/prompt_optimizer.skill.md",
+      "command": null,
+      "privacy_ceiling": "public_safe",
+      "activation": "on_demand",
+      "targets": ["skills_registry"],
+      "schema_ref": null
+    },
+    {
+      "id": "multi_agent_deliberation",
+      "name": "Multi-Agent Deliberation",
+      "path": "NIZAM__system/skills/multi_agent_deliberation.skill.md",
+      "command": null,
+      "privacy_ceiling": "strict_local",
+      "activation": "council",
+      "targets": ["council/deliberation", "council/decision_protocols"],
+      "schema_ref": "NIZAM__system/schemas/council_motion.schema.json"
+    },
+    {
+      "id": "thabat_ledger_closeout",
+      "name": "THABAT Ledger Closeout",
+      "path": "NIZAM__system/skills/thabat_ledger_closeout.skill.md",
+      "command": null,
+      "privacy_ceiling": "strict_local",
+      "activation": "on_demand",
+      "targets": ["governor/ledger_writer"],
+      "schema_ref": null
+    }
+  ]
+}

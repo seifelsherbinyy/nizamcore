@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-06-14T12:00:00Z",
+  "pulsation": {
+    "loop_a_interval_hours": 3,
+    "loop_b_enabled": false,
+    "last_dry_run_ok": true
+  },
+  "council": {
+    "routine_debate_suppressed": true,
+    "operator_command": "/council-review"
+  },
+  "research": {
+    "repos_assessed": 12,
+    "patterns_adopted": 20
+  }
+}

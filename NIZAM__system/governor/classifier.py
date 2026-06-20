@@ -3,7 +3,7 @@
 Reads NIZAM__system/policies/PRIVACY_CLASSIFICATION.json and matches a
 relative POSIX path to a classification:
 
-  - strict_local_maximum  (AHEL — hard-block from VPS/cloud)
+  - strict_local_maximum  (generic hard-block from VPS/cloud)
   - strict_local          (encrypted volume only; ZDR inference permitted)
   - review_before_commit  (human review then commit)
   - private_github        (free to sync; private repo per locked Q3)

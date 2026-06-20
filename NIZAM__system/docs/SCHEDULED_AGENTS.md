@@ -16,7 +16,6 @@ Daily / weekly / monthly cadence routines are easy to skip when life gets busy â
 | 1st of month | monthly_milestone | `/mal-milestone-check` â†’ `/mal-exchange-rate-check` | Track finance progress |
 | 1st of quarter | quarterly_plan | `/munawara-quarter-plan` | Plan next quarter |
 | Jan 1 | annual_review | `/tariq-annual-review` | Score pillars + identify pivots |
-| Daily 08:00 | cadence_check (optional) | `/ahel-connection-cadence` | Surface up to 3 family members |
 
 ## Runner choices (pick one, document in this file when chosen)
 

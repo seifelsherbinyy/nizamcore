@@ -1,0 +1,6 @@
+# NIZAM/Hermes live VPS baseline anchor 2026-05-30T13:54:29Z
+b58ca5bce01a0b2e6efc2f51c6276208258721af81575c95aa92e3fdc7dd4106  /home/nizam/.hermes/config.yaml
+407246a7609001c7ce2bb2c5b9447233aef548de01092d74d76ebeca567c7acc  /home/nizam/.hermes/SOUL.md
+16dac9976959004e230da6a0a5d1d8b22c7e06eae1796391c9d2df69e7060ec1  /home/nizam/.hermes/user.md
+40ebe56c5d7d7df462899375694d8835bdd4d32652aefc1b766a82e0f388c2c1  /home/nizam/.hermes/plugins/nizam-governor/__init__.py
+580123730d134d5293e77b3825cd41d613f481426201abd41363f915178be580  /home/nizam/.hermes/plugins/nizam-governor/plugin.yaml

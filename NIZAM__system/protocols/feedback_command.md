@@ -37,7 +37,7 @@ If `[category]` is omitted, default route is `voice`.
 2. Coordinator parses the command; the body becomes Amin's Artifact A capture.
 3. Coordinator routes the capture to Khaldun (kind=annotation) with the parsed category attached.
 4. Khaldun:
-   - Drafts a proposed diff against `user.md` (or `user_deep.md` for `deep`/AHEL-adjacent items).
+   - Drafts a proposed diff against `user.md` (or `user_deep.md` for deep items).
    - Writes the proposal to `LEARNING_LEDGER` with `kind=mirroring_proposal`.
    - Replies to the operator with a 5-line summary of the proposed change + the C1/C2 checkpoint
      prompt.
@@ -52,7 +52,6 @@ If `[category]` is omitted, default route is `voice`.
 ## What Khaldun is NOT allowed to do
 
 - Edit any file other than `user.md` / `user_deep.md` based on a `/feedback`.
-- Write to AHEL state. AHEL state requires Yusra's dedicated channel.
 - Apply a change without the operator's explicit reply per turn.
 - Carry context from one `/feedback` trace into another without the operator's permission
   (E2.8 anti-drift relies on independent traces).

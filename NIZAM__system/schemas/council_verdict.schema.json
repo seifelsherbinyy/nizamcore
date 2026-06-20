@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://nizam.local/schemas/council_verdict.schema.json",
+  "title": "CouncilVerdict",
+  "description": "Resolved outcome of a NIZAM companion council deliberation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict_id",
+    "motion_id",
+    "trace_id",
+    "outcome",
+    "protocol_used",
+    "decided_at",
+    "votes"
+  ],
+  "properties": {
+    "verdict_id": { "type": "string", "format": "uuid" },
+    "motion_id": { "type": "string", "format": "uuid" },
+    "trace_id": { "type": "string", "format": "uuid" },
+    "outcome": {
+      "type": "string",
+      "enum": ["approved", "rejected", "deferred", "vetoed", "no_quorum"]
+    },
+    "protocol_used": {
+      "type": "string",
+      "enum": [
+        "majority",
+        "supermajority",
+        "weighted",
+        "unanimity",
+        "judge_synthesis",
+        "veto",
+        "defer"
+      ]
+    },
+    "decided_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "votes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/vote" }
+    },
+    "dissent": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "judge_synthesis": { "type": ["string", "null"] },
+    "positions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/agent_position" }
+    },
+    "rounds_completed": { "type": "integer", "minimum": 0 },
+    "stability_stopped": { "type": "boolean" }
+  },
+  "definitions": {
+    "vote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "ballot", "weight"],
+      "properties": {
+        "agent": { "type": "string" },
+        "ballot": {
+          "type": "string",
+          "enum": ["yes", "no", "abstain", "veto", "defer"]
+        },
+        "weight": { "type": "number", "minimum": 0 },
+        "rationale": { "type": "string" }
+      }
+    },
+    "agent_position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "stance", "rationale", "confidence"],
+      "properties": {
+        "agent": { "type": "string" },
+        "stance": {
+          "type": "string",
+          "enum": ["support", "oppose", "abstain", "defer", "conditional"]
+        },
+        "rationale": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "round_index": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

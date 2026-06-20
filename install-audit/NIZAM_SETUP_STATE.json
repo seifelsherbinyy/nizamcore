@@ -1,0 +1,29 @@
+﻿{
+    "timestamp_utc":  "2026-06-14T14:14:15Z",
+    "workspace_root":  "D:\\NIZAM",
+    "repo_path":  "D:\\NIZAM",
+    "remote":  "https://github.com/seifelsherbinyy/nizamcore.git",
+    "branch":  "cursor/router-stage-1-ir6-mirror-1",
+    "commit_local":  "de2b3db9b0bff0c81fea8f4ef5c631f37a223892",
+    "commit_remote_main":  "071e54c2d4cfcf7258471e4abb845542df113e8f",
+    "head_parity_ok":  false,
+    "platform_version":  "3.3.0",
+    "startup_ready":  true,
+    "startup_exit_code":  0,
+    "python":  "3.12.4",
+    "venv":  ".venv",
+    "requirements_files":  [
+                               "HIFZ__github_version_control/requirements-governor.txt",
+                               "MARSAD__flight_radar/requirements.txt"
+                           ],
+    "pip_freeze_path":  "install-audit/pip-freeze.txt",
+    "marsad_pytest":  "pass",
+    "marsad_tests_passed":  81,
+    "governor_lib_import":  "pass",
+    "verify_log":  "verify-20260614-171409.log",
+    "notes":  [
+                  "doctorhealth not used",
+                  "no pip package named nizam; use tools/nizam_startup.py and NIZAM_TEMPLE platform_version",
+                  "no GitHub release tags on remote"
+              ]
+}

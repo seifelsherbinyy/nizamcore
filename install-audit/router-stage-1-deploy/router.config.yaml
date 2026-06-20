@@ -1,0 +1,67 @@
+# NIZAM router.config.yaml
+# Per Routing v7 sec.4; capture_before_judge default; LLM-as-router primary.
+# Updated: 2026-05-31 (IR-1..IR-8 intent router stage 1)
+
+schema_version: 1.0.0
+
+router:
+  mode: llm_as_router          # primary; sentence-transformers pipeline DEFERRED
+  model: deepseek-v4-flash     # routing-class, low cost, fast
+  reviewer_model: kimi-k2.6    # used only when confidence sits in confirm band
+
+# Confidence thresholds — capture_before_judge default
+route_confidence:
+  auto_route_min: 0.70         # >= 0.70 -> auto-route to target codename
+  confirm_band_min: 0.50       # 0.50 - 0.70 -> single confirmation prompt MAX
+  confirm_band_max: 0.70
+  fallback_command: /tafrigh-capture   # < 0.50 -> capture instead of judge
+
+# Routing priority (first match wins; later items defer to earlier)
+routing_priority:
+  - { kind: CRISIS,       handler: protocol:crisis_sukoon_red }
+  - { kind: HIMAYAH_HIT,  handler: governor:Ammar }
+  - { kind: SUKOON_HIT,   handler: gate:SUKOON_downshift }
+  - { kind: COMMAND,      handler: command:registry_lookup }
+  - { kind: TRIGGER,      handler: trigger:registry_lookup }
+  - { kind: CONTINUATION, handler: continuation:thread_resume }
+  - { kind: AMBIGUOUS,    handler: fallback:/tafrigh-capture }
+
+intents:
+  brainstorm:           { target: Salman, examples_ref: intent_exemplars.yaml#brainstorm }
+  redteam:              { target: Hazim,  examples_ref: intent_exemplars.yaml#redteam }
+  long_horizon:         { target: Tariq,  examples_ref: intent_exemplars.yaml#long_horizon }
+  tactical_plan:        { target: Khalid, examples_ref: intent_exemplars.yaml#tactical_plan }
+  weekly_synthesis:     { target: Khaldun, examples_ref: intent_exemplars.yaml#weekly_synthesis }
+  intel_scout:          { target: Tahir,  examples_ref: intent_exemplars.yaml#intel_scout }
+  biometric_log:        { target: Hayat,  examples_ref: intent_exemplars.yaml#biometric_log }
+  family_record:        { target: Yusra,  examples_ref: intent_exemplars.yaml#family_record, egress_class: strict_local_maximum }
+  decision_log:         { target: Sadiq,  examples_ref: intent_exemplars.yaml#decision_log }
+  capture:              { target: Amin,   examples_ref: intent_exemplars.yaml#capture }
+
+# Telegram command registry (NIZAM_HERMES_WIRING_v1.0)
+commands:
+  "/dump":    { target: Amin,   kind: COMMAND }
+  "/pulse":   { target: Hayat,  kind: COMMAND }
+  "/shura":   { target: Salman, kind: COMMAND }
+  "/naqd":    { target: Hazim,  kind: COMMAND }
+  "/confirm": { control: relay_confirm }
+  "/pause":   { control: relay_pause }
+  "/cost":    { control: relay_cost_report }
+
+# Crisis detection
+crisis_signals:
+  hard_keywords: ["crisis", "emergency", "help", "panic", "overload red"]
+  protocol_doc: NIZAM__system/protocols/crisis_sukoon_red.md
+
+# Operator-confirm thresholds
+operator_in_the_loop:
+  delegation_depth_at: 4    # auto chains capped at 3
+  cost_step_at_usd: 5.0     # any single step projected > $5 -> confirm
+  egress_first_call_per_provider: true
+  tool_budget: {default: 3, hard_cap: 7}   # R2, mirrors registry hermes block
+  session_reset: after_each_pillar_task
+
+# Dry-run fixture
+fixture:
+  path: NIZAM__system/config/fixtures/router_13_inputs.jsonl
+  expected_routing_min_accuracy: 0.80

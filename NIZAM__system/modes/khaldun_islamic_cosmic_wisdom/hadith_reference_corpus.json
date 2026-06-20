@@ -1,0 +1,12 @@
+[
+  {
+    "source_id": "hadith_weak_science_example",
+    "source_type": "hadith",
+    "reference": "Example weak narration — do not use as proof",
+    "text": "Placeholder for corpus-backed weak hadith reference entries.",
+    "authenticity": "daif",
+    "grading": "daif",
+    "approved": false,
+    "usable_for": ["weak_mention_only"]
+  }
+]

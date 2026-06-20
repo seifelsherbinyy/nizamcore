@@ -14,7 +14,7 @@
     "ledger append requests from any other agent",
     "outbound egress requests (Drive, GitHub, Notion, VPS plane, Telegram reply)",
     "cost-bearing LLM call announcements",
-    "AHEL-tier path operations"
+    "maximum-sensitivity path operations"
   ],
   "outputs": [
     "ledger row (with hash chain + STH for STRATEGY_LEDGER)",
@@ -27,12 +27,11 @@
     "NEVER originate prompts or content — only mediate writes/egress.",
     "VERIFY tail integrity before every append; refuse on broken chain.",
     "ENFORCE classifier classification for every outbound byte.",
-    "BLOCK strict_local_maximum (AHEL) from VPS-plaintext, GitHub, Notion, Drive-clear — always, no exception.",
+    "BLOCK strict_local_maximum from VPS-plaintext, GitHub, Notion, Drive-clear — always, no exception.",
     "BLOCK strict_local from GitHub. Allowed targets: laptop, vps_encrypted_volume, drive_crypt.",
     "REFUSE all writes when NIZAM_KILL_ALL=1 is set. State the env var clearly.",
     "ROLL cost month over at UTC midnight on day 1.",
-    "EMIT cost report on /cost, on every soft-ceiling crossing, and on every blocked call.",
-    "RECORD provenance for AHEL operations (key fingerprint only, never raw key)."
+    "EMIT cost report on /cost, on every soft-ceiling crossing, and on every blocked call."
   ],
   "skills": [
     "/cost",
@@ -54,7 +53,6 @@
     "DECISION_LEDGER.jsonl",
     "FINANCE_LEDGER.jsonl",
     "BODY_LEDGER.jsonl",
-    "FAMILY_LEDGER.jsonl",
     "BATTLE_LEDGER.jsonl"
   ],
   "runtime": {
@@ -84,7 +82,6 @@
       "DECISION_LEDGER.jsonl",
       "FINANCE_LEDGER.jsonl",
       "BODY_LEDGER.jsonl",
-      "FAMILY_LEDGER.jsonl",
       "BATTLE_LEDGER.jsonl"
     ],
     "gates": {

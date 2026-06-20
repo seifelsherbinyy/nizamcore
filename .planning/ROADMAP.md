@@ -3,9 +3,9 @@
 **Project:** NIZAM Multi-Persona System v1.1  
 **Scope:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action, celebrating completion — with adaptive messaging when engagement drops  
 **Granularity:** FINE (7 phases, derived from message lifecycle and integration boundaries)  
-**Last Updated:** 2026-06-20  
-**Progress:** Phase 15 complete (2 of 2 plans executed and committed)  
-**Status:** In Progress (Phase 16 next)
+**Last Updated:** 2026-06-21  
+**Progress:** Phase 16 planning complete (2 of 2 plans created)  
+**Status:** In Progress (Phase 16 execution next)
 
 ---
 
@@ -13,7 +13,7 @@
 
 - [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓, 14-05: comprehensive test suite ✓)
 - [x] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources (15-01: refresh pipeline ✓, 15-02: configuration & integration ✓)
-- [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone
+- [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone (16-01: core infrastructure ◐, 16-02: test suite + integration ◐)
 - [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
 - [ ] **Phase 18: Adaptation & Format Evolution** - Track weekly response rates, adapt format if <80%, cycle through variations, log rationale
 - [ ] **Phase 19: Cross-Pillar Integration** - Wire messages to MUNAWARA (actions), MAL (finance), TARIQ (strategy), ledger append
@@ -97,7 +97,24 @@
 3. Generated message is actionable: nudges open topic, motivates action, or celebrates completion (not generic or passive)
 4. Persona tone is consistent (e.g., AMMAR is builder-focused, HIKMAH is philosophical, TARIQ is strategic) across 5 consecutive test message generations
 
-**Plans:** TBD
+**Plans:** 2/2 plans planned
+- [ ] 16-01: Core Infrastructure & Generator (Wave 1, 6 tasks, PLANNED)
+  - Persona system prompts for all 11 personas (AMMAR, HIKMAH, TARIQ, MUNAWARA, MAL, BADAN, NAQD, SHURA, TAFRIGH, MARSAD, NIZAM)
+  - RepetitionTracker: Last-5 message tracking with phrase-level deduplication (3-grams)
+  - IntentProcessor: Extract topics from intent, build rich context from index
+  - MessageLedger: JSONL audit trail with privacy gates (context_tags whitelist only)
+  - Generator: Claude API with system prompt injection, error handling, exponential backoff
+  - Public API in HIKMAH__knowledge_index.message_generation module
+  - Addresses requirements: MSG-01 (rephrasing + tone), MSG-02 (repetition tracking), MSG-03 (actionability heuristic), MSG-04 (tone consistency via system prompts)
+
+- [ ] 16-02: Test Suite & Integration (Wave 2, 6 tasks, PLANNED)
+  - 5 test modules: conftest.py (fixtures), test_generator.py (9 tests), test_repetition_tracker.py (6 tests), test_intent_processor.py (10 tests), test_tone_consistency.py (5 tests)
+  - 28+ tests total covering all MSG-01-04 requirements
+  - MockClaude fixture for persona-specific responses without real API calls
+  - Tone consistency validation: 5 consecutive message generations per persona
+  - >80% coverage on core modules (generator.py, repetition_tracker.py, message_ledger.py, intent_processor.py)
+  - README.md Phase 16 documentation with Phase 17 integration example
+  - Addresses requirements: Comprehensive validation of MSG-01-04
 
 ---
 
@@ -176,8 +193,8 @@
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 14. Knowledge Index Schema & Storage | 5/5 | Complete    | 2026-06-20 |
-| 15. Data Refresh & Synchronization | 2/2 planned | Complete    | 2026-06-20 |
-| 16. Message Generation & Variation | 0/? | Not started | — |
+| 15. Data Refresh & Synchronization | 2/2 | Complete    | 2026-06-20 |
+| 16. Message Generation & Variation | 0/2 planning | Planned     | — |
 | 17. Delivery & Response Tracking | 0/? | Not started | — |
 | 18. Adaptation & Format Evolution | 0/? | Not started | — |
 | 19. Cross-Pillar Integration | 0/? | Not started | — |

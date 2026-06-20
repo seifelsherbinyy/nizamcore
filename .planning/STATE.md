@@ -2,21 +2,21 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
-status: planning
-stopped_at: Phase 15-02 completed; refresh configuration externalized to YAML, public API exposed with Phase 16 integration example, comprehensive documentation added to README
-last_updated: "2026-06-20T21:04:49.021Z"
+status: execution
+stopped_at: Phase 16-01 completed; core message generation engine built with persona tone injection, repetition tracking, intent processing, privacy enforcement. Public API exposed. Ready for Wave 2 testing.
+last_updated: "2026-06-21T00:00:00Z"
 progress:
   total_phases: 7
   completed_phases: 2
-  total_plans: 7
-  completed_plans: 7
-  percent: 64
+  total_plans: 8
+  completed_plans: 8
+  percent: 73
 ---
 
 # STATE: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
 
-**Last Updated:** 2026-06-20T00:00:00Z  
-**Current Milestone:** v1.1 — Roadmap complete, ready for Phase 14 planning
+**Last Updated:** 2026-06-21T00:00:00Z  
+**Current Milestone:** v1.1 — Phase 16-01 (Message Generation) complete, ready for Wave 2 testing
 
 ---
 
@@ -48,14 +48,24 @@ progress:
 ## Current Position
 
 **Milestone:** v1.1 / In Progress  
-**Phase:** 15 (Data Refresh & Synchronization)  
-**Plan:** 15-02 (Configuration & Integration) — COMPLETE  
-**Status:** Ready to plan
-**Progress:** [███████░░░] 64% (7/11 plans complete: Phase 14 (5) + Phase 15 (2))
+**Phase:** 16 (Message Generation & Variation)  
+**Plan:** 16-01 (Core Message Generator) — COMPLETE  
+**Status:** Ready to plan Phase 16-02 (Tests) or proceed to Phase 17
+**Progress:** [████████░░] 73% (8/11 plans complete: Phase 14 (5) + Phase 15 (2) + Phase 16 (1))
 
-**Stopped At:** Phase 15-02 completed; refresh configuration externalized to YAML, public API exposed with Phase 16 integration example, comprehensive documentation added to README
+**Stopped At:** Phase 16-01 completed; core message generation engine built with persona tone injection, repetition tracking, intent processing, and privacy-gated audit trail. Public API exposed. Ready for Wave 2 testing.
 
 **Work Completed:**
+- **Phase 16-01 Completion:**
+  - Implemented all 6 core modules: persona_tones.py, generator.py, repetition_tracker.py, intent_processor.py, message_ledger.py, __init__.py
+  - Created system prompts for all 11 personas with distinct tones (AMMAR: terse, HIKMAH: deep/warm, TARIQ: strategic, etc.)
+  - Implemented RepetitionTracker with 3-gram phrase-level deduplication and last-5 message tracking
+  - Implemented IntentProcessor with context extraction pipeline (topics, activity summary, completion detection)
+  - Implemented MessageLedger with privacy enforcement (context_tags whitelist validation)
+  - Integrated Claude API 3.5 Sonnet for message generation with system prompt injection, error handling, exponential backoff
+  - All 6 tasks completed and committed atomically (6 commits total)
+  - Phase 16 message generation engine now ready for Wave 2 testing and Phase 17 consumption
+  - Satisfies requirements MSG-01, MSG-02, MSG-03, MSG-04
 - **Phase 15-02 Completion:**
   - Externalized refresh configuration to YAML (config.yaml) with all operator-editable parameters
   - Implemented RefreshConfig dataclass and load_refresh_config() with validation and runtime overrides

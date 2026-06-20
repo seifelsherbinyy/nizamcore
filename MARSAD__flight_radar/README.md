@@ -109,12 +109,16 @@ post-Eid buffer. Update when the official announcement is made (~30 days before)
 
 ## Primary Data Source Decision
 
-**Recommended: Amadeus for Developers API** (`DATA_SOURCE=amadeus` in .env)
+**Default and recommended: SerpApi Google Flights** (`DATA_SOURCE=serpapi` in .env)
 
-ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
-- Google's ToS prohibits automated access without prior written permission
-- Bot detection will likely block headless browser automation within 24 hours
-- Use only if you have reviewed the ToS and accept the risk
+- Register at [serpapi.com](https://serpapi.com) — instant approval, no gating
+- Free tier: 250 searches/month (covers testing and low-cadence monitoring)
+- Paid tier ($25/month): 1,000 searches/month — required for full daily monitoring across all 24 combinations
+- Set `SERPAPI_PRIORITY_ONLY=true` in .env to restrict to 8 priority destinations and stay within free tier during setup
+
+Amadeus for Developers (`DATA_SOURCE=amadeus`) — **disabled**: the Amadeus self-service portal shut down in July 2025 and new API keys are no longer issued. The implementation is retained for reference; existing key holders can re-enable.
+
+ITA Matrix (`DATA_SOURCE=ita_matrix`) — **ToS-gated**: Google's Terms of Service prohibit automated access without prior written permission. Bot detection will likely block headless browser automation within 24 hours. Enable only after ToS review by setting `ITA_MATRIX_ENABLED=true` in .env.
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
@@ -123,11 +127,15 @@ See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instr
 ```bash
 cd MARSAD__flight_radar
 cp .env.example .env
-# Edit .env — set AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET at minimum
+# Edit .env — set SERPAPI_KEY at minimum (register free at serpapi.com)
 pip install -r requirements.txt
+
+# Confirm credentials and config are valid
+python -m radar.main validate
 
 # Run baseline collection (Stage 1 — first time only)
 python -m radar.main discover
+# Optional: preview scope without writing: --dry-run
 
 # Run daily monitor (Stage 2 — or let scheduler run it)
 python -m radar.main monitor
@@ -138,24 +146,76 @@ python -m radar.main alert
 # Run forecast update (Stage 4)
 python -m radar.main forecast
 
-# Run all stages in sequence
+# Run all stages in sequence (monitor + alert + forecast)
 python -m radar.main run-all
+# Include discover in the sequence: --with-discover
 
 # Start scheduler daemon (runs 06:00 UTC daily)
 python -m radar.main schedule
+
+# Live executive dashboard at http://localhost:7329
+python -m radar.main dashboard
+
+# Print store summary
+python -m radar.main status
 ```
+
+## Historical Price Seed Research
+
+The forecast model needs 7+ observations to exit cold-start (LOW confidence). Seeding with
+historical data from external sources accelerates this. All seeds are stored with
+`observation_type: historical_seed` in the schema — they never overwrite live observations.
+
+### Available Sources
+
+| Source | Historical Depth | Access Method | Format | Integration |
+|---|---|---|---|---|
+| Google Flights price history | ~3 months visible in UI | Manual: price graph on Google Flights search results. No public API. | Approximate month-range + price curve | Manual entry as `historical_seed` observations via schema_store.append_observation |
+| Hopper historical data | 12–24 months (Hopper app) | Mobile app only — no public API. Hopper's algorithm is proprietary. | In-app price calendar / forecast screen | Manual sampling from app — not bulk-importable |
+| Kayak price history charts | ~3 months via Kayak.com/flights price trend feature | Web UI scraping (fragile) — no official API | Monthly price trend chart | Manual extraction; add as `historical_seed` |
+| Momondo price trends | ~3 months | Similar to Kayak — web UI only | Monthly chart | Manual extraction |
+| SerpApi historical search | Current day only (live API) | Programmatic via SerpApi | JSON | The daily MONITOR stage builds the time series automatically |
+| Airline fare filing archives | Up to 24 months | ATPCO (requires enterprise subscription — not viable for personal use) | Structured fare data | Not applicable |
+
+### Practical Seed Strategy
+
+The most viable approach for rapid cold-start exit:
+
+1. **Run DISCOVER once** to seed a baseline observation for all 24 route-cabin combinations.
+2. **Run MONITOR daily** — the pipeline exits cold-start after 7 consecutive daily runs (~1 week).
+3. **Optional manual seed**: For any route-cabin combination, manually search Google Flights for 3–5 historical price points from the past 30 days and insert via:
+   ```python
+   from radar.schema_store import append_observation
+   append_observation(
+       origin="CAI", destination="JFK", carrier="EK", cabin="BUSINESS",
+       price_usd=3200.0, outbound_date="2027-04-01", return_date="2027-04-12",
+       outbound_duration_hours=14.5, return_duration_hours=15.0,
+       outbound_stops=1, return_stops=1,
+       outbound_routing="CAI-DXB-JFK", return_routing="JFK-DXB-CAI",
+       source="manual", observation_type="historical_seed",
+   )
+   ```
+4. After 7 total observations per series (baseline + seeds + daily), the confidence gate opens and BUY_SIGNAL eligibility activates.
+
+### Why No Hopper-Grade Dataset Exists Here
+
+Hopper's price prediction accuracy comes from 10+ billion price points accumulated over years across all routes. MARSAD operates on a single personal corridor (CAI→USA) with a 6-month travel window. The SMA→EWM→LR three-tier model is calibrated for this constrained dataset — accuracy improves linearly with observation count. By day 30, the linear regression model produces directional forecasts that are reliable enough for booking decision support.
+
+---
 
 ## SWAPPABLE_DEFAULT REGISTRY
 
 | Component | Current Default | Swap To | Swap Instructions |
 |---|---|---|---|
 | Language | Python 3.11 | Any 3.11+ | No changes needed |
-| Primary source | Amadeus API | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
-| Secondary source | Kiwi Tequila | Kayak/Momondo scrape | Set `SECONDARY_SOURCE=scrape` in .env |
+| Primary source | SerpApi (Google Flights) | Amadeus API (if key exists) | Set `DATA_SOURCE=amadeus` in .env + `AMADEUS_CLIENT_ID`/`SECRET` |
+| Primary source | SerpApi (Google Flights) | ITA Matrix | Set `DATA_SOURCE=ita_matrix` in .env — review ToS first |
+| Secondary source | None (disabled) | Kiwi Tequila | Set `SECONDARY_SOURCE=kiwi` and `KIWI_API_KEY` in .env |
 | File store | JSON file | PostgreSQL/SQLite | Swap `schema_store.py` implementation |
 | Scheduler | APScheduler | cron / GitHub Actions | See `SCHEDULED_AGENTS.md` in NIZAM__system |
-| Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
-| Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary |
+| Alert delivery | Console + JSON file | Slack | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
+| Alert delivery | Console + JSON file | Webhook | Set `ALERT_DELIVERY=webhook` and `ALERT_WEBHOOK_URL` in .env |
+| Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary fields |
 
 ## Privacy
 

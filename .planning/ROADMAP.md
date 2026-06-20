@@ -4,15 +4,15 @@
 **Scope:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action, celebrating completion — with adaptive messaging when engagement drops  
 **Granularity:** FINE (7 phases, derived from message lifecycle and integration boundaries)  
 **Last Updated:** 2026-06-20  
-**Progress:** Phase 15 planning complete (2 of 2 plans created)  
-**Status:** In Progress
+**Progress:** Phase 15 complete (2 of 2 plans executed and committed)  
+**Status:** In Progress (Phase 16 next)
 
 ---
 
 ## Phases
 
 - [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓, 14-05: comprehensive test suite ✓)
-- [ ] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources (15-01: refresh pipeline ⬜, 15-02: configuration & integration ⬜)
+- [x] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources (15-01: refresh pipeline ✓, 15-02: configuration & integration ✓)
 - [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone
 - [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
 - [ ] **Phase 18: Adaptation & Format Evolution** - Track weekly response rates, adapt format if <80%, cycle through variations, log rationale
@@ -65,21 +65,22 @@
 3. If Drive is unavailable (network error, auth failure, missing file), system falls back to cached index and logs the degradation (audit entry with timestamp)
 4. Every refresh logs data sources read, timestamps, and success/failure status (audit trail persists locally)
 
-**Plans:** 2 plans created
-- [x] 15-01: Refresh Pipeline Implementation (Wave 1, 5 tasks)
+**Plans:** 2/2 plans complete
+- [x] 15-01: Refresh Pipeline Implementation (Wave 1, 5 tasks, COMPLETE)
   - GoogleDriveClient: Drive API wrapper with credential management
   - merge_activity_into_index(): Preserves stalled_work and completions
   - RefreshAuditLogger: JSONL audit trail for all refresh attempts
   - refresh_persona_index(): Graceful fallback on Drive unavailability
-  - Comprehensive test suite: 25+ tests covering Drive queries, merge, fallback, audit logging
+  - Comprehensive test suite: 63 tests, all passing (0 failures)
   - Covers requirements: REFRESH-01, REFRESH-02, REFRESH-03
 
-- [x] 15-02: Configuration & Integration (Wave 2, 4 tasks)
-  - Externalized refresh configuration (YAML) for operator customization
-  - RefreshConfig dataclass + config_loader.py module
+- [x] 15-02: Configuration & Integration (Wave 2, 4 tasks, COMPLETE)
+  - Externalized refresh configuration (YAML, config.yaml) for operator customization
+  - RefreshConfig dataclass + config_loader.py module with validation
   - Updated HIKMAH.__init__.py public API for Phase 16 consumption
-  - README.md Phase 15 section with integration example for Phase 16
-  - Covers requirements: REFRESH-01, REFRESH-02, REFRESH-03 (documentation)
+  - README.md comprehensive Phase 15 documentation with Phase 16 integration example
+  - All Phase 14-15 functions exposed in public API
+  - Covers requirements: REFRESH-01, REFRESH-02, REFRESH-03 (documentation & integration)
 
 ---
 

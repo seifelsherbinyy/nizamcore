@@ -49,13 +49,21 @@ progress:
 
 **Milestone:** v1.1 / In Progress  
 **Phase:** 15 (Data Refresh & Synchronization)  
-**Plan:** 15-01 (Data Refresh Pipeline) — COMPLETE  
-**Status:** Ready for Phase 15 verification or Phase 16 planning
-**Progress:** [██████░░░░] 57% (6/10 plans complete: Phase 14 (5) + Phase 15-01 (1))
+**Plan:** 15-02 (Configuration & Integration) — COMPLETE  
+**Status:** Phase 15 complete; ready for Phase 16 planning
+**Progress:** [███████░░░] 64% (7/11 plans complete: Phase 14 (5) + Phase 15 (2))
 
-**Stopped At:** Phase 15-01 completed; complete data refresh pipeline with 63 passing tests (0 failures), Google Drive API client, merge strategy with stalled_work/completion preservation, graceful fallback, and audit logging with hash chaining
+**Stopped At:** Phase 15-02 completed; refresh configuration externalized to YAML, public API exposed with Phase 16 integration example, comprehensive documentation added to README
 
 **Work Completed:**
+- **Phase 15-02 Completion:**
+  - Externalized refresh configuration to YAML (config.yaml) with all operator-editable parameters
+  - Implemented RefreshConfig dataclass and load_refresh_config() with validation and runtime overrides
+  - Updated HIKMAH.__init__.py public API to expose Phase 15 refresh functions (refresh_persona_index, load_cached_index, RefreshAuditLogger, RefreshConfig, load_refresh_config)
+  - Added comprehensive Phase 15 documentation to README.md (7-step refresh cycle, configuration, audit trail, failure handling, Phase 16 integration example)
+  - Updated Architecture and Key Files sections to include Phase 15 modules
+  - All 4 tasks completed and committed atomically (4 commits total)
+  - Phase 15 pipeline now configured, documented, and ready for Phase 16 consumption
 - **Phase 15-01 Completion:**
   - Implemented complete data refresh pipeline: GoogleDriveClient, merge_strategy, audit logging, graceful fallback
   - GoogleDriveClient: Service account auth, folder/file queries with MIME filtering, error handling (RefreshError, HttpError)

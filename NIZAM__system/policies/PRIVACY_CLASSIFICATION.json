@@ -25,6 +25,8 @@
     { "path_glob": "MUNAWARA__tactical_strategy/{1_year,3_year,5_year,quarters,months,weeks,battle_ledger,opportunity_maneuvers}/**",  "classification": "strict_local" },
     { "path_glob": "MAL__financial_engine/**",                                  "classification": "strict_local" },
     { "path_glob": "BADAN__body_health_system/**",                              "classification": "strict_local" },
+    { "path_glob": "HIKMAH__knowledge_index/indices/*.json",                    "classification": "strict_local" },
+    { "path_glob": "NIZAM__system/ledgers/PERSONA_KNOWLEDGE_INDEX.jsonl",        "classification": "strict_local" },
     { "path_glob": "NIZAM__system/ledgers/EVENT_LEDGER.jsonl",                  "classification": "review_before_commit" },
     { "path_glob": "NIZAM__system/ledgers/DECISION_LEDGER.jsonl",               "classification": "review_before_commit" },
     { "path_glob": "NIZAM__system/ledgers/LEARNING_LEDGER.jsonl",               "classification": "review_before_commit" },

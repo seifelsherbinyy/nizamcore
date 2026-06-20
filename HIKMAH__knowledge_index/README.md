@@ -80,7 +80,21 @@ HIKMAH__knowledge_index/
 │   ├── ledger_writer.py               # RefreshAuditLogger for audit trail
 │   ├── REFRESH_AUDIT_LEDGER.jsonl    # Audit trail (append-only)
 │   └── tests/                         # Refresh tests (63 tests)
-└── tests/                             # Phase 14 validation tests
+├── message_generation/                # Phase 16: Message generation
+│   ├── __init__.py                    # Public API (generate_message, generate_and_dedupe)
+│   ├── persona_tones.py               # System prompts for all 11 personas
+│   ├── generator.py                   # Core generation with Claude API
+│   ├── repetition_tracker.py          # Last-5 message deduplication (3-gram phrases)
+│   ├── intent_processor.py            # Intent → context pipeline
+│   ├── message_ledger.py              # JSONL ledger with privacy gates
+│   ├── MESSAGE_LEDGER.jsonl           # Message audit trail (created on first write)
+│   └── tests/                         # Message generation tests (81 tests)
+│       ├── conftest.py                # Fixtures (MockClaude, sample indices)
+│       ├── test_generator.py          # Core generation tests
+│       ├── test_repetition_tracker.py # Deduplication tests
+│       ├── test_intent_processor.py   # Context building tests
+│       └── test_tone_consistency.py   # Tone validation tests
+├── tests/                             # Phase 14 validation tests
     ├── test_schema_validation.py
     └── test_sample_index.json
 ```
@@ -350,6 +364,204 @@ Each ledger entry includes:
 
 ---
 
+## Phase 16: Message Generation & Variation
+
+### Overview
+
+Phase 16 implements the core message generation engine that creates fresh, contextual, persona-consistent nudges twice daily. It consumes indices from Phase 15 and produces messages for Phase 17 delivery.
+
+**Key Components:**
+1. **Intent Rephrasing:** Converts user intents into rich context via IntentProcessor
+2. **Tone Injection:** Applies persona-specific system prompts to Claude API calls
+3. **Repetition Prevention:** RepetitionTracker detects phrase-level repeats from last 5 messages
+4. **Actionability Validation:** Ensures messages contain imperative verbs or clear motivation
+5. **Message Ledger:** Audit trail with privacy-gated context tags
+
+### Core API
+
+**Main Functions:**
+
+```python
+# Generate a single message (no repetition checking)
+message = generate_message(
+    persona="AMMAR",
+    intent="You have 3 open items",
+    index=ammar_index,
+    client=anthropic_client,
+    max_tokens=100
+)
+# Returns: "Pick one and move forward" (persona-toned)
+
+# Generate message with repetition detection + ledger logging
+message, success, reason = generate_and_dedupe(
+    persona="AMMAR",
+    intent="open work",
+    index=ammar_index,
+    client=anthropic_client,
+    tracker=repetition_tracker,
+    ledger=message_ledger,
+    max_retries=3
+)
+# Returns: (message, True, "success") on first try
+# Returns: (fallback, False, "max_retries_exceeded") if all retries repeat
+# Returns: (fallback, False, "api_error") if Claude API fails
+```
+
+**Classes:**
+
+- **`IntentProcessor`** — Converts intent to rich context
+  - `extract_topics(intent, index)` — Find relevant topics via keyword matching
+  - `build_context_summary(topics, index)` — Create descriptive summary with status
+  - `should_celebrate(index)` — Detect recent completions for celebratory tone
+  - `get_activity_summary(index)` — Aggregate activity events (counts by type)
+  - `build_full_context(intent, index)` — Combine all context into dict for Claude
+
+- **`RepetitionTracker`** — Last-5 message deduplication
+  - `get_last_messages(persona, limit=5)` — Retrieve last N messages
+  - `extract_key_phrases(text)` — Extract 3-gram phrases with min 10-char threshold
+  - `is_repetition(new_message, persona)` — Check set intersection for phrase overlap
+  - `log_message(persona, message_text, intent, success)` — Append to ledger
+
+- **`MessageLedger`** — Audit trail with privacy enforcement
+  - `log_generation(persona, message_text, intent, context_tags, ...)` — Write ledger entry
+    - Validates context_tags against CONTEXT_TAGS_WHITELIST (technical, health, financial, strategic, personal)
+    - Raises ValueError if invalid tag detected (fail-safe privacy gate)
+  - `get_messages_for_persona(persona, limit=10)` — Query ledger
+
+### Persona Tones
+
+Each persona gets a distinct system prompt defining voice, constraints, and examples:
+
+**AMMAR (Terse & Direct):**
+- Example: "3 items waiting. Pick one and move forward."
+- Tone markers: Imperative verbs (pick, move, focus, identify), no emotional language
+- Constraint: Keep it factual and actionable
+
+**HIKMAH (Philosophical & Reflective):**
+- Example: "Your work carries weight. Notice the pattern. What's beneath this pause?"
+- Tone markers: Reflective language (reflect, pattern, notice, mean, deeper), warmth
+- Constraint: Deep but honest; no false cheerleading
+
+**TARIQ (Strategic & Big-Picture):**
+- Example: "This directly feeds Q3. Remove the blocker and restore momentum."
+- Tone markers: Goal/timeline language (quarter, target, impact, horizon), strategic framing
+- Constraint: Link to larger objectives
+
+**Others (MUNAWARA, MAL, BADAN, NAQD, SHURA, TAFRIGH, MARSAD, NIZAM):**
+- Unique system prompts defined in `persona_tones.py`
+- All 11 personas fully supported with distinct voices
+
+### Repetition Prevention Strategy
+
+Why **3-gram phrase-level** over exact string matching?
+
+- **Exact string:** "Your AI work is stalled" vs. "Your work on AI is stalled" → would miss rephrasings
+- **3-gram (phrase-level):** Both share "work is stalled" → detected as repetition (correct!)
+- **Min 10-char threshold:** Filters trivial phrases like "the" or "you have"
+- **Performance:** O(n*m) where n≈20 words, m≈30 phrases → <5ms per check
+
+Example:
+```python
+tracker = RepetitionTracker(ledger_path)
+tracker.log_message("AMMAR", "Your AI workflow could be faster", "optimization")
+
+# Later, check a candidate
+is_repeat = tracker.is_repetition("Your AI work might accelerate", "AMMAR")
+# True (shared phrase: "your ai")
+```
+
+### Message Constraints
+
+- **Length:** <280 chars (fits Telegram limit)
+- **PII:** No raw personal data (only safe context_tags)
+- **Actionability:** Must contain imperative verbs or clear motivation
+- **Repetition:** No exact phrase repeats from last 5 messages per persona
+
+### Privacy & Safety
+
+- **Context Tags:** Ledger stores only safe tags (technical, health, financial, strategic, personal), validated against whitelist
+- **Strict Local:** All ledger entries remain on-device (never egressed)
+- **Audit Trail:** Every generation (success/failure) logged for Phase 20 validation
+- **Fallback Messages:** If Claude API fails, use contextual fallback (e.g., "You have 2 open items. Pick one.")
+
+### Error Handling
+
+Graceful degradation on API errors:
+- **RateLimitError:** Retry with exponential backoff (1s, 2s, 4s)
+- **APITimeoutError:** Retry up to max_retries, then fallback message
+- **APIError:** Log error, return fallback, mark success=False in ledger
+- **Fallback:** Generic contextual message when Claude unavailable
+
+### Phase 17 Integration Example
+
+```python
+from HIKMAH__knowledge_index import (
+    refresh_persona_index, load_refresh_config,
+    generate_and_dedupe, RepetitionTracker, MessageLedger
+)
+from pathlib import Path
+from anthropic import Anthropic
+import os
+
+# Phase 15: Load fresh index
+config = load_refresh_config()
+drive_client = GoogleDriveClient(config.credentials_path)
+audit_logger = RefreshAuditLogger(config.audit_ledger_path)
+
+success, index, reason = refresh_persona_index(
+    persona="AMMAR",
+    drive_client=drive_client,
+    index_path=Path("HIKMAH__knowledge_index/indices/AMMAR_index.json"),
+    audit_logger=audit_logger
+)
+
+# Phase 16: Generate message
+client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+tracker = RepetitionTracker(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+ledger = MessageLedger(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+
+message, success, reason = generate_and_dedupe(
+    persona="AMMAR",
+    intent="You have 3 open items on AI optimization",
+    index=index,
+    client=client,
+    tracker=tracker,
+    ledger=ledger,
+    max_retries=3
+)
+
+# Returns: ("Pick one and move forward", True, "success")
+# Ledger entry appended with: ts, persona, message_text, intent, context_tags, success
+
+# Phase 17: Deliver to Telegram (next phase)
+# hermes_relay.send_telegram(message, persona=persona, message_id=generate_message_id())
+```
+
+### Test Suite
+
+Phase 16 includes comprehensive test coverage:
+- **81 total tests** across 5 test modules
+- **test_repetition_tracker.py:** 19 tests for phrase extraction, deduplication, ledger persistence
+- **test_intent_processor.py:** 24 tests for topic extraction, context building, activity summarization
+- **test_generator.py:** 20 tests for generation flow, error handling, ledger logging
+- **test_tone_consistency.py:** 18 tests for tone validation across 5 consecutive generations per persona
+
+**Run tests:**
+```bash
+# Quick run (unit tests only)
+pytest HIKMAH__knowledge_index/message_generation/tests/ -v -k "not api"
+
+# Full suite (all tests including mocked LLM)
+pytest HIKMAH__knowledge_index/message_generation/tests/ -v
+
+# Coverage check
+pytest HIKMAH__knowledge_index/message_generation/tests/ --cov=HIKMAH__knowledge_index.message_generation --cov-report=term-missing
+```
+
+All tests use MockClaude fixture to avoid real API calls. Sample persona indices provided for AMMAR, HIKMAH, TARIQ, etc.
+
+---
+
 ## Privacy Classification & Enforcement
 
 ### SYNC_POLICY Integration
@@ -390,8 +602,8 @@ Two rules enforce strict_local on this module:
 
 | File | Purpose | Phase | Status |
 |------|---------|-------|--------|
-| README.md | Module documentation | 14-15 | ✓ |
-| __init__.py | Public API (Phase 14-15 exports) | 15 | ✓ |
+| README.md | Module documentation | 14-16 | ✓ |
+| __init__.py | Public API (Phase 14-16 exports) | 16 | ✓ |
 | _index.json | Self-registration metadata | 14 | ✓ |
 | index/schema.py | Schema definition + validation | 14 | ✓ |
 | index/writer.py | Ledger writer (mutations) | 14 | ✓ |
@@ -402,19 +614,37 @@ Two rules enforce strict_local on this module:
 | refresh/merge_strategy.py | Merge logic for activity data | 15 | ✓ |
 | refresh/ledger_writer.py | RefreshAuditLogger for audit trail | 15 | ✓ |
 | refresh/__init__.py | Refresh API (refresh_persona_index) | 15 | ✓ |
+| message_generation/persona_tones.py | System prompts for all 11 personas | 16 | ✓ |
+| message_generation/generator.py | Core generation + Claude API integration | 16 | ✓ |
+| message_generation/repetition_tracker.py | Last-5 message deduplication (3-gram phrases) | 16 | ✓ |
+| message_generation/intent_processor.py | Intent → context conversion pipeline | 16 | ✓ |
+| message_generation/message_ledger.py | JSONL ledger with privacy enforcement | 16 | ✓ |
+| message_generation/__init__.py | Message generation public API | 16 | ✓ |
+| message_generation/tests/conftest.py | Shared pytest fixtures (MockClaude, indices) | 16 | ✓ |
+| message_generation/tests/test_generator.py | Core generation tests (20 tests) | 16 | ✓ |
+| message_generation/tests/test_repetition_tracker.py | Deduplication tests (19 tests) | 16 | ✓ |
+| message_generation/tests/test_intent_processor.py | Context building tests (24 tests) | 16 | ✓ |
+| message_generation/tests/test_tone_consistency.py | Tone validation tests (18 tests) | 16 | ✓ |
 
 ---
 
 ## Contact & Handoff
 
 - **Module Owner:** Seif ElSherbiny (seif.elsherbiny13@gmail.com)
-- **Phases Implemented:** 14 (Schema & Storage) + 15 (Data Refresh)
-- **Next Phase:** 16 (Message Generation)
+- **Phases Implemented:** 14 (Schema & Storage) + 15 (Data Refresh) + 16 (Message Generation)
+- **Next Phase:** 17 (Delivery & Response Tracking)
 - **Privacy Compliance:** HIMAYAH gate + SYNC_POLICY
-- **Last Updated:** 2026-06-20
+- **Last Updated:** 2026-06-21
+- **Test Coverage:** 43+ Phase 14 tests + 63 Phase 15 tests + 81 Phase 16 tests = 187+ total
+
+**Ready for Phase 17:**
+- Indices populated via Phase 15 refresh
+- Messages generated via Phase 16 with repetition detection
+- Ledger audit trail functional
+- All privacy gates enforced
 
 ---
 
-*Document Version: 1.1*  
-*Phases: 14 (Knowledge Index Schema & Storage) + 15 (Data Refresh & Synchronization)*  
+*Document Version: 1.2*  
+*Phases: 14 (Knowledge Index Schema & Storage) + 15 (Data Refresh & Synchronization) + 16 (Message Generation & Variation)*  
 *Classification: NIZAM Internal*

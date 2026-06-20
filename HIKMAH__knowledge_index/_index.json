@@ -1,0 +1,33 @@
+{
+  "module": "HIKMAH__knowledge_index",
+  "codename": "Persona Knowledge Index",
+  "purpose": "Per-persona knowledge state tracking with topics, activity history, blockers, and context snapshots. Foundation for adaptive messaging (Phases 15-20).",
+  "phase": 14,
+  "phase_gate": "HIMAYAH (privacy enforcement)",
+  "privacy": "strict_local",
+  "indices_location": "HIKMAH__knowledge_index/indices/{PERSONA}_index.json",
+  "ledger": "PERSONA_KNOWLEDGE_INDEX.jsonl",
+  "personas": [
+    "AMMAR",
+    "HIKMAH",
+    "TARIQ",
+    "MUNAWARA",
+    "MAL",
+    "BADAN",
+    "NAQD",
+    "SHURA",
+    "TAFRIGH",
+    "MARSAD",
+    "NIZAM"
+  ],
+  "schema_version": "1.0",
+  "downstream_phases": [
+    "15-data-refresh",
+    "16-message-generation",
+    "17-delivery-tracking",
+    "18-adaptation",
+    "20-privacy-validation"
+  ],
+  "created": "2026-06-20",
+  "version": "1.0"
+}

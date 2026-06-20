@@ -11,7 +11,7 @@
 
 ## Phases
 
-- [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓)
+- [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓, 14-05: comprehensive test suite ✓)
 - [ ] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources
 - [ ] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone
 - [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
@@ -42,6 +42,13 @@
   - Privacy enforcement configured (PRIVACY_CLASSIFICATION + .gitignore)
   - Documentation complete (README.md + _index.json)
   - INDEX-02 requirement satisfied
+- [x] 14-05: Comprehensive Test Suite (COMPLETE)
+  - Created shared pytest fixtures (conftest.py)
+  - 14 schema validation tests (>80% coverage)
+  - 15 initialization tests covering all 11 personas
+  - 14 versioning and snapshot tests
+  - All 43 tests passing with >80% coverage on core modules
+  - All INDEX-01, INDEX-02, INDEX-03, INDEX-04 requirements verified
 
 ---
 

@@ -68,6 +68,11 @@ BADAN__body_health_system/sleep_recovery/
 BADAN__body_health_system/body_composition/
 BADAN__body_health_system/red_flags/
 
+# ---- Phase 14 knowledge index — NEVER commit per-persona indices or ledger ----
+HIKMAH__knowledge_index/indices/
+HIKMAH__knowledge_index/indices/*.json
+NIZAM__system/ledgers/PERSONA_KNOWLEDGE_INDEX.jsonl
+
 # ---- Phase 2/3 strict-local ledgers ----
 NIZAM__system/ledgers/STRATEGY_LEDGER.jsonl
 NIZAM__system/ledgers/BATTLE_LEDGER.jsonl

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Persona Knowledge Index & Adaptive Messaging
 status: phase_14_executing
-stopped_at: Phase 14-03 COMPLETE (Knowledge Index Initialization); initialize_persona_index and initialize_all_personas implemented, ledger writer with hash chaining, manifest record created
-last_updated: "2026-06-20T23:50:00Z"
+stopped_at: Phase 14-04 COMPLETE (Schema Versioning & MAKHZAN Snapshots); increment_schema_version and snapshot_indices_to_makhzan implemented, CONTINUITY_PROTOCOL.md updated with versioning pattern
+last_updated: "2026-06-20T23:55:00Z"
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 10
-  completed_plans: 3
-  percent: 30
+  completed_plans: 4
+  percent: 40
 ---
 
 # STATE: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
@@ -49,13 +49,21 @@ progress:
 
 **Milestone:** v1.1 / In Progress  
 **Phase:** 14 (Knowledge Index Schema & Storage)  
-**Plan:** 14-03 (Knowledge Index Initialization) — COMPLETE  
-**Status:** Phase 14-03 executed and verified  
-**Progress:** [███░░░░░░░] 30% (3/10 Phase 14 plans complete)
+**Plan:** 14-04 (Schema Versioning & MAKHZAN Snapshots) — COMPLETE  
+**Status:** Phase 14-04 executed and verified  
+**Progress:** [████░░░░░░] 40% (4/10 Phase 14 plans complete)
 
-**Stopped At:** Phase 14-03 completed; initialize_persona_index and initialize_all_personas functions implemented with 15 passing tests; ledger writer with SHA256 hash chaining; init_manifest.json created
+**Stopped At:** Phase 14-04 completed; increment_schema_version() and snapshot_indices_to_makhzan() implemented with 14 passing tests; CONTINUITY_PROTOCOL.md updated; semantic versioning (v1.x, v2.x) supported; MAKHZAN snapshot pattern for rollback
 
 **Work Completed:**
+- **Phase 14-04 Completion:**
+  - Implemented increment_schema_version() for atomic version bumps across all 11 personas (304 lines versioning.py)
+  - Implemented snapshot_indices_to_makhzan() creating MAKHZAN__archive/{ISO_TIMESTAMP}/ with MANIFEST.json
+  - Implemented validate_schema_versions() and validate_version_format() helper functions
+  - Added 14 comprehensive tests validating all versioning functions (all passing)
+  - Updated CONTINUITY_PROTOCOL.md with HIKMAH__knowledge_index versioning pattern (84 lines)
+  - Updated schema.py to support semantic versioning (MAJOR.MINOR, not just 1.x)
+  - Satisfies requirement INDEX-03 (Schema versioning and evolution support)
 - **Phase 14-03 Completion:**
   - Implemented initialize_persona_index() and initialize_all_personas() functions (145 lines main.py)
   - Implemented ledger writer with SHA256 hash chaining (175 lines writer.py)

@@ -4,8 +4,8 @@
 **Scope:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action, celebrating completion — with adaptive messaging when engagement drops  
 **Granularity:** FINE (7 phases, derived from message lifecycle and integration boundaries)  
 **Last Updated:** 2026-06-21  
-**Progress:** Phase 16 planning complete (2 of 2 plans created)  
-**Status:** In Progress (Phase 16 execution next)
+**Progress:** Phase 17 planning complete (2 of 2 plans created)  
+**Status:** In Progress (Phase 17 execution next)
 
 ---
 
@@ -13,8 +13,8 @@
 
 - [x] **Phase 14: Knowledge Index Schema & Storage** - Define optimized JSON schema per persona, initialize local storage (strict_local), versioning support (14-02: HIKMAH registration ✓, 14-05: comprehensive test suite ✓)
 - [x] **Phase 15: Data Refresh & Synchronization** - Refresh index from Google Drive logs, handle graceful degradation, audit all data sources (15-01: refresh pipeline ✓, 15-02: configuration & integration ✓)
-- [x] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone (16-01: core infrastructure ◐, 16-02: test suite + integration ◐) (completed 2026-06-20)
-- [ ] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture
+- [x] **Phase 16: Message Generation & Variation** - Fresh message per intent, avoid repetition, actionable nudges, persona-consistent tone (16-01: core infrastructure ✓, 16-02: test suite + integration ✓) (completed 2026-06-20)
+- [~] **Phase 17: Delivery & Response Tracking** - Twice-daily Telegram delivery (09:00 & 18:00 Cairo), message ID assignment, 1-hour response window capture (17-01: infrastructure ◐, 17-02: orchestration & monitoring ◐)
 - [ ] **Phase 18: Adaptation & Format Evolution** - Track weekly response rates, adapt format if <80%, cycle through variations, log rationale
 - [ ] **Phase 19: Cross-Pillar Integration** - Wire messages to MUNAWARA (actions), MAL (finance), TARIQ (strategy), ledger append
 - [ ] **Phase 20: Privacy & Safety Validation** - No raw personal data in index/messages, sensitive topics flagged, confidence gates, full test validation
@@ -98,7 +98,7 @@
 4. Persona tone is consistent (e.g., AMMAR is builder-focused, HIKMAH is philosophical, TARIQ is strategic) across 5 consecutive test message generations
 
 **Plans:** 2/2 plans complete
-- [ ] 16-01: Core Infrastructure & Generator (Wave 1, 6 tasks, PLANNED)
+- [x] 16-01: Core Infrastructure & Generator (Wave 1, 6 tasks, COMPLETE)
   - Persona system prompts for all 11 personas (AMMAR, HIKMAH, TARIQ, MUNAWARA, MAL, BADAN, NAQD, SHURA, TAFRIGH, MARSAD, NIZAM)
   - RepetitionTracker: Last-5 message tracking with phrase-level deduplication (3-grams)
   - IntentProcessor: Extract topics from intent, build rich context from index
@@ -107,9 +107,9 @@
   - Public API in HIKMAH__knowledge_index.message_generation module
   - Addresses requirements: MSG-01 (rephrasing + tone), MSG-02 (repetition tracking), MSG-03 (actionability heuristic), MSG-04 (tone consistency via system prompts)
 
-- [ ] 16-02: Test Suite & Integration (Wave 2, 6 tasks, PLANNED)
-  - 5 test modules: conftest.py (fixtures), test_generator.py (9 tests), test_repetition_tracker.py (6 tests), test_intent_processor.py (10 tests), test_tone_consistency.py (5 tests)
-  - 28+ tests total covering all MSG-01-04 requirements
+- [x] 16-02: Test Suite & Integration (Wave 2, 6 tasks, COMPLETE)
+  - 5 test modules: conftest.py (fixtures), test_generator.py (20 tests), test_repetition_tracker.py (19 tests), test_intent_processor.py (24 tests), test_tone_consistency.py (18 tests)
+  - 81 total tests covering all MSG-01-04 requirements
   - MockClaude fixture for persona-specific responses without real API calls
   - Tone consistency validation: 5 consecutive message generations per persona
   - >80% coverage on core modules (generator.py, repetition_tracker.py, message_ledger.py, intent_processor.py)
@@ -127,12 +127,24 @@
 
 **Success Criteria** (what must be TRUE when phase completes):
 1. Messages are delivered twice daily (09:00 & 18:00 Cairo via Hermes cron) to Telegram using existing relay infrastructure
-2. Each message receives a unique message_id, sent_at timestamp, and delivered_at timestamp; metadata stored in index
+2. Each message receives a unique message_id, sent_at timestamp, and delivered_at timestamp; metadata stored in ledger
 3. System monitors Telegram for user responses in 1-hour window after delivery (polls relay for incoming messages matching message_id)
 4. Response received within 1-hour window is recorded with response_content and response_time; marked as "successful engagement"
 5. Response tracking test validates: sent message recorded, monitor waits 1 hour, simulated response detected and logged
 
-**Plans:** TBD
+**Plans:** 2/2 plans planned
+- [~] 17-01: Message Delivery Infrastructure (Wave 1, 4 tasks)
+  - MessageIDGenerator: Unique, sortable message IDs (ULID-style: MSG-YYYYMMDDHHMMSSMMMM-RANDOM)
+  - DeliveryLedger: JSONL append-only ledger with privacy gates (context_tags whitelist validation)
+  - TelegramRelayClient: Hermes relay wrapper (send_message, get_updates, reply correlation)
+  - Public API in HIKMAH__knowledge_index.delivery module
+  - Addresses requirements: DELIVERY-01 (foundation for relay integration), DELIVERY-02 (unique IDs), DELIVERY-03 (ledger schema)
+
+- [~] 17-02: Delivery Orchestration & Monitoring (Wave 2, 3 tasks)
+  - DeliveryOrchestrator: Orchestrate delivery lifecycle (ID generation → pre-send log → relay send → success/failure log → monitor spawn)
+  - ResponseMonitor: Background 1-hour engagement window polling with response correlation via reply_to_message_id
+  - Comprehensive test suite: 20+ tests covering delivery flow, response detection, timeout behavior, error handling
+  - Addresses requirements: DELIVERY-01 (twice-daily delivery), DELIVERY-04 (response monitoring), DELIVERY-05 (response logging)
 
 ---
 
@@ -195,7 +207,7 @@
 | 14. Knowledge Index Schema & Storage | 5/5 | Complete    | 2026-06-20 |
 | 15. Data Refresh & Synchronization | 2/2 | Complete    | 2026-06-20 |
 | 16. Message Generation & Variation | 2/2 | Complete    | 2026-06-20 |
-| 17. Delivery & Response Tracking | 0/? | Not started | — |
+| 17. Delivery & Response Tracking | 2/2 | Planned     | 2026-06-21 |
 | 18. Adaptation & Format Evolution | 0/? | Not started | — |
 | 19. Cross-Pillar Integration | 0/? | Not started | — |
 | 20. Privacy & Safety Validation | 0/? | Not started | — |

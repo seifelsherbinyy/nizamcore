@@ -118,6 +118,22 @@
       "scaffolded": true,
       "live": true,
       "note": "Flight-radar intel scout. Persona to be created at B2.7."
+    },
+    "HIKMAH__knowledge_index": {
+      "phase": 14,
+      "codename": "Persona Knowledge Index",
+      "purpose": "Per-persona knowledge state tracking with topics, activity history, blockers, and context snapshots. Foundation for v1.1 adaptive messaging.",
+      "privacy": "strict_local",
+      "indices_location": "HIKMAH__knowledge_index/indices/{PERSONA}_index.json",
+      "schema_version": "1.0",
+      "downstream_consumers": [
+        "Phase 15: Data Refresh",
+        "Phase 16: Message Generation",
+        "Phase 17: Delivery Tracking",
+        "Phase 18: Adaptation",
+        "Phase 20: Validation"
+      ],
+      "status": "active"
     }
   },
   "orientation_files": [
@@ -224,6 +240,16 @@
       "privacy": "review_before_commit",
       "owner": "Tariq",
       "purpose": "Career radar run events, opportunity counts, delivery status, error tracking"
+    },
+    "PERSONA_KNOWLEDGE_INDEX": {
+      "path": "NIZAM__system/ledgers/PERSONA_KNOWLEDGE_INDEX.jsonl",
+      "privacy": "strict_local",
+      "phase": 14,
+      "purpose": "Append-only ledger tracking all knowledge index mutations per persona (topic creates, accomplishments, blockers, completions, context snapshots)",
+      "writer": "HIKMAH__knowledge_index/index/writer.py",
+      "format": "JSONL (append-only, hash-chained)",
+      "retention": "permanent",
+      "note": "Critical audit trail; must be preserved across schema migrations via MAKHZAN snapshots"
     }
   },
   "external_pattern_sources": [

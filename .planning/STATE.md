@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: milestone
 status: planning
-stopped_at: "Completed 18-01-PLAN.md: adaptation package with 63 tests — WeeklyResponseRateCalculator, FormatRotationManager, AdaptationLogger, AdaptationState"
-last_updated: "2026-06-21T13:29:24.590Z"
+stopped_at: "Completed 18-02-PLAN.md: adaptation-generator integration with format_hint injection + 8 integration tests"
+last_updated: "2026-06-21T13:37:30.362Z"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 13
-  completed_plans: 12
-  percent: 97
+  completed_plans: 13
+  percent: 100
 ---
 
 # STATE: NIZAM v1.1 — Persona Knowledge Index & Adaptive Messaging
@@ -51,9 +51,9 @@ progress:
 **Phase:** 16 (Message Generation & Variation)  
 **Plan:** 16-02 (Testing & Integration) — COMPLETE  
 **Status:** Ready to plan
-**Progress:** [██████████] 97%
+**Progress:** [██████████] 100%
 
-**Stopped At:** Completed 18-01-PLAN.md: adaptation package with 63 tests — WeeklyResponseRateCalculator, FormatRotationManager, AdaptationLogger, AdaptationState
+**Stopped At:** Completed 18-02-PLAN.md: adaptation-generator integration with format_hint injection + 8 integration tests
 
 **Work Completed:**
 - **Phase 16-02 Completion:**
@@ -229,6 +229,9 @@ Phase 20: Privacy & Safety Validation
 | Adaptive format rotation if <80% response | Avoid fatigue; test 5+ format variations | Locked |
 | Cross-pillar signals logged but optional | User opt-in via Telegram reply; no silent automation | Locked |
 | Validation as final phase + sign-off gate | Privacy + safety bar before integration into daily workflow | Locked |
+| Lazy import of adaptation classes inside generate_and_dedupe() | Avoids circular import risk between message_generation and adaptation packages | Implemented (18-02) |
+| All 3 adaptation paths required to enable adaptation; any None skips | Backward-compatible: existing callers without adaptation paths unaffected | Implemented (18-02) |
+| FORMAT_CONSTRAINTS.get(format_hint, "") pattern | Unknown hints produce empty string → no change to system prompt (safe fallback) | Implemented (18-02) |
 
 ### Known Risks & Mitigations
 

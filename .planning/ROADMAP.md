@@ -4,8 +4,8 @@
 **Scope:** Each persona delivers fresh, contextual, actionable nudges twice daily — refreshing user knowledge, motivating action, celebrating completion — with adaptive messaging when engagement drops  
 **Granularity:** FINE (7 phases, derived from message lifecycle and integration boundaries)  
 **Last Updated:** 2026-06-21  
-**Progress:** Phase 17 planning complete (2 of 2 plans created)  
-**Status:** In Progress (Phase 17 execution next)
+**Progress:** Phase 18 planning complete (2 of 2 plans created)  
+**Status:** In Progress (Phase 18 execution next)
 
 ---
 
@@ -161,7 +161,9 @@
 3. Format change is logged with rationale (e.g., "TARIQ response rate 65% < 80%, switching from 'standard' to 'short' format")
 4. System never repeats same format twice consecutively; validates format rotation across 10 consecutive message generations under low-engagement scenario
 
-**Plans:** TBD
+**Plans:** 2 plans
+- [ ] 18-01-PLAN.md — Core adaptation modules: WeeklyResponseRateCalculator, FormatRotationManager, AdaptationLogger + 28+ unit tests
+- [ ] 18-02-PLAN.md — Phase 16 integration: format_hint injection into generate_message(), integration tests (10-consecutive-no-repeat), README + parent exports
 
 ---
 
@@ -208,7 +210,7 @@
 | 15. Data Refresh & Synchronization | 2/2 | Complete    | 2026-06-20 |
 | 16. Message Generation & Variation | 2/2 | Complete    | 2026-06-20 |
 | 17. Delivery & Response Tracking | 2/2 | Complete    | 2026-06-21 |
-| 18. Adaptation & Format Evolution | 0/? | Not started | — |
+| 18. Adaptation & Format Evolution | 0/2 | Not started | — |
 | 19. Cross-Pillar Integration | 0/? | Not started | — |
 | 20. Privacy & Safety Validation | 0/? | Not started | — |
 

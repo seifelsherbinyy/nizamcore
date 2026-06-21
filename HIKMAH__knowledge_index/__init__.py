@@ -3,10 +3,12 @@ HIKMAH Knowledge Index Module
 
 A comprehensive persona-aware knowledge management system for the NIZAM multi-persona framework.
 
-Provides persona knowledge indices, versioning, and data refresh pipeline:
+Provides persona knowledge indices, versioning, data refresh pipeline, message generation,
+and delivery infrastructure (Phases 14–17):
 - Phase 14 (Index Schema & Storage): Define and store knowledge indices locally
 - Phase 15 (Data Refresh): Read Google Drive logs and merge activity into indices
-- Phases 16-20 (Message Generation & Adaptation): Consume fresh/cached indices for messaging
+- Phase 16 (Message Generation & Variation): Generate fresh, persona-toned messages via Claude
+- Phase 17 (Delivery & Response Tracking): Deliver messages via Hermes relay, track responses
 
 All storage is strict_local (never egressed to Telegram, Drive, or GitHub).
 
@@ -36,26 +38,30 @@ Message Generation (Phase 16):
     - RepetitionTracker: Track last 5 messages per persona
     - MessageLedger: JSONL audit trail with privacy enforcement
 
+Delivery & Response Tracking (Phase 17):
+    from HIKMAH__knowledge_index import MessageIDGenerator, DeliveryLedger, TelegramRelayClient
+    - MessageIDGenerator.generate(): Create unique sortable message ID (MSG-{YYYYMMDDHHMMSSMMMM}-{8-HEX})
+    - MessageIDGenerator.parse(msg_id): Extract timestamp from message ID
+    - DeliveryLedger: JSONL ledger for delivery, response, and engagement window events
+    - TelegramRelayClient: Abstraction layer for Hermes relay (send_message, get_updates, reply correlation)
+
 Integration (Phases 16-20):
     from HIKMAH__knowledge_index import refresh_persona_index, generate_and_dedupe
     - Call refresh_persona_index() before message generation to get fresh index
     - Falls back to cached index if Drive unavailable
     - Pass index to generate_and_dedupe() for message generation
 
-Usage:
-    from HIKMAH__knowledge_index import refresh_persona_index, load_refresh_config, generate_and_dedupe, RepetitionTracker, MessageLedger
+Usage (Phases 15-17 combined flow):
+    from HIKMAH__knowledge_index import (
+        refresh_persona_index, load_refresh_config,
+        generate_and_dedupe, RepetitionTracker, MessageLedger,
+        MessageIDGenerator, DeliveryLedger, TelegramRelayClient,
+    )
     from anthropic import Anthropic
     from pathlib import Path
 
-    # Load configuration
+    # Phase 15: Refresh index
     config = load_refresh_config()
-
-    # Initialize message generation components
-    client = Anthropic(api_key="sk-ant-...")
-    tracker = RepetitionTracker(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
-    ledger = MessageLedger(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
-
-    # Refresh index before message generation
     success, index, reason = refresh_persona_index(
         persona="AMMAR",
         drive_client=drive_client,
@@ -63,28 +69,38 @@ Usage:
         audit_logger=audit_logger
     )
 
-    if success:
-        # Generate message with fresh index
-        message, success, reason = generate_and_dedupe(
-            persona="AMMAR",
-            intent="You have open work",
-            index=index,
-            client=client,
-            tracker=tracker,
-            ledger=ledger
-        )
-    else:
-        # Gracefully degrade to cached index
-        from HIKMAH__knowledge_index import load_cached_index
-        index = load_cached_index(Path("HIKMAH__knowledge_index/indices/AMMAR_index.json"))
-        message, success, reason = generate_and_dedupe(
-            persona="AMMAR",
-            intent="You have open work",
-            index=index,
-            client=client,
-            tracker=tracker,
-            ledger=ledger
-        )
+    # Phase 16: Generate message
+    client = Anthropic(api_key="sk-ant-...")
+    tracker = RepetitionTracker(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+    msg_ledger = MessageLedger(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+    message, gen_success, gen_reason = generate_and_dedupe(
+        persona="AMMAR",
+        intent="You have open work",
+        index=index,
+        client=client,
+        tracker=tracker,
+        ledger=msg_ledger
+    )
+
+    # Phase 17: Deliver message with unique ID and audit trail
+    msg_id = MessageIDGenerator.generate()
+    relay = TelegramRelayClient()  # reads TELEGRAM_BOT_TOKEN from env
+    delivery_ledger = DeliveryLedger(Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl"))
+
+    response = relay.send_message(chat_id=AMMAR_CHAT_ID, text=message)
+    telegram_msg_id = response["result"]["message_id"]
+
+    delivery_ledger.log_delivery(
+        message_id=msg_id,
+        telegram_message_id=telegram_msg_id,
+        persona="AMMAR",
+        message_text=message,
+        intent="open_work",
+        sent_at="2026-06-21T09:30:45Z",
+        delivered_at="2026-06-21T09:30:46Z",
+        context_tags=["technical"],
+        status="success"
+    )
 """
 
 __version__ = "1.0"
@@ -119,6 +135,13 @@ from HIKMAH__knowledge_index.message_generation import (
     MessageLedger,
 )
 
+# Phase 17 imports (delivery & response tracking)
+from HIKMAH__knowledge_index.delivery import (
+    MessageIDGenerator,
+    DeliveryLedger,
+    TelegramRelayClient,
+)
+
 __all__ = [
     # Phase 14: Initialization
     'initialize_persona_index',
@@ -138,4 +161,8 @@ __all__ = [
     'generate_and_dedupe',
     'RepetitionTracker',
     'MessageLedger',
+    # Phase 17: Delivery & Response Tracking
+    'MessageIDGenerator',
+    'DeliveryLedger',
+    'TelegramRelayClient',
 ]

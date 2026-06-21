@@ -52,7 +52,7 @@ The HIMAYAH privacy gate enforces this classification. Violations trigger immedi
 HIKMAH__knowledge_index/
 ├── README.md                          # This file
 ├── _index.json                        # Module self-registration
-├── __init__.py                        # Public API (Phase 14-15 exports)
+├── __init__.py                        # Public API (Phase 14-17 exports)
 ├── indices/                           # Per-persona indices (strict_local)
 │   ├── AMMAR_index.json
 │   ├── HIKMAH_index.json
@@ -94,7 +94,19 @@ HIKMAH__knowledge_index/
 │       ├── test_repetition_tracker.py # Deduplication tests
 │       ├── test_intent_processor.py   # Context building tests
 │       └── test_tone_consistency.py   # Tone validation tests
-├── tests/                             # Phase 14 validation tests
+├── delivery/                          # Phase 17 (NEW): Message delivery & response tracking
+│   ├── __init__.py                    # Public API (MessageIDGenerator, DeliveryLedger, TelegramRelayClient)
+│   ├── message_id_generator.py        # Unique sortable ID generation (ULID-style)
+│   ├── delivery_ledger.py             # JSONL ledger (delivery, response, window events)
+│   ├── telegram_relay_client.py       # Hermes relay wrapper (send_message, get_updates)
+│   └── tests/                         # Test suite (Wave 2 — 30+ tests planned)
+│       ├── __init__.py
+│       ├── conftest.py                # Shared fixtures (MockTelegramRelay, mock_ledger)
+│       ├── test_message_id_generator.py  # ID uniqueness, format, parse round-trip
+│       ├── test_delivery_ledger.py    # Write operations, privacy gate, queries
+│       └── test_telegram_relay_client.py # Relay integration tests with mocks
+├── DELIVERY_LEDGER.jsonl              # Delivery audit trail (created on first write)
+└── tests/                             # Phase 14 validation tests
     ├── test_schema_validation.py
     └── test_sample_index.json
 ```
@@ -625,6 +637,12 @@ Two rules enforce strict_local on this module:
 | message_generation/tests/test_repetition_tracker.py | Deduplication tests (19 tests) | 16 | ✓ |
 | message_generation/tests/test_intent_processor.py | Context building tests (24 tests) | 16 | ✓ |
 | message_generation/tests/test_tone_consistency.py | Tone validation tests (18 tests) | 16 | ✓ |
+| delivery/__init__.py | Delivery public API (Phase 17 exports) | 17 | ✓ |
+| delivery/message_id_generator.py | Unique sortable ID generation (MSG-YYYYMMDDHHMMSSMMMM-8HEX) | 17 | ✓ |
+| delivery/delivery_ledger.py | JSONL ledger (delivery/response/window events, privacy gate) | 17 | ✓ |
+| delivery/telegram_relay_client.py | Hermes relay wrapper (send_message, get_updates, reply correlation) | 17 | ✓ |
+| delivery/tests/ | Wave 2 test scaffold (34 test cases specified) | 17 | Wave 2 |
+| DELIVERY_LEDGER.jsonl | Delivery audit trail (created on first write) | 17 | created at runtime |
 
 ---
 
@@ -632,19 +650,321 @@ Two rules enforce strict_local on this module:
 
 - **Module Owner:** Seif ElSherbiny (seif.elsherbiny13@gmail.com)
 - **Phases Implemented:** 14 (Schema & Storage) + 15 (Data Refresh) + 16 (Message Generation)
-- **Next Phase:** 17 (Delivery & Response Tracking)
+- **Next Phase:** 18 (Adaptation & Format Evolution)
 - **Privacy Compliance:** HIMAYAH gate + SYNC_POLICY
 - **Last Updated:** 2026-06-21
-- **Test Coverage:** 43+ Phase 14 tests + 63 Phase 15 tests + 81 Phase 16 tests = 187+ total
-
-**Ready for Phase 17:**
-- Indices populated via Phase 15 refresh
-- Messages generated via Phase 16 with repetition detection
-- Ledger audit trail functional
-- All privacy gates enforced
+- **Test Coverage:** 43+ Phase 14 tests + 63 Phase 15 tests + 81 Phase 16 tests = 187+ total (Wave 2 adds 30+ delivery tests)
 
 ---
 
-*Document Version: 1.2*  
-*Phases: 14 (Knowledge Index Schema & Storage) + 15 (Data Refresh & Synchronization) + 16 (Message Generation & Variation)*  
-*Classification: NIZAM Internal*
+## Phase 17: Delivery & Response Tracking
+
+### Overview
+
+Phase 17 implements the message delivery infrastructure for NIZAM's twice-daily Telegram messaging
+(09:00 & 18:00 Cairo via Hermes cron). Every message sent receives a unique, sortable message ID
+before dispatch, and all delivery events (sent, responded, no-response) are recorded in an
+immutable JSONL audit trail.
+
+**Wave 1 (Foundation — Phase 17-01):** Message ID generator, delivery ledger, relay client abstraction
+**Wave 2 (Execution — Phase 17-02):** Delivery orchestrator, response monitor, 1-hour engagement window
+
+**Requirements Satisfied:**
+- DELIVERY-01: Twice-daily delivery via Hermes relay (relay client ready; Wave 2 adds scheduler)
+- DELIVERY-02: Unique message_id per send (MessageIDGenerator.generate())
+- DELIVERY-03: Delivery audit trail with sent_at/delivered_at (DeliveryLedger.log_delivery())
+- DELIVERY-04: Response polling and correlation (TelegramRelayClient.get_updates() + reply matching)
+- DELIVERY-05: Response logging with engagement latency (DeliveryLedger.log_response())
+
+### Architecture
+
+Message delivery follows this pipeline:
+
+```
+Phase 16 Output        Phase 17 Wave 1              Phase 17 Wave 2
+─────────────────────  ──────────────────────────   ──────────────────────────────────
+generate_and_dedupe()  MessageIDGenerator           DeliveryOrchestrator
+  → message_text       .generate() → msg_id    ──→ coordinates ID + send + log
+                                │
+                       TelegramRelayClient         ResponseMonitor
+                       .send_message(text)    ──→ polls get_updates() every 60s
+                                │                 matches reply_to_message_id
+                       DeliveryLedger              logs response or window close
+                       .log_delivery()
+```
+
+**Directory structure:**
+```
+HIKMAH__knowledge_index/delivery/
+├── __init__.py                           # Public API (NEW - Phase 17)
+├── message_id_generator.py               # ULID-style ID generation (NEW)
+├── delivery_ledger.py                    # JSONL ledger (NEW)
+├── telegram_relay_client.py              # Hermes relay wrapper (NEW)
+└── tests/
+    ├── __init__.py
+    ├── conftest.py                       # Shared fixtures (Wave 2)
+    ├── test_message_id_generator.py      # 8 test cases (Wave 2)
+    ├── test_delivery_ledger.py           # 14 test cases (Wave 2)
+    └── test_telegram_relay_client.py     # 12 test cases (Wave 2)
+```
+
+### Core API
+
+#### MessageIDGenerator
+
+Generates globally unique, lexicographically sortable message IDs.
+
+**Format:** `MSG-{YYYYMMDDHHMMSSMMMM}-{8-CHAR-HEX}`
+**Example:** `"MSG-20260621093045123-A7F2E8CD"`
+
+```python
+from HIKMAH__knowledge_index import MessageIDGenerator
+
+# Generate unique ID (called BEFORE sending to relay)
+msg_id = MessageIDGenerator.generate()
+print(msg_id)   # "MSG-20260621093045123-A7F2E8CD"
+
+# Parse message ID (returns timestamp + original ID)
+parsed = MessageIDGenerator.parse(msg_id)
+print(parsed["timestamp_utc"])   # datetime(2026, 6, 21, 9, 30, 45, 123000, tzinfo=UTC)
+print(parsed["message_id"])      # "MSG-20260621093045123-A7F2E8CD"
+
+# Sortability: IDs generated in sequence sort chronologically
+id1 = MessageIDGenerator.generate()
+id2 = MessageIDGenerator.generate()
+assert id1 < id2   # True (lexicographic == chronological order)
+```
+
+**Properties:**
+- Always UTC (never local time, avoids DST confusion)
+- Random 8-char hex suffix: ~4 billion values/millisecond (no collisions in practice)
+- No PII encoded: timestamp + random only
+- Parse raises ValueError on malformed input
+
+#### DeliveryLedger
+
+JSONL append-only audit trail for message delivery lifecycle events.
+
+**Privacy gate:** context_tags validated against CONTEXT_TAGS_WHITELIST before writing.
+**File:** `HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl` (created on first write)
+
+```python
+from HIKMAH__knowledge_index import DeliveryLedger
+from pathlib import Path
+
+ledger = DeliveryLedger(Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl"))
+
+# Log a delivery event (called after successful relay send)
+ledger.log_delivery(
+    message_id="MSG-20260621093045123-A7F2E8CD",
+    telegram_message_id=12345,
+    persona="AMMAR",
+    message_text="Pick one and move forward.",
+    intent="open_work",
+    sent_at="2026-06-21T09:30:45Z",
+    delivered_at="2026-06-21T09:30:46Z",
+    context_tags=["technical"],   # must be whitelisted
+    status="success"
+)
+
+# Log a response event (called when user replies within 1-hour window)
+ledger.log_response(
+    message_id="MSG-20260621093045123-A7F2E8CD",
+    telegram_message_id=12345,
+    response_text="On it.",
+    response_time="2026-06-21T09:45:00Z",
+    engagement_latency_seconds=855.0,
+    persona="AMMAR"
+)
+
+# Log no-response (called when 1-hour window expires without reply)
+ledger.log_no_response(
+    message_id="MSG-20260621093045123-A7F2E8CD",
+    telegram_message_id=12345,
+    persona="AMMAR"
+)
+
+# Query deliveries for a persona (most recent first)
+entries = ledger.get_deliveries_for_persona("AMMAR", limit=10)
+
+# Check if a message got a response
+response = ledger.get_responses_for_message("MSG-20260621093045123-A7F2E8CD")
+if response:
+    print(f"Response: {response['response_text']} (latency: {response['engagement_latency_seconds']}s)")
+```
+
+**Ledger Entry Format:**
+
+Delivery event:
+```json
+{
+  "ts": "2026-06-21T09:30:45.123Z",
+  "message_id": "MSG-20260621093045123-A7F2E8CD",
+  "telegram_message_id": 12345,
+  "persona": "AMMAR",
+  "event_type": "delivery",
+  "message_text": "Pick one and move forward.",
+  "intent": "open_work",
+  "sent_at": "2026-06-21T09:30:45.000Z",
+  "delivered_at": "2026-06-21T09:30:46.000Z",
+  "context_tags": ["technical"],
+  "status": "success",
+  "error_reason": null,
+  "ledger_hash": "a1b2c3d4e5f6a7b8"
+}
+```
+
+**context_tags whitelist:** `["technical", "health", "financial", "strategic", "personal"]`
+Invalid tags raise ValueError BEFORE write (fail-safe privacy gate).
+
+#### TelegramRelayClient
+
+Abstraction layer for NIZAM's Hermes relay. Never calls Telegram API directly.
+
+```python
+import os
+from HIKMAH__knowledge_index import TelegramRelayClient
+from NIZAM__system.relay.poller import GatewayPollingConflict
+
+# Initialize (reads TELEGRAM_BOT_TOKEN env var automatically)
+relay = TelegramRelayClient()
+# Or with explicit token:
+relay = TelegramRelayClient(token="1234567890:AABBCCDDEEFFaabbccddeeff1234567890")
+
+# Send a message
+response = relay.send_message(
+    chat_id=int(os.environ["AMMAR_CHAT_ID"]),
+    text="Your AI work is stalled. Pick one task and move forward."
+)
+telegram_msg_id = response["result"]["message_id"]
+print(f"Sent: Telegram message ID = {telegram_msg_id}")
+
+# Poll for updates (response monitor pattern)
+try:
+    updates = relay.get_updates(offset=last_update_id + 1, timeout=25)
+    for update in updates:
+        reply_to_id = relay.check_reply_to_message_id(update)
+        if reply_to_id == telegram_msg_id:
+            print(f"Reply received: {update['message']['text']}")
+except GatewayPollingConflict:
+    print("Another process is polling; waiting before retry...")
+
+# Response correlation
+update = {"update_id": 1, "message": {"reply_to_message": {"message_id": 12345}}}
+reply_to = relay.check_reply_to_message_id(update)
+print(reply_to)  # 12345
+```
+
+**Token precedence:** explicit token= > TELEGRAM_BOT_TOKEN env var > ValueError
+
+### Delivery Ledger Event Types
+
+| Event Type | When Written | Key Fields |
+|-----------|-------------|-----------|
+| `delivery` | After relay send (success or failure) | message_id, telegram_message_id, status, sent_at, delivered_at |
+| `response` | When user replies within 1-hour window | message_id, response_text, engagement_latency_seconds |
+| `engagement_window_closed` | After 1 hour with no reply | message_id, engagement_status="no_response" |
+
+### Hermes Relay Integration
+
+Phase 17 uses NIZAM's existing Hermes relay (NIZAM__system.relay.poller) rather than
+calling Telegram's API directly. This is intentional:
+
+**Why use Hermes relay:**
+1. **No polling conflicts:** Telegram only allows ONE getUpdates caller per token. Hermes
+   coordinates this via dedup.py. Phase 17 calling directly would cause 409 conflicts.
+2. **Proven infrastructure:** Hermes relay has been in production since Phase 1 with
+   battle-tested error handling (network timeouts, retries, auth).
+3. **Token centralization:** Hermes owns the bot token lifecycle; multiple modules
+   sharing a token creates coordination issues.
+4. **No public endpoint:** Hermes uses outbound long-polling, so no domain/TLS needed.
+
+**Conflict handling:**
+```python
+from NIZAM__system.relay.poller import GatewayPollingConflict
+try:
+    updates = relay.get_updates(offset=0, timeout=25)
+except GatewayPollingConflict:
+    # Another process (Hermes gateway) is polling; back off and retry
+    time.sleep(60)
+```
+
+### Phase 18+ Integration Example
+
+Phase 18 (Adaptation & Format Evolution) queries the delivery ledger to calculate
+response rates and trigger format rotation:
+
+```python
+from HIKMAH__knowledge_index import DeliveryLedger
+from pathlib import Path
+import json
+
+ledger = DeliveryLedger(Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl"))
+
+# Get last 14 deliveries (7 days × 2 per day)
+deliveries = ledger.get_deliveries_for_persona("AMMAR", limit=14)
+
+# Count responses
+responses = 0
+for delivery in deliveries:
+    msg_id = delivery["message_id"]
+    if ledger.get_responses_for_message(msg_id) is not None:
+        responses += 1
+
+# Calculate response rate
+response_rate = responses / len(deliveries) if deliveries else 0
+print(f"AMMAR response rate: {response_rate:.0%}")  # e.g., "71%"
+
+if response_rate < 0.80:
+    print("Response rate < 80% — trigger format rotation (Phase 18)")
+```
+
+### Common Pitfalls
+
+**1. Timezone confusion in timestamps**
+Always use UTC. Cairo time offset varies with DST. The scheduler converts
+09:00/18:00 Cairo to UTC internally; Phase 17 ledger always stores UTC.
+```python
+from datetime import datetime, timezone
+sent_at = datetime.now(timezone.utc).isoformat()  # Correct: UTC
+# NOT: datetime.now().isoformat()  # Wrong: local time (Cairo)
+```
+
+**2. Response matching uses reply_to_message_id (not text matching)**
+Users must explicitly reply to the message (not just send any message) for
+the correlation to work. This is enforced by check_reply_to_message_id().
+```python
+# Correct: use Telegram's reply_to_message mechanism
+reply_id = relay.check_reply_to_message_id(update)
+if reply_id == sent_telegram_message_id:
+    # This is a reply to our message
+```
+
+**3. GatewayPollingConflict requires backoff, not crash**
+If Hermes gateway is running alongside the response monitor, conflicts will
+occur. The response monitor (Wave 2) must catch and wait, not crash.
+```python
+try:
+    updates = relay.get_updates(offset=0)
+except GatewayPollingConflict:
+    time.sleep(60)  # Wait for Hermes gateway polling cycle to release
+```
+
+**4. context_tags must match whitelist exactly**
+Pass only whitelisted tags to log_delivery(). Invalid tags are rejected
+before write (privacy gate). Check your intent mapping against the whitelist.
+```python
+CONTEXT_TAGS_WHITELIST = ["technical", "health", "financial", "strategic", "personal"]
+```
+
+### Error Handling Patterns
+
+| Error | Source | Handler |
+|-------|--------|---------|
+| RuntimeError | relay.send_message() (Telegram API error) | Log delivery with status="failure", error_reason=str(e) |
+| GatewayPollingConflict | relay.get_updates() (polling conflict) | Sleep 60s, retry; if >3 retries, skip cycle |
+| ValueError | ledger.log_delivery() (invalid context_tag) | Fix tag mapping in delivery orchestrator |
+| ValueError | TelegramRelayClient.__init__() (no token) | Set TELEGRAM_BOT_TOKEN env var |
+| FileNotFoundError | ledger queries on missing file | Returns [] or None (handled gracefully) |
+
+---

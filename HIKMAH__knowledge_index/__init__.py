@@ -159,6 +159,14 @@ from HIKMAH__knowledge_index.delivery import (
     ResponseMonitor,
 )
 
+# Phase 18: Adaptation & Format Evolution
+from HIKMAH__knowledge_index.adaptation import (
+    WeeklyResponseRateCalculator,
+    FormatRotationManager,
+    AdaptationLogger,
+    AdaptationState,
+)
+
 __all__ = [
     # Phase 14: Initialization
     'initialize_persona_index',
@@ -185,4 +193,9 @@ __all__ = [
     'DeliveryOrchestrator',
     'DeliveryResult',
     'ResponseMonitor',
+    # Phase 18: Adaptation & Format Evolution
+    'WeeklyResponseRateCalculator',
+    'FormatRotationManager',
+    'AdaptationLogger',
+    'AdaptationState',
 ]

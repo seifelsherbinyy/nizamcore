@@ -968,3 +968,137 @@ CONTEXT_TAGS_WHITELIST = ["technical", "health", "financial", "strategic", "pers
 | FileNotFoundError | ledger queries on missing file | Returns [] or None (handled gracefully) |
 
 ---
+
+## Phase 18: Adaptation & Format Evolution
+
+Phase 18 closes the adaptive messaging feedback loop. When a persona's weekly response
+rate drops below 80%, the system automatically rotates the message format, logs the
+rationale, and injects a format constraint into the next Claude generation call — all
+without operator intervention.
+
+### Architecture
+
+```
+DELIVERY_LEDGER.jsonl
+        │
+        ▼
+WeeklyResponseRateCalculator.calculate(persona, days=7)
+        │  rate, numerator, denominator
+        │
+   rate < 0.80?
+        │ YES
+        ▼
+FormatRotationManager.rotate_format(persona, reason, rate, ...)
+        │
+        ├── AdaptationLogger.log_rotation()   ──► ADAPTATION_LEDGER.jsonl
+        │       (written BEFORE state update)
+        │
+        └── save_state(new_format, ...)       ──► ADAPTATION_STATE.jsonl
+        │
+        ▼
+FormatRotationManager.get_current_format(persona)
+        │  format_hint: str  (e.g. "short", "emoji", "direct_question")
+        ▼
+generate_message(persona, intent, index, client, format_hint=format_hint)
+        │
+        └── system_prompt += FORMAT_CONSTRAINTS[format_hint]
+        │       (appended BEFORE Claude API call)
+        ▼
+Claude API → persona-toned message with format constraint injected
+```
+
+### Format Rotation Cycle
+
+The cycle order is fixed and deterministic: `FORMATS = ["standard", "short", "emoji", "direct_question", "story"]`
+
+| Format | Description | System Prompt Constraint |
+|--------|-------------|--------------------------|
+| `standard` | Default — no constraint added | *(empty — no change to prompt)* |
+| `short` | Terse, under 100 characters | Keep message under 100 characters. Be maximally terse. |
+| `emoji` | Include 1–2 emojis | Include 1-2 emojis. Use visual markers to emphasize key action. |
+| `direct_question` | Frame as a question | Frame as a direct question to the user. Start with a question word. |
+| `story` | 2–3 sentence narrative | Tell a brief 2-3 sentence narrative or analogy. Make it relatable. |
+
+### How Adaptation Works
+
+1. **Before each message generation**, `generate_and_dedupe()` calls `WeeklyResponseRateCalculator.calculate(persona, days=7)` to compute the response rate from `DELIVERY_LEDGER.jsonl`.
+2. **If response rate < 80%** for the past 7 days, `FormatRotationManager.rotate_format()` selects the next format in the cycle (enforcing the no-consecutive-repeat guard).
+3. **`AdaptationLogger.log_rotation()`** records the format change (old_format, new_format, rationale, response_rate) to `ADAPTATION_LEDGER.jsonl` — written **BEFORE** state is updated.
+4. **`format_hint`** is set to the new format name and injected into `generate_message()` as a FORMAT CONSTRAINT string appended to the system prompt.
+5. **If response rate >= 80%**, `format_hint=None` and message generation proceeds unchanged.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `adaptation/response_rate_calculator.py` | Rate calculation from DELIVERY_LEDGER.jsonl |
+| `adaptation/format_rotation_manager.py` | Format state machine (no-consecutive-repeat + weekly rate-limit enforcement) |
+| `adaptation/adaptation_logger.py` | Append-only JSONL writer for format rotation audit events |
+| `adaptation/adaptation_state.py` | AdaptationState dataclass + JSONL persistence (load_state / save_state) |
+| `adaptation/ADAPTATION_STATE.jsonl` | Current format per persona — created on first write |
+| `adaptation/ADAPTATION_LEDGER.jsonl` | Format change history with rationale — append-only audit trail |
+| `message_generation/generator.py` | Updated generate_message() (format_hint param) + generate_and_dedupe() (adaptation hook) |
+
+### Integration Example (Phase 18 caller)
+
+```python
+from pathlib import Path
+from HIKMAH__knowledge_index import (
+    WeeklyResponseRateCalculator,
+    FormatRotationManager,
+    AdaptationLogger,
+)
+from HIKMAH__knowledge_index.message_generation import generate_and_dedupe
+from HIKMAH__knowledge_index.message_generation.repetition_tracker import RepetitionTracker
+from HIKMAH__knowledge_index.message_generation.message_ledger import MessageLedger
+from anthropic import Anthropic
+
+# Paths (configured per deployment)
+BASE = Path("HIKMAH__knowledge_index")
+delivery_ledger_path   = BASE / "DELIVERY_LEDGER.jsonl"
+adaptation_state_path  = BASE / "adaptation" / "ADAPTATION_STATE.jsonl"
+adaptation_ledger_path = BASE / "adaptation" / "ADAPTATION_LEDGER.jsonl"
+
+# Standard generation objects
+client   = Anthropic()
+tracker  = RepetitionTracker(BASE / "MESSAGE_LEDGER.jsonl")
+msg_ledger = MessageLedger(BASE / "MESSAGE_LEDGER.jsonl")
+
+# Phase 18 adaptive call — adaptation is fully automatic
+message, success, reason = generate_and_dedupe(
+    persona="TARIQ",
+    intent="You have 3 open strategic items",
+    index=fresh_index,
+    client=client,
+    tracker=tracker,
+    ledger=msg_ledger,
+    # Phase 18 adaptation paths (all 3 required to enable adaptation)
+    delivery_ledger_path=delivery_ledger_path,
+    adaptation_state_path=adaptation_state_path,
+    adaptation_ledger_path=adaptation_ledger_path,
+)
+# If TARIQ's weekly rate was < 80%, format_hint was injected automatically.
+# The rationale is logged in ADAPTATION_LEDGER.jsonl before message generation.
+```
+
+### Guards and Safety
+
+| Guard | Mechanism | File |
+|-------|-----------|------|
+| Denominator=0 (new persona) | Returns rate=1.0 → no adaptation triggered | `response_rate_calculator.py` |
+| 1-rotation-per-week limit | `last_rotation_at` checked; rotations within 7 days are skipped | `format_rotation_manager.py` |
+| No-consecutive-repeat | `previous_format` stored in state; next format != previous | `format_rotation_manager.py` |
+| Audit-before-apply | `AdaptationLogger.log_rotation()` written BEFORE `save_state()` | `format_rotation_manager.py` |
+| Backward compatibility | All 3 adaptation paths default to `None`; existing callers unaffected | `generator.py` |
+| Unknown format_hint | `FORMAT_CONSTRAINTS.get(hint, "")` → empty string, no change to prompt | `generator.py` |
+
+### ADAPT Requirements Satisfied
+
+| Requirement | Description | Implementing Module |
+|-------------|-------------|---------------------|
+| ADAPT-01 | Weekly response rate calculated from delivery ledger | `response_rate_calculator.py` |
+| ADAPT-02 | Rate < 80% triggers automatic format rotation | `format_rotation_manager.py` + `generator.py` (adaptation hook) |
+| ADAPT-03 | Format change logged with rationale before message generation | `adaptation_logger.py` (audit-before-apply pattern) |
+| ADAPT-04 | No consecutive identical format hints across rotations | `format_rotation_manager.py` (previous_format guard) |
+
+---

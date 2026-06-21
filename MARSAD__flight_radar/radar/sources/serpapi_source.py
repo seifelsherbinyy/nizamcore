@@ -160,7 +160,7 @@ class SerpApiSource(BaseFlightSource):
                 if "error" in data:
                     return [], [f"SerpApi error: {data['error']}"]
 
-                offers = self._parse(data, dep_date, ret_date, cabin)
+                offers = self._parse(data, dep_date, ret_date, cabin, destination)
                 return offers, []
 
             except requests.Timeout:
@@ -178,6 +178,7 @@ class SerpApiSource(BaseFlightSource):
         dep_date: date,
         ret_date: date,
         cabin: str,
+        destination: str = "",
     ) -> list[FlightOffer]:
         offers = []
 
@@ -190,7 +191,7 @@ class SerpApiSource(BaseFlightSource):
 
             for item in flight_group:
                 try:
-                    offer = self._parse_item(item, dep_date, ret_date, cabin)
+                    offer = self._parse_item(item, dep_date, ret_date, cabin, destination)
                     if offer:
                         offers.append(offer)
                 except Exception as exc:
@@ -204,6 +205,7 @@ class SerpApiSource(BaseFlightSource):
         dep_date: date,
         ret_date: date,
         cabin: str,
+        destination: str = "",
     ) -> Optional[FlightOffer]:
         price = item.get("price")
         if not price:
@@ -214,13 +216,8 @@ class SerpApiSource(BaseFlightSource):
             return None
 
         total_duration_min = item.get("total_duration", 0)
-        total_duration_hours = round(total_duration_min / 60, 2) if total_duration_min else 0.0
 
-        # Google Flights returns the full round-trip duration in total_duration
-        # For one-way constraints we split roughly 50/50 — actual per-leg data
-        # is in the flights array when available
-        outbound_flights = [f for f in flights if not f.get("is_return", False)]
-        return_flights = [f for f in flights if f.get("is_return", False)]
+        outbound_flights, return_flights = self._split_outbound_return(flights, destination)
 
         outbound_dur = sum(f.get("duration", 0) for f in outbound_flights) if outbound_flights else total_duration_min // 2
         return_dur = sum(f.get("duration", 0) for f in return_flights) if return_flights else total_duration_min // 2
@@ -234,19 +231,18 @@ class SerpApiSource(BaseFlightSource):
         # Map airline name to IATA code where possible
         carrier_iata = self._name_to_iata(carrier_name) or carrier_name[:2].upper()
 
-        # Build routing strings
-        outbound_routing = self._build_routing(outbound_flights or flights[:len(flights)//2 or 1])
-        return_routing = self._build_routing(return_flights or flights[len(flights)//2:])
+        outbound_routing = self._build_routing(outbound_flights)
+        return_routing = self._build_routing(return_flights)
 
-        # Fallback routing from departure/arrival airport codes
+        # Fallback routing when segments are missing
         if not outbound_routing and flights:
             dep = flights[0].get("departure_airport", {}).get("id", "")
             arr = flights[0].get("arrival_airport", {}).get("id", "")
             outbound_routing = f"{dep}-{arr}" if dep and arr else ""
 
         return FlightOffer(
-            origin=dep_date and flights[0].get("departure_airport", {}).get("id", "CAI") or "CAI",
-            destination=flights[-1].get("arrival_airport", {}).get("id", "???") if flights else "???",
+            origin=flights[0].get("departure_airport", {}).get("id", "CAI") if flights else "CAI",
+            destination=outbound_flights[-1].get("arrival_airport", {}).get("id", destination or "???") if outbound_flights else destination or "???",
             cabin=cabin,
             carrier=carrier_iata,
             outbound_date=dep_date,
@@ -261,6 +257,30 @@ class SerpApiSource(BaseFlightSource):
             source=self.name,
             raw=item,
         )
+
+    def _split_outbound_return(self, flights: list, destination: str) -> tuple[list, list]:
+        """Split round-trip segments into outbound and return legs.
+
+        When SerpApi omits the is_return flag (common for direct flights), we find
+        the pivot segment whose arrival airport matches the requested destination —
+        everything up to and including that segment is outbound; the rest is return.
+        """
+        # Prefer the explicit flag when present on any segment
+        if any(f.get("is_return") is not None for f in flights):
+            outbound = [f for f in flights if not f.get("is_return", False)]
+            return_ = [f for f in flights if f.get("is_return", False)]
+            return outbound, return_
+
+        # Destination-based pivot split
+        dest_upper = destination.upper()
+        for i, seg in enumerate(flights):
+            arr = seg.get("arrival_airport", {}).get("id", "").upper()
+            if arr == dest_upper:
+                return flights[: i + 1], flights[i + 1 :]
+
+        # Last-resort: split in half
+        mid = max(1, len(flights) // 2)
+        return flights[:mid], flights[mid:]
 
     def _build_routing(self, segments: list) -> str:
         if not segments:

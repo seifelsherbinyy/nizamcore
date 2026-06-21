@@ -210,7 +210,7 @@
 | 15. Data Refresh & Synchronization | 2/2 | Complete    | 2026-06-20 |
 | 16. Message Generation & Variation | 2/2 | Complete    | 2026-06-20 |
 | 17. Delivery & Response Tracking | 2/2 | Complete    | 2026-06-21 |
-| 18. Adaptation & Format Evolution | 2/2 | Complete   | 2026-06-21 |
+| 18. Adaptation & Format Evolution | 2/2 | Complete    | 2026-06-21 |
 | 19. Cross-Pillar Integration | 0/? | Not started | — |
 | 20. Privacy & Safety Validation | 0/? | Not started | — |
 

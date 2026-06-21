@@ -1,0 +1,142 @@
+{
+  "name": "NIZAM Persona Messaging Schedule",
+  "version": "1.0",
+  "total_personas": 11,
+  "messages_per_persona": 2,
+  "total_messages_per_day": 22,
+  "timezone": "UTC",
+  "schedule": [
+    {
+      "time_utc": "00:30",
+      "persona": "AMMAR",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "01:30",
+      "persona": "HIKMAH",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "02:30",
+      "persona": "TARIQ",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "03:30",
+      "persona": "MUNAWARA",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "04:30",
+      "persona": "MAL",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "05:30",
+      "persona": "BADAN",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "06:30",
+      "persona": "NAQD",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "07:30",
+      "persona": "SHURA",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "08:30",
+      "persona": "TAFRIGH",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "09:30",
+      "persona": "MARSAD",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "10:30",
+      "persona": "NIZAM",
+      "message_number": 1,
+      "message_type": "first_daily"
+    },
+    {
+      "time_utc": "11:30",
+      "persona": "AMMAR",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "12:30",
+      "persona": "HIKMAH",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "13:30",
+      "persona": "TARIQ",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "14:30",
+      "persona": "MUNAWARA",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "15:30",
+      "persona": "MAL",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "16:30",
+      "persona": "BADAN",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "17:30",
+      "persona": "NAQD",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "18:30",
+      "persona": "SHURA",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "19:30",
+      "persona": "TAFRIGH",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "20:30",
+      "persona": "MARSAD",
+      "message_number": 2,
+      "message_type": "second_daily"
+    },
+    {
+      "time_utc": "21:30",
+      "persona": "NIZAM",
+      "message_number": 2,
+      "message_type": "second_daily"
+    }
+  ]
+}

@@ -204,42 +204,154 @@ PRIVACY AND SAFETY NOTES
 - Response text truncated to 500 chars in log_response() (prevents bloat)
 - All ledger files are strict_local (enforced by HIMAYAH gate + .gitignore)
 
-REQUIREMENTS SATISFIED (WAVE 1 FOUNDATION)
--------------------------------------------
-- DELIVERY-01: Foundation for twice-daily delivery (relay client abstraction ready)
-- DELIVERY-02: Unique message_id generation (MessageIDGenerator.generate())
+WAVE 2: ORCHESTRATION & MONITORING (THIS RELEASE)
+---------------------------------------------------
+Wave 2 builds on the Wave 1 foundation by providing:
+
+DeliveryOrchestrator (delivery_orchestrator.py):
+  Full delivery lifecycle in one method call:
+    - generate message_id BEFORE relay call (crash safety)
+    - log "pending" entry BEFORE relay call (audit trail even on crash)
+    - call TelegramRelayClient.send_message()
+    - log "success" entry with delivered_at and telegram_message_id
+    - spawn ResponseMonitor daemon thread for 1-hour engagement tracking
+
+ResponseMonitor (response_monitor.py):
+  Background polling for user replies within 1-hour window:
+    - daemon thread per message (exits with main process)
+    - polls get_updates() every 30 seconds (POLL_INTERVAL_SECONDS)
+    - correlates replies via reply_to_message_id == telegram_message_id
+    - logs response with engagement_latency_seconds to DeliveryLedger
+    - logs engagement_window_closed when deadline passes without reply
+    - GatewayPollingConflict: 60s backoff, retry (no crash)
+
+REQUIREMENTS SATISFIED (WAVE 1 + 2 COMBINED)
+----------------------------------------------
+- DELIVERY-01: Twice-daily delivery via Hermes relay (DeliveryOrchestrator.deliver())
+- DELIVERY-02: Unique message_id (MessageIDGenerator.generate() called per deliver())
 - DELIVERY-03: Delivery ledger with sent_at, delivered_at (DeliveryLedger.log_delivery())
-- DELIVERY-04: Response polling infrastructure (TelegramRelayClient.get_updates() +
-               check_reply_to_message_id())
-- DELIVERY-05: Response logging infrastructure (DeliveryLedger.log_response() with
-               engagement_latency_seconds)
+- DELIVERY-04: 1-hour response window (ResponseMonitor._monitor_loop() enforces deadline)
+- DELIVERY-05: Response logging with latency (DeliveryLedger.log_response() + latency calc)
 
-Wave 2 will complete DELIVERY-01 (actual twice-daily delivery), DELIVERY-04
-(1-hour window enforcement), and DELIVERY-05 (full response correlation).
+USAGE EXAMPLE: FULL PHASE 17 DELIVERY FLOW
+---------------------------------------------
+>>> from pathlib import Path
+>>> from HIKMAH__knowledge_index.delivery import (
+...     DeliveryOrchestrator, ResponseMonitor, DeliveryResult
+... )
+>>> import os
 
-TEST SCAFFOLD (WAVE 2)
------------------------
-Test directory ready at: HIKMAH__knowledge_index/delivery/tests/
-Placeholder test files created for Wave 2 implementation:
-- tests/conftest.py (shared fixtures and mocks)
-- tests/test_message_id_generator.py (ID uniqueness, format, parse round-trip)
-- tests/test_delivery_ledger.py (log operations, privacy gate, query methods)
-- tests/test_telegram_relay_client.py (relay integration tests with mocks)
+>>> # Initialize orchestrator and monitor
+>>> ledger_path = Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl")
+>>> token = os.environ["TELEGRAM_BOT_TOKEN"]
 
-Planned test count (Wave 2): 30+ tests covering:
-  - 10k ID uniqueness test (no collisions)
-  - Ledger write/read operations
-  - context_tags validation (reject invalid, accept valid)
-  - Response correlation logic (reply_to_message_id matching)
-  - Relay mocking (no real Telegram API calls in tests)
+>>> orchestrator = DeliveryOrchestrator(
+...     telegram_token=token,
+...     ledger_path=ledger_path,
+...     monitor_window_seconds=3600,  # 1 hour
+... )
+>>> monitor = ResponseMonitor(
+...     telegram_token=token,
+...     ledger_path=ledger_path,
+... )
+>>> orchestrator.response_monitor = monitor
+
+>>> # Deliver a message (Phase 16 output → Phase 17 delivery)
+>>> result: DeliveryResult = orchestrator.deliver(
+...     persona="AMMAR",
+...     message_text="Your AI work is stalled. Pick one task and move forward.",
+...     intent="open_work",
+...     chat_id=int(os.environ["AMMAR_CHAT_ID"]),
+...     context_tags=["technical"],
+... )
+
+>>> if result.status == "success":
+...     print(f"Sent: {result.message_id} → Telegram {result.telegram_message_id}")
+...     # ResponseMonitor is now polling for replies in background (1 hour window)
+...     # After 1 hour: engagement_window_closed logged if no reply
+...     # On reply: response logged with engagement_latency_seconds
+... else:
+...     print(f"Delivery failed: {result.error}")
+...     # Pre-send entry still in ledger with status=failure for operator audit
+
+INTEGRATION EXAMPLE: PHASE 15 → 16 → 17
+------------------------------------------
+>>> # Phase 15 (data refresh) + Phase 16 (message generation) + Phase 17 (delivery)
+>>> from HIKMAH__knowledge_index import (
+...     refresh_persona_index, load_refresh_config,
+...     generate_and_dedupe, RepetitionTracker, MessageLedger,
+...     DeliveryOrchestrator, ResponseMonitor,
+... )
+>>>
+>>> # Phase 15: Refresh index from Google Drive
+>>> config = load_refresh_config()
+>>> success, index, reason = refresh_persona_index(
+...     persona="AMMAR",
+...     drive_client=drive_client,
+...     index_path=Path("HIKMAH__knowledge_index/indices/AMMAR_index.json"),
+...     audit_logger=audit_logger
+... )
+>>>
+>>> # Phase 16: Generate message with tone + deduplication
+>>> tracker = RepetitionTracker(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+>>> msg_ledger = MessageLedger(Path("HIKMAH__knowledge_index/MESSAGE_LEDGER.jsonl"))
+>>> message, gen_ok, gen_reason = generate_and_dedupe(
+...     persona="AMMAR", intent="open_work", index=index,
+...     client=client, tracker=tracker, ledger=msg_ledger
+... )
+>>>
+>>> # Phase 17: Deliver and monitor
+>>> result = orchestrator.deliver(
+...     persona="AMMAR",
+...     message_text=message,
+...     intent="open_work",
+...     chat_id=int(os.environ["AMMAR_CHAT_ID"]),
+...     context_tags=["technical"],
+... )
+
+THREAD SAFETY NOTES
+--------------------
+- ResponseMonitor uses threading.Lock for _global_offset updates
+- Multiple ResponseMonitor threads can run concurrently (one per active message)
+- Typical NIZAM load: ~1 active monitor at any time (11 personas × 2 sends/day,
+  1-hour windows → ~22 messages/day, rarely >1 concurrent)
+- Daemon threads: exit with main process, no zombie threads
+
+ERROR HANDLING PATTERNS
+------------------------
+DeliveryOrchestrator.deliver() errors:
+  - context_tags ValueError: propagated (caller must fix invalid tags)
+  - relay RuntimeError: caught, ledger updated, failure result returned
+  - network errors: caught, ledger updated, failure result returned
+  - NEVER raises exceptions to caller (returns failure DeliveryResult instead)
+
+ResponseMonitor._monitor_loop() errors:
+  - GatewayPollingConflict: log warning, sleep 60s, retry
+  - network errors: log warning, sleep 30s, retry
+  - all exceptions caught: thread never crashes, window still enforced
+
+TEST SUITE (WAVE 2)
+--------------------
+tests/ directory contains 36 tests:
+  - test_orchestrator.py: 17 tests (delivery flow, error handling, monitor spawning)
+  - test_response_monitor.py: 19 tests (thread, response detection, timeout, offsets)
+  - conftest.py: MockTelegramRelay, fresh_sent_at(), update factories
+  - All tests: no real Telegram API calls, no real sleep delays
 """
 
 from .delivery_ledger import DeliveryLedger
+from .delivery_orchestrator import DeliveryOrchestrator, DeliveryResult
 from .message_id_generator import MessageIDGenerator
+from .response_monitor import ResponseMonitor
 from .telegram_relay_client import TelegramRelayClient
 
 __all__ = [
+    # Wave 1 (infrastructure)
     "MessageIDGenerator",
     "DeliveryLedger",
     "TelegramRelayClient",
+    # Wave 2 (orchestration)
+    "DeliveryOrchestrator",
+    "DeliveryResult",
+    "ResponseMonitor",
 ]

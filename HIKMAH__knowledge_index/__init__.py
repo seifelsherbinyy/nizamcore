@@ -39,11 +39,19 @@ Message Generation (Phase 16):
     - MessageLedger: JSONL audit trail with privacy enforcement
 
 Delivery & Response Tracking (Phase 17):
-    from HIKMAH__knowledge_index import MessageIDGenerator, DeliveryLedger, TelegramRelayClient
+    from HIKMAH__knowledge_index import (
+        MessageIDGenerator, DeliveryLedger, TelegramRelayClient,
+        DeliveryOrchestrator, DeliveryResult, ResponseMonitor,
+    )
+    Wave 1 (Foundation):
     - MessageIDGenerator.generate(): Create unique sortable message ID (MSG-{YYYYMMDDHHMMSSMMMM}-{8-HEX})
     - MessageIDGenerator.parse(msg_id): Extract timestamp from message ID
     - DeliveryLedger: JSONL ledger for delivery, response, and engagement window events
     - TelegramRelayClient: Abstraction layer for Hermes relay (send_message, get_updates, reply correlation)
+    Wave 2 (Orchestration):
+    - DeliveryOrchestrator.deliver(): Full lifecycle (ID gen → pre-send log → relay send → post-send log → monitor spawn)
+    - DeliveryResult: Dataclass with message_id, telegram_message_id, sent_at, delivered_at, status, error
+    - ResponseMonitor.monitor(): Spawn daemon thread to poll for replies within 1-hour engagement window
 
 Integration (Phases 16-20):
     from HIKMAH__knowledge_index import refresh_persona_index, generate_and_dedupe
@@ -82,25 +90,31 @@ Usage (Phases 15-17 combined flow):
         ledger=msg_ledger
     )
 
-    # Phase 17: Deliver message with unique ID and audit trail
-    msg_id = MessageIDGenerator.generate()
-    relay = TelegramRelayClient()  # reads TELEGRAM_BOT_TOKEN from env
-    delivery_ledger = DeliveryLedger(Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl"))
+    # Phase 17 Wave 2: Orchestrated delivery with response monitoring
+    ledger_path = Path("HIKMAH__knowledge_index/DELIVERY_LEDGER.jsonl")
+    orchestrator = DeliveryOrchestrator(
+        telegram_token=os.environ["TELEGRAM_BOT_TOKEN"],
+        ledger_path=ledger_path,
+    )
+    monitor = ResponseMonitor(
+        telegram_token=os.environ["TELEGRAM_BOT_TOKEN"],
+        ledger_path=ledger_path,
+    )
+    orchestrator.response_monitor = monitor
 
-    response = relay.send_message(chat_id=AMMAR_CHAT_ID, text=message)
-    telegram_msg_id = response["result"]["message_id"]
-
-    delivery_ledger.log_delivery(
-        message_id=msg_id,
-        telegram_message_id=telegram_msg_id,
+    result = orchestrator.deliver(
         persona="AMMAR",
         message_text=message,
         intent="open_work",
-        sent_at="2026-06-21T09:30:45Z",
-        delivered_at="2026-06-21T09:30:46Z",
+        chat_id=AMMAR_CHAT_ID,
         context_tags=["technical"],
-        status="success"
     )
+
+    if result.status == "success":
+        print(f"Message sent: {result.message_id}, Telegram: {result.telegram_message_id}")
+        # ResponseMonitor is now polling for replies in background (1 hour window)
+    else:
+        print(f"Delivery failed: {result.error}")
 """
 
 __version__ = "1.0"
@@ -135,11 +149,14 @@ from HIKMAH__knowledge_index.message_generation import (
     MessageLedger,
 )
 
-# Phase 17 imports (delivery & response tracking)
+# Phase 17 imports (delivery & response tracking — Wave 1 + Wave 2)
 from HIKMAH__knowledge_index.delivery import (
     MessageIDGenerator,
     DeliveryLedger,
     TelegramRelayClient,
+    DeliveryOrchestrator,
+    DeliveryResult,
+    ResponseMonitor,
 )
 
 __all__ = [
@@ -161,8 +178,11 @@ __all__ = [
     'generate_and_dedupe',
     'RepetitionTracker',
     'MessageLedger',
-    # Phase 17: Delivery & Response Tracking
+    # Phase 17: Delivery & Response Tracking (Wave 1 + Wave 2)
     'MessageIDGenerator',
     'DeliveryLedger',
     'TelegramRelayClient',
+    'DeliveryOrchestrator',
+    'DeliveryResult',
+    'ResponseMonitor',
 ]

@@ -31,6 +31,7 @@ Timeout: 10 seconds per request (Hermes cron constraints)
 
 import logging
 import time
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 
 from anthropic import Anthropic, RateLimitError, APITimeoutError, APIError
@@ -61,6 +62,16 @@ CELEBRATORY_WORDS = {
     "great", "excellent", "awesome", "proud", "achievement",
 }
 
+# Phase 18: Format constraints appended to system prompt when format_hint is active.
+# "standard" maps to "" (no constraint added); unknown hints fall back to "" via .get().
+FORMAT_CONSTRAINTS = {
+    "short":           "\n\nFORMAT CONSTRAINT: Keep message under 100 characters. Be maximally terse.",
+    "emoji":           "\n\nFORMAT CONSTRAINT: Include 1-2 emojis. Use visual markers to emphasize key action.",
+    "direct_question": "\n\nFORMAT CONSTRAINT: Frame as a direct question to the user. Start with a question word.",
+    "story":           "\n\nFORMAT CONSTRAINT: Tell a brief 2-3 sentence narrative or analogy. Make it relatable.",
+    "standard":        "",  # No constraint added for standard format
+}
+
 
 def generate_message(
     persona: str,
@@ -68,16 +79,18 @@ def generate_message(
     index: Dict[str, Any],
     client: Anthropic,
     max_tokens: int = 100,
+    format_hint: Optional[str] = None,
 ) -> str:
     """
     Generate a persona-consistent message via Claude API.
 
     Implements the core generation pipeline:
     1. Extract system prompt from PERSONA_SYSTEM_PROMPTS[persona]
-    2. Build context using IntentProcessor.build_full_context()
-    3. Construct user message with intent + context + constraints
-    4. Call Claude API with system prompt injection
-    5. Return cleaned message (strip newlines, enforce <280 chars)
+    2. Append FORMAT CONSTRAINT to system_prompt if format_hint is not None
+    3. Build context using IntentProcessor.build_full_context()
+    4. Construct user message with intent + context + constraints
+    5. Call Claude API with system prompt injection
+    6. Return cleaned message (strip newlines, enforce <280 chars)
 
     Args:
         persona: Persona codename (e.g., "AMMAR")
@@ -85,6 +98,10 @@ def generate_message(
         index: PersonaIndexDict from Phase 15 refresh
         client: Anthropic client instance
         max_tokens: Max tokens for Claude (default: 100, enforces ~280 char limit)
+        format_hint: Optional format name from Phase 18 adaptation. When not None,
+            appends the matching FORMAT_CONSTRAINTS string to the system prompt.
+            Unknown hints and "standard" produce no change (empty string appended).
+            Defaults to None (backward-compatible, no format constraint added).
 
     Returns:
         Generated message text (cleaned, <280 chars, actionable)
@@ -98,6 +115,10 @@ def generate_message(
         raise KeyError(f"Unknown persona: {persona}")
 
     system_prompt = PERSONA_SYSTEM_PROMPTS[persona]
+
+    # Phase 18: Append format constraint when format_hint is active
+    if format_hint is not None:
+        system_prompt += FORMAT_CONSTRAINTS.get(format_hint, "")
 
     # Build rich context from index
     context = IntentProcessor.build_full_context(intent, index)
@@ -151,18 +172,23 @@ def generate_and_dedupe(
     tracker: RepetitionTracker,
     ledger: MessageLedger,
     max_retries: int = 3,
+    delivery_ledger_path: Optional[Path] = None,
+    adaptation_state_path: Optional[Path] = None,
+    adaptation_ledger_path: Optional[Path] = None,
 ) -> Tuple[str, bool, str]:
     """
     Generate message with repetition checking and full audit logging.
 
     Implements complete generation pipeline:
-    1. Generate candidate message via generate_message()
-    2. Check RepetitionTracker.is_repetition() against last 5 messages
-    3. If not repetition: log to ledger and return (message, True, "success")
-    4. If repetition: retry up to max_retries with exponential backoff
-    5. On max retries: log failure to ledger and return (message, False, "max_retries_exceeded")
-    6. Handle API errors with fallback message
-    7. Validate actionability (heuristic: check for imperative verbs)
+    1. (Phase 18) If all adaptation paths provided: check weekly response rate;
+       if rate < 0.80, rotate format and inject format_hint into generation
+    2. Generate candidate message via generate_message()
+    3. Check RepetitionTracker.is_repetition() against last 5 messages
+    4. If not repetition: log to ledger and return (message, True, "success")
+    5. If repetition: retry up to max_retries with exponential backoff
+    6. On max retries: log failure to ledger and return (message, False, "max_retries_exceeded")
+    7. Handle API errors with fallback message
+    8. Validate actionability (heuristic: check for imperative verbs)
 
     Args:
         persona: Persona codename
@@ -172,6 +198,10 @@ def generate_and_dedupe(
         tracker: RepetitionTracker instance
         ledger: MessageLedger instance
         max_retries: Max retry attempts for repetition (default: 3)
+        delivery_ledger_path: Optional path to DELIVERY_LEDGER.jsonl for rate calculation.
+            If None (or either adaptation path is None), adaptation is skipped entirely.
+        adaptation_state_path: Optional path to ADAPTATION_STATE.jsonl for format state.
+        adaptation_ledger_path: Optional path to ADAPTATION_LEDGER.jsonl for audit log.
 
     Returns:
         Tuple of (message, success, reason) where:
@@ -193,13 +223,33 @@ def generate_and_dedupe(
         else:
             print(f"Failed: {reason}")
     """
+    # Phase 18: adaptation hook — check weekly response rate and rotate format if needed
+    format_hint = None
+    if all([delivery_ledger_path, adaptation_state_path, adaptation_ledger_path]):
+        from HIKMAH__knowledge_index.adaptation import (
+            WeeklyResponseRateCalculator,
+            FormatRotationManager,
+        )
+        calc = WeeklyResponseRateCalculator(delivery_ledger_path)
+        rate, numerator, denominator = calc.calculate(persona, days=7)
+        if rate < 0.80:
+            manager = FormatRotationManager(adaptation_state_path, adaptation_ledger_path)
+            manager.rotate_format(
+                persona=persona,
+                reason=f"Response rate {rate:.0%} < 80%",
+                response_rate=rate,
+                numerator=numerator,
+                denominator=denominator,
+            )
+            format_hint = manager.get_current_format(persona)
+
     last_message = None
     topic_count = index.get("topics", []).__len__()
 
     for attempt in range(max_retries):
         try:
-            # Generate candidate message
-            message = generate_message(persona, intent, index, client)
+            # Generate candidate message (pass format_hint from Phase 18 adaptation)
+            message = generate_message(persona, intent, index, client, format_hint=format_hint)
             last_message = message
 
             # Check for repetition
@@ -335,4 +385,5 @@ __all__ = [
     "is_actionable",
     "ACTIONABLE_VERBS",
     "CELEBRATORY_WORDS",
+    "FORMAT_CONSTRAINTS",
 ]

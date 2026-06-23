@@ -22,18 +22,20 @@
     ".env"
   ],
   "skill_commands": [
+    "/marsad-seed",
     "/marsad-discover",
     "/marsad-monitor",
     "/marsad-alert",
     "/marsad-forecast"
   ],
   "pipeline_stages": [
-    "DISCOVER — baseline collection (runs once on init)",
-    "MONITOR — daily delta (06:00 UTC scheduled)",
-    "ALERT — BUY_SIGNAL detection (runs after MONITOR)",
-    "FORECAST — trend model update (runs after ALERT)"
+    "SEED (Stage 0) — historical data import from CSV/JSON (run once before DISCOVER to pre-warm forecasting)",
+    "DISCOVER (Stage 1) — baseline collection (runs once on init)",
+    "MONITOR (Stage 2) — daily delta (06:00 UTC scheduled)",
+    "ALERT (Stage 3) — BUY_SIGNAL detection (runs after MONITOR)",
+    "FORECAST (Stage 4) — trend model update (runs after ALERT)"
   ],
-  "last_updated": "2026-05-18T00:00:00Z",
+  "last_updated": "2026-06-23T00:00:00Z",
   "registers_to": "NIZAM_MASTER_REGISTER.json",
   "module_status": "active",
   "schema_version": "1.0"

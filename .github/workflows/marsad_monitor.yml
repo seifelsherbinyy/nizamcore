@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "Stage to run: monitor | discover | forecast | alert | run-all"
+        description: "Stage to run: monitor | discover | seed | forecast | alert | run-all"
         required: false
         default: monitor
 
@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
+          # No hardcoded ref — uses the default branch (main after merge)
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -34,13 +34,19 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install requests python-dotenv pydantic rich
+        # numpy + pandas required by forecast stage (EWM, linear regression)
+        # google-search-results pinned to avoid the wheel build failure on some runners
+        run: pip install requests python-dotenv pydantic rich numpy pandas
         working-directory: MARSAD__flight_radar
+
+      - name: Install SerpApi client (best-effort — skip if build fails)
+        working-directory: MARSAD__flight_radar
+        run: pip install google-search-results || true
 
       - name: Write .env from secrets
         working-directory: MARSAD__flight_radar
         run: |
-          cat > .env <<EOF
+          cat > .env <<'EOF'
           DATA_SOURCE=serpapi
           SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
           SERPAPI_PRIORITY_ONLY=false
@@ -58,6 +64,13 @@ jobs:
           LOG_LEVEL=INFO
           EOF
 
+      - name: Restore persisted data store
+        uses: actions/cache@v4
+        with:
+          path: MARSAD__flight_radar/data/flight_prices.json
+          key: marsad-store-${{ github.run_id }}
+          restore-keys: marsad-store-
+
       - name: Run stage
         working-directory: MARSAD__flight_radar
         run: |
@@ -72,6 +85,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to store — nothing to commit"
           else
-            git commit -m "marsad: daily monitor $(date -u +%Y-%m-%d)"
+            git commit -m "marsad: ${{ github.event.inputs.stage || 'monitor' }} $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             git push
           fi

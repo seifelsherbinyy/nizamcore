@@ -3,19 +3,23 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
-  discover   — Stage 1: baseline collection (run once on init)
-  monitor    — Stage 2: daily delta
-  alert      — Stage 3: price drop signal detection
-  forecast   — Stage 4: trend model update
-  run-all    — Run all four stages in sequence
-  schedule   — Start APScheduler daemon (06:00 UTC daily)
-  dashboard  — Live executive dashboard at http://localhost:7329
-  status     — Print current store summary
-  validate   — Validate credentials and configuration
+  discover       — Stage 1: baseline collection (run once on init)
+  monitor        — Stage 2: daily delta
+  alert          — Stage 3: price drop signal detection
+  forecast       — Stage 4: trend model update
+  seed           — Stage 0: import historical price data from CSV/JSON file
+  seed-template  — Write a blank seed CSV template
+  run-all        — Run all four stages in sequence
+  schedule       — Start APScheduler daemon (06:00 UTC daily)
+  dashboard      — Live executive dashboard at http://localhost:7329
+  status         — Print current store summary
+  validate       — Validate credentials and configuration
 
 Usage:
   cd MARSAD__flight_radar
   python -m radar.main discover
+  python -m radar.main seed --file path/to/seed.csv --dry-run
+  python -m radar.main seed-template --output seed_template.csv
   python -m radar.main schedule
 """
 
@@ -61,6 +65,34 @@ def cmd_forecast(args: argparse.Namespace) -> int:
     from radar.stages.forecast import run_forecast
     stats = run_forecast()
     print(f"\nFORECAST: {stats['series_updated']} series updated, {stats['buy_signals']} buy_signals")
+    return 0
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed
+    stats = run_seed(file_path=args.file, dry_run=args.dry_run)
+    action = "DRY RUN — would import" if args.dry_run else "imported"
+    print(
+        f"\nSEED: {stats['rows_read']} rows read, {stats['rows_imported']} {action}, "
+        f"{stats['rows_skipped_constraint']} constraint fail, "
+        f"{stats['rows_skipped_duplicate']} duplicate, "
+        f"{stats['rows_skipped_parse_error']} parse error"
+    )
+    if stats["parse_errors"]:
+        for err in stats["parse_errors"][:5]:
+            print(f"  PARSE ERROR: {err}")
+    if stats["constraint_failures"]:
+        for cf in stats["constraint_failures"][:5]:
+            print(f"  CONSTRAINT FAIL row {cf['row']}: {cf['failures']}")
+    return 0
+
+
+def cmd_seed_template(args: argparse.Namespace) -> int:
+    from radar.stages.seed import generate_seed_template
+    output = args.output or "seed_template.csv"
+    generate_seed_template(output)
+    print(f"\nSeed template written to: {output}")
+    print("Fill in the rows and run: python -m radar.main seed --file <path>")
     return 0
 
 
@@ -190,6 +222,17 @@ def main() -> int:
     # validate
     p_validate = subparsers.add_parser("validate", help="Validate credentials and configuration")
     p_validate.set_defaults(func=cmd_validate)
+
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical prices from CSV/JSON")
+    p_seed.add_argument("--file", required=True, help="Path to seed CSV or JSON file")
+    p_seed.add_argument("--dry-run", action="store_true", help="Preview import without writing to store")
+    p_seed.set_defaults(func=cmd_seed)
+
+    # seed-template
+    p_seed_tpl = subparsers.add_parser("seed-template", help="Write a blank seed CSV template")
+    p_seed_tpl.add_argument("--output", default="seed_template.csv", help="Output path (default: seed_template.csv)")
+    p_seed_tpl.set_defaults(func=cmd_seed_template)
 
     args = parser.parse_args()
     return args.func(args)

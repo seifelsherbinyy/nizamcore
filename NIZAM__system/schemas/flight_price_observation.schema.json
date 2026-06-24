@@ -195,7 +195,8 @@
         },
         "source": {
           "type": "string",
-          "enum": ["amadeus", "ita_matrix", "kiwi", "google_flights", "manual", "historical_seed"]
+          "enum": ["serpapi", "amadeus", "ita_matrix", "kiwi", "google_flights", "manual", "historical_seed"],
+          "description": "serpapi: SerpApi Google Flights API (primary) | amadeus: Amadeus for Developers | ita_matrix: ITA Matrix (ToS-gated) | kiwi: Kiwi Tequila | google_flights: direct scrape | manual: hand-entered | historical_seed: imported historical data"
         },
         "delta_from_previous_usd": {
           "type": ["number", "null"],

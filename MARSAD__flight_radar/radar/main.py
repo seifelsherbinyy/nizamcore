@@ -3,6 +3,7 @@ MARSAD — NIZAM Flight Intelligence Module
 Entry point: python -m radar.main <command>
 
 Commands:
+  seed       — Stage 0: import historical price data from CSV or JSON (cold-start shortcut)
   discover   — Stage 1: baseline collection (run once on init)
   monitor    — Stage 2: daily delta
   alert      — Stage 3: price drop signal detection
@@ -12,9 +13,11 @@ Commands:
   dashboard  — Live executive dashboard at http://localhost:7329
   status     — Print current store summary
   validate   — Validate credentials and configuration
+  seed-template — Print a CSV template for historical seed data
 
 Usage:
   cd MARSAD__flight_radar
+  python -m radar.main seed --csv path/to/history.csv
   python -m radar.main discover
   python -m radar.main schedule
 """
@@ -34,6 +37,35 @@ def _setup_logging() -> None:
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%SZ",
     )
+
+
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed, generate_csv_template
+    stats = run_seed(
+        csv_path=args.csv,
+        json_path=args.json,
+        dry_run=args.dry_run,
+    )
+    print(f"\nSEED {'(DRY RUN) ' if args.dry_run else ''}complete:")
+    print(f"  Rows read:         {stats['rows_read']}")
+    print(f"  Imported:          {stats['rows_imported']}")
+    print(f"  Filtered (constraint): {stats['rows_filtered']}")
+    print(f"  Duplicate skipped: {stats['rows_duplicate']}")
+    print(f"  Parse errors:      {stats['rows_parse_error']}")
+    print(f"  Import errors:     {stats['rows_import_error']}")
+    return 0
+
+
+def cmd_seed_template(args: argparse.Namespace) -> int:
+    from radar.stages.seed import generate_csv_template
+    template = generate_csv_template()
+    if args.output:
+        from pathlib import Path
+        Path(args.output).write_text(template, encoding="utf-8")
+        print(f"CSV template written to: {args.output}")
+    else:
+        print(template)
+    return 0
 
 
 def cmd_discover(args: argparse.Namespace) -> int:
@@ -150,6 +182,21 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed (Stage 0 — historical import)
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Stage 0: import historical price data (cold-start shortcut — accelerates model to MEDIUM confidence)"
+    )
+    p_seed.add_argument("--csv", metavar="PATH", help="Path to CSV file")
+    p_seed.add_argument("--json", metavar="PATH", help="Path to JSON array file")
+    p_seed.add_argument("--dry-run", action="store_true", help="Log what would be imported without writing")
+    p_seed.set_defaults(func=cmd_seed)
+
+    # seed-template
+    p_seed_tmpl = subparsers.add_parser("seed-template", help="Print a blank CSV template for seed data entry")
+    p_seed_tmpl.add_argument("--output", metavar="PATH", help="Write template to file instead of stdout")
+    p_seed_tmpl.set_defaults(func=cmd_seed_template)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

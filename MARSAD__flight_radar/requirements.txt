@@ -1,5 +1,5 @@
 # MARSAD — NIZAM Flight Radar dependencies
-# Versions current as of 2026-05-18 — verify against PyPI before install
+# Versions current as of 2026-06-24 — verify against PyPI before install
 # SWAPPABLE_DEFAULT labels indicate replaceable components
 
 # Core
@@ -7,35 +7,41 @@ python-dotenv>=1.0.0
 pydantic>=2.0.0
 requests>=2.31.0
 
-# Primary data source — SerpApi Google Flights (SWAPPABLE_DEFAULT: primary)
-google-search-results>=2.4.0
+# Primary data source: SerpApi Google Flights — uses requests directly (no SDK needed)
+# The serpapi_source.py calls https://serpapi.com/search via requests.get
+# No additional package required beyond requests>=2.31.0
+# SERPAPI_KEY environment variable required — sign up at serpapi.com
 
-# Amadeus for Developers API — DISABLED (portal shut down July 2025), kept for reference
+# Amadeus for Developers API — optional alternative (DATA_SOURCE=amadeus)
+# portal status as of 2026: verify at developers.amadeus.com before enabling
 # amadeus>=8.0.0
 
-# Secondary / scraping sources (SWAPPABLE_DEFAULT: comment out if not using scraping)
-playwright>=1.40.0          # JS-rendered pages (Google Flights, ITA Matrix, airline sites)
-beautifulsoup4>=4.12.0      # HTML parsing for static pages
-lxml>=4.9.0                 # Fast HTML parser for BeautifulSoup
+# Secondary / scraping sources — optional, heavy, gated behind ToS review
+# playwright>=1.40.0    # Only if DATA_SOURCE=ita_matrix after ToS review
+#                       # Install separately: playwright install chromium
+# beautifulsoup4>=4.12.0  # Only if using HTML-scraping sources
 
 # Forecasting and analytics (SWAPPABLE_DEFAULT: statsmodels for advanced models)
 pandas>=2.1.0
 numpy>=1.26.0
-# statsmodels>=0.14.0       # Uncomment for Holt-Winters exponential smoothing
+# statsmodels>=0.14.0   # Uncomment for Holt-Winters exponential smoothing upgrade
 
-# Scheduling (SWAPPABLE_DEFAULT: external cron — remove APScheduler if using cron)
+# Scheduling (SWAPPABLE_DEFAULT: GitHub Actions cron — see .github/workflows/marsad_monitor.yml)
 APScheduler>=3.10.0
 
 # Console output
 rich>=13.0.0
 
+# CSV import for historical seed (seed.py stage)
+# csv module is stdlib — no extra package needed
+
 # Development / testing
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
 
+# Optional: Kiwi Tequila secondary source
+# KIWI_API_KEY required — sign up at tequila.kiwi.com
+# No additional package; uses requests
+
 # Optional: Slack alerts (uncomment if ALERT_DELIVERY=slack)
 # slack-sdk>=3.25.0
-
-# Install notes:
-#   pip install -r requirements.txt
-#   playwright install chromium    # required if using playwright sources

@@ -8,7 +8,9 @@ pydantic>=2.0.0
 requests>=2.31.0
 
 # Primary data source — SerpApi Google Flights (SWAPPABLE_DEFAULT: primary)
-google-search-results>=2.4.0
+# Uses plain requests — no SerpApi SDK needed (google-search-results is NOT a dependency)
+# pip install google-search-results  ← do NOT add; the SDK fails to build in some envs
+# The SerpApiSource uses https://serpapi.com/search directly via requests.
 
 # Amadeus for Developers API — DISABLED (portal shut down July 2025), kept for reference
 # amadeus>=8.0.0

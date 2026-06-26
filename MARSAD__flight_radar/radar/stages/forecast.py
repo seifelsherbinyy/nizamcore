@@ -27,7 +27,6 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import numpy as np
-import pandas as pd
 
 from radar.config import (
     FORECAST_LOW_CONFIDENCE_THRESHOLD,
@@ -68,14 +67,22 @@ def _forecast_sma(prices: list[float], horizons: list[int]) -> dict[int, dict]:
     return result
 
 
+def _ewm_last(prices: list[float], span: int = 7) -> float:
+    """EWM equivalent to pd.Series.ewm(span=span, adjust=False).mean().iloc[-1]."""
+    alpha = 2.0 / (span + 1)
+    val = prices[0]
+    for p in prices[1:]:
+        val = (1 - alpha) * val + alpha * p
+    return val
+
+
 def _forecast_ewm(prices: list[float], horizons: list[int]) -> dict[int, dict]:
     """
     Exponential Weighted Mean forecast.
     span=7 gives recent observations more weight than older ones.
     Trend: difference between EWM and SMA of same window (directional signal).
     """
-    s = pd.Series(prices)
-    ewm_val = float(s.ewm(span=7, adjust=False).mean().iloc[-1])
+    ewm_val = _ewm_last(prices, span=7)
 
     # Estimate trend from last 7 observations
     if len(prices) >= 7:
@@ -83,7 +90,7 @@ def _forecast_ewm(prices: list[float], horizons: list[int]) -> dict[int, dict]:
     else:
         recent_trend = 0.0
 
-    std = float(s.std()) if len(prices) > 1 else ewm_val * 0.05
+    std = float(np.std(prices, ddof=1)) if len(prices) > 1 else ewm_val * 0.05
 
     result = {}
     for h in horizons:

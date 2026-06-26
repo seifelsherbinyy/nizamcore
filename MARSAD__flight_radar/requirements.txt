@@ -19,8 +19,8 @@ beautifulsoup4>=4.12.0      # HTML parsing for static pages
 lxml>=4.9.0                 # Fast HTML parser for BeautifulSoup
 
 # Forecasting and analytics (SWAPPABLE_DEFAULT: statsmodels for advanced models)
-pandas>=2.1.0
 numpy>=1.26.0
+# pandas>=2.1.0             # No longer required — EWM implemented via numpy
 # statsmodels>=0.14.0       # Uncomment for Holt-Winters exponential smoothing
 
 # Scheduling (SWAPPABLE_DEFAULT: external cron — remove APScheduler if using cron)

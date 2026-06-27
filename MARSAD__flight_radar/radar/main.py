@@ -64,6 +64,19 @@ def cmd_forecast(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from pathlib import Path
+    from radar.stages.seed import run_seed
+    source_path = Path(args.file)
+    stats = run_seed(
+        source_path=source_path,
+        allow_duplicates=args.allow_duplicates,
+        dry_run=args.dry_run,
+    )
+    print(f"\nSEED: {stats['records_written']} written, {stats['records_skipped_duplicate']} duplicate skipped from {stats['records_parsed']} parsed")
+    return 0
+
+
 def cmd_run_all(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     from radar.stages.monitor import run_monitor
@@ -150,6 +163,20 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Stage 0: import historical price data from CSV or JSON (accelerates cold-start)",
+    )
+    p_seed.add_argument("file", help="Path to CSV or JSON seed file")
+    p_seed.add_argument(
+        "--allow-duplicates",
+        action="store_true",
+        help="Write records even if the outbound_date already exists in the series",
+    )
+    p_seed.add_argument("--dry-run", action="store_true", help="Parse and validate without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

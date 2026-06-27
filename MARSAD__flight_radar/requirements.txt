@@ -8,7 +8,9 @@ pydantic>=2.0.0
 requests>=2.31.0
 
 # Primary data source — SerpApi Google Flights (SWAPPABLE_DEFAULT: primary)
-google-search-results>=2.4.0
+# The SerpApi source uses requests directly — google-search-results is optional
+# Uncomment the line below only if you want to use the high-level Python client:
+# google-search-results>=2.4.0
 
 # Amadeus for Developers API — DISABLED (portal shut down July 2025), kept for reference
 # amadeus>=8.0.0

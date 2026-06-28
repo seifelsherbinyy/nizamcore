@@ -36,6 +36,24 @@ def _setup_logging() -> None:
     )
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed
+    from pathlib import Path
+    seed_file = Path(args.file) if args.file else None
+    stats = run_seed(
+        seed_file=seed_file,
+        write_template=args.write_template,
+        dry_run=args.dry_run,
+    )
+    imported = stats.get("rows_imported", 0)
+    failed = stats.get("rows_constraint_failed", 0)
+    if stats.get("template_written"):
+        print(f"\nSEED template written: {stats['template_written']}")
+    else:
+        print(f"\nSEED: {imported} imported, {failed} constraint failures")
+    return 0
+
+
 def cmd_discover(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     stats = run_discover(dry_run=args.dry_run)
@@ -150,6 +168,20 @@ def main() -> int:
         description="MARSAD — NIZAM Flight Intelligence Module",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # seed
+    p_seed = subparsers.add_parser(
+        "seed",
+        help="Import historical price data from CSV/JSON to accelerate cold-start",
+    )
+    p_seed.add_argument("--file", default=None, help="Path to CSV or JSON seed file")
+    p_seed.add_argument(
+        "--write-template",
+        action="store_true",
+        help="Write a CSV template to data/seed_template.csv and exit",
+    )
+    p_seed.add_argument("--dry-run", action="store_true", help="Validate without writing")
+    p_seed.set_defaults(func=cmd_seed)
 
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")

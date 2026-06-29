@@ -36,6 +36,14 @@ def _setup_logging() -> None:
     )
 
 
+def cmd_seed(args: argparse.Namespace) -> int:
+    from radar.stages.seed import run_seed
+    stats = run_seed(count=args.count, dry_run=args.dry_run)
+    action = "DRY RUN —" if stats["dry_run"] else ""
+    print(f"\nSEED {action} {stats['total_seeded']} observations written across {stats['series_seeded']} series ({stats['series_skipped']} skipped)")
+    return 0
+
+
 def cmd_discover(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     stats = run_discover(dry_run=args.dry_run)
@@ -69,6 +77,11 @@ def cmd_run_all(args: argparse.Namespace) -> int:
     from radar.stages.monitor import run_monitor
     from radar.stages.alert import run_alert
     from radar.stages.forecast import run_forecast
+
+    if getattr(args, "with_seed", False):
+        from radar.stages.seed import run_seed
+        print("Running SEED (historical bootstrap)...")
+        run_seed()
 
     if args.with_discover:
         print("Running DISCOVER (baseline collection)...")
@@ -115,7 +128,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     except Exception:
         pass
 
-    print(f"\nMARS AD Status")
+    print(f"\nMARSAD Status")
     print(f"  Schema version:    {store.get('schema_version', '?')}")
     print(f"  Last updated:      {store.get('last_updated', 'never')}")
     print(f"  Total series:      {len(keys)}")
@@ -151,6 +164,12 @@ def main() -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    # seed
+    p_seed = subparsers.add_parser("seed", help="Stage 0: import historical price seed (bootstrap confidence)")
+    p_seed.add_argument("--count", type=int, default=30, help="Observations per series (default: 30 → HIGH confidence)")
+    p_seed.add_argument("--dry-run", action="store_true", help="Log what would be written without touching the store")
+    p_seed.set_defaults(func=cmd_seed)
+
     # discover
     p_discover = subparsers.add_parser("discover", help="Stage 1: baseline collection")
     p_discover.add_argument("--dry-run", action="store_true", help="Log what would be fetched without writing")
@@ -171,6 +190,7 @@ def main() -> int:
     # run-all
     p_all = subparsers.add_parser("run-all", help="Run monitor + alert + forecast in sequence")
     p_all.add_argument("--with-discover", action="store_true", help="Also run discover first")
+    p_all.add_argument("--with-seed", action="store_true", help="Also run historical seed first (bootstrap confidence)")
     p_all.set_defaults(func=cmd_run_all)
 
     # dashboard

@@ -44,6 +44,7 @@ class AmadeusSource(BaseFlightSource):
     name = "amadeus"
 
     def __init__(self) -> None:
+        super().__init__()
         self._client = None
         self._initialized = False
 

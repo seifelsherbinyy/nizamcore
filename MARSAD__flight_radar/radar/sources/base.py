@@ -56,7 +56,9 @@ class BaseFlightSource(ABC):
     """Abstract base class for all flight data sources."""
 
     name: str = "base"
-    _request_count: int = 0
+
+    def __init__(self) -> None:
+        self._request_count: int = 0
 
     @abstractmethod
     def search(

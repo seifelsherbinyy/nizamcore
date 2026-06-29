@@ -15,6 +15,8 @@ import logging
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+from radar.config import DATA_SOURCE
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_PORT = 7329
@@ -151,6 +153,7 @@ def _api_data() -> dict:
             "window_end": store.get("metadata", {}).get("travel_window_end", ""),
             "best_biz": biz[0] if biz else None,
             "best_pe": pe[0] if pe else None,
+            "data_source": DATA_SOURCE,
         },
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
@@ -467,7 +470,7 @@ section{margin-bottom:24px}
 <!-- ═══ FOOTER ═══ -->
 <footer class="footer">
   <div class="footer-left">
-    <span>Source: SerpApi / Google Flights</span>
+    <span id="ft-source">Source: —</span>
     <span>Travel window: <span id="ft-window">—</span></span>
     <span>Booking horizon: ~2027-03-19 (305-day cap)</span>
   </div>
@@ -854,6 +857,9 @@ function renderFooter(s) {
   }
   if (s.last_updated) {
     document.getElementById('ft-updated').textContent = `Store updated: ${fmtTS(s.last_updated)}`;
+  }
+  if (s.data_source) {
+    document.getElementById('ft-source').textContent = `Source: ${s.data_source}`;
   }
 }
 

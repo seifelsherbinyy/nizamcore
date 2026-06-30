@@ -139,6 +139,49 @@ def fetch_best_price(
     return best, all_errors
 
 
+def fetch_qualifying_offers(
+    origin: str,
+    destination: str,
+    cabin: str,
+    window_start: date,
+    window_end: date,
+) -> tuple[list[FlightOffer], list[str]]:
+    """
+    Fetch every constraint-qualifying offer for a single (origin, destination,
+    cabin) combination from the primary source — across ALL carriers in one
+    fetch, since the source returns whatever carriers operate the route.
+
+    Used by MONITOR so that carrier series sharing a route+cabin are checked
+    from a single source fetch instead of one redundant fetch per carrier.
+    """
+    primary = _build_source()
+    result = primary.search(
+        origin=origin,
+        destination=destination,
+        cabin=cabin,
+        window_start=window_start,
+        window_end=window_end,
+    )
+
+    qualifying: list[FlightOffer] = []
+    for offer in result.offers:
+        itin = FlightItinerary(
+            origin=offer.origin,
+            destination=offer.destination,
+            cabin=offer.cabin,
+            outbound_date=offer.outbound_date,
+            return_date=offer.return_date,
+            outbound_duration_hours=offer.outbound_duration_hours,
+            return_duration_hours=offer.return_duration_hours,
+            carrier=offer.carrier,
+            price_usd=offer.price_usd,
+        )
+        if apply_constraints(itin):
+            qualifying.append(offer)
+
+    return qualifying, result.errors
+
+
 def fetch_all_combinations(
     combinations: list[dict],
     window_start: date,

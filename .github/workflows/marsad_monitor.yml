@@ -24,7 +24,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -55,6 +54,8 @@ jobs:
           FETCH_DELAY_MIN_SEC=3
           FETCH_DELAY_MAX_SEC=12
           MAX_REQUESTS_PER_SESSION=50
+          SOURCE_MAX_RETRY_ATTEMPTS=2
+          MONITOR_RATE_LIMIT_ABORT_THRESHOLD=4
           LOG_LEVEL=INFO
           EOF
 

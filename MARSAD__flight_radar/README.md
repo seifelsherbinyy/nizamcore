@@ -118,6 +118,32 @@ ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
+## Known Incident — Daily Monitor Quota Exhaustion (2026-05-21 → 2026-07-02)
+
+The `MARSAD Daily Monitor` GitHub Action ran successfully on 2026-05-19 and
+2026-05-20, then was **cancelled by its own 30-minute timeout every single day**
+from 2026-05-21 through 2026-07-02 (44 consecutive runs). Root cause: the
+SerpApi key hit its quota after the first couple of days, every subsequent
+request returned HTTP 429, and `run_monitor()` retried each of the ~22
+route-carrier-cabin series with full exponential backoff (4 attempts,
+2s+4s+8s+16s = 30s) before moving to the next — with no circuit breaker. That
+burned the entire CI timeout without completing, so `flight_prices.json` was
+never updated and no BUY_SIGNAL could ever fire during this window.
+
+Fix applied:
+- `SOURCE_MAX_RETRY_ATTEMPTS` (default 2) caps per-call backoff cost.
+- `MONITOR_RATE_LIMIT_ABORT_THRESHOLD` (default 4) aborts the remaining series
+  in a run after that many consecutive series come back rate-limited, so a
+  quota-exhausted run now fails fast (seconds, not 30 minutes) with
+  `aborted_reason: "source_rate_limited"` in the logged stats instead of
+  silently doing nothing.
+
+This does **not** fix the underlying quota mismatch: full daily coverage needs
+~132 SerpApi calls/day (22 series × up to 6 calls), which exceeds even the
+paid $25/mo/1,000-search tier (~33/day). Before relying on daily monitoring,
+either upgrade to a higher SerpApi tier, set `SERPAPI_PRIORITY_ONLY=true` to
+shrink the matrix, or reduce `_SAMPLE_DATES_COUNT` in `serpapi_source.py`.
+
 ## Quick Start
 
 ```bash

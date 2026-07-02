@@ -22,7 +22,7 @@ from __future__ import annotations
 import logging
 from datetime import date
 
-from radar.config import WINDOW_END, WINDOW_START
+from radar.config import MONITOR_RATE_LIMIT_ABORT_THRESHOLD, WINDOW_END, WINDOW_START
 from radar.fetcher import fetch_best_price
 from radar.schema_store import (
     append_observation,
@@ -68,7 +68,10 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "aborted_reason": None,
     }
+
+    consecutive_rate_limited = 0
 
     for key_info in all_keys:
         origin = key_info["origin"]
@@ -81,7 +84,7 @@ def run_monitor(use_secondary: bool = False) -> dict:
             origin, destination, carrier, cabin,
         )
 
-        best_offer, errors = fetch_best_price(
+        best_offer, errors, rate_limited = fetch_best_price(
             origin=origin,
             destination=destination,
             cabin=cabin,
@@ -99,7 +102,25 @@ def run_monitor(use_secondary: bool = False) -> dict:
                 "MONITOR: no data for %s→%s %s %s",
                 origin, destination, carrier, cabin,
             )
+
+            if rate_limited:
+                consecutive_rate_limited += 1
+                if consecutive_rate_limited >= MONITOR_RATE_LIMIT_ABORT_THRESHOLD:
+                    remaining = len(all_keys) - stats["routes_checked"]
+                    logger.error(
+                        "MONITOR: %d consecutive series rate-limited — source quota likely "
+                        "exhausted. Aborting with %d series unchecked instead of retrying "
+                        "each one until the job times out.",
+                        consecutive_rate_limited, remaining,
+                    )
+                    stats["aborted_reason"] = "source_rate_limited"
+                    stats["routes_unchecked_after_abort"] = remaining
+                    break
+            else:
+                consecutive_rate_limited = 0
             continue
+
+        consecutive_rate_limited = 0
 
         # Fetch previous price from store for delta display logging
         store = load_store()

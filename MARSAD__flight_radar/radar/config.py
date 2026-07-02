@@ -85,6 +85,18 @@ FETCH_DELAY_MIN_SEC: float = float(os.getenv("FETCH_DELAY_MIN_SEC", "3"))
 FETCH_DELAY_MAX_SEC: float = float(os.getenv("FETCH_DELAY_MAX_SEC", "12"))
 MAX_REQUESTS_PER_SESSION: int = int(os.getenv("MAX_REQUESTS_PER_SESSION", "50"))
 
+# Max attempts (with exponential backoff) per single API call before giving up.
+# Kept low deliberately: a sustained 429 almost always means the account is out
+# of quota, not a transient blip — retrying 4x per call across dozens of series
+# is what caused MONITOR to burn its entire CI timeout without completing.
+SOURCE_MAX_RETRY_ATTEMPTS: int = int(os.getenv("SOURCE_MAX_RETRY_ATTEMPTS", "2"))
+
+# MONITOR circuit breaker: abort the remaining series for this run after this
+# many CONSECUTIVE series come back rate-limited (vs. legitimately "no data").
+# Protects the daily schedule from hanging until the job's CI timeout when the
+# source's quota is exhausted for the day/month.
+MONITOR_RATE_LIMIT_ABORT_THRESHOLD: int = int(os.getenv("MONITOR_RATE_LIMIT_ABORT_THRESHOLD", "4"))
+
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 SCHEDULER_HOUR: int = int(os.getenv("SCHEDULER_HOUR", "6"))
 SCHEDULER_MINUTE: int = int(os.getenv("SCHEDULER_MINUTE", "0"))

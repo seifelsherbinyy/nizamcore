@@ -26,8 +26,18 @@ from typing import Optional
 
 import requests
 
-from radar.config import SERPAPI_KEY, SERPAPI_PRIORITY_ONLY, PRIORITY_DESTINATIONS
+from radar.config import (
+    SERPAPI_KEY,
+    SERPAPI_PRIORITY_ONLY,
+    PRIORITY_DESTINATIONS,
+    SOURCE_MAX_RETRY_ATTEMPTS,
+)
 from radar.sources.base import BaseFlightSource, FlightOffer, SourceResult
+
+# Marker prefix so callers (fetcher/monitor) can distinguish "quota exhausted,
+# stop hammering the API" from an ordinary no-results response without
+# depending on exact wording.
+RATE_LIMIT_ERROR_MARKER = "SERPAPI_RATE_LIMITED"
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +89,8 @@ class SerpApiSource(BaseFlightSource):
         sample_dates = self._sample_dates(window_start, window_end, _SAMPLE_DATES_COUNT)
         all_offers: list[FlightOffer] = []
         errors: list[str] = []
+        calls_made = 0
+        calls_rate_limited = 0
         start_t = time.time()
 
         for dep_date in sample_dates:
@@ -88,7 +100,7 @@ class SerpApiSource(BaseFlightSource):
                 if ret_date > window_end:
                     continue
 
-                offers, errs = self._fetch_one(
+                offers, errs, was_rate_limited = self._fetch_one(
                     origin=origin,
                     destination=destination,
                     dep_date=dep_date,
@@ -98,15 +110,24 @@ class SerpApiSource(BaseFlightSource):
                 )
                 all_offers.extend(offers)
                 errors.extend(errs)
+                calls_made += 1
+                if was_rate_limited:
+                    calls_rate_limited += 1
 
                 if all_offers:
                     # Found results for this date pair — rate limit before next call
                     self._rate_limited_sleep()
 
+        # Every sub-call for this route/cabin hit 429 with zero successes — treat
+        # as quota exhaustion for this run rather than a per-route anomaly, so the
+        # caller can short-circuit instead of repeating this for every remaining series.
+        rate_limited = calls_made > 0 and calls_rate_limited == calls_made and not all_offers
+
         return SourceResult(
             source_name=self.name,
             offers=all_offers,
             errors=errors,
+            rate_limited=rate_limited,
             fetch_duration_sec=round(time.time() - start_t, 2),
         )
 
@@ -118,8 +139,14 @@ class SerpApiSource(BaseFlightSource):
         ret_date: date,
         travel_class: int,
         cabin: str,
-    ) -> tuple[list[FlightOffer], list[str]]:
-        """Single SerpApi call with exponential backoff on rate limit."""
+    ) -> tuple[list[FlightOffer], list[str], bool]:
+        """
+        Single SerpApi call with exponential backoff on rate limit.
+
+        Returns (offers, errors, rate_limited) — rate_limited is True only when
+        every attempt was exhausted due to 429, so callers can tell "quota
+        exhausted" apart from "timeout" or "no results" and short-circuit.
+        """
         params = {
             "engine": "google_flights",
             "departure_id": origin,
@@ -134,7 +161,10 @@ class SerpApiSource(BaseFlightSource):
             "api_key": SERPAPI_KEY,
         }
 
-        for attempt in range(4):
+        max_attempts = max(1, SOURCE_MAX_RETRY_ATTEMPTS)
+        last_was_429 = False
+
+        for attempt in range(max_attempts):
             try:
                 resp = requests.get(
                     _SERPAPI_ENDPOINT,
@@ -143,34 +173,46 @@ class SerpApiSource(BaseFlightSource):
                 )
 
                 if resp.status_code == 429:
-                    self._exponential_backoff(attempt)
+                    last_was_429 = True
+                    try:
+                        body = resp.json() if resp.content else {}
+                    except ValueError:
+                        body = {"raw": resp.text[:200]}
+                    logger.warning(
+                        "SerpApi 429 on %s→%s %s: %s",
+                        origin, destination, dep_date, body.get("error", body),
+                    )
+                    if attempt < max_attempts - 1:
+                        self._exponential_backoff(attempt)
                     continue
 
                 if resp.status_code == 401:
-                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"]
+                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"], False
 
                 if resp.status_code == 400:
                     body = resp.json() if resp.content else {}
-                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"]
+                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"], False
 
                 resp.raise_for_status()
                 self._request_count += 1
 
                 data = resp.json()
                 if "error" in data:
-                    return [], [f"SerpApi error: {data['error']}"]
+                    return [], [f"SerpApi error: {data['error']}"], False
 
                 offers = self._parse(data, dep_date, ret_date, cabin)
-                return offers, []
+                return offers, [], False
 
             except requests.Timeout:
-                errors = [f"SerpApi timeout: {origin}→{destination} {dep_date}"]
-                if attempt < 3:
+                last_was_429 = False
+                if attempt < max_attempts - 1:
                     self._exponential_backoff(attempt)
             except requests.RequestException as exc:
-                return [], [f"SerpApi request error: {exc}"]
+                return [], [f"SerpApi request error: {exc}"], False
 
-        return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"]
+        if last_was_429:
+            return [], [f"{RATE_LIMIT_ERROR_MARKER}: max retries exceeded (429) — {origin}→{destination} {dep_date}"], True
+        return [], [f"SerpApi timeout: max retries exceeded — {origin}→{destination} {dep_date}"], False
 
     def _parse(
         self,

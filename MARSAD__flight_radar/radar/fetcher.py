@@ -57,13 +57,16 @@ def fetch_best_price(
     window_end: date,
     carriers: Optional[list[str]] = None,
     use_secondary: bool = False,
-) -> tuple[Optional[FlightOffer], list[str]]:
+) -> tuple[Optional[FlightOffer], list[str], bool]:
     """
     Fetch the best (lowest price) qualifying offer for a single
     (origin, destination, cabin) combination.
 
     Applies constraint filtering to all returned results.
-    Returns (best_offer, error_list). best_offer is None if no qualifying offer found.
+    Returns (best_offer, error_list, rate_limited). best_offer is None if no
+    qualifying offer found. rate_limited is True when the primary source's
+    quota/rate-limit was hit on every attempt for this combination — callers
+    can use it to short-circuit a batch instead of repeating the same failure.
 
     use_secondary: also queries Kiwi as cross-validation and takes lowest price.
     """
@@ -81,6 +84,7 @@ def fetch_best_price(
         carriers=carriers,
     )
     all_errors.extend(result.errors)
+    rate_limited = result.rate_limited
 
     for offer in result.offers:
         itin = FlightItinerary(
@@ -129,14 +133,14 @@ def fetch_best_price(
                 qualifying.append(offer)
 
     if not qualifying:
-        return None, all_errors
+        return None, all_errors, rate_limited
 
     best = min(qualifying, key=lambda o: o.price_usd)
     logger.debug(
         "Best offer: %s→%s %s %s $%.0f via %s",
         best.origin, best.destination, best.cabin, best.outbound_date, best.price_usd, best.source,
     )
-    return best, all_errors
+    return best, all_errors, rate_limited
 
 
 def fetch_all_combinations(
@@ -169,7 +173,7 @@ def fetch_all_combinations(
 
         logger.info("Fetching %d/%d: %s→%s %s", i + 1, total, combo["origin"], combo["destination"], combo["cabin"])
 
-        best, errors = fetch_best_price(
+        best, errors, _rate_limited = fetch_best_price(
             origin=combo["origin"],
             destination=combo["destination"],
             cabin=combo["cabin"],

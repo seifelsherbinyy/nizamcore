@@ -52,6 +52,15 @@ class SourceResult:
     fetch_duration_sec: float = 0.0
 
 
+class SourceExhausted(Exception):
+    """
+    Raised when a source has hit sustained rate-limiting (consecutive full
+    backoff-cycle failures) — signals callers to abort the run early instead of
+    grinding through every remaining combination for the full backoff duration
+    each. Typically means an API quota is exhausted or the credential is invalid.
+    """
+
+
 class BaseFlightSource(ABC):
     """Abstract base class for all flight data sources."""
 

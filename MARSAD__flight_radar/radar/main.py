@@ -40,6 +40,8 @@ def cmd_discover(args: argparse.Namespace) -> int:
     from radar.stages.discover import run_discover
     stats = run_discover(dry_run=args.dry_run)
     print(f"\nDISCOVER: {stats}")
+    if stats.get("circuit_breaker_tripped"):
+        return 1
     return 0
 
 
@@ -47,6 +49,13 @@ def cmd_monitor(args: argparse.Namespace) -> int:
     from radar.stages.monitor import run_monitor
     stats = run_monitor()
     print(f"\nMONITOR: {stats}")
+    # A tripped circuit breaker, or a run that checked routes but wrote zero
+    # observations, means the source produced nothing useful — exit non-zero so
+    # CI surfaces a clear failure instead of a silently "successful" no-op run.
+    if stats.get("circuit_breaker_tripped"):
+        return 1
+    if stats.get("routes_checked", 0) > 0 and stats.get("observations_written", 0) == 0:
+        return 1
     return 0
 
 

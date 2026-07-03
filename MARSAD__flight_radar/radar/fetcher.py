@@ -24,7 +24,7 @@ from typing import Optional
 
 from radar.config import DATA_SOURCE, MAX_REQUESTS_PER_SESSION
 from radar.constraints import apply_constraints, FlightItinerary
-from radar.sources.base import FlightOffer, SourceResult
+from radar.sources.base import FlightOffer, SourceExhausted, SourceResult
 from radar.sources.serpapi_source import SerpApiSource
 from radar.sources.amadeus_source import AmadeusSource
 from radar.sources.ita_matrix_source import ITAMatrixSource
@@ -169,15 +169,22 @@ def fetch_all_combinations(
 
         logger.info("Fetching %d/%d: %s→%s %s", i + 1, total, combo["origin"], combo["destination"], combo["cabin"])
 
-        best, errors = fetch_best_price(
-            origin=combo["origin"],
-            destination=combo["destination"],
-            cabin=combo["cabin"],
-            window_start=window_start,
-            window_end=window_end,
-            carriers=carriers,
-            use_secondary=use_secondary,
-        )
+        try:
+            best, errors = fetch_best_price(
+                origin=combo["origin"],
+                destination=combo["destination"],
+                cabin=combo["cabin"],
+                window_start=window_start,
+                window_end=window_end,
+                carriers=carriers,
+                use_secondary=use_secondary,
+            )
+        except SourceExhausted as exc:
+            logger.error("Circuit breaker tripped at combo %d/%d — stopping fetch early: %s", i + 1, total, exc)
+            remaining = combinations[i:]
+            for c in remaining:
+                results.append((c, None, [f"Circuit breaker tripped: {exc}"]))
+            break
         results.append((combo, best, errors))
 
         # Count requests made (approximate — each combo uses multiple sub-requests)

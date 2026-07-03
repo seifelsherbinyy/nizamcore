@@ -27,11 +27,21 @@ from typing import Optional
 import requests
 
 from radar.config import SERPAPI_KEY, SERPAPI_PRIORITY_ONLY, PRIORITY_DESTINATIONS
-from radar.sources.base import BaseFlightSource, FlightOffer, SourceResult
+from radar.sources.base import BaseFlightSource, FlightOffer, SourceResult, SourceExhausted
 
 logger = logging.getLogger(__name__)
 
 _SERPAPI_ENDPOINT = "https://serpapi.com/search"
+
+# Circuit breaker: a fresh SerpApiSource() is built for every combination
+# fetched (see fetcher._build_source), so consecutive-failure state is tracked
+# as a class variable to persist across instances for the life of the process.
+# Without this, a fully exhausted API quota or an invalid key causes every
+# single combination to grind through the full 2s/4s/8s/16s backoff cycle —
+# in a 06:00 UTC cron with a 30-minute job timeout, that reliably eats the
+# entire timeout and shows up as a silent "cancelled" run instead of a clear
+# failure, day after day, without ever writing a single observation.
+_CIRCUIT_BREAKER_THRESHOLD = 3
 
 _CABIN_CLASS_MAP = {
     "BUSINESS": 3,
@@ -44,6 +54,7 @@ _SAMPLE_DATES_COUNT = 3
 
 class SerpApiSource(BaseFlightSource):
     name = "serpapi"
+    _consecutive_exhausted: int = 0  # class-level circuit breaker state
 
     def search(
         self,
@@ -134,6 +145,8 @@ class SerpApiSource(BaseFlightSource):
             "api_key": SERPAPI_KEY,
         }
 
+        saw_429 = False
+
         for attempt in range(4):
             try:
                 resp = requests.get(
@@ -143,6 +156,7 @@ class SerpApiSource(BaseFlightSource):
                 )
 
                 if resp.status_code == 429:
+                    saw_429 = True
                     self._exponential_backoff(attempt)
                     continue
 
@@ -155,6 +169,7 @@ class SerpApiSource(BaseFlightSource):
 
                 resp.raise_for_status()
                 self._request_count += 1
+                type(self)._consecutive_exhausted = 0
 
                 data = resp.json()
                 if "error" in data:
@@ -169,6 +184,19 @@ class SerpApiSource(BaseFlightSource):
                     self._exponential_backoff(attempt)
             except requests.RequestException as exc:
                 return [], [f"SerpApi request error: {exc}"]
+
+        if saw_429:
+            type(self)._consecutive_exhausted += 1
+            if type(self)._consecutive_exhausted >= _CIRCUIT_BREAKER_THRESHOLD:
+                count = type(self)._consecutive_exhausted
+                type(self)._consecutive_exhausted = 0  # reset for the next run/process
+                raise SourceExhausted(
+                    f"SerpApi returned 429 (rate limited) on {count} consecutive fetches, "
+                    "each exhausting the full backoff cycle — the account's search quota is "
+                    "likely used up or SERPAPI_KEY is invalid. Aborting this run early instead "
+                    "of grinding through every remaining combination. Check "
+                    "https://serpapi.com/manage-api-key for remaining quota."
+                )
 
         return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"]
 

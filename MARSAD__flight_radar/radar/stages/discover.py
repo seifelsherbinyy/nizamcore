@@ -156,6 +156,12 @@ def run_discover(
     covered = sum(1 for k in all_keys_after if k["observation_count"] > 0)
     stats["baseline_complete"] = covered >= len(combinations)
 
+    tripped = next(
+        (e for e in stats["fetch_errors"] if e.startswith("Circuit breaker tripped")),
+        None,
+    )
+    stats["circuit_breaker_tripped"] = tripped
+
     logger.info(
         "DISCOVER complete: %d fetched, %d no data, %d errors, baseline_complete=%s",
         stats["combinations_fetched"],

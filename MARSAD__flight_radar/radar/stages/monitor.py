@@ -24,6 +24,7 @@ from datetime import date
 
 from radar.config import WINDOW_END, WINDOW_START
 from radar.fetcher import fetch_best_price
+from radar.sources.base import SourceExhausted
 from radar.schema_store import (
     append_observation,
     backup_store,
@@ -68,6 +69,7 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "circuit_breaker_tripped": None,
     }
 
     for key_info in all_keys:
@@ -81,15 +83,20 @@ def run_monitor(use_secondary: bool = False) -> dict:
             origin, destination, carrier, cabin,
         )
 
-        best_offer, errors = fetch_best_price(
-            origin=origin,
-            destination=destination,
-            cabin=cabin,
-            window_start=window_start,
-            window_end=window_end,
-            carriers=[carrier],
-            use_secondary=use_secondary,
-        )
+        try:
+            best_offer, errors = fetch_best_price(
+                origin=origin,
+                destination=destination,
+                cabin=cabin,
+                window_start=window_start,
+                window_end=window_end,
+                carriers=[carrier],
+                use_secondary=use_secondary,
+            )
+        except SourceExhausted as exc:
+            logger.error("MONITOR: circuit breaker tripped — stopping run early: %s", exc)
+            stats["circuit_breaker_tripped"] = str(exc)
+            break
         stats["fetch_errors"].extend(errors)
         stats["routes_checked"] += 1
 

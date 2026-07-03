@@ -118,6 +118,34 @@ ITA Matrix (`DATA_SOURCE=ita_matrix`) is implemented but flagged:
 
 See `SWAPPABLE_DEFAULT REGISTRY` at the bottom of this README for all swap instructions.
 
+## Known Incident: SerpApi quota exhaustion silently starved the daily monitor
+
+Found 2026-07-03: the `MARSAD Daily Monitor` GitHub Actions cron (06:00 UTC)
+had been timing out every day since at least 2026-06-04 — a full month —
+without writing a single new observation. `data/flight_prices.json` still
+only holds the original 44-observation baseline from 2026-05-18.
+
+Root cause: every SerpApi request was returning 429, and `_fetch_one` retried
+the full 2s/4s/8s/16s backoff cycle for each of ~6 sub-requests per
+route-carrier-cabin combination before giving up and moving to the next one —
+with dozens of combinations to check, this reliably ate the entire 30-minute
+job timeout. GitHub reports a timed-out job as `cancelled`, not `failed`, so
+this was easy to miss in the Actions tab.
+
+Fix applied: `SerpApiSource` now trips a circuit breaker
+(`SourceExhausted`, see `radar/sources/base.py`) after 3 consecutive
+fully-exhausted fetches, aborting DISCOVER/MONITOR early instead of grinding
+through every remaining combination. `radar/main.py` also now exits non-zero
+when the breaker trips or a run checks routes but writes zero observations,
+so CI shows a clear red ✗ instead of a silent no-op "success" or a 30-minute
+"cancelled".
+
+**This does not fix the underlying cause** — it only makes it fail fast and
+loud. Action required: check the SerpApi account at
+https://serpapi.com/manage-api-key for remaining quota / key validity, and
+either renew `SERPAPI_KEY` or upgrade past the free tier (see budget note in
+`radar/sources/serpapi_source.py`).
+
 ## Quick Start
 
 ```bash

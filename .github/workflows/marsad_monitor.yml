@@ -18,7 +18,10 @@ jobs:
   monitor:
     name: Run MARSAD pipeline stage
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 24 series x ~60-90s/request (SerpApi rate-limit backoff included) run ~31min,
+    # which exceeded the old 30min cap on every scheduled run since 2026-05-20 —
+    # the job was cancelled mid-MONITOR every day and never reached the commit step.
+    timeout-minutes: 55
 
     steps:
       - name: Checkout
@@ -65,6 +68,10 @@ jobs:
           python -m radar.main "$STAGE"
 
       - name: Commit updated data store
+        # Run even if "Run stage" was cancelled (e.g. hit timeout-minutes) so
+        # whatever observations were appended before cancellation aren't lost —
+        # schema_store.py writes append-only, so a partial run still has real data.
+        if: always()
         run: |
           git config user.name "MARSAD"
           git config user.email "noreply@github.com"

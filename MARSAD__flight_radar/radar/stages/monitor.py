@@ -33,6 +33,19 @@ from radar.schema_store import (
 
 logger = logging.getLogger(__name__)
 
+# If this many consecutive combinations come back with nothing but
+# rate-limit/max-retry errors, the data source is exhausted for the
+# session (e.g. monthly quota burned) — abort instead of retrying every
+# remaining combo and burning the job's full timeout for zero data.
+_CONSECUTIVE_EXHAUSTION_LIMIT = 3
+_EXHAUSTION_MARKERS = ("rate limit", "max retries exceeded", "429")
+
+
+def _looks_exhausted(errors: list[str]) -> bool:
+    return bool(errors) and all(
+        any(marker in err.lower() for marker in _EXHAUSTION_MARKERS) for err in errors
+    )
+
 
 def run_monitor(use_secondary: bool = False) -> dict:
     """
@@ -68,7 +81,11 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "aborted_early": False,
+        "abort_reason": None,
     }
+
+    consecutive_exhausted = 0
 
     for key_info in all_keys:
         origin = key_info["origin"]
@@ -99,7 +116,27 @@ def run_monitor(use_secondary: bool = False) -> dict:
                 "MONITOR: no data for %s→%s %s %s",
                 origin, destination, carrier, cabin,
             )
+
+            if _looks_exhausted(errors):
+                consecutive_exhausted += 1
+                if consecutive_exhausted >= _CONSECUTIVE_EXHAUSTION_LIMIT:
+                    reason = (
+                        f"data source exhausted — {consecutive_exhausted} consecutive "
+                        "combinations returned only rate-limit/max-retry errors. "
+                        "Aborting run early instead of retrying every remaining "
+                        "combination (likely monthly API quota exceeded — check "
+                        "provider dashboard/billing)."
+                    )
+                    logger.error("MONITOR: aborting early — %s", reason)
+                    stats["aborted_early"] = True
+                    stats["abort_reason"] = reason
+                    break
+            else:
+                consecutive_exhausted = 0
+
             continue
+        else:
+            consecutive_exhausted = 0
 
         # Fetch previous price from store for delta display logging
         store = load_store()

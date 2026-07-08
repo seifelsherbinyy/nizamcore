@@ -157,6 +157,49 @@ python -m radar.main schedule
 | Alert delivery | Console + JSON file | Email/Slack/Webhook | Set `ALERT_DELIVERY=slack` and `SLACK_WEBHOOK_URL` in .env |
 | Currency | USD primary | Any | All prices stored in USD; EGP/EUR as supplementary |
 
+## SerpApi Quota Incident (discovered 2026-07-08)
+
+**Every scheduled MONITOR run since 2026-05-19 (51 consecutive daily runs) failed
+silently.** The baseline (`discover`) collection on 2026-05-18 was the *only* run
+that ever wrote observations to the store. Since then:
+
+- SerpApi returned `429 Too Many Requests` on **every single request**, all day,
+  every day — the free tier's 250 searches/month cannot cover daily monitoring of
+  ~12 destinations × 7+ carriers × 2 cabins (that workload needs several thousand
+  searches/month even in priority-only mode).
+- The MONITOR stage had no circuit breaker and no time budget, so it retried
+  every combination through exhaustion (4 backoff attempts each) for the full
+  30 minutes, then GitHub Actions hard-cancelled the job before the "commit
+  data store" step ever ran. Zero observations were written; nothing looked
+  broken in the workflow's own summary because it never got the chance to log
+  a failure — it just silently ran out the clock, daily, for 7 weeks.
+- Separately, `.github/workflows/marsad_monitor.yml` had pinned `checkout` to an
+  ephemeral session branch (`claude/charming-shannon-E6moy`) that was never
+  merged into `main`, instead of checking out the default branch.
+
+**Fixes applied:**
+1. `radar/sources/serpapi_source.py` — class-level circuit breaker. After 2
+   consecutive full-retry exhaustions (8 total 429s), stop making SerpApi calls
+   for the rest of the run instead of retrying futilely.
+2. `radar/stages/monitor.py` — wall-clock budget (`MONITOR_MAX_RUNTIME_SEC`,
+   default 1200s / 20 min). The stage now always stops with time to spare so
+   the workflow's commit step still runs, even if a source hangs or a future
+   circuit breaker has a gap.
+3. `.github/workflows/marsad_monitor.yml` — checkout no longer pins a stale
+   branch; `SERPAPI_PRIORITY_ONLY=true` set as an immediate volume reduction.
+
+**Still unresolved — requires a decision, not code:** the free SerpApi tier
+cannot sustain daily monitoring at this route×carrier×cabin count even with
+priority-only mode. Pick one:
+- Upgrade to the SerpApi paid tier ($25/mo, 1,000 searches) — comfortably
+  covers priority-only daily monitoring.
+- Reduce scheduler cadence (e.g. every 3 days, or weekly) to fit the free tier.
+- Shrink `PRIORITY_DESTINATIONS` further and/or drop `SECONDARY_CARRIERS`.
+
+Until one of these is chosen, expect most daily runs to still return `no data`
+for most combinations — the fix above stops the CI-time waste and data loss,
+it does not manufacture search quota that doesn't exist.
+
 ## Privacy
 
 Framework code: `private_github` (committed)

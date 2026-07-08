@@ -85,6 +85,12 @@ FETCH_DELAY_MIN_SEC: float = float(os.getenv("FETCH_DELAY_MIN_SEC", "3"))
 FETCH_DELAY_MAX_SEC: float = float(os.getenv("FETCH_DELAY_MAX_SEC", "12"))
 MAX_REQUESTS_PER_SESSION: int = int(os.getenv("MAX_REQUESTS_PER_SESSION", "50"))
 
+# Wall-clock budget for the MONITOR stage (seconds). Leaves headroom under the
+# 30-minute CI job timeout so the run always exits cleanly and commits whatever
+# it collected, instead of grinding until GitHub Actions hard-cancels the job.
+# See README.md "SerpApi Quota Incident".
+MONITOR_MAX_RUNTIME_SEC: float = float(os.getenv("MONITOR_MAX_RUNTIME_SEC", "1200"))
+
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 SCHEDULER_HOUR: int = int(os.getenv("SCHEDULER_HOUR", "6"))
 SCHEDULER_MINUTE: int = int(os.getenv("SCHEDULER_MINUTE", "0"))

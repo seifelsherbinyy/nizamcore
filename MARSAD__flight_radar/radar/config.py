@@ -16,7 +16,9 @@ SECONDARY_SOURCE: str = os.getenv("SECONDARY_SOURCE", "")
 # SerpApi (Google Flights) — primary source
 SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")
 # Free tier: 250 searches/month. Paid ($25/mo): 1,000/month.
-# Full daily monitoring = 48 searches/day — paid tier required for full coverage.
+# MONITOR makes 1 call per series checked, capped by MONITOR_KEYS_PER_RUN below
+# (default 8/day fits the free tier). DISCOVER's baseline sweep is far more
+# expensive (up to 6 calls/series) and will burn most of the monthly quota.
 # Set SERPAPI_PRIORITY_ONLY=true to restrict to priority destinations on free tier.
 SERPAPI_PRIORITY_ONLY: bool = os.getenv("SERPAPI_PRIORITY_ONLY", "false").lower() == "true"
 
@@ -79,6 +81,18 @@ BACKUPS_DIR: Path = DATA_DIR / "backups"
 FLIGHT_PRICES_PATH: Path = DATA_DIR / "flight_prices.json"
 FLIGHT_PRICES_TMP: Path = DATA_DIR / "flight_prices.tmp"
 RADAR_ALERTS_PATH: Path = ALERTS_DIR / "radar_alerts.json"
+
+# ── Monitor budget ─────────────────────────────────────────────────────────────
+# Caps how many route-carrier-cabin series MONITOR rechecks per run (round-robin
+# via a persisted cursor — full coverage rotates across multiple days). Keeps
+# daily API usage within the SerpApi free tier (250/month ≈ 8/day sustainable;
+# 8/run leaves headroom for retries while still cycling through ~24 known
+# series roughly every 3 days).
+MONITOR_KEYS_PER_RUN: int = int(os.getenv("MONITOR_KEYS_PER_RUN", "8"))
+# Abort the run early if this many consecutive series come back with no data —
+# almost always means the source's rate/quota limit is exhausted, so retrying
+# every remaining series would just burn the job's timeout for nothing.
+MONITOR_CONSECUTIVE_FAILURE_LIMIT: int = int(os.getenv("MONITOR_CONSECUTIVE_FAILURE_LIMIT", "3"))
 
 # ── Rate limiting ─────────────────────────────────────────────────────────────
 FETCH_DELAY_MIN_SEC: float = float(os.getenv("FETCH_DELAY_MIN_SEC", "3"))

@@ -334,6 +334,19 @@ def get_series(
         return []
 
 
+def get_monitor_cursor() -> int:
+    """Return the persisted round-robin offset for MONITOR's key rotation."""
+    store = load_store()
+    return int(store.get("metadata", {}).get("monitor_rotation_cursor", 0))
+
+
+def set_monitor_cursor(value: int) -> None:
+    """Persist the round-robin offset for MONITOR's key rotation."""
+    store = load_store()
+    store.setdefault("metadata", {})["monitor_rotation_cursor"] = value
+    _safe_write(store)
+
+
 def get_all_series_keys(store: Optional[dict] = None) -> list[dict]:
     """Return all (origin, destination, carrier, cabin) combinations in the store."""
     if store is None:

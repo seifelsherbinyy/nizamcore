@@ -139,6 +139,69 @@ def fetch_best_price(
     return best, all_errors
 
 
+def fetch_price_for_known_itinerary(
+    origin: str,
+    destination: str,
+    cabin: str,
+    carrier: str,
+    outbound_date: date,
+    return_date: date,
+) -> tuple[Optional[FlightOffer], list[str]]:
+    """
+    Re-check the price of a single already-known itinerary — ONE API call
+    when the source supports `search_exact_date` (e.g. SerpApi).
+
+    This is the cheap path MONITOR should use for daily deltas. It re-queries
+    the exact (outbound_date, return_date) pair already on record instead of
+    resampling the full date/night matrix that DISCOVER uses (up to 6x the
+    calls per route). Falls back to the broad `search()` for sources that
+    don't implement the lean path.
+    """
+    primary = _build_source()
+
+    if hasattr(primary, "search_exact_date"):
+        result = primary.search_exact_date(
+            origin=origin,
+            destination=destination,
+            cabin=cabin,
+            outbound_date=outbound_date,
+            return_date=return_date,
+        )
+    else:
+        result = primary.search(
+            origin=origin,
+            destination=destination,
+            cabin=cabin,
+            window_start=outbound_date,
+            window_end=return_date,
+            carriers=[carrier],
+        )
+
+    qualifying: list[FlightOffer] = []
+    for offer in result.offers:
+        if offer.carrier.upper() != carrier.upper():
+            continue
+        itin = FlightItinerary(
+            origin=offer.origin,
+            destination=offer.destination,
+            cabin=offer.cabin,
+            outbound_date=offer.outbound_date,
+            return_date=offer.return_date,
+            outbound_duration_hours=offer.outbound_duration_hours,
+            return_duration_hours=offer.return_duration_hours,
+            carrier=offer.carrier,
+            price_usd=offer.price_usd,
+        )
+        if apply_constraints(itin):
+            qualifying.append(offer)
+
+    if not qualifying:
+        return None, result.errors
+
+    best = min(qualifying, key=lambda o: o.price_usd)
+    return best, result.errors
+
+
 def fetch_all_combinations(
     combinations: list[dict],
     window_start: date,

@@ -18,13 +18,13 @@ jobs:
   monitor:
     name: Run MARSAD pipeline stage
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -55,6 +55,8 @@ jobs:
           FETCH_DELAY_MIN_SEC=3
           FETCH_DELAY_MAX_SEC=12
           MAX_REQUESTS_PER_SESSION=50
+          MONITOR_KEYS_PER_RUN=8
+          MONITOR_CONSECUTIVE_FAILURE_LIMIT=3
           LOG_LEVEL=INFO
           EOF
 

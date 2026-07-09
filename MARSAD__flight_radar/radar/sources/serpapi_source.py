@@ -110,6 +110,54 @@ class SerpApiSource(BaseFlightSource):
             fetch_duration_sec=round(time.time() - start_t, 2),
         )
 
+    def search_exact_date(
+        self,
+        origin: str,
+        destination: str,
+        cabin: str,
+        outbound_date: date,
+        return_date: date,
+    ) -> SourceResult:
+        """
+        Re-check a single already-known itinerary (exact date pair) — ONE API call.
+
+        Used by MONITOR (daily delta) instead of `search()`, which samples
+        multiple date/night combinations (up to 6 calls) and is only appropriate
+        for DISCOVER's exploratory baseline collection. Reusing `search()` for
+        daily monitoring multiplies API usage 6x and was the root cause of
+        SerpApi free-tier quota exhaustion (see CHANGELOG / incident notes).
+        """
+        if not SERPAPI_KEY:
+            return SourceResult(
+                source_name=self.name,
+                offers=[],
+                errors=["SERPAPI_KEY not configured — set it in .env"],
+            )
+
+        travel_class = _CABIN_CLASS_MAP.get(cabin.upper())
+        if not travel_class:
+            return SourceResult(
+                source_name=self.name,
+                offers=[],
+                errors=[f"Unknown cabin: {cabin!r}"],
+            )
+
+        start_t = time.time()
+        offers, errors = self._fetch_one(
+            origin=origin,
+            destination=destination,
+            dep_date=outbound_date,
+            ret_date=return_date,
+            travel_class=travel_class,
+            cabin=cabin,
+        )
+        return SourceResult(
+            source_name=self.name,
+            offers=offers,
+            errors=errors,
+            fetch_duration_sec=round(time.time() - start_t, 2),
+        )
+
     def _fetch_one(
         self,
         origin: str,

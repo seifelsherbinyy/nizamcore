@@ -40,6 +40,7 @@ from radar.schema_store import (
     load_store,
     mark_premium_economy_unavailable,
 )
+from radar.sources.serpapi_source import is_quota_likely_exhausted
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +108,7 @@ def run_discover(
         "observations_written": 0,
         "fetch_errors": [],
         "baseline_complete": False,
+        "aborted_reason": "serpapi_quota_or_rate_limit_exhausted" if is_quota_likely_exhausted() else None,
     }
 
     for combo, best_offer, errors in results:

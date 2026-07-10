@@ -41,6 +41,32 @@ _CABIN_CLASS_MAP = {
 # Sample departure dates spread across the travel window per search
 _SAMPLE_DATES_COUNT = 3
 
+# ── Process-wide circuit breaker ──────────────────────────────────────────────
+# A fresh SerpApiSource() is instantiated per (route, carrier, cabin) combo, so
+# per-instance counters never accumulate. When the monthly/account quota is
+# exhausted, EVERY request 429s and each combo burns its full 4-attempt
+# exponential backoff (~30s) before moving on — with 30+ combos that exceeds
+# any reasonable job timeout and the run is killed having fetched nothing.
+# This module-level state persists for the life of the process (one CLI
+# invocation) and trips after a small number of fully-exhausted combos so the
+# remaining combos short-circuit instantly instead of repeating the same
+# doomed retry loop dozens more times.
+_QUOTA_EXHAUSTED_TRIP_THRESHOLD = 2
+_consecutive_exhausted_combos = 0
+_quota_likely_exhausted = False
+
+
+def is_quota_likely_exhausted() -> bool:
+    """True once the circuit breaker has tripped for this process."""
+    return _quota_likely_exhausted
+
+
+def reset_circuit_breaker() -> None:
+    """Test/CLI hook to clear circuit-breaker state between independent runs."""
+    global _consecutive_exhausted_combos, _quota_likely_exhausted
+    _consecutive_exhausted_combos = 0
+    _quota_likely_exhausted = False
+
 
 class SerpApiSource(BaseFlightSource):
     name = "serpapi"
@@ -59,6 +85,17 @@ class SerpApiSource(BaseFlightSource):
                 source_name=self.name,
                 offers=[],
                 errors=["SERPAPI_KEY not configured — set it in .env"],
+            )
+
+        if _quota_likely_exhausted:
+            return SourceResult(
+                source_name=self.name,
+                offers=[],
+                errors=[
+                    "SerpApi quota/rate-limit circuit breaker is open — "
+                    "skipping fetch for this combo (see earlier ERROR log for details)"
+                ],
+                rate_limited=True,
             )
 
         travel_class = _CABIN_CLASS_MAP.get(cabin.upper())
@@ -80,15 +117,18 @@ class SerpApiSource(BaseFlightSource):
         all_offers: list[FlightOffer] = []
         errors: list[str] = []
         start_t = time.time()
+        tripped_mid_combo = False
 
         for dep_date in sample_dates:
+            if tripped_mid_combo:
+                break
             # Try two return duration options: 9 nights and 14 nights
             for nights in [9, 14]:
                 ret_date = dep_date + timedelta(days=nights)
                 if ret_date > window_end:
                     continue
 
-                offers, errs = self._fetch_one(
+                offers, errs, rate_limited = self._fetch_one(
                     origin=origin,
                     destination=destination,
                     dep_date=dep_date,
@@ -99,6 +139,12 @@ class SerpApiSource(BaseFlightSource):
                 all_offers.extend(offers)
                 errors.extend(errs)
 
+                if _quota_likely_exhausted:
+                    # Breaker tripped during this very call — stop burning time
+                    # on the remaining date/nights combinations for this route.
+                    tripped_mid_combo = True
+                    break
+
                 if all_offers:
                     # Found results for this date pair — rate limit before next call
                     self._rate_limited_sleep()
@@ -107,6 +153,7 @@ class SerpApiSource(BaseFlightSource):
             source_name=self.name,
             offers=all_offers,
             errors=errors,
+            rate_limited=_quota_likely_exhausted,
             fetch_duration_sec=round(time.time() - start_t, 2),
         )
 
@@ -118,8 +165,21 @@ class SerpApiSource(BaseFlightSource):
         ret_date: date,
         travel_class: int,
         cabin: str,
-    ) -> tuple[list[FlightOffer], list[str]]:
-        """Single SerpApi call with exponential backoff on rate limit."""
+    ) -> tuple[list[FlightOffer], list[str], bool]:
+        """Single SerpApi call with exponential backoff on rate limit.
+
+        Returns (offers, errors, rate_limited) — rate_limited is True when
+        this call exhausted all attempts on repeated 429s (as opposed to a
+        timeout, auth error, or a clean "no results" response).
+        """
+        global _consecutive_exhausted_combos, _quota_likely_exhausted
+
+        if _quota_likely_exhausted:
+            return [], [
+                "SerpApi quota/rate-limit circuit breaker is open — "
+                "skipping fetch (see earlier ERROR log for details)"
+            ], True
+
         params = {
             "engine": "google_flights",
             "departure_id": origin,
@@ -143,34 +203,48 @@ class SerpApiSource(BaseFlightSource):
                 )
 
                 if resp.status_code == 429:
-                    self._exponential_backoff(attempt)
-                    continue
+                    if attempt < 3:
+                        self._exponential_backoff(attempt)
+                        continue
+                    # All 4 attempts 429'd — count this toward the breaker.
+                    _consecutive_exhausted_combos += 1
+                    if _consecutive_exhausted_combos >= _QUOTA_EXHAUSTED_TRIP_THRESHOLD:
+                        _quota_likely_exhausted = True
+                        logger.error(
+                            "serpapi: %d consecutive requests fully rate-limited — "
+                            "tripping circuit breaker, skipping remaining fetches "
+                            "this run. Check SerpApi account quota/plan.",
+                            _consecutive_exhausted_combos,
+                        )
+                    return [], [f"SerpApi max retries exceeded (429): {origin}→{destination} {dep_date}"], True
+
+                _consecutive_exhausted_combos = 0
 
                 if resp.status_code == 401:
-                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"]
+                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"], False
 
                 if resp.status_code == 400:
                     body = resp.json() if resp.content else {}
-                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"]
+                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"], False
 
                 resp.raise_for_status()
                 self._request_count += 1
 
                 data = resp.json()
                 if "error" in data:
-                    return [], [f"SerpApi error: {data['error']}"]
+                    return [], [f"SerpApi error: {data['error']}"], False
 
                 offers = self._parse(data, dep_date, ret_date, cabin)
-                return offers, []
+                return offers, [], False
 
             except requests.Timeout:
                 errors = [f"SerpApi timeout: {origin}→{destination} {dep_date}"]
                 if attempt < 3:
                     self._exponential_backoff(attempt)
             except requests.RequestException as exc:
-                return [], [f"SerpApi request error: {exc}"]
+                return [], [f"SerpApi request error: {exc}"], False
 
-        return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"]
+        return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"], False
 
     def _parse(
         self,

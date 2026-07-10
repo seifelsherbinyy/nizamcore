@@ -43,7 +43,12 @@ jobs:
           cat > .env <<EOF
           DATA_SOURCE=serpapi
           SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
-          SERPAPI_PRIORITY_ONLY=false
+          # Priority-only trims each run to the 8 highest-priority destinations
+          # instead of all 12 — SerpApi's free tier (250 searches/month) is
+          # exhausted by a single full-matrix run, so this stretches quota
+          # further. Still likely insufficient for daily coverage on the free
+          # tier — see MARSAD__flight_radar/README.md SWAPPABLE_DEFAULT registry.
+          SERPAPI_PRIORITY_ONLY=true
           RADAR_WINDOW_START=2027-03-15
           RADAR_WINDOW_END=2027-09-30
           ALERT_THRESHOLD_PCT=10
@@ -62,7 +67,14 @@ jobs:
         working-directory: MARSAD__flight_radar
         run: |
           STAGE="${{ github.event.inputs.stage || 'monitor' }}"
-          python -m radar.main "$STAGE"
+          python -m radar.main "$STAGE" 2>&1 | tee /tmp/marsad_run.log
+          if grep -q "aborted_reason.*serpapi_quota_or_rate_limit_exhausted" /tmp/marsad_run.log; then
+            {
+              echo "### :warning: MARSAD run aborted early — rate limit / quota exhausted"
+              echo "SerpApi rejected requests with 429 until the circuit breaker tripped."
+              echo "No fresh price data was collected this run. Check the SerpApi dashboard quota."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Commit updated data store
         run: |

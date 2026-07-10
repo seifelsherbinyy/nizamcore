@@ -30,6 +30,7 @@ from radar.schema_store import (
     get_all_series_keys,
     load_store,
 )
+from radar.sources.serpapi_source import is_quota_likely_exhausted
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +69,20 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "aborted_reason": None,
     }
 
     for key_info in all_keys:
+        if is_quota_likely_exhausted():
+            stats["aborted_reason"] = "serpapi_quota_or_rate_limit_exhausted"
+            logger.error(
+                "MONITOR: aborting early — data source rate-limit circuit breaker "
+                "is open (%d/%d combinations checked). No further fetches will be "
+                "attempted this run.",
+                stats["routes_checked"], len(all_keys),
+            )
+            break
+
         origin = key_info["origin"]
         destination = key_info["destination"]
         carrier = key_info["carrier"]

@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/proposed/health_hypothesis_record.schema.json",
+  "title": "PROPOSED non-causal health/behavior hypothesis record v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "hypothesis_id",
+    "candidate_trigger",
+    "observed_response",
+    "evidence_refs",
+    "counterevidence_refs",
+    "confounders",
+    "confidence_dimensions",
+    "causal_status",
+    "next_observation_needed",
+    "privacy_level"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "hypothesis_id": {
+      "type": "string"
+    },
+    "candidate_trigger": {
+      "type": "string"
+    },
+    "observed_response": {
+      "type": "string"
+    },
+    "lag_definition": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "counterevidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confounders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confidence_dimensions": {
+      "type": "object",
+      "required": [
+        "quantity",
+        "source_quality",
+        "stability",
+        "confounding"
+      ],
+      "properties": {
+        "quantity": {
+          "type": "string"
+        },
+        "source_quality": {
+          "type": "string"
+        },
+        "stability": {
+          "type": "string"
+        },
+        "confounding": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "display_confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "insufficient"
+      ]
+    },
+    "causal_status": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "candidate_association",
+        "within_person_pattern_candidate"
+      ]
+    },
+    "next_observation_needed": {
+      "type": "string"
+    },
+    "low_risk_intervention_candidate": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "privacy_level": {
+      "const": "strict_local"
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/proposed/journal_feature_record.schema.json",
+  "title": "PROPOSED journal-derived feature record v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "source_transcript_ref",
+    "observed_at",
+    "features",
+    "privacy_level",
+    "non_diagnostic"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "record_id": {
+      "type": "string"
+    },
+    "source_transcript_ref": {
+      "type": "string"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event_categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sentiment_label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "explicit_stress_1_10": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 10
+        },
+        "explicit_energy_1_10": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_span_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "non_diagnostic": {
+      "const": true
+    },
+    "privacy_level": {
+      "const": "strict_local"
+    }
+  }
+}

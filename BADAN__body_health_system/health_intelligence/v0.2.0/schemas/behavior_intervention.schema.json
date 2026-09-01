@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/proposed/behavior_intervention.schema.json",
+  "title": "PROPOSED behavior intervention/adherence record v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "intervention_id",
+    "target",
+    "status",
+    "baseline_evidence_refs",
+    "measurement_plan",
+    "human_completion",
+    "calendar_approved",
+    "privacy_level"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "intervention_id": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "intervention_type": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "suggested",
+        "human_approved",
+        "active",
+        "evaluated",
+        "retained",
+        "modified",
+        "retired"
+      ]
+    },
+    "baseline_evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scheduled_start": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "scheduled_end": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "measurement_plan": {
+      "type": "string"
+    },
+    "human_completion": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "calendar_approved": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "outcome_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "privacy_level": {
+      "const": "strict_local"
+    }
+  }
+}

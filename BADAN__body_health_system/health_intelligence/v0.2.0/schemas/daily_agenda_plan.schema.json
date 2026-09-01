@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pop.local/proposed/daily_agenda_plan.schema.json",
+  "title": "PROPOSED adaptive daily agenda plan v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "planning_date",
+    "timezone",
+    "generated_at",
+    "calendar_coverage",
+    "targets",
+    "agenda",
+    "calendar_write_status",
+    "privacy_level",
+    "advisory_disclaimer"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2.0"
+    },
+    "planning_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "timezone": {
+      "const": "Africa/Cairo"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "calendar_coverage": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "partial",
+        "unknown"
+      ]
+    },
+    "targets": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "string"
+      }
+    },
+    "agenda": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "kind",
+          "title"
+        ],
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reminder_proposals": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "stress_risk_windows": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "measure_tomorrow": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "calendar_write_status": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "pending_human_approval",
+        "approved_not_written",
+        "written_verified",
+        "failed"
+      ]
+    },
+    "privacy_level": {
+      "const": "strict_local"
+    },
+    "advisory_disclaimer": {
+      "const": "Advisory only \u2014 not medical diagnosis. Red flags route to qualified professionals."
+    }
+  }
+}

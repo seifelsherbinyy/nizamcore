@@ -1,0 +1,10 @@
+# NIZAM-HEALTH-INTELLIGENCE v0.2.0
+# Contract: 08_STORAGE_AUTHORITY_AND_RETRIEVAL_CONTRACT.md
+# Phase: MVP-1
+#
+# Python build artifacts produced by running the test suite in place.
+# These are never part of the tracked package.
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/

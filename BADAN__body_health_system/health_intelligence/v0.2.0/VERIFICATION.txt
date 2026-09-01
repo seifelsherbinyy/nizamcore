@@ -1,0 +1,12 @@
+CLEAN_1
+VERIFY_PASS
+docs=10 schemas=6 marker=NIZAM-HEALTH-INTELLIGENCE v0.2.0
+
+TAMPER
+VERIFY_FAIL
+tamper_probe_detected
+exit=1
+
+CLEAN_2
+VERIFY_PASS
+docs=10 schemas=6 marker=NIZAM-HEALTH-INTELLIGENCE v0.2.0

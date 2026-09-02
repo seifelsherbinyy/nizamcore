@@ -119,6 +119,14 @@ MARSAD__flight_radar/*.pyc
 MARSAD__flight_radar/**/*.pyc
 MARSAD__flight_radar/.pytest_cache/
 
+# ---- Python bytecode, repo-wide ----
+# Only MARSAD was covered above, so running the governor or relay test suites
+# left untracked __pycache__ trees anywhere else. Bytecode is a build artifact:
+# it is per-interpreter, regenerated on demand, and never content.
+__pycache__/
+*.pyc
+.pytest_cache/
+
 # ---- MAKHZAN archive: keep structure, but archived raw content respects upstream rules ----
 # (Snapshots inside MAKHZAN__archive may contain mirrored copies of strict-local files.
 # Treat snapshot contents as inheriting the privacy of their original location.)

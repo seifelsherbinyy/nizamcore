@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import sys
 import unittest
+import uuid
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parents[3]
@@ -54,6 +55,10 @@ class PublishVerifyE43(unittest.TestCase):
         row = ledger_writer.append(
             "STRATEGY_LEDGER",
             payload={"note": "E4.3 test round-trip", "kind": "test"},
+            # Fresh identity per run: the test's purpose is to append ONE new
+            # row so the STH has something to sign, and a stable id would
+            # replay the row written by the previous run instead.
+            record_id=f"e43-round-trip:{uuid.uuid4().hex}",
             actor="Ammar",
             action="test_strategy_sth",
             module="NIZAM__governor.tests",

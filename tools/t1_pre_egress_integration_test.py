@@ -190,6 +190,9 @@ def check_kill_switch_assertion() -> None:
             ledger_writer.append(
                 "EVENT_LEDGER",
                 payload={"t1": "kill_switch_drill"},
+                # A stable drill identity is correct here: the kill switch must
+                # refuse this append, so no row is ever written under it.
+                record_id="t1-kill-switch-drill",
                 actor="Ammar", action="kill_switch_drill",
                 module="tools.t1",
             )

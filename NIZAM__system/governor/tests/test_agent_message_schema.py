@@ -172,6 +172,7 @@ class TraceE15(unittest.TestCase):
         row = ledger_writer.append(
             "EVENT_LEDGER",
             payload={"trace_id": tid, "target": "Salman", "note": "test"},
+            record_id=f"e15-chain:{tid}",
             actor="Ammar",
             action="phase1_round_trip",
             module="NIZAM__governor.tests",
@@ -187,6 +188,7 @@ class TraceE15(unittest.TestCase):
         ledger_writer.append(
             "EVENT_LEDGER",
             payload={"trace_id": tid, "target": "Salman"},
+            record_id=f"e15-markdown:{tid}",
             actor="Operator",
             action="turn_start",
             module="NIZAM__relay",

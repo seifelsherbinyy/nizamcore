@@ -12,6 +12,7 @@ import os
 import sys
 import tempfile
 import unittest
+import uuid
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parents[3]
@@ -24,6 +25,13 @@ os.environ.setdefault("NIZAM_TELEGRAM_ALLOWED_IDS", "111222333")
 
 from NIZAM__system.governor import ledger_writer  # noqa: E402
 from NIZAM__system.relay import auth, coordinator, dedup, sukoon_gate, webhook  # noqa: E402
+
+
+def _fresh_update(text: str, user_id: int = 111222333) -> dict:
+    """A never-before-seen update, the way a real Telegram update always is."""
+    return _telegram_update(text,
+                            update_id=900_000_000 + uuid.uuid4().int % 10**8,
+                            user_id=user_id)
 
 
 def _telegram_update(text: str, update_id: int = 1,
@@ -142,11 +150,33 @@ class B47_LedgerAppend(unittest.TestCase):
         dedup.reset()
 
     def test_round_trip_writes_event_ledger_row(self) -> None:
-        update = _telegram_update("/shura-brainstorm Q3", update_id=999_001)
-        d = coordinator.process(update, user_id=111222333)
+        # A fresh update_id per run, because the writer is now idempotent on it
+        # (section 6a purpose 4). Telegram never reuses an update_id, so a
+        # hard-coded one only ever worked by relying on the very defect that
+        # purpose 4 fixes: with a stable id, the second run of this test would
+        # replay the row the first run wrote instead of appending a new one.
+        d = coordinator.process(_fresh_update("/shura-brainstorm Q3"),
+                                user_id=111222333)
         self.assertIsNotNone(d["ledger_row_id"])
         tail = ledger_writer.tail_rows("EVENT_LEDGER", n=2)
         self.assertTrue(any(r["row_id"] == d["ledger_row_id"] for r in tail))
+
+    def test_a_retried_turn_reuses_its_ledger_row(self) -> None:
+        """The ledger half of B4.8.
+
+        The gateway already drops a duplicate update_id, so this covers the
+        case the gateway cannot: the turn was processed, the process died
+        before the dedup table was saved, and the same update is handed to the
+        coordinator again.
+        """
+        update = _fresh_update("/shura-brainstorm Q3")
+        before = len(ledger_writer.tail_rows("EVENT_LEDGER", n=1_000_000))
+        first = coordinator.process(update, user_id=111222333)
+        second = coordinator.process(update, user_id=111222333)
+        after = len(ledger_writer.tail_rows("EVENT_LEDGER", n=1_000_000))
+        self.assertEqual(first["ledger_row_id"], second["ledger_row_id"],
+                         "a retried turn must land on the row it already wrote")
+        self.assertEqual(after - before, 1, "one turn, one row, even on retry")
 
 
 class B48_IdempotentResume(unittest.TestCase):

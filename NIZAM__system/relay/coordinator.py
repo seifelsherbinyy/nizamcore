@@ -125,6 +125,16 @@ def process(update: dict, user_id: int) -> dict:
     # B4.7 ledger append (Ammar)
     ledger_row_id = None
     if not blocked:
+        # The Telegram update_id is this turn's stable identity. Both gateways
+        # (poller.handle_update, webhook.handle_update) already refuse an
+        # update whose update_id is not an int, so the fallback below is
+        # unreachable in production and exists only for a direct call. If a
+        # crash retries the turn, the writer returns the row that already
+        # exists rather than appending a second one with a valid chain.
+        # See section 6a purpose 4 in the sibling repository's steering.
+        _update_id = update.get("update_id")
+        _record_id = (f"tg-update:{_update_id}"
+                      if isinstance(_update_id, int) else f"turn:{trace_id}")
         row = ledger_writer.append(
             "EVENT_LEDGER",
             payload={
@@ -140,6 +150,7 @@ def process(update: dict, user_id: int) -> dict:
                 "artifact_b_present": agent_out["artifact_b"] is not None,
                 "note": "phase-1 boot loop turn",
             },
+            record_id=_record_id,
             actor="Ammar",
             action="phase1_round_trip",
             module="NIZAM__relay",

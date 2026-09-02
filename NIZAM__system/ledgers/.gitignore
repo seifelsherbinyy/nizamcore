@@ -2,6 +2,9 @@
 # Bootstrap rows live in MAKHZAN; live rows are strict_local or
 # review_before_commit (depends on ledger; see NIZAM_TEMPLE#ledgers).
 *.jsonl
+# Advisory-lock sidecars created by governor/ledger_writer.py. Zero-byte,
+# per-host, recreated on demand: a lock is runtime state, never content.
+*.jsonl.lock
 *.merkle
 *.sth
 # Signed Tree Heads expose ledger size/timing metadata for strict_local

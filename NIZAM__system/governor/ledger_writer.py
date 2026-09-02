@@ -64,6 +64,8 @@ import uuid
 from pathlib import Path
 from typing import Any, Iterator
 
+from NIZAM__system.governor import kill_switch as _kill_switch
+
 try:  # POSIX: the VPS, and the only platform that serves live traffic.
     import fcntl as _fcntl
 except ImportError:  # pragma: no cover - exercised on Windows
@@ -305,8 +307,10 @@ def append_with_mode(
 
     Caller MUST supply a sensible `privacy_class` for non-EVENT ledgers.
     """
-    if os.environ.get("NIZAM_KILL_ALL") == "1":
-        raise RuntimeError("NIZAM_KILL_ALL=1 - writer halted (HIMAYAH panic stop)")
+    try:
+        _kill_switch.assert_alive("ledger_writer")
+    except _kill_switch.KillSwitchActive as _kse:
+        raise RuntimeError(str(_kse)) from _kse
     if on_divergence not in {"replay", "refuse"}:
         raise ValueError(
             f"on_divergence must be 'replay' or 'refuse', got {on_divergence!r}"

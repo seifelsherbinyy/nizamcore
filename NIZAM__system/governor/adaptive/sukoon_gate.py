@@ -10,8 +10,11 @@ Phase:           R1_FIXTURES
 DOCTRINE:
   * A crisis / immediate-safety signal overrides EVERY recovery percentage and
     blocks ordinary automation (Contract 01 T01, playbook S05).
-  * Objective recovery may only elevate capacity when it is FRESH. Stale or
-    unknown recovery is not current truth (playbook E03).
+  * The self-reported capacity state is a CEILING. Objective recovery may
+    never raise it: RED and YELLOW cannot become FULL at any recovery value.
+    Recovery only decides whether RED gets restricted cognitive work or none.
+  * Objective recovery may only lift RED out of recovery mode when it is FRESH.
+    Stale or unknown recovery is not current truth (playbook E03).
   * A low recovery state is never evidence of laziness or moral failure; this
     module emits capacity, never judgement (Contract 01 T01 forbidden).
   * Nothing here is imputed. Absent recovery is MISSING, not zero.
@@ -24,8 +27,19 @@ from enum import Enum
 from .evidence import Evidence, Label, missing, fact
 
 # Thresholds are contract constants, not tunables.
-FULL_RECOVERY_THRESHOLD = 67   # directive sukoon_policy.full_mode
-BOUNDED_RECOVERY_THRESHOLD = 40  # Contract 01 T01 + directive bounded_mode
+#
+# There is deliberately NO full-mode recovery threshold. Contract 01 T01 grants
+# exactly one path to FULL -- "SUKOON green permits full cognitive actions" --
+# and grants no rule anywhere that an objective recovery percentage may elevate
+# capacity to FULL. The 67 percent figure exists only in the supporting
+# directive (sukoon_policy.full_mode), and a contract outranks a directive.
+#
+# The self-reported capacity state is therefore a CEILING that objective
+# physiology may never raise (SUKOON authority rule: if the sensor reports green
+# but the owner self-reports red, trust the self-report -- the sensor measures
+# physiology, the owner measures lived experience). Recovery may only lift RED
+# out of pure recovery mode into a restricted bounded set. It never makes RED FULL.
+BOUNDED_RECOVERY_THRESHOLD = 40  # Contract 01 T01 rule 3 ("recovery >= 40 percent")
 
 
 class Mode(str, Enum):
@@ -78,6 +92,13 @@ _BOUNDED_STAGES = frozenset(
 _RECOVERY_STAGES = frozenset(
     {STAGE_CAPTURE, STAGE_ESSENTIAL_MAINTENANCE, STAGE_RECOVERY_PLANNING,
      STAGE_DATA_REFRESH, STAGE_CONTINUITY}
+)
+# RED capacity with recovery >= 40 permits *cognitive* work only (Contract 01
+# T01 rule 3), i.e. the deliberation chain plus essential planning. It must not
+# unlock throughput work: optimization, calendar restructuring and bounded build
+# stay blocked, because those expand workload rather than think about it.
+_RED_BOUNDED_STAGES = _RECOVERY_STAGES | frozenset(
+    {STAGE_SHURA, STAGE_NAQD, STAGE_QARAR, STAGE_PLANNING}
 )
 # A crisis stops ordinary automation. Capture and continuity remain, because
 # losing the record would itself be harm (Contract 01 T03, T07).
@@ -148,10 +169,16 @@ def evaluate(inp: SukoonInput) -> SukoonDecision:
     """Deterministically resolve capacity into an allowed-stage set.
 
     Precedence, strictly in this order:
-      1. crisis / immediate-safety signal  -> CRISIS_OVERRIDE (hard stop)
-      2. green            OR fresh recovery >= 67 -> FULL
-      3. yellow          OR fresh recovery >= 40 -> BOUNDED
-      4. otherwise (red and recovery <40/unusable) -> RECOVERY
+      1. crisis / immediate-safety signal            -> CRISIS_OVERRIDE (hard stop)
+      2. capacity green                              -> FULL
+      3. capacity yellow                             -> BOUNDED (full bounded set)
+      4. capacity red AND usable recovery >= 40      -> BOUNDED (restricted set)
+      5. otherwise                                   -> RECOVERY
+
+    The self-reported capacity state is a ceiling. Objective recovery never
+    raises it: no recovery percentage, however high or however fresh, can turn
+    RED or YELLOW into FULL. Recovery only decides whether RED is allowed
+    restricted cognitive work or none at all.
     """
     usable, rec_ev, rec_reason = _usable_recovery(inp)
     reasons: list[str] = [rec_reason]
@@ -177,15 +204,9 @@ def evaluate(inp: SukoonInput) -> SukoonDecision:
     # (playbook S03).
     conservative = inp.capacity_state is Capacity.RED
 
-    # 2. FULL
-    if inp.capacity_state is Capacity.GREEN or (
-        usable is not None and usable >= FULL_RECOVERY_THRESHOLD
-    ):
-        reasons.append(
-            "full mode: capacity green"
-            if inp.capacity_state is Capacity.GREEN
-            else f"full mode: objective recovery {usable}% >= {FULL_RECOVERY_THRESHOLD}"
-        )
+    # 2. FULL -- reachable ONLY by a green self-reported capacity state.
+    if inp.capacity_state is Capacity.GREEN:
+        reasons.append("full mode: capacity green")
         return SukoonDecision(
             mode=Mode.FULL,
             allowed_stages=_FULL_STAGES,
@@ -196,16 +217,14 @@ def evaluate(inp: SukoonInput) -> SukoonDecision:
             reasons=tuple(reasons),
         )
 
-    # 3. BOUNDED
-    if inp.capacity_state is Capacity.YELLOW or (
-        usable is not None and usable >= BOUNDED_RECOVERY_THRESHOLD
-    ):
-        reasons.append(
-            "bounded mode: capacity yellow"
-            if inp.capacity_state is Capacity.YELLOW
-            else f"bounded mode: objective recovery {usable}% >= "
-                 f"{BOUNDED_RECOVERY_THRESHOLD} with no hard safety block"
-        )
+    # 3. BOUNDED (yellow) -- the full bounded set.
+    if inp.capacity_state is Capacity.YELLOW:
+        reasons.append("bounded mode: capacity yellow")
+        if usable is not None:
+            reasons.append(
+                f"objective recovery {usable}% is recorded but capacity yellow is "
+                "a ceiling; self-report outranks physiology, so mode stays bounded"
+            )
         return SukoonDecision(
             mode=Mode.BOUNDED,
             allowed_stages=_BOUNDED_STAGES,
@@ -216,7 +235,24 @@ def evaluate(inp: SukoonInput) -> SukoonDecision:
             reasons=tuple(reasons),
         )
 
-    # 4. RECOVERY
+    # 4. BOUNDED (red + recovery >= 40) -- restricted to cognitive stages only.
+    if usable is not None and usable >= BOUNDED_RECOVERY_THRESHOLD:
+        reasons.append(
+            f"bounded mode: objective recovery {usable}% >= "
+            f"{BOUNDED_RECOVERY_THRESHOLD} with no hard safety block; capacity "
+            "red restricts this to cognitive stages and never reaches full mode"
+        )
+        return SukoonDecision(
+            mode=Mode.BOUNDED,
+            allowed_stages=_RED_BOUNDED_STAGES,
+            blocked_stages=_FULL_STAGES - _RED_BOUNDED_STAGES,
+            max_primary_targets=MAX_TARGETS[Mode.BOUNDED],
+            conservative_workload=conservative,
+            recovery_evidence=rec_ev,
+            reasons=tuple(reasons),
+        )
+
+    # 5. RECOVERY
     reasons.append(
         "recovery mode: capacity red and objective recovery is below "
         f"{BOUNDED_RECOVERY_THRESHOLD} or unusable"

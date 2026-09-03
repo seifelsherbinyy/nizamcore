@@ -2,18 +2,21 @@
 
 Orchestrates the full pipeline (already authenticated + deduplicated):
 
-    update -> SUKOON pre-gate -> router -> agent stub -> HIMAYAH egress
+    update -> SUKOON pre-gate -> router -> Hermes profile or local capture
+    -> HIMAYAH egress
     -> ledger append (Ammar) -> reply text
 
-The agent stub returns a deterministic synthesis envelope (Artifact A +
-Artifact B); the LLM-as-router and the LLM agent themselves are engaged
-post-K1/K2 (USER gates U5/U7). All non-LLM gates ARE exercised here.
+When the protected NIZAM_HERMES_LIVE flag is absent, the coordinator keeps
+the deterministic local capture path. When it is present, the Hermes adapter
+is used and provider failures become a truthful safe response. All non-LLM
+gates are exercised here in either mode.
 
 Pure stdlib.
 """
 from __future__ import annotations
 
 import sys
+import os
 import uuid
 from pathlib import Path
 from typing import Any
@@ -28,6 +31,12 @@ from NIZAM__system.governor.classifier import (  # noqa: E402
     is_egress_blocked,
 )
 from NIZAM__system.relay import sukoon_gate  # noqa: E402
+from NIZAM__system.relay.hermes_adapter import (  # noqa: E402
+    HermesInvocation,
+    HermesUnavailable,
+    invoke_hermes,
+)
+from NIZAM__system.relay.owner_memory import append_explicit_memory  # noqa: E402
 
 
 def _route(input_text: str) -> tuple[str, str, float]:
@@ -72,6 +81,57 @@ def _agent_stub(target: str, input_text: str, trace_id: str) -> dict:
             "reply": f"[stub] {target}: would synthesize ({len(input_text)} chars)."}
 
 
+def _agent_response(target: str, input_text: str, trace_id: str) -> dict:
+    """Use Hermes only when the protected live flag explicitly enables it."""
+    memory_record = append_explicit_memory(
+        os.environ.get("NIZAM_HERMES_MEMORY_FILE", ""),
+        input_text,
+        trace_id=trace_id,
+    )
+    if os.environ.get("NIZAM_HERMES_LIVE") != "1":
+        out = _agent_stub(target, input_text, trace_id)
+        if memory_record is not None:
+            out["memory_status"] = "saved"
+        return out
+
+    artifact = _agent_stub(target, input_text, trace_id)
+    profile_home = os.environ.get("NIZAM_HERMES_PROFILE_HOME", "")
+    model = os.environ.get("NIZAM_HERMES_MODEL", "")
+    prompt = (
+        "Target internal agent: " + target + "\n"
+        "Use only validated local knowledge and the supplied owner request. "
+        "Do not invent facts, compute monetary values, or expose secrets. "
+        "If evidence is missing, say so plainly. Return a focused response "
+        "with evidence limits and one next action.\n\n"
+        "Owner request:\n" + input_text
+    )
+    try:
+        response = invoke_hermes(
+            HermesInvocation(
+                profile_home=profile_home,
+                model=model,
+                prompt=prompt,
+                executable=os.environ.get("NIZAM_HERMES_EXECUTABLE", "hermes"),
+            )
+        )
+    except HermesUnavailable as exc:
+        return {
+            **artifact,
+            "reply": "Hermes is unavailable; no model response was generated. "
+            "The message was captured locally for retry.",
+            "hermes_status": "unavailable",
+            "hermes_reason": exc.reason,
+            "memory_status": "saved" if memory_record is not None else "unchanged",
+        }
+    return {
+        **artifact,
+        "reply": response.text,
+        "hermes_status": "ok",
+        "hermes_model": response.model,
+        "memory_status": "saved" if memory_record is not None else "unchanged",
+    }
+
+
 def _now_iso() -> str:
     import datetime as _dt
     return _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -107,8 +167,8 @@ def process(update: dict, user_id: int) -> dict:
     elif sukoon["mode"] == "supportive_reflection" and target == "Hazim":
         target = "Salman"  # downshift NAQD -> SHURA per persona rule
 
-    # B4.5 agent stub
-    agent_out = _agent_stub(target, text, trace_id)
+    # B4.5 Hermes profile or deterministic local capture
+    agent_out = _agent_response(target, text, trace_id)
 
     # B4.6 HIMAYAH egress check. The destination of the reply is
     # Telegram (operator-only, encrypted). All persistence happens on
@@ -148,6 +208,7 @@ def process(update: dict, user_id: int) -> dict:
                 "input_chars": len(text),
                 "artifact_a_present": agent_out["artifact_a"] is not None,
                 "artifact_b_present": agent_out["artifact_b"] is not None,
+                "hermes_status": agent_out.get("hermes_status", "local_capture"),
                 "note": "phase-1 boot loop turn",
             },
             record_id=_record_id,

@@ -150,3 +150,17 @@ MAKHZAN__archive/*T*Z*/
 # (family / health / finance / geography). Treat as strict_local; keep local.
 # The validator CODE (fixtures/*.py) is still committed; only data stays off git.
 NIZAM__system/config/fixtures/*.jsonl
+
+# ---- Retrieval layer operational records — this repository is PUBLIC (R24) ----
+# Deployment receipts name containers, bind addresses and host paths.
+NIZAM__system/retrieval/RECEIPT_*.md
+# Benchmark result files quote real corpus document paths and real query text
+# from the owner's private corpus. The harness (bench/*.py) is committed; the
+# outputs are not.
+NIZAM__system/retrieval/bench/results/*.json
+!NIZAM__system/retrieval/bench/results/.gitkeep
+
+# ---- Pre-change backups are local rollback anchors, never commits ----
+# Host convention is <name>.pre-<slug>-<UTC timestamp>. They hold the text as it
+# was BEFORE redaction, i.e. exactly what R24 keeps out of a tracked file.
+*.pre-*

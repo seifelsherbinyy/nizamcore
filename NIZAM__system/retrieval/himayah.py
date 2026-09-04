@@ -27,7 +27,7 @@ classify_path = _mod.classify  # classify(rel_path: str) -> str
 
 
 PERMITTED = frozenset({"private_github", "review_before_commit"})
-BLOCKED   = frozenset({"strict_local", "strict_local_maximum"})
+BLOCKED   = frozenset({"strict_local", "strict_local_drive", "strict_local_maximum"})
 
 # Non-negotiable hard-block prefixes (defence-in-depth; classifier is primary)
 _HARD_BLOCK_PREFIXES = (

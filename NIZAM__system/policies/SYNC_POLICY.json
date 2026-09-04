@@ -79,7 +79,7 @@
       ]
     }
   },
-  "approval_workflow": "HIMAYAH gate reads PRIVACY_CLASSIFICATION.json before any sync. Refuses strict_local paths automatically.",
+  "approval_workflow": "HIMAYAH gate reads PRIVACY_CLASSIFICATION.json before any sync. Refuses strict_local and strict_local_maximum paths automatically. strict_local_drive paths (YAWMIYAT transcripts/**, mirrors/**, _retrieval/**) MAY mirror one-way POP->Drive to the private designated NIZAM Drive location (47_NIZAM / drive_nizam_pop root) with read-back sha256 verification; the VPS copy is never deleted and is authoritative during Drive outages (mirrors queue and retry). GitHub / Obsidian / Notion / any_external still refuse all YAWMIYAT journal content.",
   "drive_nizam_pop": {
     "drive_root_id": "1N_Cx5i4UPxp7qkCb6WxA3TYPgion4RUi",
     "repo_mirror": {

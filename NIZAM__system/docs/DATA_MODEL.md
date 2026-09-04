@@ -100,6 +100,7 @@ Each schema file is committable. Major schema changes:
 |---|---|---|
 | `strict_local_maximum` | Never leaves disk; never syncs anywhere | AHEL/** |
 | `strict_local` | Never commits; on-disk only | TAFRIGH/raw, triaged, SHURA/sessions, NAQD/sessions, SUKOON/signals, MAL/**, BADAN/**, TARIQ content, MUNAWARA content, all P2/P3 ledgers, SOUL.md |
+| `strict_local_drive` | Never commits; on-disk only; MAY mirror one-way (POP→Drive) the private designated NIZAM Drive location (47_NIZAM / drive_nizam_pop root), read-back verified; VPS copy never deleted | YAWMIYAT transcripts/**, mirrors/**, _retrieval/** |
 | `review_before_commit` | Committable only after manual review | ledgers (EVENT/DECISION/LEARNING), log.md |
 | `private_github` | Default-committable in private repo | schemas, templates, skills, protocols, workflows, docs, personas, manifests |
 | `mirror_curated_only` | Curated selection to Obsidian | NUR (Phase 2) |

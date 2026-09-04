@@ -12,9 +12,13 @@ NAQD__brain_griller/sessions/
 SUKOON__recovery_first/signals/
 SUKOON__recovery_first/overload_flags.jsonl
 
-# ---- YAWMIYAT conversational sessions — NEVER commit ----
+# ---- YAWMIYAT conversational sessions — NEVER commit (incl. all derived/local state) ----
 YAWMIYAT__journaling/sessions/
 YAWMIYAT__journaling/mirrors/
+YAWMIYAT__journaling/transcripts/
+YAWMIYAT__journaling/analysis/
+YAWMIYAT__journaling/_recovery/
+YAWMIYAT__journaling/_retrieval/
 YAWMIYAT__journaling/weekly/
 YAWMIYAT__journaling/daily/
 YAWMIYAT__journaling/monthly/

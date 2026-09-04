@@ -127,6 +127,8 @@ EGRESS_MATRIX: dict[str, set[str]] = {
     "strict_local":        {"laptop_disk", "vps_encrypted_volume",
                             "drive_crypt", "zdr_inference",
                             "telegram_operator"},
+    "strict_local_drive":  {"laptop_disk", "vps_encrypted_volume",
+                            "drive_nizam_journals", "zdr_inference"},
     "review_before_commit": {"laptop_disk", "vps_plaintext", "github_private",
                              "drive_clear", "zdr_inference",
                              "telegram_operator"},

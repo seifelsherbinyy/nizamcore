@@ -38,6 +38,7 @@ class Plane(str, enum.Enum):
     GITHUB_PRIVATE = "github_private"
     DRIVE_CLEAR = "drive_clear"
     DRIVE_CRYPT = "drive_crypt"
+    DRIVE_NIZAM_JOURNALS = "drive_nizam_journals"
     NOTION_SANITIZED = "notion_sanitized"
     TELEGRAM_OPERATOR = "telegram_operator"
     ZDR_INFERENCE = "zdr_inference"
@@ -49,6 +50,8 @@ _ALLOWED = {
     "strict_local_maximum": set(),
     "strict_local": {Plane.LAPTOP, Plane.VPS_ENCRYPTED_VOLUME, Plane.DRIVE_CRYPT,
                      Plane.TELEGRAM_OPERATOR, Plane.ZDR_INFERENCE},
+    "strict_local_drive": {Plane.LAPTOP, Plane.VPS_ENCRYPTED_VOLUME,
+                           Plane.DRIVE_NIZAM_JOURNALS, Plane.ZDR_INFERENCE},
     "review_before_commit": {Plane.LAPTOP, Plane.VPS_PLAINTEXT, Plane.GITHUB_PRIVATE,
                               Plane.DRIVE_CLEAR, Plane.TELEGRAM_OPERATOR,
                               Plane.ZDR_INFERENCE},

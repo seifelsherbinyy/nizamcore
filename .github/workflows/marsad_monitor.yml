@@ -24,7 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: claude/charming-shannon-E6moy
+          # No explicit ref: schedule/workflow_dispatch always resolve to the default
+          # branch. A prior version of this file pinned an ephemeral session branch
+          # (claude/charming-shannon-E6moy) that was never merged to main — every run
+          # since 2026-05-19 fetched stale, orphaned history instead of main. See
+          # MARSAD__flight_radar/README.md "SerpApi Quota Incident".
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -43,7 +47,10 @@ jobs:
           cat > .env <<EOF
           DATA_SOURCE=serpapi
           SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
-          SERPAPI_PRIORITY_ONLY=false
+          # Priority-only cuts daily search volume roughly in half (8 destinations vs 12).
+          # Still likely exceeds the free 250/month tier at daily cadence — see README.md
+          # "SerpApi Quota Incident" for the real fix (upgrade tier or reduce cadence).
+          SERPAPI_PRIORITY_ONLY=true
           RADAR_WINDOW_START=2027-03-15
           RADAR_WINDOW_END=2027-09-30
           ALERT_THRESHOLD_PCT=10
@@ -55,6 +62,7 @@ jobs:
           FETCH_DELAY_MIN_SEC=3
           FETCH_DELAY_MAX_SEC=12
           MAX_REQUESTS_PER_SESSION=50
+          MONITOR_MAX_RUNTIME_SEC=1200
           LOG_LEVEL=INFO
           EOF
 

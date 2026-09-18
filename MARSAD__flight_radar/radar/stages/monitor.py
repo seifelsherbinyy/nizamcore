@@ -20,9 +20,10 @@ Output log fields:
 from __future__ import annotations
 
 import logging
+import time
 from datetime import date
 
-from radar.config import WINDOW_END, WINDOW_START
+from radar.config import MONITOR_MAX_RUNTIME_SEC, WINDOW_END, WINDOW_START
 from radar.fetcher import fetch_best_price
 from radar.schema_store import (
     append_observation,
@@ -68,9 +69,25 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "stopped_early": False,
     }
 
+    run_start = time.monotonic()
+
     for key_info in all_keys:
+        elapsed = time.monotonic() - run_start
+        if elapsed > MONITOR_MAX_RUNTIME_SEC:
+            remaining = len(all_keys) - stats["routes_checked"]
+            logger.warning(
+                "MONITOR: MONITOR_MAX_RUNTIME_SEC=%.0f exceeded after %.0fs — stopping early "
+                "with %d/%d combinations left unchecked (they will be picked up on the next "
+                "scheduled run). This guards against a single stuck/rate-limited source "
+                "consuming the whole CI job timeout — see README.md 'SerpApi Quota Incident'.",
+                MONITOR_MAX_RUNTIME_SEC, elapsed, remaining, len(all_keys),
+            )
+            stats["stopped_early"] = True
+            break
+
         origin = key_info["origin"]
         destination = key_info["destination"]
         carrier = key_info["carrier"]

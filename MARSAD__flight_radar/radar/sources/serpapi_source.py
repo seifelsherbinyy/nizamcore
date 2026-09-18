@@ -45,6 +45,26 @@ _SAMPLE_DATES_COUNT = 3
 class SerpApiSource(BaseFlightSource):
     name = "serpapi"
 
+    # Circuit breaker — CLASS-level, not instance-level.
+    # fetcher._build_source() constructs a fresh SerpApiSource() per route-carrier-cabin
+    # combo, so instance attributes never accumulate across a run. Class attributes do.
+    #
+    # Incident (2026-07-08): every scheduled MONITOR run since 2026-05-19 (51 consecutive
+    # days) hit 429 on every single request and ground through the full 30-minute CI
+    # timeout retrying combos that could never succeed, writing zero observations each day.
+    # Two consecutive full-retry exhaustions (8 total 429s) reliably indicates the monthly
+    # quota is spent, not a transient burst — stop hammering the API for the rest of this
+    # run once that's detected. See README.md "SerpApi Quota Incident" for the full story.
+    _consecutive_quota_exhaustions: int = 0
+    _quota_exhausted: bool = False
+    _QUOTA_EXHAUSTION_THRESHOLD = 2
+
+    @classmethod
+    def reset_circuit_breaker(cls) -> None:
+        """Test hook / new-process-equivalent reset of the shared circuit breaker state."""
+        cls._consecutive_quota_exhaustions = 0
+        cls._quota_exhausted = False
+
     def search(
         self,
         origin: str,
@@ -120,6 +140,12 @@ class SerpApiSource(BaseFlightSource):
         cabin: str,
     ) -> tuple[list[FlightOffer], list[str]]:
         """Single SerpApi call with exponential backoff on rate limit."""
+        if SerpApiSource._quota_exhausted:
+            return [], [
+                f"SerpApi quota exhausted this run — skipping {origin}→{destination} "
+                f"{dep_date} without a network call (see README.md SerpApi Quota Incident)"
+            ]
+
         params = {
             "engine": "google_flights",
             "departure_id": origin,
@@ -155,6 +181,7 @@ class SerpApiSource(BaseFlightSource):
 
                 resp.raise_for_status()
                 self._request_count += 1
+                SerpApiSource._consecutive_quota_exhaustions = 0  # a live call succeeded
 
                 data = resp.json()
                 if "error" in data:
@@ -169,6 +196,20 @@ class SerpApiSource(BaseFlightSource):
                     self._exponential_backoff(attempt)
             except requests.RequestException as exc:
                 return [], [f"SerpApi request error: {exc}"]
+
+        # All 4 attempts exhausted without a successful response — almost always means
+        # every attempt hit 429. Trip the circuit breaker after repeated occurrences.
+        SerpApiSource._consecutive_quota_exhaustions += 1
+        if SerpApiSource._consecutive_quota_exhaustions >= SerpApiSource._QUOTA_EXHAUSTION_THRESHOLD:
+            if not SerpApiSource._quota_exhausted:
+                logger.error(
+                    "SerpApi: %d consecutive full rate-limit exhaustions — quota is almost "
+                    "certainly spent for this billing period. Skipping all further SerpApi "
+                    "calls for the rest of this run instead of retrying futilely. "
+                    "See README.md 'SerpApi Quota Incident' for remediation.",
+                    SerpApiSource._consecutive_quota_exhaustions,
+                )
+            SerpApiSource._quota_exhausted = True
 
         return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"]
 

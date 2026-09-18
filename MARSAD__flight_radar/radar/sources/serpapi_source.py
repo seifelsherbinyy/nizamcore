@@ -80,15 +80,18 @@ class SerpApiSource(BaseFlightSource):
         all_offers: list[FlightOffer] = []
         errors: list[str] = []
         start_t = time.time()
+        rate_limited = False
 
         for dep_date in sample_dates:
+            if rate_limited:
+                break
             # Try two return duration options: 9 nights and 14 nights
             for nights in [9, 14]:
                 ret_date = dep_date + timedelta(days=nights)
                 if ret_date > window_end:
                     continue
 
-                offers, errs = self._fetch_one(
+                offers, errs, exhausted = self._fetch_one(
                     origin=origin,
                     destination=destination,
                     dep_date=dep_date,
@@ -99,6 +102,13 @@ class SerpApiSource(BaseFlightSource):
                 all_offers.extend(offers)
                 errors.extend(errs)
 
+                if exhausted:
+                    # Persistent 429s — this is quota exhaustion or an invalid key,
+                    # not a transient burst. Stop burning the remaining date/night
+                    # combos on a source that has already proven it won't answer.
+                    rate_limited = True
+                    break
+
                 if all_offers:
                     # Found results for this date pair — rate limit before next call
                     self._rate_limited_sleep()
@@ -107,6 +117,7 @@ class SerpApiSource(BaseFlightSource):
             source_name=self.name,
             offers=all_offers,
             errors=errors,
+            rate_limited=rate_limited,
             fetch_duration_sec=round(time.time() - start_t, 2),
         )
 
@@ -118,8 +129,15 @@ class SerpApiSource(BaseFlightSource):
         ret_date: date,
         travel_class: int,
         cabin: str,
-    ) -> tuple[list[FlightOffer], list[str]]:
-        """Single SerpApi call with exponential backoff on rate limit."""
+    ) -> tuple[list[FlightOffer], list[str], bool]:
+        """
+        Single SerpApi call with exponential backoff on rate limit.
+
+        Returns (offers, errors, exhausted) — exhausted=True means every retry
+        attempt hit HTTP 429, i.e. the account has no search quota left rather
+        than a transient burst limit. Callers should treat exhausted as a
+        signal to stop making further calls this run, not just this request.
+        """
         params = {
             "engine": "google_flights",
             "departure_id": origin,
@@ -147,30 +165,37 @@ class SerpApiSource(BaseFlightSource):
                     continue
 
                 if resp.status_code == 401:
-                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"]
+                    return [], ["SerpApi 401 Unauthorized — check SERPAPI_KEY in .env"], False
 
                 if resp.status_code == 400:
                     body = resp.json() if resp.content else {}
-                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"]
+                    return [], [f"SerpApi 400: {body.get('error', 'bad request')} — {origin}→{destination} {dep_date}"], False
 
                 resp.raise_for_status()
                 self._request_count += 1
 
                 data = resp.json()
                 if "error" in data:
-                    return [], [f"SerpApi error: {data['error']}"]
+                    return [], [f"SerpApi error: {data['error']}"], False
 
                 offers = self._parse(data, dep_date, ret_date, cabin)
-                return offers, []
+                return offers, [], False
 
             except requests.Timeout:
                 errors = [f"SerpApi timeout: {origin}→{destination} {dep_date}"]
                 if attempt < 3:
                     self._exponential_backoff(attempt)
             except requests.RequestException as exc:
-                return [], [f"SerpApi request error: {exc}"]
+                return [], [f"SerpApi request error: {exc}"], False
 
-        return [], [f"SerpApi max retries exceeded: {origin}→{destination} {dep_date}"]
+        return (
+            [],
+            [
+                f"SerpApi max retries exceeded (persistent 429 — likely quota "
+                f"exhausted or invalid key): {origin}→{destination} {dep_date}"
+            ],
+            True,
+        )
 
     def _parse(
         self,

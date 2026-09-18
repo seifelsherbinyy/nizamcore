@@ -68,7 +68,16 @@ def run_monitor(use_secondary: bool = False) -> dict:
         "largest_drop_series": None,
         "fetch_errors": [],
         "observations_written": 0,
+        "aborted_reason": None,
     }
+
+    # Circuit breaker: if the source is persistently rate-limited (quota
+    # exhausted or an invalid key), every remaining combo will fail the same
+    # way. Without this, a 44-series store burns ~30s of retries per combo
+    # and guarantees the CI job silently times out after 30 minutes without
+    # writing anything or ever reaching ALERT/FORECAST.
+    _RATE_LIMIT_ABORT_THRESHOLD = 3
+    consecutive_rate_limited = 0
 
     for key_info in all_keys:
         origin = key_info["origin"]
@@ -81,7 +90,7 @@ def run_monitor(use_secondary: bool = False) -> dict:
             origin, destination, carrier, cabin,
         )
 
-        best_offer, errors = fetch_best_price(
+        best_offer, errors, rate_limited = fetch_best_price(
             origin=origin,
             destination=destination,
             cabin=cabin,
@@ -92,6 +101,16 @@ def run_monitor(use_secondary: bool = False) -> dict:
         )
         stats["fetch_errors"].extend(errors)
         stats["routes_checked"] += 1
+
+        consecutive_rate_limited = consecutive_rate_limited + 1 if rate_limited else 0
+        if consecutive_rate_limited >= _RATE_LIMIT_ABORT_THRESHOLD:
+            stats["aborted_reason"] = (
+                f"persistent_rate_limit — {consecutive_rate_limited} consecutive "
+                f"combos hit exhausted 429 retries. Source has no usable quota "
+                f"this run; check SERPAPI_KEY / plan limits rather than retrying."
+            )
+            logger.error("MONITOR: aborting — %s", stats["aborted_reason"])
+            break
 
         if best_offer is None:
             stats["routes_no_data"] += 1

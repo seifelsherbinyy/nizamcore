@@ -57,13 +57,16 @@ def fetch_best_price(
     window_end: date,
     carriers: Optional[list[str]] = None,
     use_secondary: bool = False,
-) -> tuple[Optional[FlightOffer], list[str]]:
+) -> tuple[Optional[FlightOffer], list[str], bool]:
     """
     Fetch the best (lowest price) qualifying offer for a single
     (origin, destination, cabin) combination.
 
     Applies constraint filtering to all returned results.
-    Returns (best_offer, error_list). best_offer is None if no qualifying offer found.
+    Returns (best_offer, error_list, rate_limited). best_offer is None if no
+    qualifying offer found. rate_limited=True means the primary source hit
+    persistent 429s (quota exhausted / invalid key) — callers should treat
+    this as a signal to stop making further calls this run.
 
     use_secondary: also queries Kiwi as cross-validation and takes lowest price.
     """
@@ -129,14 +132,14 @@ def fetch_best_price(
                 qualifying.append(offer)
 
     if not qualifying:
-        return None, all_errors
+        return None, all_errors, result.rate_limited
 
     best = min(qualifying, key=lambda o: o.price_usd)
     logger.debug(
         "Best offer: %s→%s %s %s $%.0f via %s",
         best.origin, best.destination, best.cabin, best.outbound_date, best.price_usd, best.source,
     )
-    return best, all_errors
+    return best, all_errors, result.rate_limited
 
 
 def fetch_all_combinations(
@@ -169,7 +172,7 @@ def fetch_all_combinations(
 
         logger.info("Fetching %d/%d: %s→%s %s", i + 1, total, combo["origin"], combo["destination"], combo["cabin"])
 
-        best, errors = fetch_best_price(
+        best, errors, rate_limited = fetch_best_price(
             origin=combo["origin"],
             destination=combo["destination"],
             cabin=combo["cabin"],
@@ -179,6 +182,18 @@ def fetch_all_combinations(
             use_secondary=use_secondary,
         )
         results.append((combo, best, errors))
+
+        if rate_limited:
+            logger.error(
+                "Source persistently rate-limited (quota exhausted or invalid "
+                "key) at combo %d/%d — aborting remaining fetches instead of "
+                "retrying each one for nothing. Check credentials/plan quota.",
+                i + 1, total,
+            )
+            remaining = combinations[i + 1:]
+            for c in remaining:
+                results.append((c, None, ["Skipped — source rate-limited earlier this session"]))
+            break
 
         # Count requests made (approximate — each combo uses multiple sub-requests)
         request_count += 1

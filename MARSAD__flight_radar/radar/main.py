@@ -47,7 +47,7 @@ def cmd_monitor(args: argparse.Namespace) -> int:
     from radar.stages.monitor import run_monitor
     stats = run_monitor()
     print(f"\nMONITOR: {stats}")
-    return 0
+    return 1 if stats.get("aborted_reason") else 0
 
 
 def cmd_alert(args: argparse.Namespace) -> int:

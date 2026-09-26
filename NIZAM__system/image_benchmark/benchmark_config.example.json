@@ -1,12 +1,40 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "paid_calls_enabled": false,
   "production_paths": {
-    "P0_CHATGPT_INCLUDED": {"mode": "manual_import", "marginal_api_cost_usd": 0},
-    "P1_LOCAL": {"mode": "deterministic"},
-    "P2_OPENROUTER_LOW_COST": {"enabled": false, "model": null},
-    "P3_OPENROUTER_PREMIUM": {"enabled": false, "model": null},
-    "P4_DIRECT_PROVIDER": {"enabled": false, "model": null}
+    "P0_CHATGPT_INCLUDED": {
+      "mode": "manual_import",
+      "marginal_api_cost_usd": 0,
+      "model_identity": "chatgpt_images_2.5_surface"
+    },
+    "P1_LOCAL": {
+      "mode": "deterministic"
+    },
+    "P2_OPENROUTER_LOW_COST": {
+      "enabled": false,
+      "model": "bytedance-seed/seedream-5-0-pro",
+      "reason": "verified editing model, $0.003/image input + $0.045/image standard output, Seed provider listed as no-training and zero-retention"
+    },
+    "P3_OPENROUTER_PREMIUM": {
+      "enabled": false,
+      "models_under_test": [
+        "openai/gpt-image-2.5-flare",
+        "google/gemini-3.1-flash-image"
+      ],
+      "winner": null
+    },
+    "P4_DIRECT_PROVIDER": {
+      "enabled": false,
+      "models_under_test": [
+        "gpt-image-2.5-sunburst"
+      ],
+      "reason": "reserve for provider-specific precision controls such as masked edits; no universal quality winner declared"
+    }
+  },
+  "excluded_from_private_photo_default": {
+    "meta/muse-image": {
+      "reason": "very low $0.01/image price but current OpenRouter provider table lists Meta with 30-day retention; benchmark only with non-sensitive material unless privacy policy is explicitly relaxed"
+    }
   },
   "budget": {
     "pilot_max_usd": 3.0,
@@ -17,6 +45,7 @@
   "privacy": {
     "persist_face_embeddings": false,
     "github_sync_media": false,
-    "external_processing_requires_cloud_allowed": true
+    "external_processing_requires_cloud_allowed": true,
+    "zdr_required_for_private_photo_paid_routes": true
   }
 }

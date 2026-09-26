@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "paid_calls_enabled": false,
+  "production_paths": {
+    "P0_CHATGPT_INCLUDED": {"mode": "manual_import", "marginal_api_cost_usd": 0},
+    "P1_LOCAL": {"mode": "deterministic"},
+    "P2_OPENROUTER_LOW_COST": {"enabled": false, "model": null},
+    "P3_OPENROUTER_PREMIUM": {"enabled": false, "model": null},
+    "P4_DIRECT_PROVIDER": {"enabled": false, "model": null}
+  },
+  "budget": {
+    "pilot_max_usd": 3.0,
+    "campaign_max_usd": 15.0,
+    "soft_stop_fraction": 0.8,
+    "max_retries_per_image": 1
+  },
+  "privacy": {
+    "persist_face_embeddings": false,
+    "github_sync_media": false,
+    "external_processing_requires_cloud_allowed": true
+  }
+}

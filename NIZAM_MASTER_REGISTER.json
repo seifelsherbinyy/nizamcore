@@ -88,6 +88,17 @@
       "scaffolded": true
     },
     {
+      "path": "PFOS__personal_finance_app",
+      "phase": 2,
+      "symbol": "PFOS",
+      "meaning_en": "Personal Finance Operating System — merged from nizamfinancialapp, 2026-10-02",
+      "privacy": "mixed: deterministic engine + Dexie cache local; Drive mirror under drive.file scope, encrypted, no keys",
+      "registers": "package.json",
+      "scaffolded": false,
+      "note": "Self-contained software project (own package.json/build/tests), not interleaved with nizamcore's skill/persona layout. MAL__financial_engine delegates all monetary computation here — see ADR-ZAYD-001.",
+      "staged_not_committed": true
+    },
+    {
       "path": "BADAN__body_health_system",
       "phase": 2,
       "symbol": "BADAN",

@@ -1,0 +1,68 @@
+{
+  "tool": "scripts/ingest/pfos-drive-pull.mjs",
+  "ingested_at": "2026-08-05T13:05:30.035Z",
+  "source_folder": {
+    "id": "<PFOS_SOURCE_FOLDER_ID>",
+    "name": "01_Product_Blueprints",
+    "modified": "2026-08-04T20:59:47.135Z"
+  },
+  "scope_used": "https://www.googleapis.com/auth/drive.readonly",
+  "scope_note": "Read only scope is used by this local tool only. The shipped application keeps the per file scope.",
+  "id_note": "Every source identifier is redacted to an <ANGLE_BRACKET> placeholder. The repository is public and steering §0b forbids a storage folder or file identifier in a tracked file. Byte-identity to the source is proved by name, byte count and sha256 below, none of which the redaction touches; the identifiers were provenance labels only. The tool writes placeholders too, so a re-run does not reintroduce them.",
+  "file_count": 4,
+  "not_ingested": [],
+  "files": [
+    {
+      "source_name": "01_PFOS_Product_Constitution_and_Problem_Solution_Logic.md",
+      "source_id": "<PFOS_SOURCE_FILE_ID_01>",
+      "source_mime": "text/markdown",
+      "source_modified": "2026-08-04T20:59:56.649Z",
+      "source_version": "2",
+      "exported_as": "verbatim bytes",
+      "dest": "contracts/pfos/01_PFOS_Product_Constitution_and_Problem_Solution_Logic.md",
+      "bytes": 17299,
+      "sha256": "2763df52cce0648b5237f6c0eaa6870397d78717e20d0df49e2765d2046a7b89",
+      "unchanged_from_previous_ingest": false,
+      "previous_sha256": null
+    },
+    {
+      "source_name": "02_PFOS_Data_Architecture_Integrations_and_Security.md",
+      "source_id": "<PFOS_SOURCE_FILE_ID_02>",
+      "source_mime": "text/markdown",
+      "source_modified": "2026-08-04T21:00:02.739Z",
+      "source_version": "2",
+      "exported_as": "verbatim bytes",
+      "dest": "contracts/pfos/02_PFOS_Data_Architecture_Integrations_and_Security.md",
+      "bytes": 18170,
+      "sha256": "47e381d37f1850d1de8d51fbc4ecc0cd34baea8c14229018b4886adaf4499d53",
+      "unchanged_from_previous_ingest": false,
+      "previous_sha256": null
+    },
+    {
+      "source_name": "03_PFOS_Financial_Intelligence_Decision_Forecasting_and_Learning.md",
+      "source_id": "<PFOS_SOURCE_FILE_ID_03>",
+      "source_mime": "text/markdown",
+      "source_modified": "2026-08-04T21:00:09.160Z",
+      "source_version": "2",
+      "exported_as": "verbatim bytes",
+      "dest": "contracts/pfos/03_PFOS_Financial_Intelligence_Decision_Forecasting_and_Learning.md",
+      "bytes": 16201,
+      "sha256": "098ac967ba387038872600af6df7f3616dedb351659649bdfceae9aa653ff519",
+      "unchanged_from_previous_ingest": false,
+      "previous_sha256": null
+    },
+    {
+      "source_name": "04_PFOS_UX_UI_User_Journeys_Research_and_Delivery_Roadmap.md",
+      "source_id": "<PFOS_SOURCE_FILE_ID_04>",
+      "source_mime": "text/markdown",
+      "source_modified": "2026-08-04T21:00:15.230Z",
+      "source_version": "2",
+      "exported_as": "verbatim bytes",
+      "dest": "contracts/pfos/04_PFOS_UX_UI_User_Journeys_Research_and_Delivery_Roadmap.md",
+      "bytes": 17072,
+      "sha256": "f86c6141744506196b6049f76888c3f0a8474ce0d4354f7979b2b0d6aa0866a8",
+      "unchanged_from_previous_ingest": false,
+      "previous_sha256": null
+    }
+  ]
+}

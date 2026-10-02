@@ -1,0 +1,142 @@
+# deps / build
+node_modules/
+dist/
+.vite/
+coverage/
+# env / secrets — NEVER commit
+.env
+.env.local
+*.client_secret.json
+token.json
+# local personal data — never commit real ledgers
+data/ledgers/*.json
+data/ledgers/*.csv
+!data/ledgers/*.example.json
+!data/ledgers/.gitkeep
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.log
+# a local developer-machine convenience script: it nudges the mouse pointer to keep a workstation
+# awake. It holds no project role, is imported by nothing, and belongs to whoever is sitting at the
+# machine — not to the build. Ignored rather than tracked so it stops failing AC14 (clean tree).
+jiggle.ps1
+# the same script, rewritten. `awake.ps1` supersedes `jiggle.ps1`, `awake.cmd` is the shortcut that
+# launches it, and `_archive/` holds the two earlier drafts (`awake.v1.ps1`, `awake.v2.ps1`) that
+# their author kept rather than discarded. Same reasoning as above and for the same reason: they
+# nudge the pointer on one workstation, nothing in the build imports them, and they carry no
+# deployment particular and no secret. Ignored rather than tracked so they stop failing AC14
+# (clean tree). Deliberately NOT deleted — superseded or not, they belong to whoever is sitting at
+# the machine, and a build gate is not a licence to remove another person's local tooling.
+awake.ps1
+awake.cmd
+_archive/
+# continuation analysis + build session inputs (tooling, not app code)
+outputs/
+Execute and build.md
+# loop scratch (the ledger itself IS committed)
+.loop/tmp/
+# benchmark run outputs (contract 09's five artifacts). Regenerable from tracked inputs — the eval
+# set, the recorded fixture and src/server/benchmark — and a PROVISIONAL registry emitted from
+# fixtures must not sit in a public repository looking like graded evidence. Phase 6.3 replaces it
+# with a live-measured one, which is likewise a run output rather than source.
+artifacts/
+# raw third-party API dumps captured by research tooling: regenerable by the scripts beside them,
+# and they carry third-party prose that the generic-only check (AC11) forbids in a tracked file.
+docs/research/**/_raw/
+# an IN-FLIGHT research run. Its report, shortlist, exclusions and integration notes are still being
+# authored and rewritten as its tooling fetches primary sources, so the folder is a staging area, not
+# a deliverable. Ignored so the acceptance gate is not measuring another process's scratch space.
+# Track it (and restore the _RESEARCH_INDEX.md row) once the run is finished and its author says so.
+docs/research/2026-08-07-oss-design-scan/
+# --- local secrets (never commit) ---
+.secrets/
+.env.*.local
+*client_secret*.json
+secretsgoogle*.txt
+# A FILLED-IN container env file. `ops/env/*.env.example` are the tracked templates, but a real
+# `ops/env/<name>.env` holds live bot tokens and API keys. The `.env` rule above matches only a
+# file named exactly ".env", so `ops/env/proxy.env` was NOT ignored: proven with
+# `git check-ignore -v` on 2026-08-09, on a PUBLIC repository. The `.example` templates are
+# unaffected because they do not end in `.env`.
+ops/env/*.env
+# any Cloudflare API token file, wherever it lands
+*cloudflare*.env
+cf_token*
+
+# The SEEDED SERVER STORE. Spec 08 wave A2 materialises the owner's real ledger into a local SQLite
+# file so waves A3 and A4 can reconcile and index against it, and wave A5 moves it to the host. It is
+# the single most sensitive artifact this repository's tooling produces - every row is a real
+# transaction - so it is untracked, and the ingestion gates ask `git check-ignore` about this path
+# before they write the first byte rather than trusting this entry to still be here.
+data/store/
+*.db
+*.db-wal
+*.db-shm
+# --- REAL Slack credentials found loose in the working tree, 2026-09-02 ---
+# `slack-setup.txt` and `whoop-slack-setup.txt` are byte-identical 449-byte notes that hold a live
+# `xoxb-` bot token, a live `xapp-` app token, a signing secret and a channel identifier. None of
+# the rules above matched them: `.secrets/` needs the leading dot, `ops/env/*.env` needs that path,
+# and these two sit at the repository root under ordinary names. This repository is PUBLIC
+# (steering §0b), so one `git add -A` would have published production credentials irrecoverably.
+# Ignored rather than deleted, for the same reason as the scripts below: they are the owner's own
+# handoff notes and a build gate is not a licence to remove them. Their proper home is `.secrets/`
+# or a password manager, and per `ops/secrets/ALIAS_REGISTRY.md` a value never belongs in a file
+# that git can see at all.
+slack-setup.txt
+whoop-slack-setup.txt
+
+# Python bytecode and Hypothesis' example database: regenerable caches, never source.
+__pycache__/
+*.pyc
+.hypothesis/
+
+# The same keep-awake workstation script family already ignored above, in its timestamped-backup
+# and self-test variants (`awake.v3.<date>.bak.ps1`, `awake.tests.ps1`). Identical reasoning to
+# `awake.ps1`: one workstation, no importer, no project role, no secret, no deployment particular.
+# Committing another person's local pointer-nudging script to a public repository is the worse of
+# the two options, and deleting it is not mine to do.
+awake.v*.ps1
+awake.tests.ps1
+
+# The same family again, under its PascalCase name and inside scripts/. Nothing new is being decided
+# here: the reasoning three comments up already covers this file, and the only reason it still showed
+# up as untracked is that the existing patterns are lowercase and unanchored to that directory. One
+# workstation, no importer, no project role. Recorded under D-H 2026-09-22 as the single entry the
+# repository's own prior reasoning already resolved.
+Keep-Awake.ps1
+scripts/Keep-Awake.ps1
+
+# ---------------------------------------------------------------------------------------------
+# NOT PUBLISHED — organization-specific vocabulary. Recorded 2026-09-22 under D-H, and amended
+# into docs/adr/ADR-0004-production-release-decisions.md.
+#
+# AC11 forbids an organization-specific term in any TRACKED file, and this repository is public.
+# The paths below are research inputs, session prompts and IDE agent-harness tooling that cite or
+# document another organization by name. Two facts decide this:
+#
+#   1. Sanitizing them would destroy what they are. A research provenance manifest whose publisher
+#      has been anonymized is no longer evidence, it is an assertion. Deleting the publisher to
+#      satisfy a string check would leave a citation nobody can verify, which is worse than not
+#      publishing the citation at all.
+#   2. Rewriting a URL or a name to slip past the checker would be evading the gate rather than
+#      meeting it, and that is explicitly forbidden.
+#
+# So the disposition is: RETAINED ON DISK, NOT PUBLISHED. This is not a local exclude standing in
+# for a decision - the decision is that these artifacts are inputs to the work rather than part of
+# the released product, and the released design cites their claims by claim id (C006, C007, S045)
+# rather than by publisher. Nothing is deleted and nothing is moved.
+#
+# The two files that WERE sanitized instead, because they are product rather than input, are
+# src/server/hermes/financialResponse.ts and scripts/kiro/permissions.test.mjs: in both the
+# organization name was incidental - one a citation label, one an arbitrary synthetic command name.
+# .kiro/specs/hermes-governed-workflows/design.md was sanitized for the same reason.
+.agents/
+docs/kiro/prompts/
+docs/kiro/operational-excellence/
+docs/kiro/slack-financial-pillar-response-design.md
+docs/plans/nizam-transaction-capture-pipeline-research-annex.md
+scripts/kiro/assembleSlackFinance.mjs
+scripts/kiro/researchSlackFinance.mjs
+scripts/kiro/researchSlackFinance.test.mjs

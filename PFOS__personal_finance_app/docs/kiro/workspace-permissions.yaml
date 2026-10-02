@@ -1,0 +1,204 @@
+# Owner: contracts/programs/KIRO_WORKSPACE_PERMISSIONS.md. Phase 3 (KWP).
+# Generated review template, NOT loaded from this repository by Kiro.
+# Compact development patterns. Not a sandbox; review cwd, scripts and environment.
+# 562 concrete coverage cases; 52 runtime shell patterns.
+rules:
+  - capability: shell
+    effect: allow
+    match:
+      - "npm run typecheck"
+      - "npm run lint"
+      - "npm run build"
+      - "npm test"
+      - "npm ls --depth=0"
+      - "npm outdated --offline"
+      - "curl.exe --version"
+      - "node --test scripts/kiro/develop.test.mjs"
+  - capability: shell
+    effect: allow
+    match:
+      - "node --test scripts/kiro/permissions.test.mjs scripts/kiro/develop.test.mjs"
+      - "npm test -- --run"
+      - "npm run verify:all -- --all"
+      - "npm run dev -- --host 127.0.0.1"
+      - "npm run preview -- --host 127.0.0.1"
+      - "node --test scripts/kiro/permissions.test.mjs"
+      - "node scripts/kiro/permissions.mjs"
+      - "node scripts/kiro/validate.mjs"
+  - capability: shell
+    effect: allow
+    match:
+      - "git status"
+      - "git status --short"
+      - "git status --porcelain=v1"
+      - "git diff --no-ext-diff --no-textconv"
+      - "git diff --no-ext-diff --no-textconv --stat"
+      - "git diff --no-ext-diff --no-textconv --check"
+      - "git diff --no-ext-diff --no-textconv --cached"
+      - "git log -5 --oneline"
+  - capability: shell
+    effect: allow
+    match:
+      - "git log -10 --oneline"
+      - "git log -20 --oneline"
+      - "git ls-files"
+      - "git ls-files --modified"
+      - "git ls-files --others --exclude-standard"
+      - "git branch --show-current"
+      - "git branch --list"
+      - "git rev-parse --show-toplevel"
+  - capability: shell
+    effect: allow
+    match:
+      - "git --version"
+      - "node --version"
+      - "npm --version"
+      - "pwd"
+      - "Get-Location"
+      - "Get-ChildItem"
+      - "Get-ChildItem src"
+      - "Get-ChildItem tests"
+  - capability: shell
+    effect: allow
+    match:
+      - "npm test -- src/*.test.ts"
+      - "npm test -- --run src/*.test.ts"
+      - "node node_modules/vitest/vitest.mjs run src/*.test.ts"
+      - "npm test -- src/*.test.tsx"
+      - "npm test -- --run src/*.test.tsx"
+      - "node node_modules/vitest/vitest.mjs run src/*.test.tsx"
+      - "node scripts/kiro/develop.mjs *"
+      - "rg *"
+  - capability: shell
+    effect: allow
+    match:
+      - "Get-Content *"
+      - "Get-ChildItem *"
+      - "Get-Command *"
+      - "Test-Path *"
+  - capability: shell
+    effect: ask
+    exclude:
+      - "npm run typecheck"
+      - "npm run lint"
+      - "npm run build"
+      - "npm test"
+      - "npm ls --depth=0"
+      - "npm outdated --offline"
+      - "curl.exe --version"
+      - "node --test scripts/kiro/develop.test.mjs"
+      - "node --test scripts/kiro/permissions.test.mjs scripts/kiro/develop.test.mjs"
+      - "npm test -- --run"
+      - "npm run verify:all -- --all"
+      - "npm run dev -- --host 127.0.0.1"
+      - "npm run preview -- --host 127.0.0.1"
+      - "node --test scripts/kiro/permissions.test.mjs"
+      - "node scripts/kiro/permissions.mjs"
+      - "node scripts/kiro/validate.mjs"
+      - "git status"
+      - "git status --short"
+      - "git status --porcelain=v1"
+      - "git diff --no-ext-diff --no-textconv"
+      - "git diff --no-ext-diff --no-textconv --stat"
+      - "git diff --no-ext-diff --no-textconv --check"
+      - "git diff --no-ext-diff --no-textconv --cached"
+      - "git log -5 --oneline"
+      - "git log -10 --oneline"
+      - "git log -20 --oneline"
+      - "git ls-files"
+      - "git ls-files --modified"
+      - "git ls-files --others --exclude-standard"
+      - "git branch --show-current"
+      - "git branch --list"
+      - "git rev-parse --show-toplevel"
+      - "git --version"
+      - "node --version"
+      - "npm --version"
+      - "pwd"
+      - "Get-Location"
+      - "Get-ChildItem"
+      - "Get-ChildItem src"
+      - "Get-ChildItem tests"
+      - "npm test -- src/*.test.ts"
+      - "npm test -- --run src/*.test.ts"
+      - "node node_modules/vitest/vitest.mjs run src/*.test.ts"
+      - "npm test -- src/*.test.tsx"
+      - "npm test -- --run src/*.test.tsx"
+      - "node node_modules/vitest/vitest.mjs run src/*.test.tsx"
+      - "node scripts/kiro/develop.mjs *"
+      - "rg *"
+      - "Get-Content *"
+      - "Get-ChildItem *"
+      - "Get-Command *"
+      - "Test-Path *"
+  - capability: fs_read
+    effect: allow
+    match:
+      - "./**"
+  - capability: fs_read
+    effect: ask
+    exclude:
+      - "./**"
+  - capability: fs_write
+    effect: allow
+    match:
+      - "./src/**"
+      - "./tests/**"
+      - "./docs/**"
+      - "./scripts/**"
+      - "./.kiro/specs/**"
+  - capability: fs_write
+    effect: ask
+    exclude:
+      - "./src/**"
+      - "./tests/**"
+      - "./docs/**"
+      - "./scripts/**"
+      - "./.kiro/specs/**"
+  - capability: filesystem
+    effect: ask
+    match:
+      - "**/.env"
+      - "**/.env.*"
+      - "**/.secrets/**"
+      - "**/*.pem"
+      - "**/*.key"
+      - "./data/**"
+      - "./FINANCIAL/**"
+      - "./ops/**"
+  - capability: web_fetch
+    effect: allow
+    match:
+      - "kiro.dev"
+      - "www.typescriptlang.org"
+      - "react.dev"
+      - "vite.dev"
+      - "vitest.dev"
+      - "nodejs.org"
+      - "docs.npmjs.com"
+      - "git-scm.com"
+      - "developer.mozilla.org"
+  - capability: web_fetch
+    effect: ask
+    exclude:
+      - "kiro.dev"
+      - "www.typescriptlang.org"
+      - "react.dev"
+      - "vite.dev"
+      - "vitest.dev"
+      - "nodejs.org"
+      - "docs.npmjs.com"
+      - "git-scm.com"
+      - "developer.mozilla.org"
+  - capability: web_search
+    effect: allow
+  - capability: diagnostics
+    effect: allow
+  - capability: context
+    effect: allow
+  - capability: skill
+    effect: allow
+  - capability: subagent
+    effect: allow
+  - capability: mcp
+    effect: ask

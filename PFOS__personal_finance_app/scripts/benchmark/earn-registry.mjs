@@ -1,0 +1,927 @@
+// scripts/benchmark/earn-registry.mjs
+// NIZAM · Registry runner — the entrypoint that earns a non-provisional eligibility registry
+// Owning contract: PFOS 09 (OpenRouter Phase 1 — benchmark calibration) + PFOS 12 / phase 6.3
+// Owning spec: .kiro/specs/ship-run-live-bringup — R10, R11, R14
+// Steering: two-agent-vps.md §3 (the dev-key carve-out: developer machine only, dev key only,
+//   sanitized eval set only, and only for producing the eligibility registry)
+// NO DEPLOYMENT PARTICULAR. The provider base and the credential arrive as ENTRY NAMES, resolved
+//   through an injected environment; no address and no credential is a literal in this file.
+//
+// ## Why this module lives in `scripts/` and not in `src/server/`
+//
+// `liveModelCaller.isolation.test.ts` asserts mechanically that NO file under `src/server/**`
+// imports `src/features/benchmark/liveModelCaller.ts`, with a negative test that breaks the
+// assertion and watches it fire. This runner is the module that legitimately imports BOTH tiers —
+// it is the caller `emitLiveRegistry`'s injection was designed for. Under `src/server/` it would
+// break that assertion; under `scripts/` it satisfies it by construction.
+//
+// ## One process invocation, and why there is no resume
+//
+// A `LiveMeasurementWitness` is an in-process object identity: the gate is membership in a
+// module-private `WeakSet` inside `liveModelCaller.ts`. A `WeakSet` does not survive serialization,
+// so a witness cannot cross a process boundary. A checkpoint file would therefore be a new trust
+// mechanism — a replay path into the gate — which is exactly the shortcut R11 forbids. So this
+// runner dials, mints, grades and emits in ONE invocation, and a crash mid-run forfeits the spend
+// already incurred and restarts from zero. That cost is accepted (R10.12); no mechanism avoids it.
+//
+// ## Money
+//
+// Provider accounting only, in integer micro-USD. Owner money is integer milliunits behind
+// `src/lib/money/` and does not appear here; the two units are never joined. No `parseFloat`, no
+// `.toFixed(` — every figure below is integer arithmetic, rounded UP so an estimate never shrinks.
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { request as httpsRequest } from 'node:https';
+import { registerHooks } from 'node:module';
+import { dirname, join, resolve as resolvePath } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * The `@/` path alias, taught to Node's resolver.
+ *
+ * `dataset.ts` and `datasetIntegrity.ts` import `@/lib/money/money` — the alias `tsconfig.json` and
+ * `vite.config.ts` both declare, and which Node's ESM resolver knows nothing about. The alternative
+ * would be editing those two tracked source files, and the design's one stated exception is that NO
+ * existing file is modified to make this runner reachable. So the runner teaches the resolver
+ * instead, in-process and synchronously: no build step, no bundler, no loader flag, and no CLI
+ * argument on the npm script. Under Vitest this hook is inert — Vite resolves the alias first.
+ */
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    if (!specifier.startsWith('@/')) return nextResolve(specifier, context);
+    const rest = specifier.slice('@/'.length);
+    // Node performs no extension search, so a bare specifier is given the extension it names.
+    const named = /\.[cm]?[jt]sx?$/.test(rest) ? rest : `${rest}.ts`;
+    return { url: new URL(named, new URL('../../src/', import.meta.url)).href, shortCircuit: true };
+  },
+});
+
+// Imported dynamically because the hook above must be registered BEFORE these specifiers resolve,
+// and a static import is hoisted above every statement in the module.
+const { buildEvalSet, validateEvalSet } = await import('../../src/features/benchmark/dataset.ts');
+const { auditEvalSet } = await import('../../src/features/benchmark/datasetIntegrity.ts');
+const {
+  DEVELOPER_MACHINE_INVOCATION,
+  grantDeveloperMachineRun,
+  isLiveMeasurementWitness,
+  liveModelCaller,
+  resolveLiveRun,
+  revealSecret,
+  runLiveModelCalls,
+} = await import('../../src/features/benchmark/liveModelCaller.ts');
+const {
+  CHARS_PER_PROMPT_TOKEN,
+  ESTIMATE_SAFETY_MULTIPLIER,
+  PreflightError,
+  REQUEST_OVERHEAD_TOKENS,
+  assertScopedToDefaultAllowed,
+  usdToMicroUsd,
+} = await import('../../src/features/benchmark/preflight.ts');
+const { frozenSnapshot, priceFor } = await import('../../src/features/benchmark/pricing.ts');
+const { LiveRegistryError, emitLiveRegistry } = await import(
+  '../../src/server/benchmark/liveRegistry.ts'
+);
+
+// ---- constants ---------------------------------------------------------------------------------
+
+/**
+ * The K4 default-allowed set, and the whole of it. Both models run, not one: the policy selects the
+ * CHEAPEST CAPABLE model, and a registry with one entry cannot express a cheapest-capable choice —
+ * it expresses "the only one we measured". The premium models are OFF without an explicit owner
+ * opt-in, and `assertScopedToDefaultAllowed` refuses one at the moment of the call regardless.
+ */
+export const DEFAULT_ALLOWED_MODEL_IDS = ['xiaomi/mimo-v2.5', 'z-ai/glm-5.2'];
+
+/** Dev-tier weekly ceiling, integer micro-USD. ~USD 1/week per docs/PFOS_SECRETS_PLAN.md §4. */
+export const DEV_WEEKLY_CEILING_MICRO_USD = 1_000_000;
+
+/** Tokens per million. The denominator of every `*UsdPerMillion` rate in the pricing snapshot. */
+const TOKENS_PER_MILLION = 1_000_000;
+
+/**
+ * Entry NAMES, not values. These are the names the benchmark tier's own tests already use, so there
+ * is one vocabulary for a benchmark run's environment rather than two.
+ */
+export const MODEL_API_BASE_ENTRY = 'NIZAM_BENCH_MODEL_API_BASE';
+export const DEV_KEY_ENTRY = 'NIZAM_BENCH_DEV_KEY';
+/** An entry naming a FILE that holds the dev credential, for an operator who prefers not to export it. */
+export const DEV_KEY_FILE_ENTRY = 'NIZAM_BENCH_DEV_KEY_FILE';
+/**
+ * The entry whose presence means "this is a server runtime". Read by the RUNNER and passed in,
+ * because `liveModelCaller.ts` reads no environment by design — its behaviour is a function of its
+ * arguments. `grantDeveloperMachineRun` refuses outright when this resolves to anything, so the
+ * runner cannot execute on the host at all.
+ */
+export const SERVER_RUNTIME_MARKER_ENTRY = 'NIZAM_SERVER_RUNTIME';
+
+/** The path appended to the resolved base. A path is not a deployment particular. */
+export const COMPLETIONS_PATH = '/chat/completions';
+
+/**
+ * The output allowance requested per case, and the allowance the estimate charges in full.
+ *
+ * ## Why 1536 and not 512
+ *
+ * 512 was sized against the SHORTEST expectation kind. It is not enough. A run on 2026-08-11 read 16
+ * consecutive cases correctly and then refused `LIVE_PROVIDER_ANSWER_TRUNCATED` on `sms_0017` with
+ * `choices[0].finish_reason: "length"` — a genuine truncation, not a mapping defect. Two facts size
+ * the replacement:
+ *
+ *  1. **The longest legitimate answer is an `explanation`.** 73 of the 219 cases (`sts`, `pd`, `fc`)
+ *     expect prose that cites three named evidence keys and, for `pd`, restates a binding
+ *     recommendation without overriding it. That is several hundred tokens, not the ~40 a structured
+ *     extraction answer needs.
+ *  2. **The observed truncation was NOT an explanation case.** `sms_0017` is an `extraction` case
+ *     whose answer is one small object, and it still saturated 512. So the binding cost is not answer
+ *     prose at all — it is the reasoning preamble a reasoning model emits, which the provider bills and
+ *     bounds as completion tokens. An allowance sized only to the visible answer will truncate again.
+ *
+ * 1536 is 3x, which covers a verbose explanation AND a reasoning preamble ahead of it. It is also the
+ * largest value that keeps the pre-flight estimate comfortably below the ceiling: 219 cases x 2 models
+ * estimates 816,068 micro-USD against `DEV_WEEKLY_CEILING_MICRO_USD`, leaving 183,932 of headroom.
+ * 1792 would fit too, but buys 17% more allowance for 67% less headroom, and the estimate is what
+ * refuses — so the trade is the wrong way round. 1920 exceeds the ceiling outright.
+ *
+ * The estimate charges this in FULL for every case and then doubles it, so actual spend lands far
+ * below: the truncated run's 16 answered cases cost 2,762 micro-USD (~173 each), and that spend is
+ * forfeited — a partial run produced no measurement, so it is charged against the weekly cap without
+ * having bought anything. It is counted as consumed when judging what remains.
+ */
+export const MAX_OUTPUT_TOKENS = 1536;
+
+/** Per-request wall clock bound, whole milliseconds. */
+export const REQUEST_TIMEOUT_MS = 60_000;
+
+/**
+ * The response read bound, whole bytes. Same value and same reason as the messaging side's
+ * `MAX_PROVIDER_RESPONSE_BYTES`: an unbounded read is a memory hazard on a hostile answer. Declared
+ * locally rather than imported, so the model side of the runner holds no edge to the messaging tier.
+ */
+export const MAX_RESPONSE_BYTES = 1_048_576;
+
+/** Where the emitted artifacts land. `artifacts/` is gitignored, so nothing here is ever committed. */
+export const ARTIFACT_ROOT = 'artifacts/benchmark';
+
+// ---- bounded transport-fault retry: the constants ----------------------------------------------
+
+/**
+ * ## The distinction this section is built on, and which it must never blur
+ *
+ * A **refusal** is a statement that the model or the request was WRONG: a truncated answer, a
+ * substituted model, a missing cost, an unsanitized eval set, a registry-class error. Retrying one of
+ * those would re-ask a question whose answer was already unacceptable, and a loop around it is exactly
+ * how "the first failure aborts" decays into "keep going until something passes". Refusals therefore
+ * still halt IMMEDIATELY, with no attempt, and that rule is unchanged below.
+ *
+ * A **transport fault** says nothing whatsoever about the model: a 5xx from the provider or from its
+ * gateway, a connection reset at TLS read, a socket timeout, a rate limit. Re-asking the SAME question
+ * over a NEW connection is not a second chance at a bad answer — it is the first delivery of the
+ * question. That is the only class retried here.
+ *
+ * ## Why this lives in the runner and not in the shared reader
+ *
+ * `providerResponseReader.ts` is shared with the agent's model port. Adding a retry there would change
+ * the agent path's halt-on-everything behaviour as a side effect of a benchmark decision. So the retry
+ * sits ABOVE the reader, wrapping the injected transport: a fault is absorbed before the reader ever
+ * sees it, and anything the classifier does not recognise as transport-class is handed to the reader
+ * verbatim, where it refuses exactly as it does today.
+ *
+ * ## Why bounded, and why two bounds rather than one
+ *
+ * Measured on 2026-08-11 over eight recorded attempts: roughly one transient per 38 calls against the
+ * 438 consecutive calls a full run needs, which puts the probability of a clean single invocation near
+ * 1e-5 and has forfeited 57,419 micro-USD. A per-case cap alone would let a systematically broken
+ * upstream grind through 438 cases x 3 attempts while charging for every partial answer. A whole-run
+ * budget alone would let one hopeless case consume it. Both, so a transient is survived and a broken
+ * upstream still STOPS the run.
+ */
+
+/** Attempts per case, first attempt included. 3 means at most two retries for any one case. */
+export const MAX_ATTEMPTS_PER_CASE = 3;
+
+/**
+ * The whole-run transport-fault budget, across every model and every case.
+ *
+ * 40 against ~12 expected transients (438 calls at one per 38) is roughly 3.5x the measured rate — wide
+ * enough that an ordinary run finishes, narrow enough that an upstream failing on most calls exhausts
+ * it inside the first model rather than dragging the full eval set through a doomed loop.
+ */
+export const RUN_TRANSPORT_FAULT_BUDGET = 40;
+
+/** First backoff, whole milliseconds. Doubles per attempt up to {@link BACKOFF_CEILING_MS}. */
+export const BACKOFF_BASE_MS = 1_000;
+
+/** The backoff ceiling, whole milliseconds. Modest on purpose: the run is one process and it waits. */
+export const BACKOFF_CEILING_MS = 8_000;
+
+/** An advertised retry interval is honoured up to this bound, so a hostile header cannot stall a run. */
+export const MAX_HONOURED_RETRY_AFTER_MS = 30_000;
+
+/**
+ * Errnos that describe a broken CONNECTION rather than a bad answer. `ETIMEDOUT` also covers this
+ * runner's own socket-timeout path, which tags its error with that code for exactly this reason.
+ */
+export const TRANSPORT_FAULT_ERRNOS = Object.freeze(['ECONNRESET', 'ETIMEDOUT', 'EPIPE']);
+
+/** The two codes this runner raises once a bound is reached. Both are handled by `main`'s `code` switch. */
+export const TRANSPORT_RETRIES_EXHAUSTED = 'LIVE_TRANSPORT_RETRIES_EXHAUSTED';
+export const TRANSPORT_BUDGET_EXHAUSTED = 'LIVE_TRANSPORT_BUDGET_EXHAUSTED';
+
+/**
+ * A bound was reached. Carries a `code` so `main` discriminates on it like every other refusal, and a
+ * `detail` of counts and reasons only — no body text, no header value, no credential.
+ */
+export class TransportFaultError extends Error {
+  /**
+   * @param {string} code
+   * @param {string} message
+   * @param {Record<string, string>} detail
+   */
+  constructor(code, message, detail = {}) {
+    super(`NIZAM live benchmark run: ${message}`);
+    this.name = 'TransportFaultError';
+    this.code = code;
+    this.detail = Object.freeze({ ...detail });
+  }
+}
+
+// ---- the explicit environment ------------------------------------------------------------------
+
+/**
+ * An environment that is a Map, never `process.env`.
+ *
+ * Two reasons this is not a convenience. First, an ambient environment makes a run's inputs
+ * invisible: a reader cannot tell which entries were consulted. Second, `process.env` has no
+ * distinction between "absent" and "empty", and this resolver must answer `null` for an absent name
+ * so `resolveLiveRun` fails closed rather than substituting a default. There is no default here for
+ * anything.
+ *
+ * @param {Iterable<readonly [string, string]> | Map<string, string>} entries
+ * @returns {{ resolve(name: string): string | null }}
+ */
+export function explicitEnvironment(entries) {
+  const table = new Map(entries);
+  return Object.freeze({
+    resolve(name) {
+      const value = table.get(name);
+      return value === undefined ? null : value;
+    },
+  });
+}
+
+// ---- the transport: the ONE revealSecret call site on the model side ---------------------------
+
+/**
+ * Build the network capability the benchmark tier declares and never implements.
+ *
+ * This is the ONE place on the model side that calls `revealSecret`. The revealed characters are
+ * used to build one header and reach no other expression: no log line, no return value, no error
+ * message, no thrown object. The request object itself has no field for an authorization value, so
+ * it may be quoted whole without disclosing anything.
+ *
+ * @param {{ requestTimeoutMs: number }} options
+ * @returns {(request: { url: string, method: 'POST', body: string }, credential: object) => Promise<{ status: number, bodyText: string, latencyMs: number }>}
+ */
+export function httpsTransport({ requestTimeoutMs }) {
+  return (liveRequest, credential) =>
+    new Promise((settle, refuse) => {
+      const target = new URL(liveRequest.url);
+      const body = Buffer.from(liveRequest.body, 'utf8');
+      const startedAt = Date.now();
+
+      const outbound = httpsRequest(
+        {
+          protocol: target.protocol,
+          hostname: target.hostname,
+          port: target.port === '' ? undefined : target.port,
+          path: `${target.pathname}${target.search}`,
+          method: liveRequest.method,
+          headers: {
+            'content-type': 'application/json',
+            'content-length': String(body.byteLength),
+            // The single `revealSecret` call site. The value is consumed here and nowhere else.
+            authorization: `Bearer ${revealSecret(credential)}`,
+          },
+        },
+        (incoming) => {
+          const chunks = [];
+          let read = 0;
+          incoming.on('data', (chunk) => {
+            read += chunk.byteLength;
+            if (read > MAX_RESPONSE_BYTES) {
+              incoming.destroy();
+              return;
+            }
+            chunks.push(chunk);
+          });
+          incoming.on('end', () => {
+            settle(
+              Object.freeze({
+                status: incoming.statusCode ?? 0,
+                bodyText: Buffer.concat(chunks).toString('utf8'),
+                latencyMs: Date.now() - startedAt,
+                // An ADVERTISED retry interval, whole milliseconds, or null. An extra field the
+                // reader does not read: `readProviderResponse` consumes `status`, `bodyText` and
+                // `latencyMs` only, so carrying this alongside them changes nothing downstream and
+                // saves the retry wrapper from having to re-open the response.
+                retryAfterMs: retryAfterMsFromHeader(incoming.headers['retry-after']),
+              }),
+            );
+          });
+          incoming.on('error', refuse);
+        },
+      );
+
+      outbound.setTimeout(requestTimeoutMs, () => {
+        // Tagged `ETIMEDOUT` so the classifier reads a code rather than matching on prose. A socket
+        // timeout is a transport fault; the message is not the contract, the code is.
+        const timedOut = new Error('the provider did not answer within the request timeout');
+        timedOut.code = 'ETIMEDOUT';
+        outbound.destroy(timedOut);
+      });
+      outbound.on('error', refuse);
+      outbound.end(body);
+    });
+}
+
+// ---- the classifier ----------------------------------------------------------------------------
+
+/**
+ * An advertised retry interval read from a `retry-after` header, whole milliseconds, or null.
+ *
+ * Both documented forms are accepted: delta-seconds, and an HTTP-date. Clamped to
+ * {@link MAX_HONOURED_RETRY_AFTER_MS} so an implausible or hostile value slows a run rather than
+ * stalling it, and floored at 0 so a date already in the past means "now" instead of a negative wait.
+ *
+ * @param {string | string[] | undefined} raw
+ * @returns {number | null}
+ */
+export function retryAfterMsFromHeader(raw) {
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  if (typeof value !== 'string' || value.trim().length === 0) return null;
+  const trimmed = value.trim();
+  if (/^\d+$/.test(trimmed)) {
+    return Math.min(Number.parseInt(trimmed, 10) * 1_000, MAX_HONOURED_RETRY_AFTER_MS);
+  }
+  const at = Date.parse(trimmed);
+  if (Number.isNaN(at)) return null;
+  return Math.min(Math.max(at - Date.now(), 0), MAX_HONOURED_RETRY_AFTER_MS);
+}
+
+/** True for a status the provider itself, or a gateway in front of it, could not serve. */
+function isTransportStatus(status) {
+  return status === 429 || (status >= 500 && status <= 599);
+}
+
+/**
+ * Is a THROWN transport failure transport-class? A reason string, or null for "not transport".
+ *
+ * Only a connection-level errno qualifies. Anything else — including every `LiveRunError` the reader
+ * raises about the CONTENT of an answer — returns null and therefore halts, unretried.
+ *
+ * @param {unknown} error
+ * @returns {{ reason: string, retryAfterMs: number | null } | null}
+ */
+export function transportFaultOfThrown(error) {
+  if (!(error instanceof Error)) return null;
+  const errno = 'code' in error ? String(error.code) : '';
+  if (TRANSPORT_FAULT_ERRNOS.includes(errno)) return { reason: errno, retryAfterMs: null };
+  // `ECONNRESET` at TLS read arrives wrapped on some Node paths, with the errno on `cause`.
+  const cause = error.cause;
+  if (cause instanceof Error && 'code' in cause && TRANSPORT_FAULT_ERRNOS.includes(String(cause.code))) {
+    return { reason: String(cause.code), retryAfterMs: null };
+  }
+  return null;
+}
+
+/**
+ * Is a RETURNED provider answer transport-class? A reason string, or null for "not transport".
+ *
+ * Three shapes, and the third is the one that has actually been costing runs:
+ *
+ *  1. A 429 status — a rate limit, with any advertised interval honoured.
+ *  2. A 5xx status — the provider or its gateway could not serve the request.
+ *  3. A **2xx carrying a provider error object** whose own `code` is 5xx or 429. This is the observed
+ *     `LIVE_PROVIDER_ERROR_IN_BODY` with `providerErrorCode: 504`: an upstream gateway timeout wrapped
+ *     in a success status. The reader is right to refuse it — the body is not an answer — but the fact
+ *     it reports is a dead gateway, not a bad model, so it is retried here BEFORE the reader sees it.
+ *
+ * A provider error whose code is 4xx other than 429 (a malformed request, a moderation refusal, an
+ * authorization problem) is NOT transport-class: re-sending it would produce the same refusal.
+ * `error.message` is never read — the provider's moderation metadata can carry an excerpt of the
+ * request text, and nothing here may put that in a `detail`.
+ *
+ * @param {{ status: number, bodyText: string, retryAfterMs?: number | null }} answer
+ * @returns {{ reason: string, retryAfterMs: number | null } | null}
+ */
+export function transportFaultOfAnswer(answer) {
+  const advertised = answer.retryAfterMs ?? null;
+  if (isTransportStatus(answer.status)) {
+    return { reason: `http_${answer.status}`, retryAfterMs: advertised };
+  }
+  if (answer.status < 200 || answer.status > 299) return null;
+  let body;
+  try {
+    body = JSON.parse(answer.bodyText);
+  } catch {
+    // An unparseable body is a refusal (`LIVE_PROVIDER_BODY_UNPARSEABLE`), not a transport fault.
+    return null;
+  }
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) return null;
+  const error = body.error;
+  if (typeof error !== 'object' || error === null || Array.isArray(error)) return null;
+  // The same field `providerResponseReader.ts` surfaces as `detail.providerErrorCode`, read from the
+  // same place rather than from the rendered detail, so the two never drift.
+  const raw = error.code;
+  const code = typeof raw === 'number' ? raw : typeof raw === 'string' && /^\d+$/.test(raw) ? Number.parseInt(raw, 10) : null;
+  if (code === null || !isTransportStatus(code)) return null;
+  return { reason: `provider_error_in_body_${code}`, retryAfterMs: advertised };
+}
+
+/** The wait before attempt `attempt` (1-based), whole milliseconds, honouring an advertised interval. */
+export function backoffMs(attempt, advertisedMs) {
+  if (typeof advertisedMs === 'number' && advertisedMs > 0) {
+    return Math.min(advertisedMs, MAX_HONOURED_RETRY_AFTER_MS);
+  }
+  return Math.min(BACKOFF_BASE_MS * 2 ** (attempt - 1), BACKOFF_CEILING_MS);
+}
+
+const sleep = (ms) => new Promise((settle) => setTimeout(settle, ms));
+
+/**
+ * Wrap a transport so a TRANSPORT-CLASS fault is re-asked over a new connection, within both bounds.
+ *
+ * What it does not do, stated because each absence is load-bearing: it never retries a refusal, never
+ * continues past one, never substitutes a different model (the model id is inside the body it re-sends
+ * unchanged), never fabricates an exchange, and never returns a synthesized answer. Every retry is
+ * counted into `tally` so the run's provenance reports what happened instead of hiding it.
+ *
+ * @param {{
+ *   transport: Function,
+ *   modelId: string,
+ *   budget: { used: number, limit: number },
+ *   tally: Map<string, number>,
+ *   report?: (line: string) => void,
+ *   wait?: (ms: number) => Promise<void>,
+ * }} options
+ */
+export function withTransportRetry({ transport, modelId, budget, tally, report = () => {}, wait = sleep }) {
+  return async (liveRequest, credential) => {
+    for (let attempt = 1; ; attempt += 1) {
+      let fault = null;
+      let answer = null;
+      try {
+        answer = await transport(liveRequest, credential);
+        fault = transportFaultOfAnswer(answer);
+        // Not transport-class: hand it to the reader verbatim. If the answer is bad, the reader
+        // refuses, and that refusal halts the run exactly as it did before this wrapper existed.
+        if (fault === null) return answer;
+      } catch (error) {
+        fault = transportFaultOfThrown(error);
+        // A thrown failure that is not transport-class is re-raised untouched.
+        if (fault === null) throw error;
+      }
+
+      if (attempt >= MAX_ATTEMPTS_PER_CASE) {
+        throw new TransportFaultError(
+          TRANSPORT_RETRIES_EXHAUSTED,
+          'a transport-class fault recurred through every permitted attempt for one case, so the run halts rather than retrying without bound',
+          {
+            modelId,
+            reason: fault.reason,
+            attempts: String(attempt),
+            budgetUsed: String(budget.used),
+            budgetLimit: String(budget.limit),
+          },
+        );
+      }
+      if (budget.used >= budget.limit) {
+        throw new TransportFaultError(
+          TRANSPORT_BUDGET_EXHAUSTED,
+          'the whole-run transport-fault budget is spent, which reads as a systematically broken upstream rather than a transient, so the run stops instead of grinding',
+          { modelId, reason: fault.reason, budgetUsed: String(budget.used), budgetLimit: String(budget.limit) },
+        );
+      }
+
+      budget.used += 1;
+      tally.set(modelId, (tally.get(modelId) ?? 0) + 1);
+      const waitMs = backoffMs(attempt, fault.retryAfterMs);
+      report(
+        `transport fault on ${modelId}: ${fault.reason}; retrying attempt ${attempt + 1} of ${MAX_ATTEMPTS_PER_CASE} after ${waitMs} ms (run budget ${budget.used}/${budget.limit})`,
+      );
+      await wait(waitMs);
+    }
+  };
+}
+
+// ---- the pre-flight estimate: integer micro-USD, rounded up ------------------------------------
+
+/**
+ * What the run would cost, in integer micro-USD, from the tracked frozen pricing snapshot.
+ *
+ * Integer arithmetic throughout. Each `*UsdPerMillion` rate is converted ONCE to integer micro-USD
+ * per million tokens by `usdToMicroUsd`, which rounds UP, and every division rounds up too — so the
+ * figure is an upper bound and may be trusted as a gate rather than as a hint. The same four
+ * pessimisms `preflight.ts` documents are stacked here: every prompt token is priced as fresh, the
+ * whole output allowance is charged for every case, a flat per-request overhead is added, and the
+ * total is multiplied by the safety multiplier.
+ *
+ * @param {{ cases: readonly { input: string }[], modelIds: readonly string[], maxOutputTokens: number }} input
+ * @returns {number} integer micro-USD
+ */
+export function preflightEstimateMicroUsd({ cases, modelIds, maxOutputTokens }) {
+  assertScopedToDefaultAllowed(modelIds);
+  if (cases.length === 0) {
+    throw new PreflightError(
+      'PREFLIGHT_NO_CASES',
+      'NIZAM pre-flight: the eval set is empty, so an estimate of zero would be a statement about nothing',
+      { at: 'cases' },
+    );
+  }
+
+  const snapshot = frozenSnapshot();
+  let promptTokens = 0;
+  for (const benchmarkCase of cases) {
+    promptTokens += REQUEST_OVERHEAD_TOKENS + Math.ceil(benchmarkCase.input.length / CHARS_PER_PROMPT_TOKEN);
+  }
+  const completionTokens = cases.length * maxOutputTokens;
+
+  let totalMicroUsd = 0;
+  for (const modelId of modelIds) {
+    const price = priceFor(snapshot, modelId);
+    const promptMicroUsd = Math.ceil(
+      (promptTokens * usdToMicroUsd(price.promptUsdPerMillion)) / TOKENS_PER_MILLION,
+    );
+    const completionMicroUsd = Math.ceil(
+      (completionTokens * usdToMicroUsd(price.completionUsdPerMillion)) / TOKENS_PER_MILLION,
+    );
+    totalMicroUsd += (promptMicroUsd + completionMicroUsd) * ESTIMATE_SAFETY_MULTIPLIER;
+  }
+  return totalMicroUsd;
+}
+
+// ---- phases 1-8: the run --------------------------------------------------------------------
+
+/**
+ * Dial, mint, grade and emit. Phases 1-8, in an order that is not cosmetic.
+ *
+ * The two gates run BEFORE dialling, and that is the caller's obligation. `emitLiveRegistry` re-runs
+ * `validateEvalSet` and `auditEvalSet`, but that happens AFTER the calls — too late to prevent the
+ * send. An unsanitized case sent to a third party is the one failure a live run can commit that a
+ * fixture run cannot, and no later refusal undoes it.
+ *
+ * REFUSALS halt. There is no per-case fallback and no continue-on-error: a run with a hole in it is not
+ * a measurement, and a loop that keeps trying after a refusal is how a narrow exception becomes an open
+ * channel. A TRANSPORT FAULT is different in kind and is retried within two bounds — see
+ * {@link withTransportRetry}, which sits between this loop and the injected transport and re-asks the
+ * same question over a new connection without ever weakening what counts as an acceptable answer.
+ *
+ * @param {{
+ *   grant?: object,
+ *   serverRuntimeMarker?: string | null,
+ *   transport: Function,
+ *   environment: { resolve(name: string): string | null },
+ *   config: { apiBaseUrlRef: string, apiKeyRef: string, completionsPath: string, maxOutputTokens: number },
+ *   modelIds: readonly string[],
+ *   evalSet?: readonly object[],
+ *   report?: (line: string) => void,
+ * }} input
+ */
+/**
+ * Report what an aborted run already spent, by model, in integer micro-USD.
+ *
+ * Called on the abort path only. It states the loss and nothing else: no artifact is written, no
+ * witness exists for a partial run, and no figure here is ever summed into a registry. Reported as
+ * `forfeited` rather than as `spent` because that is what happened to it — the run produced no
+ * measurement, so the charge bought nothing.
+ *
+ * A model that appears with 0 cases is a model whose FIRST case refused; a model absent from the map
+ * was never dialled at all. The distinction is stated rather than collapsed, because "it charged
+ * nothing" and "it never started" are different facts.
+ *
+ * @param {(line: string) => void} report
+ * @param {Map<string, { casesAnswered: number, costMicroUsd: number }>} spentByModel
+ */
+export function reportForfeitedSpend(report, spentByModel) {
+  if (spentByModel.size === 0) {
+    report('ABORTED before any case was answered: nothing was charged, so nothing is forfeited');
+    return;
+  }
+  let totalMicroUsd = 0;
+  for (const [modelId, spent] of spentByModel) {
+    totalMicroUsd += spent.costMicroUsd;
+    report(
+      `ABORTED — forfeited spend on ${modelId}: ${spent.casesAnswered} cases answered, ${spent.costMicroUsd} micro-USD reported by the provider`,
+    );
+  }
+  report(
+    `ABORTED — total forfeited: ${totalMicroUsd} micro-USD across ${spentByModel.size} model(s); the run produced no measurement, so this charge bought nothing`,
+  );
+}
+
+/**
+ * Report the transport retries a run used, per model, whether the run finished or aborted.
+ *
+ * A registry earned over 12 retries is a genuine measurement — every case was answered by the model
+ * that was asked, and nothing was substituted or invented. But the reader is owed the fact, so a run's
+ * provenance states it rather than hiding a rough passage behind a clean total. Zero is reported
+ * explicitly too: "the upstream held" and "we did not look" are different claims.
+ *
+ * @param {(line: string) => void} report
+ * @param {Map<string, number>} tally
+ * @param {{ used: number, limit: number }} budget
+ */
+export function reportTransportRetries(report, tally, budget) {
+  if (budget.used === 0) {
+    report('transport retries: 0 — every provider call was answered on its first attempt');
+    return;
+  }
+  for (const [modelId, count] of tally) report(`transport retries on ${modelId}: ${count}`);
+  report(`transport retries total: ${budget.used} of a ${budget.limit} whole-run budget`);
+}
+
+export async function earnRegistry(input) {
+  const { transport, environment, config, modelIds } = input;
+  const report = input.report ?? (() => {});
+
+  // Phase 1 — the developer-machine grant. The marker is read from the process environment by the
+  // runner and passed IN, because `liveModelCaller.ts` reads no environment by design. A caller that
+  // can see a server-runtime marker IS a server process, and the mint refuses one outright.
+  const grant =
+    input.grant ??
+    grantDeveloperMachineRun({
+      invocation: DEVELOPER_MACHINE_INVOCATION,
+      serverRuntimeMarker: input.serverRuntimeMarker ?? null,
+    });
+
+  // Phase 2 — the eval set.
+  const cases = [...(input.evalSet ?? buildEvalSet())];
+
+  // Phase 3 — contract 09's case minimums, before anything is sent.
+  const completeness = validateEvalSet(cases);
+  if (!completeness.ok) {
+    throw new LiveRegistryError(
+      'LIVE_REGISTRY_EVAL_SET_INCOMPLETE',
+      'the eval set does not meet contract 09 case minimums, so no live call is made from it',
+      { problems: String(completeness.problems.length) },
+    );
+  }
+
+  // Phase 4 — the sanitization audit, before anything is sent. This is the gate that must never be
+  // reached late: the send it prevents cannot be undone.
+  const sanitization = auditEvalSet(cases);
+  if (!sanitization.ok) {
+    const gates = [...new Set(sanitization.problems.map((problem) => problem.gate))].sort().join(', ');
+    throw new LiveRegistryError(
+      'LIVE_REGISTRY_EVAL_SET_UNSANITIZED',
+      'the eval set fails its sanitization audit, and a live run sends case text to a third party, so nothing is dialled (steering §0b, §3)',
+      { gates },
+    );
+  }
+
+  // Phase 5 — the estimate, REPORTED before any spend. An estimate that does not fit is a decision
+  // not to start, rather than a reason to attempt the run and stop when the cap trips.
+  const estimateMicroUsd = preflightEstimateMicroUsd({
+    cases,
+    modelIds,
+    maxOutputTokens: config.maxOutputTokens,
+  });
+  report(
+    `pre-flight estimate: ${estimateMicroUsd} micro-USD over ${cases.length} cases and ${modelIds.length} models; ceiling ${DEV_WEEKLY_CEILING_MICRO_USD} micro-USD`,
+  );
+  if (estimateMicroUsd >= DEV_WEEKLY_CEILING_MICRO_USD) {
+    throw new PreflightError(
+      'PREFLIGHT_ESTIMATE_NOT_BELOW_CAP',
+      'NIZAM pre-flight: the estimated cost of the run is not strictly below the dev key ceiling, so nothing is spent and the fixture-backed path stands (steering §3)',
+      { estimatedMicroUsd: String(estimateMicroUsd), capMicroUsd: String(DEV_WEEKLY_CEILING_MICRO_USD) },
+    );
+  }
+
+  // Phase 6 — resolve the endpoint and the credential by ENTRY NAME, or refuse. No default endpoint.
+  const resolved = resolveLiveRun(grant, environment, config);
+
+  // Phase 7 — the calls, one model at a time, in eval-set order. The first failure aborts.
+  //
+  // An abort forfeits the spend already incurred, and that cost is accepted (R10.12) — but it must not
+  // be SILENT. `earnRegistry` only ever reported a model's figures once its run had completed, so a
+  // mid-run refusal returned a code and no accounting, and the operator had no way to read what the
+  // attempt had already charged. The progress observed here is the whole remedy: it adds no retry, no
+  // continue-on-error, no checkpoint and no resume path, and it never carries a witness.
+  //
+  // The retry wrapper sits HERE, between the loop and the injected transport, so `runLiveModelCalls`
+  // keeps its own first-failure-aborts contract untouched: it never learns that a call was re-asked.
+  // The budget is shared across models — a broken upstream is a property of the run, not of a model —
+  // while the tally is per model, because that is what a reader of the registry needs to know.
+  const spentByModel = new Map();
+  const transportRetries = new Map();
+  const budget = { used: 0, limit: input.transportFaultBudget ?? RUN_TRANSPORT_FAULT_BUDGET };
+  const runs = [];
+  try {
+    for (const modelId of modelIds) {
+      const run = await runLiveModelCalls({
+        grant,
+        transport: withTransportRetry({
+          transport,
+          modelId,
+          budget,
+          tally: transportRetries,
+          report,
+          ...(input.wait === undefined ? {} : { wait: input.wait }),
+        }),
+        resolved,
+        modelId,
+        cases,
+        maxOutputTokens: config.maxOutputTokens,
+        onCaseAnswered: (progress) => {
+          spentByModel.set(progress.modelId, {
+            casesAnswered: progress.casesAnswered,
+            costMicroUsd: progress.costMicroUsdSoFar,
+          });
+        },
+      });
+      runs.push(run);
+      report(
+        `${modelId}: ${run.witness.casesAnswered} cases answered, ${run.witness.actualCostMicroUsd} micro-USD reported, ${transportRetries.get(modelId) ?? 0} transport retries`,
+      );
+    }
+  } catch (error) {
+    reportForfeitedSpend(report, spentByModel);
+    reportTransportRetries(report, transportRetries, budget);
+    throw error;
+  }
+
+  // Phase 8 — grade and emit. Both capabilities are injected and neither is defaulted:
+  // `liveModelCaller` already has the exact `ModelCaller` shape `buildCaller` asks for, and
+  // `isLiveMeasurementWitness` is passed BY REFERENCE, unchanged. It checks `WeakSet` membership —
+  // identity, not structure — which is precisely why it must not be wrapped, re-implemented, or
+  // defaulted to a constant acceptance.
+  const emitted = emitLiveRegistry({
+    runs,
+    buildCaller: liveModelCaller,
+    verifyWitness: isLiveMeasurementWitness,
+    evalSet: cases,
+  });
+
+  reportTransportRetries(report, transportRetries, budget);
+  return { emitted, runs, estimateMicroUsd, transportRetries, transportFaultBudget: budget };
+}
+
+// ---- phase 9: writing the artifacts ----------------------------------------------------------
+
+/**
+ * Write every entry of `emitted.artifacts` VERBATIM through the injected sink.
+ *
+ * The map is already keyed by final relative path, including the top-level registry, so there is
+ * nothing to rename and nothing to compose. `LIVE_REGISTRY_FILE_NAME === PROVISIONAL_REGISTRY_FILE_NAME`
+ * and this runner leaves that alone: one name means a stale provisional document and a measured one
+ * cannot sit side by side, and two names is exactly how the stale one ends up being the one read.
+ *
+ * @param {(relativePath: string, text: string) => void} sink
+ * @param {{ artifacts: Readonly<Record<string, string>> }} emitted
+ * @returns {string[]} the relative paths written, in the order written
+ */
+export function writeEmitted(sink, emitted) {
+  const written = [];
+  for (const [relativePath, text] of Object.entries(emitted.artifacts)) {
+    sink(relativePath, text);
+    written.push(relativePath);
+  }
+  return written;
+}
+
+/** A sink that writes under a root on the local filesystem, creating parent directories. */
+export function fileSystemSink(root) {
+  return (relativePath, text) => {
+    const target = join(root, relativePath);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, text, 'utf8');
+  };
+}
+
+// ---- phase 10: the entrypoint ----------------------------------------------------------------
+
+/**
+ * Resolve the dev credential by entry name, or from a file named by entry name. Never a literal,
+ * never a guess: an absent entry leaves the environment without the name, and `resolveLiveRun`
+ * refuses with `LIVE_API_KEY_UNRESOLVED` rather than proceeding.
+ */
+function devCredentialFrom(processEnv) {
+  const direct = processEnv[DEV_KEY_ENTRY];
+  if (typeof direct === 'string' && direct.trim().length > 0) return direct.trim();
+  const path = processEnv[DEV_KEY_FILE_ENTRY];
+  if (typeof path === 'string' && path.trim().length > 0) {
+    return readFileSync(path.trim(), 'utf8').trim();
+  }
+  return null;
+}
+
+/**
+ * The default invocation takes no arguments: the model list, the entry names and the pricing inputs
+ * are module constants, so the default invocation is the audited one.
+ */
+export async function main(processEnv = process.env, log = console.log) {
+  const entries = new Map();
+  const base = processEnv[MODEL_API_BASE_ENTRY];
+  if (typeof base === 'string' && base.trim().length > 0) entries.set(MODEL_API_BASE_ENTRY, base.trim());
+  const credential = devCredentialFrom(processEnv);
+  if (credential !== null) entries.set(DEV_KEY_ENTRY, credential);
+
+  const serverRuntimeMarker = processEnv[SERVER_RUNTIME_MARKER_ENTRY] ?? null;
+
+  try {
+    const { emitted, estimateMicroUsd, transportRetries, transportFaultBudget } = await earnRegistry({
+      serverRuntimeMarker,
+      transport: httpsTransport({ requestTimeoutMs: REQUEST_TIMEOUT_MS }),
+      environment: explicitEnvironment(entries),
+      config: {
+        apiBaseUrlRef: MODEL_API_BASE_ENTRY,
+        apiKeyRef: DEV_KEY_ENTRY,
+        completionsPath: COMPLETIONS_PATH,
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
+      },
+      modelIds: DEFAULT_ALLOWED_MODEL_IDS,
+      report: log,
+    });
+
+    const written = writeEmitted(fileSystemSink(ARTIFACT_ROOT), emitted);
+    const casesAnswered = emitted.results.reduce((sum, result) => sum + result.casesGraded, 0);
+
+    // The four numbers, plus the emitted path. Provider accounting exactly as the provider reported
+    // it: never converted, never re-derived from a price table, never estimated.
+    log(`cases in the eval set: ${emitted.results[0]?.casesGraded ?? 0}`);
+    log(`cases answered: ${casesAnswered}`);
+    log(`models graded: ${emitted.results.length}`);
+    log(`actual cost: ${emitted.actualCostMicroUsd} micro-USD (estimate was ${estimateMicroUsd})`);
+    for (const modelId of DEFAULT_ALLOWED_MODEL_IDS) {
+      log(`transport retries used on ${modelId}: ${transportRetries.get(modelId) ?? 0}`);
+    }
+    log(
+      `transport retries used total: ${transportFaultBudget.used} of ${transportFaultBudget.limit}`,
+    );
+    log(`emitted: ${join(ARTIFACT_ROOT, emitted.fileName)} (${written.length} artifacts)`);
+    return 0;
+  } catch (error) {
+    // Discriminated on `code`, never on a message: a message is prose that can be reworded, a code
+    // is the contract. The default arm re-raises rather than absorbing an error it does not know.
+    const code = error instanceof Error && 'code' in error ? String(error.code) : null;
+    switch (code) {
+      case 'LIVE_GRANT_REFUSED_SERVER_RUNTIME':
+      case 'LIVE_GRANT_INVOCATION_UNRECOGNISED':
+      case 'LIVE_GRANT_NOT_MINTED':
+      case 'LIVE_API_BASE_URL_UNRESOLVED':
+      case 'LIVE_API_KEY_UNRESOLVED':
+      case 'LIVE_SECRET_NOT_WRAPPED':
+      case 'LIVE_PROVIDER_STATUS_NOT_OK':
+      case 'LIVE_PROVIDER_BODY_UNPARSEABLE':
+      case 'LIVE_PROVIDER_ERROR_IN_BODY':
+      case 'LIVE_PROVIDER_ANSWER_TRUNCATED':
+      case 'LIVE_PROVIDER_USAGE_ABSENT':
+      case 'LIVE_PROVIDER_SERVED_ANOTHER_MODEL':
+      case 'LIVE_CASE_HAS_NO_EXCHANGE':
+      case 'LIVE_REGISTRY_NO_RUNS':
+      case 'LIVE_REGISTRY_DUPLICATE_MODEL':
+      case 'LIVE_REGISTRY_MODEL_NOT_DEFAULT_ALLOWED':
+      case 'LIVE_REGISTRY_WITNESS_NOT_ACCEPTED':
+      case 'LIVE_REGISTRY_WITNESS_MODEL_MISMATCH':
+      case 'LIVE_REGISTRY_RUN_INCOMPLETE':
+      case 'LIVE_REGISTRY_EVAL_SET_INCOMPLETE':
+      case 'LIVE_REGISTRY_EVAL_SET_UNSANITIZED':
+      case 'LIVE_REGISTRY_ARTIFACT_MISSING':
+      case 'PREFLIGHT_NO_MODELS':
+      case 'PREFLIGHT_NO_CASES':
+      case 'PREFLIGHT_MODEL_NOT_DEFAULT_ALLOWED':
+      case 'PREFLIGHT_ESTIMATE_NOT_BELOW_CAP':
+      // The two bounded-retry codes. Before they existed, a transport failure — `ECONNRESET` at TLS
+      // read in particular — reached `default:` and was re-raised out of `main`, past the process's
+      // only handler, and CRASHED with an uncaught exception. That path lost the forfeited-spend
+      // accounting and the exit code both. It now exits through this arm like every other refusal.
+      case TRANSPORT_RETRIES_EXHAUSTED:
+      case TRANSPORT_BUDGET_EXHAUSTED: {
+        // `detail` carries counts, gate names, model ids, entry names and micro-USD figures only.
+        // Nothing is added to it here.
+        const detail = /** @type {{ detail?: Record<string, string> }} */ (error).detail ?? {};
+        log(`REFUSED ${code} ${JSON.stringify(detail)}`);
+        return 1;
+      }
+      default: {
+        // The belt behind the arms above: a raw connection-level errno that somehow reached here
+        // without passing the retry wrapper is still a transport fault, and a transport fault must
+        // not leave this function as an uncaught exception. Classified by the SAME function the
+        // wrapper uses, so there is one definition of transport-class and not two.
+        const fault = transportFaultOfThrown(error);
+        if (fault !== null) {
+          log(`REFUSED ${TRANSPORT_RETRIES_EXHAUSTED} ${JSON.stringify({ reason: fault.reason, at: 'transport' })}`);
+          return 1;
+        }
+        throw error;
+      }
+    }
+  }
+}
+
+// Guarded so that IMPORTING this module dials nothing: the RUNG 3 smoke test drives the exported
+// phases without executing a run.
+const invokedDirectly =
+  process.argv[1] !== undefined && resolvePath(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  process.exitCode = await main();
+}

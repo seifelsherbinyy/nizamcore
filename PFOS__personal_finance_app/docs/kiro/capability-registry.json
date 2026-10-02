@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "authority": "contracts/programs/KIRO_DEVELOPMENT_ENVIRONMENT.md",
+  "phase": "KDE1",
+  "capabilities": [
+    {
+      "id": "nizam-investigate",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-investigate/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Explain how the transaction register reaches the local cache.",
+      "negative": "Fix this reproduced regression."
+    },
+    {
+      "id": "nizam-implement",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-implement/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Implement a small governed feature with tests.",
+      "negative": "Explain this module without editing it."
+    },
+    {
+      "id": "nizam-debug",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-debug/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "The budget page fails after reload; reproduce and identify the cause.",
+      "negative": "Review this diff without changing code."
+    },
+    {
+      "id": "nizam-test-repair",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-test-repair/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Diagnose a failing Vitest test and repair its root cause.",
+      "negative": "Design a new feature from requirements."
+    },
+    {
+      "id": "nizam-code-quality",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-code-quality/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Review the current diff for security and missing tests.",
+      "negative": "Reproduce an unexplained browser crash."
+    },
+    {
+      "id": "nizam-docs-research",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-docs-research/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Check the supported Dexie API for our installed version.",
+      "negative": "Calculate an account balance."
+    },
+    {
+      "id": "nizam-repository",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-repository/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Investigate an upstream GitHub issue and prepare a local patch plan.",
+      "negative": "Deploy a service to the VPS."
+    },
+    {
+      "id": "nizam-vps-inspect",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-vps-inspect/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md",
+        "docs/kiro/references/operations.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Inspect the authorized VPS service state without changing it.",
+      "negative": "Restart and redeploy production immediately."
+    },
+    {
+      "id": "nizam-service-diagnostics",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-service-diagnostics/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md",
+        "docs/kiro/references/operations.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Diagnose this container exit and systemd startup log.",
+      "negative": "Investigate a frontend-only rendering defect."
+    },
+    {
+      "id": "nizam-deploy",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-deploy/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md",
+        "docs/kiro/references/operations.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Prepare this local release and its rollback procedure.",
+      "negative": "Explain a module with no release request."
+    },
+    {
+      "id": "nizam-validate",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-validate/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Validate this completed change for repository handoff.",
+      "negative": "Research a library API without edits."
+    },
+    {
+      "id": "nizam-browser-test",
+      "kind": "skill",
+      "path": ".kiro/skills/nizam-browser-test/SKILL.md",
+      "references": [
+        "docs/kiro/references/development-loop.md",
+        "docs/kiro/references/browser.md"
+      ],
+      "status": "CONFIGURED",
+      "activation": "UNVERIFIED",
+      "positive": "Smoke-test local navigation and reload in an isolated browser.",
+      "negative": "Sign into Google Drive using my browser profile."
+    }
+  ]
+}

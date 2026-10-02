@@ -1,17 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pop.local/schemas/pfa_canonical_state.schema.json",
-  "title": "PFA canonical state — single source of truth for personal financial position",
+  "title": "PFA canonical state (v2) \u2014 generated view of PFOS's finance.db, not an independent source of truth",
+  "schema_version": "2.0.0",
+  "description": "v2 (2026-10-02): all monetary fields migrated from floating-point *_egp numbers to integer *_milliunits, per money-rules.md (1 EGP = 1000 milliunits, no floating-point money anywhere). This file is written by Zayd's sync routine FROM PFOS's finance.db \u2014 it is a read-only projection, matching the mirrorOf convention in drive-db.md, not a second canonical store. See the migration note at the end of this schema and NIZAM__system/docs/ADR-ZAYD-001-pfos-engine-into-mal-zayd.md for the full decision.",
   "type": "object",
-  "required": ["snapshot_date", "currency", "exchange_rate", "income", "debt_architecture", "cash_flow", "provenance"],
+  "required": ["snapshot_date", "currency", "exchange_rate", "income", "debt_architecture", "cash_flow", "provenance", "source_of_truth"],
   "properties": {
+    "source_of_truth": {
+      "type": "object",
+      "description": "Required in v2. Declares this file as a derived projection, matching drive-db.md's mirrorOf stamp.",
+      "required": ["engine", "storeRef", "projectedAt"],
+      "properties": {
+        "engine": { "const": "PFOS" },
+        "storeRef": { "type": "string", "description": "Pointer to the PFOS finance.db record/export this projection was generated from" },
+        "schemaVersion": { "type": "string" },
+        "projectedAt": { "type": "string", "format": "date-time" },
+        "sourceAuditVersion": { "type": ["string", "null"] }
+      }
+    },
     "snapshot_date": { "type": "string", "format": "date" },
     "currency": { "type": "string", "enum": ["EGP_and_USD", "EGP", "USD"] },
     "exchange_rate": {
       "type": "object",
       "required": ["egp_per_usd", "rate_verified", "rate_date"],
       "properties": {
-        "egp_per_usd": { "type": "number" },
+        "egp_per_usd": { "type": "number", "description": "A ratio, not a money amount \u2014 stays a precise decimal, not milliunits." },
         "rate_verified": { "type": "boolean" },
         "rate_sources": { "type": "array", "items": { "type": "string" } },
         "rate_date": { "type": "string", "format": "date" }
@@ -19,37 +33,36 @@
     },
     "income": {
       "type": "object",
-      "required": ["stable_net_monthly_egp"],
+      "required": ["stable_net_monthly_milliunits"],
       "properties": {
-        "stable_gross_monthly_egp": { "type": ["number", "null"] },
-        "stable_net_monthly_egp": { "type": "number" },
-        "stable_net_monthly_usd_equiv": { "type": ["number", "null"] },
-        "variable_monthly_avg_egp": { "type": ["number", "null"] },
-        "one_off_recent_egp": { "type": ["number", "null"] },
-        "source": { "type": "string" },
-        "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION", "STALE", "MISSING"] }
+        "stable_gross_monthly_milliunits": { "type": ["integer", "null"] },
+        "stable_net_monthly_milliunits": { "type": "integer" },
+        "stable_net_monthly_usd_equiv_milliunits": { "type": ["integer", "null"] },
+        "variable_monthly_avg_milliunits": { "type": ["integer", "null"] },
+        "one_off_recent_milliunits": { "type": ["integer", "null"] },
+        "source": { "const": "PFOS_engine" }
       }
     },
-    "fixed_expenses_monthly_egp": {
+    "fixed_expenses_monthly_milliunits": {
       "type": "object",
       "properties": {
-        "rent": { "type": ["number", "null"] },
-        "utilities": { "type": ["number", "null"] },
-        "transport": { "type": ["number", "null"] },
-        "subscriptions": { "type": ["number", "null"] },
-        "insurance": { "type": ["number", "null"] },
-        "other": { "type": ["number", "null"] },
-        "total": { "type": ["number", "null"] }
+        "rent": { "type": ["integer", "null"] },
+        "utilities": { "type": ["integer", "null"] },
+        "transport": { "type": ["integer", "null"] },
+        "subscriptions": { "type": ["integer", "null"] },
+        "insurance": { "type": ["integer", "null"] },
+        "other": { "type": ["integer", "null"] },
+        "total": { "type": ["integer", "null"], "description": "MUST equal the exact sum of the above (money-rules.md Rule 3 style exactness), never a rounded re-derivation." }
       }
     },
-    "variable_expenses_monthly_egp": {
+    "variable_expenses_monthly_milliunits": {
       "type": "object",
       "properties": {
-        "food": { "type": ["number", "null"] },
-        "personal": { "type": ["number", "null"] },
-        "family_support": { "type": ["number", "null"] },
-        "other": { "type": ["number", "null"] },
-        "total": { "type": ["number", "null"] }
+        "food": { "type": ["integer", "null"] },
+        "personal": { "type": ["integer", "null"] },
+        "family_support": { "type": ["integer", "null"] },
+        "other": { "type": ["integer", "null"] },
+        "total": { "type": ["integer", "null"] }
       }
     },
     "debt_architecture": {
@@ -59,35 +72,33 @@
         "summary": {
           "type": "object",
           "properties": {
-            "total_outstanding_egp": { "type": ["number", "null"] },
-            "total_monthly_obligations_egp": { "type": ["number", "null"] },
-            "recycling_eligible_limit_egp": { "type": ["number", "null"] },
-            "debt_to_income_ratio": { "type": ["number", "null"] }
+            "total_outstanding_milliunits": { "type": ["integer", "null"] },
+            "total_monthly_obligations_milliunits": { "type": ["integer", "null"] },
+            "recycling_eligible_limit_milliunits": { "type": ["integer", "null"] },
+            "debt_to_income_ratio": { "type": ["number", "null"], "description": "A ratio, not a money amount \u2014 stays a plain number." }
           }
         },
         "debts": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/debt_entry"
-          }
+          "items": { "$ref": "#/definitions/debt_entry" }
         }
       }
     },
     "cash_flow": {
       "type": "object",
       "properties": {
-        "monthly_income_egp": { "type": "number" },
-        "monthly_fixed_expenses_egp": { "type": ["number", "null"] },
-        "monthly_debt_obligations_egp": { "type": ["number", "null"] },
-        "monthly_variable_expenses_egp": { "type": ["number", "null"] },
-        "monthly_surplus_deficit_egp": { "type": ["number", "null"] }
+        "monthly_income_milliunits": { "type": "integer" },
+        "monthly_fixed_expenses_milliunits": { "type": ["integer", "null"] },
+        "monthly_debt_obligations_milliunits": { "type": ["integer", "null"] },
+        "monthly_variable_expenses_milliunits": { "type": ["integer", "null"] },
+        "monthly_surplus_deficit_milliunits": { "type": ["integer", "null"] }
       }
     },
     "liquidity": {
       "type": "object",
       "properties": {
-        "liquid_savings_egp": { "type": ["number", "null"] },
-        "investment_egp": { "type": ["number", "null"] }
+        "liquid_savings_milliunits": { "type": ["integer", "null"] },
+        "investment_milliunits": { "type": ["integer", "null"] }
       }
     },
     "runway": {
@@ -102,7 +113,7 @@
       "properties": {
         "eligible_platforms": { "type": "array", "items": { "type": "string" } },
         "non_eligible_platforms": { "type": "array", "items": { "type": "string" } },
-        "total_recycling_limit_egp": { "type": ["number", "null"] },
+        "total_recycling_limit_milliunits": { "type": ["integer", "null"] },
         "strategy_notes": { "type": ["string", "null"] }
       }
     },
@@ -111,8 +122,8 @@
       "required": ["last_updated", "update_method"],
       "properties": {
         "last_updated": { "type": "string", "format": "date-time" },
-        "update_method": { "type": "string", "enum": ["manual_consolidation", "cascade_refresh", "user_update", "partial_update"] },
-        "figures_source": { "type": "string" },
+        "update_method": { "type": "string", "enum": ["pfos_engine_sync"], "description": "v1's manual_consolidation / cascade_refresh / user_update / partial_update methods are retired \u2014 see ADR-ZAYD-001. Every refresh is a sync from PFOS, never an LLM estimate." },
+        "figures_source": { "const": "PFOS_engine" },
         "open_items": { "type": "array", "items": { "type": "string" } }
       }
     },
@@ -127,36 +138,36 @@
         "name": { "type": "string" },
         "type": { "type": "string", "enum": ["credit_card", "bnpl_recycling", "bnpl_installment", "family_loan", "personal_loan", "other"] },
         "recycling_eligible": { "type": "boolean" },
-        "credit_limit_egp": { "type": ["number", "null"] },
-        "current_balance_egp": { "type": ["number", "null"] },
-        "available_credit_egp": { "type": ["number", "null"] },
-        "original_amount_egp": { "type": ["number", "null"] },
-        "minimum_payment_monthly_egp": { "type": ["number", "null"] },
-        "installment_monthly_egp": { "type": ["number", "null"] },
-        "installment_step_down_egp": { "type": ["number", "null"], "description": "Lower installment amount after step-down date" },
-        "step_down_date": { "type": ["string", "null"], "format": "date", "description": "Date when installment reduces" },
-        "installment_fwd_estimate_egp": { "type": ["number", "null"], "description": "Forward-looking installment estimate after current obligations clear" },
-        "interest_rate_annual_pct": { "type": ["number", "null"] },
+        "credit_limit_milliunits": { "type": ["integer", "null"] },
+        "current_balance_milliunits": { "type": ["integer", "null"] },
+        "available_credit_milliunits": { "type": ["integer", "null"] },
+        "original_amount_milliunits": { "type": ["integer", "null"] },
+        "minimum_payment_monthly_milliunits": { "type": ["integer", "null"] },
+        "installment_monthly_milliunits": { "type": ["integer", "null"] },
+        "installment_step_down_milliunits": { "type": ["integer", "null"], "description": "Lower installment amount after step-down date" },
+        "step_down_date": { "type": ["string", "null"], "format": "date" },
+        "installment_fwd_estimate_milliunits": { "type": ["integer", "null"] },
+        "interest_rate_annual_pct": { "type": ["number", "null"], "description": "A rate, not a money amount." },
         "interest_rate_monthly_pct": { "type": ["number", "null"] },
-        "finance_charge_monthly_egp": { "type": ["number", "null"], "description": "Monthly interest/finance charge amount" },
-        "last_payment_amount_egp": { "type": ["number", "null"] },
-        "overdue_egp": { "type": ["number", "null"], "description": "Amount past due" },
+        "finance_charge_monthly_milliunits": { "type": ["integer", "null"] },
+        "last_payment_amount_milliunits": { "type": ["integer", "null"] },
+        "overdue_milliunits": { "type": ["integer", "null"] },
         "utilization_pct": { "type": ["number", "null"] },
         "installments_paid": { "type": ["integer", "null"] },
         "term_total_months": { "type": ["integer", "null"] },
         "term_remaining_months": { "type": ["integer", "null"] },
         "due_date": { "type": ["string", "null"], "format": "date" },
-        "end_date": { "type": ["string", "null"], "format": "date", "description": "Final payoff date for installment debts" },
-        "deadline": { "type": ["string", "null"], "format": "date", "description": "Hard or soft deadline for family/personal loans" },
+        "end_date": { "type": ["string", "null"], "format": "date" },
+        "deadline": { "type": ["string", "null"], "format": "date" },
         "deadline_type": { "type": ["string", "null"], "enum": ["HARD", "SOFT", "EOM_plus_7d_flexible", null] },
         "priority": { "type": ["string", "null"], "enum": ["TOP", "HIGH", "MEDIUM", "LOW", null] },
         "status": { "type": "string", "enum": ["active", "paid_off", "restructured", "deferred"] },
         "arrears_status": { "type": ["string", "null"], "enum": ["CURRENT", "ARREARS_1MO", "ARREARS_2MO", "ARREARS_3MO_PLUS", "OVERLIMIT", "OVERDUE", null] },
         "as_of_date": { "type": "string", "format": "date" },
-        "confidence": { "type": "string", "enum": ["CONFIRMED", "ESTIMATED", "ASSUMPTION", "STALE", "MISSING"] },
-        "source": { "type": "string" },
+        "source": { "const": "PFOS_engine" },
         "notes": { "type": ["string", "null"] }
       }
     }
-  }
+  },
+  "_migration_note": "v1 had no real data files on disk anywhere found during the 2026-10-02 repository-merge review (checked both the GitHub clone and the local nizamcore-writable checkout) \u2014 so this is a clean cutover, not a data transform. If a v1 canonical_state.json or ledger surfaces later (e.g. recovered from a chat transcript or another device), convert every *_egp float to milliunits with round(egp * 1000) at the point of entry into PFOS, never downstream, and drop the CONFIRMED/ESTIMATED/ASSUMPTION/STALE/MISSING confidence labels \u2014 PFOS either has the figure or the field stays null pending entry, per ADR-ZAYD-001."
 }

@@ -1,9 +1,11 @@
 {
   "folder": "MAL__financial_engine",
   "symbol": "MAL",
+  "codename": "Zayd",
+  "_codename_note": "Formerly self-declared \"Sadiq\" (collided with QARAR’s registered codename). Fixed 2026-10-02, ADR-ZAYD-001.",
   "meaning_ar": "wealth / money",
   "phase": 2,
-  "purpose": "Personal finance engine. ~$900/mo baseline → >$10k/mo target via staged milestones + exchange-rate verification + 7-factor decision scoring.",
+  "purpose": "Personal finance engine. ~$900/mo baseline → >$10k/mo target via staged milestones + exchange-rate verification + 7-factor decision scoring. Real figures sourced from the PFOS deterministic engine (merged into this repository 2026-10-02); this module is the presentation/coaching layer, not an independent source of truth.",
   "privacy_level": "strict_local",
   "allowed_contents": ["baseline/baseline_*.md","income_growth/<pathway>/*.md","business_pipelines/*.md","expenses_debt_assets/*.md","monthly_reviews/*.md","scenario_models/*.md","exchange_rate_log.jsonl"],
   "skill_commands": ["/mal-baseline","/mal-scenario","/mal-milestone-check","/mal-exchange-rate-check","/mal-decision-score"],
@@ -14,6 +16,8 @@
     "ledgers": ["MAL__financial_engine/pfa/ledgers/debts.jsonl","MAL__financial_engine/pfa/ledgers/payments.jsonl","MAL__financial_engine/pfa/ledgers/decisions.jsonl"],
     "learnings_log": "MAL__financial_engine/pfa/learnings_log.jsonl",
     "schemas": ["pfa_canonical_state","pfa_debt_event","pfa_payment_event","pfa_learning"],
+    "schema_version": "2.0.0",
+    "source_of_truth": "PFOS_engine",
     "debt_platforms": {
       "credit_card": ["hsbc_8071","hsbc_5411"],
       "bnpl_installment": ["tru","halan","souhoola","valu"],

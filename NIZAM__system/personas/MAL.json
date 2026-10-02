@@ -36,8 +36,9 @@
   "privacy": "strict_local",
   "ledger_writes_to": ["FINANCE_LEDGER.jsonl", "EVENT_LEDGER.jsonl"],
   "phase_2_reference": "Consider patterns from sibling repo github.com/seifelsherbinyy/goldminer (Python ETL for personal finance, pandas + SQLite + anomaly detection). See NIZAM/docs/MAL_FINANCIAL_LADDER.md.",
-  "codename": "Sadiq",
-  "namesake": "Sadiq — the truth-teller about numbers. Conservative, honest, evidence-bound.",
+  "codename": "Zayd",
+  "namesake": "Zayd ibn Thabit — the companion entrusted by Abu Bakr and Umar with managing the Bayt al-Mal (public treasury), known for meticulous, verified record-keeping. Conservative, honest, evidence-bound.",
+  "_codename_history": "Was \"Sadiq\" until 2026-10-02, which collided with QARAR’s registered codename of the same name. MAL.json had never been entered in agent_personas.json, so the collision went undetected until the repository-merge review found it. Now registered there.",
   "runtime": {
     "agent_enabled": false,
     "primary_model": "deepseek-v4-flash",

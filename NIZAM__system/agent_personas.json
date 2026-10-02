@@ -94,6 +94,15 @@
       "_separate_keypair": true
     },
     {
+      "codename": "Zayd",
+      "archetype": "treasury_steward",
+      "persona_file": "NIZAM__system/personas/MAL.json",
+      "module": "MAL",
+      "role": "Personal financial analyst — baseline, scenario modeling, milestone-ladder tracking, decision scoring; real figures computed by the PFOS deterministic engine, never estimated",
+      "delegates_to": ["Salman"],
+      "_naming_note": "Replaces MAL.json's self-declared codename \"Sadiq\", which collided with QARAR's registered codename of the same name (codename_uniqueness invariant violation, never previously registered here). Named after Zayd ibn Thabit, the companion entrusted with the Bayt al-Mal treasury, known for meticulous verified record-keeping. Resolved 2026-10-02."
+    },
+    {
       "codename": "Ammar",
       "archetype": "egress_guardian",
       "persona_file": "NIZAM__system/personas/AMMAR.json",

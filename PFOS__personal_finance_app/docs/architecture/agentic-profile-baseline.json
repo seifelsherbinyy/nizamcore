@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordedAt": "2026-09-11T00:00:00Z",
+  "capabilities": [
+    {
+      "id": "ingress",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "ingress-reported",
+          "basis": "USER_REPORTED",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "runtime",
+          "observedAt": null,
+          "sourceRef": "owner-runtime-report"
+        }
+      ]
+    },
+    {
+      "id": "journal",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "journal-reported",
+          "basis": "USER_REPORTED",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "persistence",
+          "observedAt": null,
+          "sourceRef": "owner-journal-report"
+        }
+      ]
+    },
+    {
+      "id": "retrieval",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "retrieval-reported",
+          "basis": "HISTORICAL",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "runtime",
+          "observedAt": null,
+          "sourceRef": "prior-retrieval-receipt"
+        }
+      ]
+    },
+    {
+      "id": "capacity",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "capacity-reported",
+          "basis": "HISTORICAL",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "code",
+          "observedAt": null,
+          "sourceRef": "adaptive-governor-receipt"
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "scheduler-reported",
+          "basis": "HISTORICAL",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "schedule",
+          "observedAt": null,
+          "sourceRef": "scheduler-registration-receipt"
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "calendar-reported",
+          "basis": "HISTORICAL",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "code",
+          "observedAt": null,
+          "sourceRef": "calendar-contract-receipt"
+        }
+      ]
+    },
+    {
+      "id": "recovery",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "recovery-reported",
+          "basis": "USER_REPORTED",
+          "outcome": "UNKNOWN",
+          "environment": "VPS",
+          "snapshotHash": null,
+          "check": "mirror",
+          "observedAt": null,
+          "sourceRef": "owner-recovery-report"
+        }
+      ]
+    },
+    {
+      "id": "finance",
+      "environment": "VPS",
+      "snapshotHash": null,
+      "receipts": [
+        {
+          "id": "finance-reported",
+          "basis": "HISTORICAL",
+          "outcome": "UNKNOWN",
+          "environment": "WORKSPACE",
+          "snapshotHash": null,
+          "check": "code",
+          "observedAt": null,
+          "sourceRef": "workspace-finance-inspection"
+        }
+      ]
+    }
+  ]
+}

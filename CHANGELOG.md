@@ -1,5 +1,20 @@
 # POP — Changelog
 
+## 2026-10-02 — nizamfinancialapp (PFOS) merged in
+- New top-level folder: `PFOS__personal_finance_app/` — the full nizamfinancialapp repository
+  (853 tracked files: `src/`, `contracts/`, `docs/`, `ops/`, build + test tooling), carrying its own
+  deterministic finance engine (integer milliunits), Drive sync (`drive.file` scope), and test suite.
+  Not an interleaved file merge — it lands as its own self-contained software project, since nizamcore
+  has no package.json/build of its own.
+- `MAL__financial_engine/` folded onto PFOS as its computational core: MAL's `pfa_*` schemas migrated
+  from float `*_egp` fields to integer `*_milliunits`; MAL's own "ask the user, estimate, label
+  confidence" update routine retired in favor of a single sync-from-PFOS step; `canonical_state.json`
+  redefined as a generated projection of PFOS's `finance.db`, not a second source of truth.
+- MAL's codename fixed from a self-declared, unregistered "Sadiq" (which collided with QARAR's actual
+  registered codename) to **Zayd**, now properly entered in `agent_personas.json`.
+- Full decision record: `NIZAM__system/docs/ADR-ZAYD-001-pfos-engine-into-mal-zayd.md`.
+- Staged in a local clone only — not committed, not pushed, pending owner review.
+
 ## v3.3.0 — 2026-05-15 (operational layers — protocols + workflows + memory model)
 - New folder: `NIZAM__system/protocols/` — 8 cadence-driven skill chains.
   Daily morning, daily evening, weekly Sunday, monthly close, quarterly close, annual close, crisis (SUKOON red), onboarding (first 7 days).
